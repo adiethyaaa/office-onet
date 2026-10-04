@@ -317,11 +317,13 @@
    {
     "kind": "failure",
     "text": "spec missing -> belum divalidasi",
-    "status": "asumsi",
+    "status": "terverifikasi",
     "refs": [
-     "design/requirements.json::PoE budget switch"
+     "tests/py/test_ict_power.py::test_smaller_poe_budget_fails_the_gate",
+     "tests/py/test_ict_power.py::test_smaller_ups_fails_the_gate",
+     "design/requirements.json::PoE budget per switch"
     ],
-    "note": "PoE budget/UPS/thermal menunggu datasheet"
+    "note": "PoE/UPS W/VA/panas ditutup dengan model referensi datasheet 2026-10-04; budget/rating kurang -> BLOCKED. Runtime UPS menunggu target otonomi."
    },
    {
     "kind": "boundary",

@@ -1,0 +1,214 @@
+UniFi Hi-Capacity Aggregation - Tech Specs
+Start Here
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+What's New
+Support
+Store
+How It Works?
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+More from UI
+UniFi
+UISP
+Branding
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+Accessories
+Back
+Aggregation
+Hi-Capacity Aggregation
+Hi-Capacity Aggregation
+USW-Pro-Aggregation
+Datasheet
+In The Box
+Marketing Images
+Accessories
+Installation Guide
+Download image
+Zoom in
+Download image
+Zoom in
+Download image
+Zoom in
+Overview
+Dimensions
+442 x 325 x 44 mm
+(17.4 x 12.8 x 1.7")
+Port Layout
+10G SFP+
+28
+(10G/1G)
+25G SFP28
+4
+(25G/10G/1G)
+Redundancy
+DC Power Backup
+Layer 3
+✓
+Form Factor
+Rack mount (1U)
+Performance
+Switching Capacity
+760 Gbps
+Total Non-Blocking Throughput
+380 Gbps
+Forwarding Rate
+565 Mpps
+Supported VLANs
+1,000
+MAC Address Table Size
+32,000
+IPv4 Static Routes
+256
+Packet Buffer Size
+4 MB
+Access Lists
+IPv4
+128
+MAC
+128
+Layer 3 Features
+DHCP Server (Local Networks)
+✓
+DHCP Relay
+✓
+Inter-VLAN Routing (Local Networks)
+✓
+Static Routing (Local Networks)
+✓
+Layer 2 Features
+LACP Port Aggregation
+✓
+STP & RSTP
+✓
+QoS (DSCP)
+✓
+Pro AV Profiles (Play, Dante, Q-SYS, NDI, SDVoE, Shure, AES67, Crestron)
+✓
+Advanced IGMP Configuration (Querier, Fast Leave, Router Port)
+✓
+IGMP Snooping
+✓
+802.1X Control
+✓
+MAC-Based ACLs & Device Isolation
+✓
+DHCP Snooping & Guarding
+✓
+Egress Rate Limit
+✓
+Flow Control
+✓
+Storm Control
+✓
+Multicast & Broadcast Rate Limiting
+✓
+MAC Address Blocking
+✓
+IP-Based ACLs & Network Isolation
+✓
+MAC-Based Port Restriction
+✓
+Port Isolation
+✓
+Port Mirroring
+✓
+Jumbo Frames
+✓
+LLDP-MED
+✓
+Voice VLAN
+✓
+Loop Protection
+✓
+Virtual Network Override
+✓
+Hardware
+Max. Power Consumption
+100W
+Power Method
+(1) Universal input, 100–240V AC, 50/60 Hz
+(1) USP RPS DC input
+Power Input Method
+AC input
+Power Supply
+AC/DC, internal, 100W
+Supported Voltage Range
+100–240V AC
+Management
+Ethernet
+AR
+Heat Dissipation
+341 BTU/hr
+Weight
+Without mounting brackets: 4.6 kg (10.1 lb)
+With mounting brackets: 4.7 kg (10.4 lb)
+Enclosure Material
+SGCC steel
+Mount Material
+SGCC steel
+Supported Rack Depth
+400~1200 mm
+(15.7-47.2")
+LCM Display
+1.3" touchscreen
+ESD Protection
+Air: ± 16kV, contact: ± 12kV
+Ambient Operating Temperature
+-5 to 40° C (23 to 104° F)
+Ambient Operating Humidity
+10 to 90% noncondensing
+NDAA Compliant
+✓
+Certifications
+CE, FCC, IC, Anatel: 20756-22-08356
+Software
+Application Requirements
+UniFi Network
+Version 6.1.25 and later
+Company
+Blog
+Case Studies
+Careers
+Trust Center
+Partner with UniFi
+Contact Us
+Investors
+Compliance
+Training
+Courses
+Calendar
+Trainers
+Become a Trainer
+Buy Now
+Ubiquiti Store
+Find a Distributor
+Tools
+WiFiman
+UISP
+UniFi Design Center
+UISP Design Center
+Downloads
+Stay in Touch
+Subscribe
+Terms of Service
+|
+Privacy Policy
+|
+Legal
+|
+Cookies Settings
+© 2026 Ubiquiti, Inc. All rights reserved.

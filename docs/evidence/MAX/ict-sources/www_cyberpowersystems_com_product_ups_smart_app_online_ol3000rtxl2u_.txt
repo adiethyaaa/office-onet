@@ -1,0 +1,991 @@
+OL3000RTXL2U - Smart App Online UPS - Product Details, Specs, Downloads | CyberPower
+We are having issues with Support Ticket Submissions. Please use the "Let's Chat" or call 1-877-297-6937
+to connect with support while we resolve this issue.
+CyberPower Systems
+CyberPower Systems
+Search
+Search for:
+Search
+Skip to navigation
+Skip to content
+Company
+News
+Events
+Testimonials
+Publications
+Power Blog
+Newsletters
+Careers
+Contact Us
+Register a Product
+Partners
+Become A Partner
+Partner Rewards
+Account
+My Profile
+Addresses
+Product Registrations
+Logout
+Region
+CyberPower Systems
+Products
+3-Phase UPS Systems
+UPS Systems
+PDU
+Surge Protectors
+FTTx Telecom
+Racks
+General Power
+Power Accessories
+Software
+Extended Warranties
+TAA Compliant Products
+Solar Power Systems
+Professional Services for Commercial UPS Systems and PDUs
+-->
+Here's your sine to SAVE 15%
+On CyberPower PFC Sinewave 1U Rackmount UPS Systems through September 30, 2026.
+-->
+View All Promotions
+View All Products
+View Service Plans
+Solutions
+Personal
+Home Office
+Energy Efficiency
+PC Gaming
+Commercial
+Business
+Point of Sale
+Healthcare
+FTTx
+Security
+Services
+Specialty
+Energy Efficiency
+Government
+Education
+Casino Gaming
+Making Home Work
+Power protection that keeps home and office protected and connected.
+View All Solutions
+Tools
+Shop By Topology
+Standby
+Line-Interactive
+Online Double-Conversion
+Topology Resources
+Product Selectors
+UPS Product Selector
+PDU Product Selector
+Surge Product Selector
+All Product Selectors
+Tools & Calculators
+UPS Runtime Calculator
+3-Phase Configurations
+UPS Cross Reference
+Battery Replacement Tool
+Power Assessment
+Warranty Lookup Tool
+All Tools & Calculators
+Questions?
+CyberPower’s expert team can help you with the product questions and support you need.
+Get in Touch
+Support
+General Support
+How to Buy
+FAQs
+Glossary
+Product Warranty
+Advisory Notices
+All Support Resources
+Products
+Publications
+User Manuals
+Datasheets
+Guides
+Videos
+Schematics
+Software Tutorials
+Quick Start Guides
+All Product Resources
+Software
+PowerPanel® Cloud
+PowerPanel® Personal
+PowerPanel® Business 4
+Utilities
+Firmware
+MIB Files
+All Software Resources
+Questions?
+CyberPower’s expert team can help you with the product questions and support you need.
+Get in Touch
+Products
+3-Phase UPS Systems
+UPS Systems
+PDU
+Surge Protectors
+FTTx Telecom
+Racks
+General Power
+Power Accessories
+Software
+Extended Warranties
+TAA Compliant Products
+Solar Power Systems
+Professional Services for Commercial UPS Systems and PDUs
+-->
+Here's your sine to SAVE 15%
+On CyberPower PFC Sinewave 1U Rackmount UPS Systems through September 30, 2026.
+-->
+View All Promotions
+View All Products
+View Service Plans
+Solutions
+Personal
+Home Office
+Energy Efficiency
+PC Gaming
+Commercial
+Business
+Point of Sale
+Healthcare
+FTTx
+Security
+Services
+Specialty
+Energy Efficiency
+Government
+Education
+Casino Gaming
+Making Home Work
+Power protection that keeps home and office protected and connected.
+View All Solutions
+Tools
+Support
+General Support
+How to Buy
+FAQs
+Glossary
+Product Warranty
+Advisory Notices
+All Support Resources
+Products
+Publications
+User Manuals
+Datasheets
+Guides
+Videos
+Schematics
+Software Tutorials
+Quick Start Guides
+All Product Resources
+Software
+PowerPanel® Cloud
+PowerPanel® Personal
+PowerPanel® Business 4
+Utilities
+Firmware
+MIB Files
+All Software Resources
+Questions?
+CyberPower’s expert team can help you with the product questions and support you need.
+Get in Touch
+Company
+Registration
+Partners
+Account
+Region Selector
+Let's Chat!
+Search for:
+Let's Chat!
+UPS Systems
+|
+Smart App Online UPS
+|
+OL3000RTXL2U
+Smart App Online UPS
+OL3000RTXL2U
+$
+3,750.00
+MSRP
+Purchase Online
+Find a Solution Provider
+Locate a Partner
+Capacity:
+3000 VA / 2700 W
+Power Factor (PF):
+0.9
+Topology:
+Double-Conversion
+Waveform:
+Sine Wave
+Output:
+100, 110, 115, 120, 125 V ±2% (configurable)
+Plug type & cord:
+NEMA L5-30P, 10 ft. cord
+Outlet types:
+6 × NEMA 5-20R, 1 L5-30R
+Monitoring & Management:
+USB, Serial, Network, Relay, EPO
+Data line surge protection:
+Telephone, Network
+Management software:
+PowerPanel® Business Edition
+Warranty:
+3 year
+Show More
+Expand All
+-->
+SKU:
+OL3000RTXL2U
+-->
+Categories:
+Smart App Online UPS
+,
+UPS Systems
+-->
+Overview
+Specifications
+Videos
+Downloads
+Support
+-->
+Series
+Runtime
+Overview
+Product Overview
+Prevent business interruptions and safeguard mission-critical enterprise network equipment.
+The CyberPower OL3000RTXL2U is a rack/tower UPS with double conversion topology. It provides sine wave output to critical applications and equipment that require seamless power correction. The Extended Battery Module (EBM) expands runtime, and Fast Charge Technology restores full backup power faster. This model comes with an extendable LCD control panel, Smart Battery Management charging technology, and energy-saving GreenPower UPS™ ECO Mode.
+The OL3000RTXL2U offers generator compatibility and delivers clean AC power with zero transfer time.  Its sine wave output keeps sensitive equipment working by preventing unnecessary shutdowns that can occur with simulated sine wave output.
+With a $400,000 lifetime connected equipment guarantee and a three-year warranty, you can trust CyberPower’s commitment to high quality.
+Product Features
+Double-Conversion Topology
+Provides consistent, clean, and nearly perfect power, regardless of the condition of the incoming power. With the conversion to DC power, the UPS has a zero millisecond transfer time to battery power when utility power is lost. Designed for high-end system components, corporate servers, lab equipment, and other sensitive electronic devices.
+Sine Wave Output
+Keeps sensitive equipment with Active PFC working by preventing unnecessary shutdowns caused by gaps from simulated sine waves.
+PowerPanel® Business Edition Software
+Provides tools for easy remote monitoring and managing of the UPS and automates shutdown of multiple devices when needed.
+RMCARD205 Option
+The optional RMCARD205 allows remote management and configuration of the UPS via a standard web browser, command line interface (CLI), or network management system (NMS).
+LCD Control Panel
+Displays UPS status data and configures operating settings from up to 10 ft. away (DB26 cable not included). The LCD control panel displays and allows configuration of IP address settings when an RMCARD205 is installed.
+Extended Battery Module (EBM)
+Extends runtime by adding up to 10 EBMs.
+Fast Charge Technology
+Allows UPS batteries to return to full capacity more rapidly by utilizing a built-in charger. Restores charge from 0-90% within 4 hours regardless of the number of EBMs.
+Smart Battery Management (SBM)
+Improves and extends the functional life of a UPS battery and reduces excessive heat during work cycles by using a three-cycle charging process.
+GreenPower UPS™ ECO Mode
+Improves UPS efficiency up to 95%; saves on electrical and cooling costs.
+Hot-Swappable Batteries
+Keep equipment running by eliminating downtime during UPS battery replacement.
+Upgradeable UPS firmware
+The UPS firmware that manages the unit’s features and functions is field upgradeable. UPS firmware upgrades require the optional RMCARD205 to be installed in the UPS and are done via the web management interface.
+Critical & Non-Critical Loads
+Maximize the output of the UPS by setting non-critical loads to shut off allowing additional runtime for critical load outlets.
+Emergency Power Off (EPO)
+Allows the UPS to be shut off in the event of an emergency, when the EPO port is connected to an EPO switch.
+Generator Compatible
+Provides stable sine wave output (free of harmonics and distortion) without switching to battery mode when running on generator input power.
+Converter Mode
+Provides the flexibility to set the output frequency, regardless of the input frequency, to match connected equipment by selecting 50Hz or 60Hz output on the LCD control panel.
+USB & Serial Connectivity
+Enables full integration with built-in power management and auto shutdown features on Windows, Linux, and VMware systems through a HID-compliant USB port and Serial port.
+EMI/RFI Filters
+Prevent electromagnetic and radio frequency interference to ensure clean power for connected equipment.
+Data Line Surge Protection
+Prevents power surges that travel through telephone and Ethernet lines from causing damage to your equipment
+Audible Alarms
+Identify when the model is running on battery power, overloaded, or has a low battery.
+Resettable Circuit Breaker
+Interrupts an electric current in a circuit when the current becomes too high.
+LED Status Lights
+Indicate Power On, Line Mode, Battery Mode, Bypass Mode, Fault, Replace Battery.
+Rack/Tower Versatility
+Allows for horizontal rack or vertical tower installation.
+Three-Year Warranty
+Gives you peace of mind knowing we will repair or replace a defective UPS system (including batteries) within three years of the purchase date. See warranty for details.
+Connected Equipment Guarantee
+Affirms we will repair or replace properly connected equipment if it is damaged by a power surge.
+Typical Applications
+Corporate Servers
+Edge Closets
+Enterprise Servers
+Network and Storage Devices
+PBX and VoIP Installations
+Compatible Products
+Extended Battery Module
+BP72V60ART2U
+Extended Warranty
+WEXT5YR-U4B
+Hardware
+RMCARD205
+Hardware
+RCCARD100
+Hardware
+RWCCARD100
+Hardware
+RELAYIO500
+Hardware Racks
+DOORSENSOR
+Replacement Batteries
+RB1290X6A
+Show More
+What's In The Box
+UPS system, User Manual, Registration Card, (2) Rackmount Rails, (2) Rackmount Ears, (2) Hanging Brackets, Phone line, USB Communication Cable, Serial interface Cable (RS-232), (8) M5 x 7L black flat head screws, (12) M5 x 12L black pan head screws, (6) M5 x 6L silver pan head screws, (8) Plastic washers, (12) Screw Hole Dust Covers, (12) Rubber Pads, Software Download Card
+WARNING
+This product can expose you to chemicals including Styrene (ABS), which is known to the State of California to cause cancer, and Bisphenol A (BPA), which is known to the State of California to cause birth defects or other reproductive harm. For more information go to
+http://www.P65Warnings.ca.gov
+.
+Specifications
+Expand All
+General
+Energy Saving
+ECO Mode Efficiency >95%
+UPS Topology
+Online Double Conversion
+Battery
+Battery Quantity
+6
+Battery Size
+12 V / 9 Ah
+Battery Type
+Sealed Lead-Acid Battery
+Extended Battery Module
+BP72V60ART2U
+Hot Swappable
+Yes
+Replacement Battery Cartridge
+RB1290X6A
+Replacement Battery Cartridge Quantity
+1
+Runtime at Full Load
+4 min
+Runtime at Half Load
+12.5 min
+Smart Battery Management (SBM) Mode
+Yes
+Typical Recharge Time
+4 Hours (0% to 90% charged)
+User Replaceable Battery
+Yes
+Input
+Circuit Breaker
+30 A
+Cold Start
+Yes
+Cord Length
+10 ft (3.0 m)
+Input Frequency Range
+40 Hz – 70 Hz
+Input Plug Type
+NEMA L5-30P
+Input Power Factor
+0.99
+Input Voltage Range
+60 VAC – 69 VAC for 0–60% Load
+70 VAC – 79 VAC for 0–70% Load
+80 VAC – 89 VAC for 0–80% Load
+90 VAC – 95 VAC for 0–90% Load
+Nominal Input Voltage
+100 – 125 VAC
+Output
+Bypass
+Internal Bypass (Automatic and Manual)
+Crest Factor
+3:1
+Harmonic Distortion
+< 3% at Linear Load
+< 5% at Non-Linear Load
+On AC WaveForm
+Sine Wave
+On Battery Frequency
+50/60 Hz ± 0.25Hz (auto-sensing or configurable)
+On Battery Voltage
+100/110/115/120/125 VAC ± 2% (configurable)
+On Battery Waveform
+Sine Wave
+Outlet Type
+6 – NEMA 5-20R
+1 – NEMA L5-30R
+Outlets – Total
+7
+Output Power Factor
+0.9
+Overload Protection
+Line Mode: 105% ~ 125% Load – 1 min
+Line Mode: 126% ~ 150% Load – 10 sec
+Battery Mode: 105% ~ 130% Load – 10 sec
+Battery Mode: 131% – 150% Load – 2 sec
+Typical Transfer Time
+0 ms
+USB Charge Port
+No
+VA
+3000 VA
+VA by Input Type
+3,000 (3.0 kVA) at 120, 125 V input
+2,700 (2.7 kVA) at 115, 110 V input
+2,400 (2.4 kVA) at 100 V input
+Watts
+2700 W
+Watts by Input Type
+2,700 (2.7 kW) at 120, 125 V input
+2,430 (2.4 kW) at 115, 110 V input
+2,160 (2.2 kW) at 100 V input
+Surge Protection & Filtering
+EMI/RFI Filtration
+Yes
+Phone / Network Protection RJ11/RJ45
+1-In / 1-Out (Combo)
+Surge Suppression (Joules)
+1335 J
+Management & Communications
+Audible Alarms
+Battery Mode
+Low Battery
+Overload
+UPS Fault
+Dry Contacts
+Yes
+Emergency Power Off (EPO) Port
+Yes
+Expansion Slot
+Yes – with optional RMCARD205 or RELAYIO500
+HID Compliant USB Port
+Yes
+LCD
+Multifunction LCD
+LED Indicators
+Power On (White)
+Line Mode (Green)
+Battery Mode (Yellow)
+Bypass Mode (Yellow)
+Fault (Red)
+Replace Battery (Red)
+Management Cable
+USB Cable
+Removable LCD Control Panel Option
+Yes – Requires DB26 cable (not included)
+Rotatable LCD Control Panel Option
+Yes
+Serial Port
+1 Serial
+Software (Free Download)
+PowerPanel® Business
+Physical
+Color
+Black
+Form Factor
+Rack / Tower
+Material of Construction
+Metal
+Mounting Hardware
+Yes
+Rack Height
+2U
+Dimensions
+Physical Dimensions – (WxHxD) (cm)
+43.18 x 8.89 x 59.99 (cm)
+Physical Dimensions – (WxHxD) (in)
+17 x 3.5 x 23.62 (in)
+Physical Dimensions – (WxHxD) (mm)
+432 x 89 x 600 (mm)
+Physical Weight (kg)
+30.93
+Physical Weight (lb)
+68.2
+Dimensions – Shipping
+Shipping – Weight (kg)
+39.49
+Shipping – Weight (lb)
+87.08
+Shipping Dimensions – (WxHxD) (cm)
+57.15 x 22.86 x 87.63 (cm)
+Shipping Dimensions – (WxHxD) (in)
+22.5 x 9.0 x 34.5 (in)
+Shipping Dimensions – (WxHxD) (mm)
+571.5 x 228.6 x 876.3 (mm)
+Environmental
+ECO Mode Thermal Dissipation
+465 BTU/hr
+Online Thermal Dissipation
+889 BTU/hr
+Operating Elevation
+0 – 10000 ft (0 – 3048 m)
+Operating Relative Humidity
+0 – 90 % (non-condensing)
+Operating Temperature
+32 – 104 °F (0 – 40 °C)
+Storage Elevation
+0 – 50000 ft (0 – 15239 m)
+Storage Relative Humidity
+0 – 95% (non-condensing)
+Storage Temperature
+-4 – 113 °F (-20 – 45 °C)
+Certifications
+Environmental
+RoHS Compliant
+Safety
+UL1778
+FCC Part 15 Class A
+CSA C22.2 No. 107.3
+Warranty
+CEG Amount
+$400000
+Connected Equipment Guarantee
+Lifetime
+Extended Warranty Option
+WEXT5YR-U4B
+Product Warranty
+3 Year Limited Warranty
+Downloads
+Literature
+Datasheet
+OL3000RTXL2U DS
+585.9KB
+User Manual
+OL3000RTXL2U UM
+2.3MB
+Warranty Statement
+OL3000RTXL2U WS
+62.2KB
+Visio Stencil
+OL3000RTXL2U Visio
+1.2MB
+Software
+Use Local for USB connected equipment or Remote for UPS with RMCARD
+PowerPanel Business Local/Remote | Windows | 32-bit and 64-bit | .exe | v4.12.4
+216.8 MB
+Monitor and manage computer running Local/Remote and networked devices
+PowerPanel Business Management | Windows | 32-bit and 64-bit | .exe | v4.12.4
+169.3 MB
+Shutdown software supports VMWARE vSphere ESX/ESXi 6, 6.5, 6.7, 7.0 and 8.0 U2
+PowerPanel Business | Virtual Machine | Local | .zip | v4.12.4
+1.67 GB
+Shutdown software supports VMWARE vSphere ESX/ESXi 6.0 and later
+PowerPanel Business | Virtual Machine | Remote | .zip | v4.12.4
+1.74 GB
+Shutdown software supports Mac OS systems 12, 13.1, 13.2, 14, 15.1.1 and 15.2
+PowerPanel Business Local | Mac | .dmg | v4.12.4
+217.6 MB
+Shutdown software supports Mac OS systems 12, 13.1, 13.2, 14, 15.1.1 and 15.2
+PowerPanel Business Management | Mac | .dmg | v4.12.4
+171.7 MB
+Shutdown software supports 32-bit versions of most Linux builds.
+PowerPanel Business Local | Linux | 32 bit | .sh | v4.12.4
+218.4 MB
+Shutdown software supports 32-bit versions of most Linux builds.
+PowerPanel Business Management | Linux | 32 bit | .sh | v4.12.4
+171.2 MB
+Shutdown software supports 64-bit versions of most Linux builds.
+PowerPanel Business Local | Linux | 64 bit | .sh | v4.12.4
+223.2 MB
+Shutdown software supports 64-bit versions of most Linux builds.
+PowerPanel Business Management | Linux | 64 bit | .sh | v4.12.4
+176 MB
+Support
+FAQs
+Can I use my UPS in conjunction with a generator?
+CyberPower
+Smart App Online Series
+UPS systems include a Generator Mode setting specifically designed to work with generators. With varying loads, the frequency output from generators can be erratic. This erratic output can make it difficult for a UPS without a Generator Mode setting to recognize the input power, causing the UPS to function on battery power only. With Generator Mode, the UPS can automatically adjust to frequency fluctuations and maintain a full charge of the batteries.
+Enable Generator Mode from the LCD control panel.
+See also
+Generator Compatible.
+Why does my UPS will go into battery mode while connected to a generator?
+Usually when a UPS is on battery power during generator operation it is because the generator is not putting out a stable AC frequency. The unit is designed to switch to battery if the input frequency is at a rate greater than 0.5 Hz per second in order to protect your connected equipment. This protection can’t be disabled as it would expose your equipment to potential damage from poor quality power. For more details regarding usage consult your user manual.
+Applies to
+Generator Compatible
+UPS models. Smart App Online models include: OL1000RTXL2U, OL2200RTXL2U, OL3000RTXL2U, OL6000RT3U, OL1500RTXL2U, OL8000RT3U, OL10000RT3U, OL6000RT3UTF, OL8000RT3UTF, OL10000RT3UTF, OL8000RT3UPDU, OL6000RT3UPDU, OL10000RT3UPDU, OL6000RT3UPDUTF, OL6KRT3UHW, OL8000RT3UPDUTF, OL10000RT3UPDUTF, OL8KRT3UHW, OL10KRT3UHW, OL1500RTXL2UN, OL3000RTXL2UHV, OL6000RT3UTAA, OL10KRTHW, OL6KRT, OL6KRTF, OL8KRT, OL10KRT, OL8KRTF, OL10KRTF, OL1000RTXL2UN, OL2200RTXL2UN, OL3000RTXL2UHVN, OL3000RTXL2UN, OL6KRTMB, OL6KRTMBTF, OL6KRTHW, OL8KRTHW, OL8KRTMB, OL8KRTMBTF, OL10KRTMB, OL10KRTMBTF
+See also
+Can I use my UPS in conjunction with a generator?
+Read additional FAQ:
+https://www.cyberpowersystems.com/faqs/can-i-use-my-ups-in-conjunction-with-a-generator/
+Need to know your
+UPS RUNTIME
+?  Use our
+Runtime Tool
+!  Search up to 4 at a time based on wattage.
+Technical Support
+Our Technical Support team will be happy help you with technical questions during business hours.
+Our technical support team is available between 6AM and 9PM CST
+Monday through Friday
+Visit our Support Area
+Submit a Support Ticket
+Series
+Model
+Output VA
+Output W
+Form Factor
+Waveform
+Outlets
+Topology
+MSRP
+OL1K5RTHD
+1500 VA
+1350 W
+Rack / Tower
+Sine Wave
+8 - NEMA 5-15R
+Double Conversion
+$
+2,400.00
+OL1KRTHD
+1000 VA
+1000 W
+Rack / Tower
+Sine Wave
+8 - NEMA 5-15R
+Double Conversion
+$
+1,800.00
+OL2K2RTHD
+2200 VA
+1800 W
+Rack / Tower
+Sine Wave
+6 - NEMA 5-20R,1 - NEMA L5-20R
+Double Conversion
+$
+3,100.00
+OL3KRTHD
+3000 VA
+2700 W
+Rack / Tower
+Sine Wave
+6 - NEMA 5-20R,1 - NEMA L5-30R
+Double Conversion
+$
+5,350.00
+OL750RTHD
+750 VA
+750 W
+Rack / Tower
+Sine Wave
+8 - NEMA 5-15R
+Double Conversion
+$
+1,600.00
+OL10KRTHD
+10000 VA
+10000 W
+Rack / Tower
+Sine Wave
+4 - NEMA L6-20R,2 - NEMA L6-30R,1 - Hardwire Terminal Block
+Double Conversion
+$
+11,300.00
+OL5KRTHDL
+5000 VA
+5000 W
+Rack / Tower
+Sine Wave
+2 - NEMA L6-20R,2 - NEMA L6-30R
+Double Conversion
+$
+8,580.00
+OL6KRTHDL
+6000 VA
+6000 W
+Rack / Tower
+Sine Wave
+2 - NEMA L6-20R,2 - NEMA L6-30R
+Double Conversion
+$
+9,350.00
+OL8KRTHD
+8000 VA
+8000 W
+Rack / Tower
+Sine Wave
+4 - NEMA L6-20R,2 - NEMA L6-30R,1 - Hardwire Terminal Block
+Double Conversion
+$
+9,900.00
+OL1500RTXL2UN
+1500 VA
+1350 W
+Rack / Tower
+Sine Wave
+8 - NEMA 5-15R
+Double Conversion
+$
+2,169.00
+OL1500RTXL2U
+1500 VA
+1350 W
+Rack / Tower
+Sine Wave
+8 - NEMA 5-15R
+Double Conversion
+$
+1,600.00
+OL2200RTXL2U
+2200 VA
+1800 W
+Rack / Tower
+Sine Wave
+6 - NEMA 5-20R,1 - NEMA L5-20R
+Double Conversion
+$
+2,500.00
+OL3000RTXL2UN
+3000 VA
+2700 W
+Rack / Tower
+Sine Wave
+6 - NEMA 5-20R,1 - NEMA L5-30R
+Double Conversion
+$
+4,660.00
+OL2200RTXL2UN
+2200 VA
+1800 W
+Rack / Tower
+Sine Wave
+6 - NEMA 5-20R,1 - NEMA L5-20R
+Double Conversion
+$
+2,800.00
+OL3000RTXL2U
+3000 VA
+2700 W
+Rack / Tower
+Sine Wave
+6 - NEMA 5-20R,1 - NEMA L5-30R
+Double Conversion
+$
+3,750.00
+OL5KRTHD
+5000 VA
+5000 W
+Rack / Tower
+Sine Wave
+2 - NEMA L6-20R,2 - NEMA L6-30R
+Double Conversion
+$
+6,500.00
+OL6KRTHD
+6000 VA
+6000 W
+Rack / Tower
+Sine Wave
+2 - NEMA L6-20R,2 - NEMA L6-30R
+Double Conversion
+$
+7,900.00
+OL1000RTXL2U
+1000 VA
+900 W
+Rack / Tower
+Sine Wave
+8 - NEMA 5-15R
+Double Conversion
+$
+1,235.00
+OL1000RTXL2UN
+1000 VA
+900 W
+Rack / Tower
+Sine Wave
+8 - NEMA 5-15R
+Double Conversion
+$
+1,500.00
+OL3000RTXL2UHVN
+3000 VA
+2700 W
+Rack / Tower
+Sine Wave
+2 - NEMA L6-20R,1 - NEMA L6-30R
+Double Conversion
+$
+4,500.00
+OL6KRT
+6000 VA
+5400 W
+Rack / Tower
+Sine Wave
+2 - NEMA L6-20R,2 - NEMA L6-30R
+Double Conversion
+$
+6,470.00
+OL8KRT
+8000 VA
+8000 W
+Rack / Tower
+Sine Wave
+3 - NEMA L6-30R,1 - Hardwire Terminal Block
+Double Conversion
+$
+8,900.00
+OL10KRT
+10000 VA
+10000 W
+Rack / Tower
+Sine Wave
+3 - NEMA L6-30R,1 - Hardwire Terminal Block
+Double Conversion
+$
+10,150.00
+Runtime
+Battery Runtime
+Runtimes based on testing fully-charged, new batteries at normal operating conditions. Runtime curve is approximate and varies based on battery age, level of charge at test, environment, and other variables.
+OL3000RTXL2U + 0 EBMs
+OL3000RTXL2U + 1 EBMs
+OL3000RTXL2U + 2 EBMs
+OL3000RTXL2U + 3 EBMs
+OL3000RTXL2U + 4 EBMs
+OL3000RTXL2U + 5 EBMs
+OL3000RTXL2U + 6 EBMs
+OL3000RTXL2U + 7 EBMs
+OL3000RTXL2U + 8 EBMs
+OL3000RTXL2U + 9 EBMs
+OL3000RTXL2U + 10 EBMs
+Videos
+Video
+ID">
+Series
+CyberPower Smart App Online Series 1kVA-3kVA
+2:10
+Sign Up
+Transmitting ...
+Success! Thank you!
+Whoops! Something went wrong.
+First Name
+Last Name
+Email Address
+Subscribe To
+CyberPower News & Updates
+PowerPanel Software Releases
+Firmware Updates
+General Interests (choose at least one):
+Home & Office Solutions
+Business Solutions
+Company:
+Title:
+Office:
+Mobile:
+Products Interests
+Battery Backup /UPS
+Systems
+Surge Protectors
+Power Distribution Units
+Racks and Rack
+Accessories
+General
+Power (adapters, extension cords, power strips)
+Power
+Accessories (chargers, inverters, hubs, battery banks)
+Power Management Software
+Industry Interests
+Small Office / Home
+Office
+Business
+Government
+Education
+Telecom
+Point of Sale
+Healthcare
+CyberPower values your privacy and your information will never be rented or sold.
+Information provided will be used for CyberPower's internal use only.
+View our
+Privacy Policy
+.
+-->
+-->
+Submit
+-->
+Terms and Conditions
+Acceptance of Terms
+PLEASE READ THE FOLLOWING TERMS AND CONDITIONS CAREFULLY
+The Channel Partner Alliance program (Program) from Cyber Power Systems (USA), Inc. (CyberPower) provides opportunities to each participating value added reseller (Participant). To join and use the Program, every Participant must agree to the following:
+• Participant has read, understands, and agrees to be bound by the terms and conditions of the Channel Partner Alliance Agreement (Agreement) and to any amendments to the Agreement, Program policies and procedures, which may be implemented or modified by CyberPower and communicated in writing to Participant from time to time.
+• Participant must not disclose any CyberPower information labeled as confidential while participating in the Program and for five (5) years thereafter.
+• Participant shall complete any training program required by CyberPower, including a one (1) hour online training module within one hundred and twenty (120) days of entering the Program; failure to complete training may affect Participants eligibility to advance in the Program.
+• MDF payments for partner marketing activities are subject to CyberPower approval. This Agreement is valid for one (1) year, and may be automatically renewed by CyberPower. CyberPower reserves the right to cancel this Agreement or the Program, or modify price and co-op fund schedules at any time, and for any reason, on prior written notification to Participant.
+Agree and Submit
+Cancel
+Stay Connected
+Never miss out. Subscribe to our quarterly newsletter for news, updates software releases, and much more.
+Sign
+Up
+Company
+Careers
+Events
+Testimonials
+Promotions
+News
+Publications
+Power
+Blog
+Newsletters
+Resources
+How To
+Buy
+FAQs
+Product Resources
+Glossary
+Product
+Warranty
+Advisory Notices
+Extended Warranty
+Register a
+Product
+Contact Us
+General Inquiries
+na.info@cyberpower.com
+USA/Canada/LATAM Sales
+1.855.289.8177
+sales@cyberpower.com
+Worldwide Sales
+Worldwide Contact Details
+Technical Support
+Support Resources
+1.877.297.6937
+For the fastest response:
+Tech Support
+-->
+Tech Support
+Thank you! You are signed up to receive the CyberPower newsletter.
+-->
+© 2026                    Cyber Power Systems (USA), Inc. CyberPower is a registered trademark and brand of
+Cyber Power Systems (USA), Inc. All rights reserved.
+Terms & Conditions
+Privacy Policy
+Do not sell my personal information (CCPA)
+Manage Consent
+To provide the best experiences, we use technologies like cookies to store and/or access device information. Consenting to these technologies will allow us to process data such as browsing behavior or unique IDs on this site. Not consenting or withdrawing consent, may adversely affect certain features and functions.
+Functional
+Functional
+Always active
+The technical storage or access is strictly necessary for the legitimate purpose of enabling the use of a specific service explicitly requested by the subscriber or user, or for the sole purpose of carrying out the transmission of a communication over an electronic communications network.
+Preferences
+Preferences
+The technical storage or access is necessary for the legitimate purpose of storing preferences that are not requested by the subscriber or user.
+Statistics
+Statistics
+The technical storage or access that is used exclusively for statistical purposes.
+The technical storage or access that is used exclusively for anonymous statistical purposes. Without a subpoena, voluntary compliance on the part of your Internet Service Provider, or additional records from a third party, information stored or retrieved for this purpose alone cannot usually be used to identify you.
+Marketing
+Marketing
+The technical storage or access is required to create user profiles to send advertising, or to track the user on a website or across several websites for similar marketing purposes.
+Manage options
+Manage services
+Manage {vendor_count} vendors
+Read more about these purposes
+Accept
+Deny
+View preferences
+Save preferences
+View preferences
+{title}
+{title}
+{title}
+Manage consent
+Also of Interest
+Promotions
+Solutions
+Support

@@ -1,0 +1,189 @@
+{
+ "status": "PASS-KONSEP",
+ "worldRevision": "P03",
+ "referenceOnly": true,
+ "gates": {
+  "poe_per_switch": "PASS",
+  "ups_w_va": "PASS",
+  "ups_runtime": "BLOCKED",
+  "thermal_input_for_mep": "PASS-KONSEP"
+ },
+ "switches": [
+  {
+   "switch": "SW-ACC-01",
+   "model": "Ubiquiti UniFi USW-Pro-48-POE",
+   "pdPorts": 16,
+   "poeAllocPseW": 407.0,
+   "poeAllocWithMarginW": 508.75,
+   "poeBudgetW": 600,
+   "budgetUtilization": 0.8479,
+   "headroomW": 91.25,
+   "pdPowerW": 345.5,
+   "status": "PASS"
+  },
+  {
+   "switch": "SW-ACC-02",
+   "model": "Ubiquiti UniFi USW-Pro-48-POE",
+   "pdPorts": 0,
+   "poeAllocPseW": 0,
+   "poeAllocWithMarginW": 0.0,
+   "poeBudgetW": 600,
+   "budgetUtilization": 0.0,
+   "headroomW": 600.0,
+   "pdPowerW": 0,
+   "status": "PASS"
+  },
+  {
+   "switch": "SW-ACC-03",
+   "model": "Ubiquiti UniFi USW-Pro-48-POE",
+   "pdPorts": 0,
+   "poeAllocPseW": 0,
+   "poeAllocWithMarginW": 0.0,
+   "poeBudgetW": 600,
+   "budgetUtilization": 0.0,
+   "headroomW": 600.0,
+   "pdPowerW": 0,
+   "status": "PASS"
+  }
+ ],
+ "rackLoads": [
+  {
+   "device": "SW-ACC-01",
+   "rack": "RK-L1-01",
+   "room": "L1-SERVER",
+   "model": "Ubiquiti UniFi USW-Pro-48-POE",
+   "source": "SRC-ICT-01",
+   "basis": "maks vendor tanpa PoE + alokasi PSE / efisiensi PSU (asumsi)",
+   "acW": 512.222,
+   "va": 569.136,
+   "pdExportW": 345.5,
+   "roomHeatW": 166.722
+  },
+  {
+   "device": "SW-ACC-02",
+   "rack": "RK-L1-01",
+   "room": "L1-SERVER",
+   "model": "Ubiquiti UniFi USW-Pro-48-POE",
+   "source": "SRC-ICT-01",
+   "basis": "maks vendor tanpa PoE + alokasi PSE / efisiensi PSU (asumsi)",
+   "acW": 60.0,
+   "va": 66.667,
+   "pdExportW": 0,
+   "roomHeatW": 60.0
+  },
+  {
+   "device": "SW-ACC-03",
+   "rack": "RK-L1-01",
+   "room": "L1-SERVER",
+   "model": "Ubiquiti UniFi USW-Pro-48-POE",
+   "source": "SRC-ICT-01",
+   "basis": "maks vendor tanpa PoE + alokasi PSE / efisiensi PSU (asumsi)",
+   "acW": 60.0,
+   "va": 66.667,
+   "pdExportW": 0,
+   "roomHeatW": 60.0
+  },
+  {
+   "device": "SW-AGG-01",
+   "rack": "RK-L1-01",
+   "room": "L1-SERVER",
+   "model": "Ubiquiti UniFi USW-Pro-Aggregation",
+   "source": "SRC-ICT-02",
+   "basis": "konsumsi maksimum/terukur vendor",
+   "acW": 100,
+   "va": 111.111,
+   "pdExportW": 0.0,
+   "roomHeatW": 100.0
+  },
+  {
+   "device": "GW-DEMO-01",
+   "rack": "RK-L1-01",
+   "room": "L1-SERVER",
+   "model": "Ubiquiti UniFi UDM-Pro-Max",
+   "source": "SRC-ICT-03",
+   "basis": "konsumsi maksimum/terukur vendor",
+   "acW": 60,
+   "va": 66.667,
+   "pdExportW": 0.0,
+   "roomHeatW": 60.0
+  },
+  {
+   "device": "SRV-DEMO-01",
+   "rack": "RK-L1-02",
+   "room": "L1-SERVER",
+   "model": "Dell PowerEdge R760xs (konfigurasi PSU 600 W Platinum, 1+1)",
+   "source": "SRC-ICT-04",
+   "basis": "rating PSU aktif / efisiensi (asumsi); bukan beban terukur",
+   "acW": 666.667,
+   "va": 740.741,
+   "pdExportW": 0.0,
+   "roomHeatW": 666.667
+  },
+  {
+   "device": "NAS-DEMO-01",
+   "rack": "RK-L1-02",
+   "room": "L1-SERVER",
+   "model": "Synology RackStation RS2423+",
+   "source": "SRC-ICT-05",
+   "basis": "konsumsi maksimum/terukur vendor",
+   "acW": 119.95,
+   "va": 133.278,
+   "pdExportW": 0.0,
+   "roomHeatW": 119.95
+  },
+  {
+   "device": "ALLOWANCE-AKSESORI",
+   "rack": "RK-L1-01",
+   "room": "L1-SERVER",
+   "model": "allowance",
+   "source": "AS-ICT-08",
+   "basis": "optik/PDU/aksesori kecil; asumsi",
+   "acW": 30,
+   "va": 33.333,
+   "pdExportW": 0.0,
+   "roomHeatW": 30
+  }
+ ],
+ "ups": {
+  "model": "CyberPower OL3000ERTXL2U (online double conversion, 230 V)",
+  "source": "SRC-ICT-06",
+  "ratingW": 2700,
+  "ratingVA": 3000,
+  "connectedW": 1608.8,
+  "connectedVA": 1787.6,
+  "requiredWithMarginW": 2011.0,
+  "requiredWithMarginVA": 2234.5,
+  "utilizationW": 0.7448,
+  "utilizationVA": 0.7448,
+  "runtime": "antara 3.5 dan 11 menit (beban 60% dari rating; kurva vendor, baterai baru)",
+  "runtimeStatus": "BLOCKED: target otonomi belum ditetapkan; kurva vendor = baterai baru"
+ },
+ "mepInputForHugo": {
+  "circuit": "1 sirkit dedicated untuk UPS-01 di L1-SERVER (rack RK-L1-02)",
+  "upsInputW": 1942.6,
+  "upsInputVAatPF0_9": 2158.5,
+  "upsInputCurrentA_at230V_PF0_9": 9.38,
+  "upsRatedVA_for_breaker_selection": 3000,
+  "note": "PF input 0,9 = asumsi konservatif; arus pengisian baterai tidak dihitung; rating breaker/kabel = Hugo"
+ },
+ "thermal": {
+  "room": "L1-SERVER",
+  "rackEquipmentHeatW": 1263.3,
+  "upsLossW": 333.8,
+  "serverRoomHeatW": 1597.1,
+  "serverRoomHeatBTUh": 5450,
+  "serverRoomHeatWithMarginW": 1996.4,
+  "serverRoomHeatWithMarginBTUh": 6812,
+  "distributedPdHeatW": 345.5,
+  "method": "input AC rack - daya PD yang keluar ruang; rugi kabel PoE dihitung di ruang server (konservatif); rugi UPS = disipasi online vendor pada beban penuh",
+  "excludes": [
+   "penghuni",
+   "lampu",
+   "radiasi matahari",
+   "selubung bangunan",
+   "workstation non-UPS",
+   "sizing AC"
+  ]
+ },
+ "errors": []
+}

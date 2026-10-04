@@ -16,8 +16,10 @@ Dibuat dari `design/world.json` (`assumptions`). Setiap angka ukuran/okupansi/IC
 | AS-ICT-02 | ict | Slack kabel: 3,0 m sisi rack + 0,3 m sisi outlet; tray pada 3,2 m di atas lantai jadi; outlet meja 0,3 m; outlet plafon 3,0 m. Asumsi proyek, bukan standar. |
 | AS-ICT-03 | ict | Batas panjang permanent link 90 m dipakai sebagai target konsep (praktik umum kabel tembaga terstruktur), wajib diverifikasi ke standar yang dipilih. |
 | AS-ICT-04 | ict | Daya PoE worst-case per kelas memakai nilai PSE IEEE 802.3af/at/bt (Class 3 = 15,4 W, Class 4 = 30 W). Kelas perangkat placeholder sampai datasheet dipilih. |
-| AS-ICT-05 | ict | Rating UPS, thermal/AC dan harga belum ditentukan; tidak ada harga pengadaan dalam paket ini. |
+| AS-ICT-05 | ict | Harga dan pengadaan belum ditentukan; tidak ada harga dalam paket ini. Rating UPS dan panas ICT memakai model referensi konsep (AS-ICT-07/08); sizing AC/listrik oleh MEP. |
 | AS-ICT-06 | ict | Clearance rack depan 1,2 m / belakang 0,9 m adalah target konsep; verifikasi ke standar/panduan yang dipilih. |
+| AS-ICT-07 | ict | Model referensi (USW-Pro-48-POE, USW-Pro-Aggregation, UDM-Pro-Max, R760xs PSU 600 W, RS2423+, OL3000ERTXL2U) dipilih untuk menutup gate PoE/UPS/panas konsep dari datasheet vendor bertanggal 2026-10-04. Bukan keputusan pengadaan; revisi hardware dan konfigurasi final wajib dicek ulang. |
+| AS-ICT-08 | ict | Metode daya: switch dengan PD memakai plafon vendor termasuk PoE, tanpa switch memakai maksimum vendor tanpa PoE; server = rating PSU aktif / efisiensi 0,90 (asumsi); PF beban 0,90 (asumsi); margin 1,25; allowance aksesori 30 W (asumsi). Panas ruang server = input AC − daya PD yang keluar ruang + disipasi UPS vendor; rugi kabel PoE dihitung di ruang server (konservatif). Runtime UPS dan sizing AC belum dievaluasi. |
 | AS-NET-01 | ict | Domain jaringan office/demo/guest/lab/server adalah ID abstrak; bukan subnet, VLAN atau perangkat produksi. |
 | AS-PERF-01 | performa | Target FPS/transfer/triangle adalah target PRD; angka hanya disebut terukur setelah benchmark tercatat. |
 | AS-SITE-01 | lahan | Lahan fisik, lokasi, budget, hosting dan okupansi manusia belum diputuskan. |

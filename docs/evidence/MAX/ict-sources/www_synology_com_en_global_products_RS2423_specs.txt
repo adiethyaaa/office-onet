@@ -1,0 +1,1562 @@
+RackStation RS2423+ | Synology Inc.
+RackStation RS2423RP+II​/​RS2423+
+RackStation RS2423RP+II​/​RS2423+
+RackStation RS2423RP+II​/​RS2423+
+Efficient storage for centralized data management
+Features
+Specs
+Trusted by professionals across all industries.
+Synology is a solid storage with great capabilities out of the box. The licensing model of all-inclusive software adds great value to the product.
+Information Technology Manager - Government
+Synology provides a single-platform solution for all of our backup needs in a cost effective manner.
+Director of Enterprise Infrastructure - Education
+Synology's DSM is a masterpiece, designed to be user-friendly even for non-IT professionals, helping us become less reliant on out IT teams.
+Director Media Services - Media
+Working with Synology Products has just been the best. Its an all in one product that can cater for all aspects of Storage.
+Senior Systems Engineer - Media
+The Synology brand is very feature-rich and unbeatable in terms of price/performance in the NAS segment. Our current testing was primarily focused on backup, which delivered reliability alongside adequate performance.
+CEO - IT Services
+Smooth storage server setup with intuitive OS and reliable automation features
+Server Administrator - Retail
+Secure storage for your business
+Download Datasheet
+Business-ready
+Over 3,500/1,700 MB/s seq. read/write, built-in 10GbE, and up to 240 TB raw storage before expansion.
+Flexible configuration
+Add 12 extra drive bays, 1/10/25GbE ports, and SSD cache volumes whenever needed.
+Versatile applications
+Back up 300 endpoints, manage 75 IP cameras, or safely sync and share files between devices and sites.
+Faster and more responsive
+The RS2423RP+II/RS2423+ offer exceptional performance with over 155K/79K random read/write IOPS and up to 3,500/1,700 MB/s sequential read/write throughput.
+They are the perfect cost-effective file management and sharing solution for SMBs and come equipped with advanced backup capabilities designed for businesses with expanding data needs.
+4K Random IOPS
+Sequential Throughput
+The RS2423+ features 27% faster sequential reads and 26% faster sequential writes compared to its predecessor
+Read
+%
+faster*
+Write
+%
+faster*
+*compared to predecessor RS2421RP+/RS2421+
+The RS2423+ features 60% faster random 4K IOPS reads and 16% faster random 4K IOPS writes compared to its predecessor
+Read
+%
+faster*
+Write
+%
+faster*
+*compared to predecessor RS2421RP+/RS2421+
+Designed for reliability
+The RS2423RP+II and RS2423+ come with one 10GbE RJ-45 port and two Gigabit RJ-45 ports, which can be bonded with Link Aggregation to enable automatic network failover and load balancing.
+Two RS2423RP+II/RS2423+ units can be paired using Synology High Availability to form a reliable active-passive server cluster, maximizing service uptime.
+The RS2423RP+II also features redundant and hot-swappable power supply units to protect service continuity in case there are issues with one power source.
+Room for expansion
+Easily adjust the 2U 12-bay RS2423RP+II/RS2423+ to match the usage of your environment, whether it needs performance, faster networking, or higher storage capacity.
+Storage expansion
+Add 12 extra drive bays for a total of 24 drive bays with a
+RX1223RP
+expansion unit.
+SSD cache
+Boost read/write IOPS for HDD arrays with NVMe or SATA SSD cache.
+Flexible networking options
+Improve I/O or add redundancy with 10/25GbE SFP+/SFP28 or RJ-45 networking.
+Versatile storage for businesses
+The RS2423RP+II/RS2423+ are ideal for small to medium-sized businesses and branch offices seeking a high-performing, reliable, and cost-efficient storage solution for file management, data backup, and surveillance.
+Intuitive storage for on-site and remote teams
+Multi-endpoint data protection
+Smart and scalable surveillance
+Intuitive storage for on-site and remote teams
+Provide secure and convenient cross-platform file access, sharing, and synchronization across multiple locations.
+Private file cloud
+Enable efficient collaboration with Synology Drive
+Synology Drive provides remote data access, synchronization, on-demand file restoration, and backup via handy desktop and mobile applications.
+Learn more
+Multi-platform support
+Access personal and shared data from mobile apps, desktop clients, web browsers, or another Synology system. Any changes you make are automatically synced to other devices as soon as they are connected.
+Collaborate in real time
+Enable concurrent editing of documents, spreadsheets, and slides with Synology Office, with support for conversion to and from Microsoft Word, Excel, PowerPoint, and OpenDocument files.
+Learn more
+Efficient multi-site synchronization
+Connect teams with Hybrid Share
+Use Hybrid Share to store large sets of data in the cloud, leveraging the large bandwidth of our data centers to stream requested files to local NAS deployed at the branch offices.
+Learn more
+Reliable data access on demand
+With Hybrid Share-enabled folders, remote teams retain full access to the most up-to-date files while benefiting from a reduced local storage footprint and lower bandwidth usage.
+Local caching of most-used data
+Frequently-accessed files are kept on the local NAS, allowing users to access them at LAN speeds. Files and folders can also be pinned manually to prevent them from being replaced when the cache is full.
+Multi-endpoint data protection
+Design an effective backup strategy to maximize data and system availability with a host of native and license-free solutions.
+Consolidated backup server
+Endpoint, VM, and NAS/SAN protection
+Securely back up Windows, Mac, and Linux endpoints, Synology servers, and VMware® and Hyper-V® virtual machines with Active Backup for Business.
+Learn more
+Microsoft 365 and Google Workspace
+Centralize backups of Microsoft 365 and Google Workspace data to protect cloud data from accidents and simplify compliance with data retention policies. Schedulable backups, flexible file versioning, and block-level deduplication ensure flexibility and savings in terms of storage and bandwidth consumption.
+Learn more
+Data protection and recovery
+Hyper Backup
+Back up files, LUNs, installed applications, and system configurations to destinations including
+Synology C2 Storage
+,
+public cloud platforms, USB devices, file servers, local folders, and other Synology systems.
+Set and forget backup tasks with regular schedules, enhance security with granular user permissions and encryption, keep backup sizes small with built-in deduplication, and restore data flexibly with multi-versioning.
+Snapshot Replication
+Snapshot Replication enables configurable point-in-time snapshots of shared folders and VM storage with an RPO as low as 5 minutes and recovery within seconds.
+Learn more
+Smart and scalable surveillance
+Leverage flexible deployment options, intuitive management capabilities, and advanced video analytics to secure your premises.
+Simple-to-deploy local surveillance
+Wide device compatibility
+Connect up to 75 IP cameras from a selection of over 8,600 validated models thanks to
+Synology Surveillance Station
+’s wide camera compatibility.
+Multi-platform convenience
+Monitor live streams or watch recordings from web browsers, desktop clients, or the DS cam mobile app.
+Secure and private storage
+Footage is stored locally for easier compliance with data protection regulations and further protected from unauthorized access with industry-standard AES-256 encryption.
+Flexible monitoring of multiple locations
+Assisted camera deployment
+Automatically locate new cameras within a set IP range, and configure units in batch via spreadsheet import or replicating settings to new cameras.
+Centralized management and monitoring
+Stay on top of your deployment by previewing triggered events directly on multi-floor or multi-location maps, with online map integration for Google Maps and OpenStreetMap.
+Time-saving video analytics
+Take advantage of intelligent monitoring features such as motion detection, no-idle zones, foreign object detection, and anomaly detection that cater to common surveillance scenarios.
+Works best with Synology drives
+Enjoy high sustained performance and reliability with enterprise-grade drives designed for Synology NAS, featuring built-in data protection.
+HDD
+Enterprise Series 3.5" SATA
+Plus Series 3.5" SATA
+SSD
+Enterprise Series 2.5" SATA
+Enterprise Series M.2 NVMe
+Get extra protection with Extended Warranty Plus
+Extend the standard 3-year hardware warranty
+of your RS2423RP+II/RS2423+ with 2 more years of Synology-certified support and premium services that help you recover faster in the event of disaster.
+Learn more
+Hardware Overview
+RS2423RP+II
+RS2423+
+1
+Power Button and Indicator
+2
+Status Indicator
+3
+Alert Indicator
+4
+Mute Button
+5
+Drive Status Indicators
+6
+Drive Trays
+7
+Rail Kit Release Tabs
+8
+PSU Fans
+9
+Power Ports
+10
+Console Port
+11
+PCI Express Expansion Slot
+12
+PSU Indicators
+13
+1GbE RJ-45 Ports
+14
+10GbE RJ-45 Port
+15
+USB 3.2 Gen 1 Ports
+16
+Expansion Port
+17
+Reset Button
+1
+Power Button and Indicator
+2
+Status Indicator
+3
+Alert Indicator
+4
+Mute Button
+5
+Drive Status Indicators
+6
+Drive Trays
+7
+Rail Kit Release Tabs
+8
+Power Port
+9
+PSU on/off switch
+10
+PSU fans
+11
+Console Port
+12
+PCI Express Expansion Slot
+13
+1GbE RJ-45 Ports
+14
+10GbE RJ-45 Port
+15
+USB 3.2 Gen 1 Ports
+16
+Expansion Port
+17
+Reset Button
+Notes:
+Gartner® and Peer Insights™ are trademarks of Gartner, Inc. and/or its affiliates. All rights reserved. Gartner Peer Insights content consists of the opinions of individual end users based on their own experiences, and should not be construed as statements of fact, nor do they represent the views of Gartner or its affiliates. Gartner does not endorse any vendor, product or service depicted in this content nor makes any warranties, expressed or implied, with respect to this content, about its accuracy or completeness, including any warranties of merchantability or fitness for a particular purpose.
+Performance figures are obtained through internal testing by Synology. Actual performance may vary depending on the testing environment, usage, and configuration. See
+performance charts
+for more information.
+RS2423RP+II/RS2423+ support up to 24 drives with the addition of a Synology
+RX1223RP
+expansion unit, sold separately.
+SSD cache can be enabled using SNV3400/SNV3500 NVMe SSDs along with an M2D20 or E10M20-T1 adapter card, or by using a compatible 2.5" SATA SSD. All add-ons are sold separately.
+For the most up-to-date list of compatible NICs, please check our
+compatibility list
+.
+C2 Storage for Hyper Backup and Hybrid Share requires purchase of an eligible annual or monthly subscription. A free trial is available for each newly registered device.
+Surveillance Station includes 2 free licenses. Connecting more cameras and devices requires additional licenses.
+Learn more
+Check the
+compatibility list
+for supported drives.
+The warranty period starts from the date of purchase as stated on your purchase receipt. Visit
+https://www.synology.com/company/legal/warranty
+for more information.
+Extended Warranty Plus must be purchased within 90 days of the device purchase date or, if none is available, 180 days of the device manufacturing date. A Synology Account is required for purchase. The starting date of Extended Warranty Plus additional coverage is calculated based on the purchase date of your Synology NAS. If you cannot provide proof of purchase, the device manufacturing date applies.
+Hardware Specs
+Software Specs
+Hardware Specs
+Hardware Specifications
+RS2423RP+II
+RS2423+
+CPU
+CPU Model
+AMD Ryzen V1780B
+AMD Ryzen V1780B
+CPU Quantity
+1
+1
+CPU Cores
+4
+4
+CPU Threads
+8
+8
+CPU Architecture
+64-bit
+64-bit
+CPU Frequency
+3.35 (base) / 3.6 (turbo) GHz
+3.35 (base) / 3.6 (turbo) GHz
+Hardware Encryption Engine
+Memory
+System Memory
+8 GB DDR4 ECC UDIMM
+8 GB DDR4 ECC UDIMM
+Memory Module Pre-installed
+8 GB (8 GB × 1)
+8 GB (8 GB × 1)
+Total Memory Slots
+2
+2
+Maximum Memory Capacity
+32 GB (16 GB × 2)
+32 GB (16 GB × 2)
+Notes
+Synology may revise pre-installed memory module specifications in response to component lifecycle and supply conditions. All revised components undergo the same rigorous validation to ensure equivalent compatibility, stability, and performance.
+Please select Synology memory modules for optimum compatibility and reliability. Synology will not provide complete product warranty or technical support if non-Synology memory modules are used for memory expansion.
+For multi-module memory configurations, all modules must be identical and share the same model number. Check the
+Product Manual
+of your Synology product for recommended memory configurations.
+Synology may revise pre-installed memory module specifications in response to component lifecycle and supply conditions. All revised components undergo the same rigorous validation to ensure equivalent compatibility, stability, and performance.
+Please select Synology memory modules for optimum compatibility and reliability. Synology will not provide complete product warranty or technical support if non-Synology memory modules are used for memory expansion.
+For multi-module memory configurations, all modules must be identical and share the same model number. Check the
+Product Manual
+of your Synology product for recommended memory configurations.
+Storage
+Drive Bays
+(See all supported drives)
+12 × 3.5" SATA HDD or 2.5" SATA SSD
+12 × 3.5" SATA HDD or 2.5" SATA SSD
+Maximum Drive Bays with Expansion Unit
+24 (RX1223RP × 1)
+24 (RX1223RP × 1)
+Hot Swappable Drive*
+Notes
+Synology only guarantees full functionality, reliability, and performance for Synology drives listed on the
+compatibility list
+. The use of non-validated components may limit certain functionality and result in data loss and system instability.
+Synology only guarantees full functionality, reliability, and performance for Synology drives listed on the
+compatibility list
+. The use of non-validated components may limit certain functionality and result in data loss and system instability.
+External Ports
+RJ-45 1GbE LAN Port
+2
+2
+RJ-45 10GbE LAN Port
+1
+1
+USB 3.2 Gen 1 Port
+2
+2
+Expansion Port
+1
+1
+Expansion Port Type
+Mini-SAS HD
+Mini-SAS HD
+Notes
+This device's 1GbE LAN ports have a maximum transmission unit (MTU) size of 1,500 bytes.
+This device's 1GbE LAN ports have a maximum transmission unit (MTU) size of 1,500 bytes.
+PCIe
+PCIe Expansion
+1 × Gen3 x8 slot (x4 link)
+1 × Gen3 x8 slot (x4 link)
+Appearance
+Form Factor (RU)
+2U
+2U
+Size (Height × Width × Depth)
+88 mm × 482 mm × 578 mm
+88 mm × 482 mm × 552 mm
+Weight
+11.9 kg
+11.5 kg
+Rack Installation Support*
+4-post 19" rack (Synology Rail Kit -
+RKS-02
+)
+4-post 19" rack (Synology Rail Kit -
+RKS-02
+)
+Notes
+The rail kit is sold separately
+The rail kit is sold separately
+Others
+System Fan
+60 mm × 60 mm × 3 pcs
+60 mm × 60 mm × 3 pcs
+Fan Speed Mode
+Full-Speed Mode
+Cool Mode
+Quiet Mode
+Full-Speed Mode
+Cool Mode
+Quiet Mode
+Easy Replacement System Fan
+Power Recovery
+Noise Level
+56.2 dB(A)
+52.3 dB(A)
+Scheduled Power On / Off
+Wake on LAN / WAN
+Power Supply Unit / Adapter
+550 watts
+500 watts
+Redundant Power Supply
+-
+AC Input Power Voltage
+100 V to 240 V AC
+100 V to 240 V AC
+Power Frequency
+50/60 Hz, Single Phase
+50/60 Hz, Single Phase
+Power Consumption
+114.86 watts (Access)
+42.33 watts (HDD Hibernation)
+119.95 watts (Access)
+46.21 watts (HDD Hibernation)
+British Thermal Unit
+392.18 BTU/hr (Access)
+144.53 BTU/hr (HDD Hibernation)
+409.56 BTU/hr (Access)
+157.78 BTU/hr (HDD Hibernation)
+Notes
+For more information on how power consumption is measured, refer to
+this article
+.
+Noise testing was conducted with the Synology system fully installed with Synology SATA SSDs and in an idle state. Two G.R.A.S. type 40AE microphones were placed at a 1 m distance from the front and rear of the device. Background noise: 16.49-17.51 dB(A); Temperature: 24.25-25.75˚C; Humidity: 58.2-61.8%.
+For more information on how power consumption is measured, refer to
+this article
+.
+Noise testing was conducted with the Synology system fully installed with Synology SATA SSDs and in an idle state. Two G.R.A.S. type 40AE microphones were placed at a 1 m distance from the front and rear of the device. Background noise: 16.49-17.51 dB(A); Temperature: 24.25-25.75˚C; Humidity: 58.2-61.8%.
+Temperature
+Operating Temperature
+0°C to 35°C (32°F to 95°F)
+0°C to 35°C (32°F to 95°F)
+Storage Temperature
+-20°C to 60°C (-5°F to 140°F)
+-20°C to 60°C (-5°F to 140°F)
+Operating Humidity
+8% to 80% RH
+8% to 80% RH
+Storage Humidity
+5% to 95% RH
+5% to 95% RH
+Certification
+FCC
+CE
+BSMI
+VCCI
+RCM
+UKCA
+EAC
+CCC
+KC
+BIS
+UL
+FCC
+CE
+BSMI
+VCCI
+RCM
+UKCA
+EAC
+CCC
+KC
+UL
+Warranty
+3-year hardware warranty, extendable to 5 years with
+EW202
+or
+Extended Warranty Plus
+3-year hardware warranty, extendable to 5 years with
+EW202
+or
+Extended Warranty Plus
+Notes
+The warranty period starts from the purchase date as stated on your purchase receipt.
+(Learn more)
+Extended Warranty Plus
+is only available in Europe and North America.
+EW201/EW202
+is only available in Asia, Africa, and Oceania. For exact availability information please visit their respective websites.
+The warranty period starts from the purchase date as stated on your purchase receipt.
+(Learn more)
+Extended Warranty Plus
+is only available in Europe and North America.
+EW201/EW202
+is only available in Asia, Africa, and Oceania. For exact availability information please visit their respective websites.
+Environment
+RoHS Compliant
+RoHS Compliant
+Packaging Content
+Main Unit × 1
+Accessory Pack × 1
+AC Power Cord × 2
+Quick Installation Guide × 1
+Main Unit × 1
+Accessory Pack × 1
+AC Power Cord × 1
+Quick Installation Guide × 1
+Optional Accessories
+DDR4 ECC UDIMM:
+D4EU02-8G
+/
+D4EU02-16G
+Expansion Units:
+RX1223RP
+Enterprise Series 3.5" SATA HDD:
+HAT5300 Series
+Plus Series 3.5" SATA HDD:
+HAT3300 Series
+Enterprise Series 2.5" SATA SSD:
+SAT5200 Series
+M.2 SSD & 10GbE Combo Adapter Card:
+E10M20-T1
+M.2 SSD Adapter Card:
+M2D20
+25GbE Network Interface Card:
+E25G30-F2
+10GbE Network Interface Card:
+E10G30-F2
+/
+E10G30-T2
+/
+E10G18-T1
+Rail Kit Sliding:
+RKS-02
+DDR4 ECC UDIMM:
+D4EU02-8G
+/
+D4EU02-16G
+Expansion Units:
+RX1223RP
+Enterprise Series 3.5" SATA HDD:
+HAT5300 Series
+Plus Series 3.5" SATA HDD:
+HAT3300 Series
+Enterprise Series 2.5" SATA SSD:
+SAT5200 Series
+M.2 SSD & 10GbE Combo Adapter Card:
+E10M20-T1
+M.2 SSD Adapter Card:
+M2D20
+25GbE Network Interface Card:
+E25G30-F2
+10GbE Network Interface Card:
+E10G30-F2
+/
+E10G30-T2
+/
+E10G18-T1
+Rail Kit Sliding:
+RKS-02
+Notes
+For multi-module memory configurations, all modules must be identical and share the same model number. Check the
+Product Manual
+of your Synology product for recommended memory configurations.
+Certain items may not be available in your location. Please contact your local distributors for more information.
+For multi-module memory configurations, all modules must be identical and share the same model number. Check the
+Product Manual
+of your Synology product for recommended memory configurations.
+Certain items may not be available in your location. Please contact your local distributors for more information.
+Hardware Specs
+Hardware Specifications
+RS2423RP+II
+RS2423+
+CPU
+CPU Model
+AMD Ryzen V1780B
+AMD Ryzen V1780B
+CPU Quantity
+1
+1
+CPU Cores
+4
+4
+CPU Threads
+8
+8
+CPU Architecture
+64-bit
+64-bit
+CPU Frequency
+3.35 (base) / 3.6 (turbo) GHz
+3.35 (base) / 3.6 (turbo) GHz
+Hardware Encryption Engine
+Memory
+System Memory
+8 GB DDR4 ECC UDIMM
+8 GB DDR4 ECC UDIMM
+Memory Module Pre-installed
+8 GB (8 GB × 1)
+8 GB (8 GB × 1)
+Total Memory Slots
+2
+2
+Maximum Memory Capacity
+32 GB (16 GB × 2)
+32 GB (16 GB × 2)
+Notes
+Synology may revise pre-installed memory module specifications in response to component lifecycle and supply conditions. All revised components undergo the same rigorous validation to ensure equivalent compatibility, stability, and performance.
+Please select Synology memory modules for optimum compatibility and reliability. Synology will not provide complete product warranty or technical support if non-Synology memory modules are used for memory expansion.
+For multi-module memory configurations, all modules must be identical and share the same model number. Check the
+Product Manual
+of your Synology product for recommended memory configurations.
+Storage
+Drive Bays
+(See all supported drives)
+12 × 3.5" SATA HDD or 2.5" SATA SSD
+12 × 3.5" SATA HDD or 2.5" SATA SSD
+Maximum Drive Bays with Expansion Unit
+24 (RX1223RP × 1)
+24 (RX1223RP × 1)
+Hot Swappable Drive*
+Notes
+Synology only guarantees full functionality, reliability, and performance for Synology drives listed on the
+compatibility list
+. The use of non-validated components may limit certain functionality and result in data loss and system instability.
+External Ports
+RJ-45 1GbE LAN Port
+2
+2
+RJ-45 10GbE LAN Port
+1
+1
+USB 3.2 Gen 1 Port
+2
+2
+Expansion Port
+1
+1
+Expansion Port Type
+Mini-SAS HD
+Mini-SAS HD
+Notes
+This device's 1GbE LAN ports have a maximum transmission unit (MTU) size of 1,500 bytes.
+PCIe
+PCIe Expansion
+1 × Gen3 x8 slot (x4 link)
+1 × Gen3 x8 slot (x4 link)
+Appearance
+Form Factor (RU)
+2U
+2U
+Size (Height × Width × Depth)
+88 mm × 482 mm × 578 mm
+88 mm × 482 mm × 552 mm
+Weight
+11.9 kg
+11.5 kg
+Rack Installation Support*
+4-post 19" rack (Synology Rail Kit -
+RKS-02
+)
+4-post 19" rack (Synology Rail Kit -
+RKS-02
+)
+Notes
+The rail kit is sold separately
+Others
+System Fan
+60 mm × 60 mm × 3 pcs
+60 mm × 60 mm × 3 pcs
+Fan Speed Mode
+Full-Speed Mode
+Cool Mode
+Quiet Mode
+Full-Speed Mode
+Cool Mode
+Quiet Mode
+Easy Replacement System Fan
+Power Recovery
+Noise Level
+56.2 dB(A)
+52.3 dB(A)
+Scheduled Power On / Off
+Wake on LAN / WAN
+Power Supply Unit / Adapter
+550 watts
+500 watts
+Redundant Power Supply
+-
+AC Input Power Voltage
+100 V to 240 V AC
+100 V to 240 V AC
+Power Frequency
+50/60 Hz, Single Phase
+50/60 Hz, Single Phase
+Power Consumption
+114.86 watts (Access)
+42.33 watts (HDD Hibernation)
+119.95 watts (Access)
+46.21 watts (HDD Hibernation)
+British Thermal Unit
+392.18 BTU/hr (Access)
+144.53 BTU/hr (HDD Hibernation)
+409.56 BTU/hr (Access)
+157.78 BTU/hr (HDD Hibernation)
+Notes
+For more information on how power consumption is measured, refer to
+this article
+.
+Noise testing was conducted with the Synology system fully installed with Synology SATA SSDs and in an idle state. Two G.R.A.S. type 40AE microphones were placed at a 1 m distance from the front and rear of the device. Background noise: 16.49-17.51 dB(A); Temperature: 24.25-25.75˚C; Humidity: 58.2-61.8%.
+Temperature
+Operating Temperature
+0°C to 35°C (32°F to 95°F)
+0°C to 35°C (32°F to 95°F)
+Storage Temperature
+-20°C to 60°C (-5°F to 140°F)
+-20°C to 60°C (-5°F to 140°F)
+Operating Humidity
+8% to 80% RH
+8% to 80% RH
+Storage Humidity
+5% to 95% RH
+5% to 95% RH
+Certification
+FCC
+CE
+BSMI
+VCCI
+RCM
+UKCA
+EAC
+CCC
+KC
+BIS
+UL
+FCC
+CE
+BSMI
+VCCI
+RCM
+UKCA
+EAC
+CCC
+KC
+UL
+Warranty
+3-year hardware warranty, extendable to 5 years with
+EW202
+or
+Extended Warranty Plus
+3-year hardware warranty, extendable to 5 years with
+EW202
+or
+Extended Warranty Plus
+Notes
+The warranty period starts from the purchase date as stated on your purchase receipt.
+(Learn more)
+Extended Warranty Plus
+is only available in Europe and North America.
+EW201/EW202
+is only available in Asia, Africa, and Oceania. For exact availability information please visit their respective websites.
+Environment
+RoHS Compliant
+RoHS Compliant
+Packaging Content
+Main Unit × 1
+Accessory Pack × 1
+AC Power Cord × 2
+Quick Installation Guide × 1
+Main Unit × 1
+Accessory Pack × 1
+AC Power Cord × 1
+Quick Installation Guide × 1
+Optional Accessories
+DDR4 ECC UDIMM:
+D4EU02-8G
+/
+D4EU02-16G
+Expansion Units:
+RX1223RP
+Enterprise Series 3.5" SATA HDD:
+HAT5300 Series
+Plus Series 3.5" SATA HDD:
+HAT3300 Series
+Enterprise Series 2.5" SATA SSD:
+SAT5200 Series
+M.2 SSD & 10GbE Combo Adapter Card:
+E10M20-T1
+M.2 SSD Adapter Card:
+M2D20
+25GbE Network Interface Card:
+E25G30-F2
+10GbE Network Interface Card:
+E10G30-F2
+/
+E10G30-T2
+/
+E10G18-T1
+Rail Kit Sliding:
+RKS-02
+DDR4 ECC UDIMM:
+D4EU02-8G
+/
+D4EU02-16G
+Expansion Units:
+RX1223RP
+Enterprise Series 3.5" SATA HDD:
+HAT5300 Series
+Plus Series 3.5" SATA HDD:
+HAT3300 Series
+Enterprise Series 2.5" SATA SSD:
+SAT5200 Series
+M.2 SSD & 10GbE Combo Adapter Card:
+E10M20-T1
+M.2 SSD Adapter Card:
+M2D20
+25GbE Network Interface Card:
+E25G30-F2
+10GbE Network Interface Card:
+E10G30-F2
+/
+E10G30-T2
+/
+E10G18-T1
+Rail Kit Sliding:
+RKS-02
+Notes
+For multi-module memory configurations, all modules must be identical and share the same model number. Check the
+Product Manual
+of your Synology product for recommended memory configurations.
+Certain items may not be available in your location. Please contact your local distributors for more information.
+Software Specs
+DSM Specifications
+RS2423RP+II
+RS2423+
+Storage Management
+Maximum Single Volume Size
+200 TB (32 GB memory required)
+108 TB
+200 TB (32 GB memory required)
+108 TB
+Maximum Internal Volume Number
+64
+64
+SSD Read/Write Cache
+(Determining cache size)
+SSD TRIM
+Storage Efficiency
+Supported RAID Type
+Synology Hybrid RAID
+Basic
+JBOD
+RAID 0
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Synology Hybrid RAID
+Basic
+JBOD
+RAID 0
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+RAID Migration
+Basic to RAID 1
+Basic to RAID 5
+RAID 1 to RAID 5
+RAID 5 to RAID 6
+Basic to RAID 1
+Basic to RAID 5
+RAID 1 to RAID 5
+RAID 5 to RAID 6
+Volume Expansion with Larger HDDs
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Volume Expansion by Adding a HDD
+Synology Hybrid RAID
+JBOD
+RAID 5
+RAID 6
+Synology Hybrid RAID
+JBOD
+RAID 5
+RAID 6
+Global Hot Spare Supported RAID Type
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Notes
+Volumes over 108 TB require 32 GB of memory or more.
+Actual maximum storage pool and volume sizes depend on drive sizes used, the number of drive bays available, and the RAID configuration.
+Usable capacity for each volume will be lower than the maximum volume size and is dependent on the filesystem and the amount of system metadata stored.
+Storage efficiency helps reduce storage space consumption through deduplication and compression. For more information about this feature and its support requirements, please refer to
+this article
+.
+Actual maximum storage pool and volume sizes depend on drive sizes used, the number of drive bays available, and the RAID configuration.
+Usable capacity for each volume will be lower than the maximum volume size and is dependent on the filesystem and the amount of system metadata stored.
+Storage efficiency helps reduce storage space consumption through deduplication and compression. For more information about this feature and its support requirements, please refer to
+this article
+.
+Volumes over 108 TB require DSM 7.2-64570 or above and 32 GB of memory or more.
+File System
+Internal Drives
+Btrfs
+Btrfs
+ext4
+External Drives
+Btrfs
+ext4
+ext3
+FAT32
+NTFS
+HFS+
+exFAT
+Btrfs
+ext4
+ext3
+FAT32
+NTFS
+HFS+
+exFAT
+File Services
+File Protocol
+SMB
+AFP
+NFS
+FTP
+WebDAV
+Rsync
+SMB
+AFP
+NFS
+FTP
+WebDAV
+Rsync
+Maximum Number of SMB Connections (FSCT-Based)
+510
+380
+Windows Access Control List (ACL) Integration
+NFS Kerberos Authentication
+Notes
+Connection value of this model is tested with Synology SATA HDD fully populated and all onboard network ports
+Models with expandable memory are tested with the maximum supported quantity installed.
+SMB performance was evaluated using Microsoft File Server Capacity Tool (FSCT) version 1.3, with the following configuration:
+Test workload: HomeFolder scenario provided by the FSCT tool
+Test duration: 600 seconds
+Domain controller & FSCT controller: Windows Server 2022
+FSCT clients: 8 × Windows 10 machines
+SMB feature: Directory leasing enabled
+Connection value of this model is tested with Synology SATA HDD fully populated and all onboard network ports
+Models with expandable memory are tested with the maximum supported quantity installed.
+SMB performance was evaluated using Microsoft File Server Capacity Tool (FSCT) version 1.3, with the following configuration:
+Test workload: HomeFolder scenario provided by the FSCT tool
+Test duration: 600 seconds
+Domain controller & FSCT controller: Windows Server 2022
+FSCT clients: 8 × Windows 10 machines
+SMB feature: Directory leasing enabled
+Account & Shared Folder
+Maximum Local User Accounts
+1,024
+1,024
+Maximum Local Groups
+256
+256
+Maximum Shared Folder
+256
+256
+Maximum Shared Folder Sync Tasks
+12
+12
+Hybrid Share
+Maximum Hybrid Share Folders
+10
+10
+Hyper Backup
+Folder and Package Backup
+Entire System Backup
+Notes
+-
+Full-system backup requires DSM 7.2 or later.
+High Availability
+Synology High Availability
+Log Center
+Syslog Events per Second
+1,000
+1,000
+Virtualization
+VMware vSphere
+ESXi 8.0 U2, ESXi 8.0 U1, ESXi 8.0, ESXi 7.0 U3, ESXi 7.0 U2, ESXi 7.0 U1, ESXi 7.0, ESXi 6.7 U3, ESXi 6.7 U2, ESXi 6.7 U1, ESXi 6.7, ESXi 6.5 U3, ESXi 6.5 U2, ESXi 6.5 U1, ESXi 6.5
+ESXi 8.0 U2, ESXi 8.0 U1, ESXi 8.0, ESXi 7.0 U3, ESXi 7.0 U2, ESXi 7.0 U1, ESXi 7.0, ESXi 6.7 U3, ESXi 6.7 U2, ESXi 6.7 U1, ESXi 6.7, ESXi 6.5 U3, ESXi 6.5 U2, ESXi 6.5 U1, ESXi 6.5
+Microsoft Hyper-V
+Windows Server 2025, Windows Server 2022
+Windows Server 2025, Windows Server 2022
+Citrix XenServer
+XenServer 8.4, XenServer 8, Citrix Hypervisor 8.2 LTSR CU1
+XenServer 8, Citrix Hypervisor 8.2 LTSR CU1
+OpenStack
+Cinder
+Cinder
+General Specifications
+Supported Protocols
+SMB1 (CIFS), SMB2, SMB3, NFSv3, NFSv4, NFSv4.1, NFS Kerberized sessions, iSCSI, HTTP, HTTPs, FTP, SNMP, LDAP, CalDAV
+SMB1 (CIFS), SMB2, SMB3, NFSv3, NFSv4, NFSv4.1, NFS Kerberized sessions, iSCSI, HTTP, HTTPs, FTP, SNMP, LDAP, CalDAV
+Supported Browsers
+Chrome
+Firefox
+Edge
+Safari
+Chrome
+Firefox
+Edge
+Safari
+Supported Language
+English, Deutsch, Français, Italiano, Español, Dansk, Norsk, Svenska, Nederlands, Русский, Polski, Magyar, Português do Brasil, Português Europeu, Türkçe, Český, ภาษาไทย, 日本語, 한국어, 繁體中文, 简体中文
+English, Deutsch, Français, Italiano, Español, Dansk, Norsk, Svenska, Nederlands, Русский, Polski, Magyar, Português do Brasil, Português Europeu, Türkçe, Český, ภาษาไทย, 日本語, 한국어, 繁體中文, 简体中文
+Notes
+For an updated list of supported browser versions, check the
+DSM Technical Specifications
+.
+For an updated list of supported browser versions, check the
+DSM Technical Specifications
+.
+Add-on Packages
+view the complete package list
+Central Management System
+Synology AI Console
+Third-Party AI Model Integration
+Maximum De-Identification Rate
+510 words per second
+380 words per second
+Notes
+De-identification performance measurement: Filters for Credit Card Numbers, IBAN, Individual Taxpayer Identification Number, SSN, and Names applied to a 4,355-word English text.
+To enable de-identification, your device must have at least 8 GB of memory and Container Manager installed.
+De-identification performance measurement: Filters for Credit Card Numbers, IBAN, Individual Taxpayer Identification Number, SSN, and Names applied to a 4,355-word English text.
+To enable de-identification, your device must have at least 8 GB of memory and Container Manager installed.
+Synology Chat
+Maximum Number of Users
+150
+150
+Notes
+Measured with simulated users, each with an average record of 20,000 messages, emojis, or stickers. The required server response time is below ten seconds.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Measured with simulated users, each with an average record of 20,000 messages, emojis, or stickers. The required server response time is below ten seconds.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Download Station
+Maximum Concurrent Download Tasks
+80
+80
+SAN Manager
+Maximum iSCSI Target Number
+64
+64
+Maximum LUN
+128
+128
+LUN Clone/Snapshot, Windows ODX
+Synology MailPlus / MailPlus Server
+Free Email Accounts
+5
+(Additional accounts require purchase of licenses)
+5
+(Additional accounts require purchase of licenses)
+Maximum Number of Users
+1,080
+790
+Notes
+The suggested maximum number of users is based on the following workload: 20% of users with a 20,000 item mailbox randomly performing actions and receiving 240 emails per day, and 80% of users receiving 20 emails per day.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Learn more about memory requirements
+.
+Operating in high-availability mode will incur additional overhead.
+Features enabled during evaluation: anti-spam, anti-virus, DNSBL, greylist, content scanning, and full-text search (English).
+The suggested maximum number of users is based on the following workload: 20% of users with a 20,000 item mailbox randomly performing actions and receiving 240 emails per day, and 80% of users receiving 20 emails per day.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Learn more about memory requirements
+.
+Operating in high-availability mode will incur additional overhead.
+Features enabled during evaluation: anti-spam, anti-virus, DNSBL, greylist, content scanning, and full-text search (English).
+Media Server
+DLNA Compliance
+Synology Photos
+Facial Recognition
+Object Recognition
+Snapshot Replication
+Maximum Snapshots per Shared Folder
+256
+256
+Maximum Snapshots per LUN
+64
+64
+Maximum Snapshots per System
+4,096
+4,096
+Maximum Replication Tasks for Shared Folders
+32
+32
+Maximum Replication Tasks for LUNs
+16
+16
+Maximum Replication Tasks per System
+32
+32
+Surveillance Station
+Default Licenses
+2
+(Additional cameras require purchase of licenses)
+2
+(Additional cameras require purchase of licenses)
+Maximum IP Cameras and Total FPS (H.264)
+1080p: 75 channels, 2100 FPS
+3M: 75 channels, 1500 FPS
+5M: 75 channels, 900 FPS
+4K: 55 channels, 550 FPS
+1080p: 75 channels, 2100 FPS
+3M: 75 channels, 1500 FPS
+5M: 75 channels, 900 FPS
+4K: 55 channels, 550 FPS
+Maximum IP Cameras and Total FPS (H.265)
+1080p: 75 channels, 2250 FPS
+3M: 75 channels, 2250 FPS
+5M: 75 channels, 1500 FPS
+4K: 75 channels, 900 FPS
+1080p: 75 channels, 2250 FPS
+3M: 75 channels, 2250 FPS
+5M: 75 channels, 1500 FPS
+4K: 75 channels, 900 FPS
+Notes
+Performance figures are obtained from testing conducted with the device fully populated with drives, with their default memory configuration, and under a continuous recording setup. Actual system capabilities may vary based on configuration, drive performance, enabled features, and the presence of additional workloads.
+Use
+NVR Selector
+to quickly find a suitable model based on your requirements.
+The number of video channels that can be viewed simultaneously is double the maximum number of cameras for the same codec and resolution.
+The values above are based on testing with RTSP streaming. If SRTP is enabled for all cameras, overall performance will decrease to 70% of the stated figures.
+Performance figures are obtained from testing conducted with the device fully populated with drives, with their default memory configuration, and under a continuous recording setup. Actual system capabilities may vary based on configuration, drive performance, enabled features, and the presence of additional workloads.
+Use
+NVR Selector
+to quickly find a suitable model based on your requirements.
+The number of video channels that can be viewed simultaneously is double the maximum number of cameras for the same codec and resolution.
+The values above are based on testing with RTSP streaming. If SRTP is enabled for all cameras, overall performance will decrease to 70% of the stated figures.
+Surveillance Station 9.1.3 or above is required to support the maximum IP cameras and FPS figures listed.
+Synology Drive
+Maximum Number of Users
+930
+680
+Maximum Number of Hosted Files
+15,000,000 (applies to files indexed or hosted by
+Synology Drive
+. For file access through other standard protocols, refer to the File Services section above)
+5,000,000 (applies to files indexed or hosted by
+Synology Drive
+. For file access through other standard protocols, refer to the File Services section above)
+Notes
+The suggested maximum number of users is based on the following workload: 20% of users randomly perform file operations (upload, download, move, and delete), and 80% of users are logged in but idle.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Exceeding the recommended numbers above will not block application operations, but may result in longer response time.
+Btrfs file system and non-encrypted shared folders were used during the aforementioned testing.
+The suggested maximum number of users is based on the following workload: 20% of users randomly perform file operations (upload, download, move, and delete), and 80% of users are logged in but idle.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Exceeding the recommended numbers above will not block application operations, but may result in longer response time.
+Btrfs file system and non-encrypted shared folders were used during the aforementioned testing.
+Synology Office
+Maximum Number of Users
+900
+660
+Notes
+The suggested maximum number of users is based on the following workload: 20% of users are executing random actions at an average of 30-second intervals, and 80% of users are logged in and viewing a file.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Client performance may affect maximum simultaneous editing users. Client PCs used for testing: Intel Core i3-3220 / 8GB RAM
+The suggested maximum number of users is based on the following workload: 20% of users are executing random actions at an average of 30-second intervals, and 80% of users are logged in and viewing a file.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Client performance may affect maximum simultaneous editing users. Client PCs used for testing: Intel Core i3-3220 / 8GB RAM
+Virtual Machine Manager
+Recommended Virtual Machine Instances
+8
+(Learn more)
+8
+(Learn more)
+Recommended Virtual DSM Number
+(Licenses required)
+8 (including 1 Free License)
+8 (including 1 Free License)
+Notes
+The specifications vary depending on system configuration and memory size.
+The specifications vary depending on system configuration and memory size.
+VPN Server
+Maximum Connections
+12
+12
+Software Specs
+DSM Specifications
+RS2423RP+II
+RS2423+
+Storage Management
+Maximum Single Volume Size
+200 TB (32 GB memory required)
+108 TB
+200 TB (32 GB memory required)
+108 TB
+Maximum Internal Volume Number
+64
+64
+SSD Read/Write Cache
+(Determining cache size)
+SSD TRIM
+Storage Efficiency
+Supported RAID Type
+Synology Hybrid RAID
+Basic
+JBOD
+RAID 0
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Synology Hybrid RAID
+Basic
+JBOD
+RAID 0
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+RAID Migration
+Basic to RAID 1
+Basic to RAID 5
+RAID 1 to RAID 5
+RAID 5 to RAID 6
+Basic to RAID 1
+Basic to RAID 5
+RAID 1 to RAID 5
+RAID 5 to RAID 6
+Volume Expansion with Larger HDDs
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Volume Expansion by Adding a HDD
+Synology Hybrid RAID
+JBOD
+RAID 5
+RAID 6
+Synology Hybrid RAID
+JBOD
+RAID 5
+RAID 6
+Global Hot Spare Supported RAID Type
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Synology Hybrid RAID
+RAID 1
+RAID 5
+RAID 6
+RAID 10
+Notes
+Volumes over 108 TB require 32 GB of memory or more.
+Actual maximum storage pool and volume sizes depend on drive sizes used, the number of drive bays available, and the RAID configuration.
+Usable capacity for each volume will be lower than the maximum volume size and is dependent on the filesystem and the amount of system metadata stored.
+Storage efficiency helps reduce storage space consumption through deduplication and compression. For more information about this feature and its support requirements, please refer to
+this article
+.
+Actual maximum storage pool and volume sizes depend on drive sizes used, the number of drive bays available, and the RAID configuration.
+Usable capacity for each volume will be lower than the maximum volume size and is dependent on the filesystem and the amount of system metadata stored.
+Storage efficiency helps reduce storage space consumption through deduplication and compression. For more information about this feature and its support requirements, please refer to
+this article
+.
+Volumes over 108 TB require DSM 7.2-64570 or above and 32 GB of memory or more.
+File System
+Internal Drives
+Btrfs
+Btrfs
+ext4
+External Drives
+Btrfs
+ext4
+ext3
+FAT32
+NTFS
+HFS+
+exFAT
+Btrfs
+ext4
+ext3
+FAT32
+NTFS
+HFS+
+exFAT
+File Services
+File Protocol
+SMB
+AFP
+NFS
+FTP
+WebDAV
+Rsync
+SMB
+AFP
+NFS
+FTP
+WebDAV
+Rsync
+Maximum Number of SMB Connections (FSCT-Based)
+510
+380
+Windows Access Control List (ACL) Integration
+NFS Kerberos Authentication
+Notes
+Connection value of this model is tested with Synology SATA HDD fully populated and all onboard network ports
+Models with expandable memory are tested with the maximum supported quantity installed.
+SMB performance was evaluated using Microsoft File Server Capacity Tool (FSCT) version 1.3, with the following configuration:
+Test workload: HomeFolder scenario provided by the FSCT tool
+Test duration: 600 seconds
+Domain controller & FSCT controller: Windows Server 2022
+FSCT clients: 8 × Windows 10 machines
+SMB feature: Directory leasing enabled
+Account & Shared Folder
+Maximum Local User Accounts
+1,024
+1,024
+Maximum Local Groups
+256
+256
+Maximum Shared Folder
+256
+256
+Maximum Shared Folder Sync Tasks
+12
+12
+Hybrid Share
+Maximum Hybrid Share Folders
+10
+10
+Hyper Backup
+Folder and Package Backup
+Entire System Backup
+Notes
+-
+Full-system backup requires DSM 7.2 or later.
+High Availability
+Synology High Availability
+Log Center
+Syslog Events per Second
+1,000
+1,000
+Virtualization
+VMware vSphere
+ESXi 8.0 U2, ESXi 8.0 U1, ESXi 8.0, ESXi 7.0 U3, ESXi 7.0 U2, ESXi 7.0 U1, ESXi 7.0, ESXi 6.7 U3, ESXi 6.7 U2, ESXi 6.7 U1, ESXi 6.7, ESXi 6.5 U3, ESXi 6.5 U2, ESXi 6.5 U1, ESXi 6.5
+ESXi 8.0 U2, ESXi 8.0 U1, ESXi 8.0, ESXi 7.0 U3, ESXi 7.0 U2, ESXi 7.0 U1, ESXi 7.0, ESXi 6.7 U3, ESXi 6.7 U2, ESXi 6.7 U1, ESXi 6.7, ESXi 6.5 U3, ESXi 6.5 U2, ESXi 6.5 U1, ESXi 6.5
+Microsoft Hyper-V
+Windows Server 2025, Windows Server 2022
+Windows Server 2025, Windows Server 2022
+Citrix XenServer
+XenServer 8.4, XenServer 8, Citrix Hypervisor 8.2 LTSR CU1
+XenServer 8, Citrix Hypervisor 8.2 LTSR CU1
+OpenStack
+Cinder
+Cinder
+General Specifications
+Supported Protocols
+SMB1 (CIFS), SMB2, SMB3, NFSv3, NFSv4, NFSv4.1, NFS Kerberized sessions, iSCSI, HTTP, HTTPs, FTP, SNMP, LDAP, CalDAV
+SMB1 (CIFS), SMB2, SMB3, NFSv3, NFSv4, NFSv4.1, NFS Kerberized sessions, iSCSI, HTTP, HTTPs, FTP, SNMP, LDAP, CalDAV
+Supported Browsers
+Chrome
+Firefox
+Edge
+Safari
+Chrome
+Firefox
+Edge
+Safari
+Supported Language
+English, Deutsch, Français, Italiano, Español, Dansk, Norsk, Svenska, Nederlands, Русский, Polski, Magyar, Português do Brasil, Português Europeu, Türkçe, Český, ภาษาไทย, 日本語, 한국어, 繁體中文, 简体中文
+English, Deutsch, Français, Italiano, Español, Dansk, Norsk, Svenska, Nederlands, Русский, Polski, Magyar, Português do Brasil, Português Europeu, Türkçe, Český, ภาษาไทย, 日本語, 한국어, 繁體中文, 简体中文
+Notes
+For an updated list of supported browser versions, check the
+DSM Technical Specifications
+.
+Add-on Packages
+view the complete package list
+Central Management System
+Synology AI Console
+Third-Party AI Model Integration
+Maximum De-Identification Rate
+510 words per second
+380 words per second
+Notes
+De-identification performance measurement: Filters for Credit Card Numbers, IBAN, Individual Taxpayer Identification Number, SSN, and Names applied to a 4,355-word English text.
+To enable de-identification, your device must have at least 8 GB of memory and Container Manager installed.
+Synology Chat
+Maximum Number of Users
+150
+150
+Notes
+Measured with simulated users, each with an average record of 20,000 messages, emojis, or stickers. The required server response time is below ten seconds.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Download Station
+Maximum Concurrent Download Tasks
+80
+80
+SAN Manager
+Maximum iSCSI Target Number
+64
+64
+Maximum LUN
+128
+128
+LUN Clone/Snapshot, Windows ODX
+Synology MailPlus / MailPlus Server
+Free Email Accounts
+5
+(Additional accounts require purchase of licenses)
+5
+(Additional accounts require purchase of licenses)
+Maximum Number of Users
+1,080
+790
+Notes
+The suggested maximum number of users is based on the following workload: 20% of users with a 20,000 item mailbox randomly performing actions and receiving 240 emails per day, and 80% of users receiving 20 emails per day.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Learn more about memory requirements
+.
+Operating in high-availability mode will incur additional overhead.
+Features enabled during evaluation: anti-spam, anti-virus, DNSBL, greylist, content scanning, and full-text search (English).
+Media Server
+DLNA Compliance
+Synology Photos
+Facial Recognition
+Object Recognition
+Snapshot Replication
+Maximum Snapshots per Shared Folder
+256
+256
+Maximum Snapshots per LUN
+64
+64
+Maximum Snapshots per System
+4,096
+4,096
+Maximum Replication Tasks for Shared Folders
+32
+32
+Maximum Replication Tasks for LUNs
+16
+16
+Maximum Replication Tasks per System
+32
+32
+Surveillance Station
+Default Licenses
+2
+(Additional cameras require purchase of licenses)
+2
+(Additional cameras require purchase of licenses)
+Maximum IP Cameras and Total FPS (H.264)
+1080p: 75 channels, 2100 FPS
+3M: 75 channels, 1500 FPS
+5M: 75 channels, 900 FPS
+4K: 55 channels, 550 FPS
+1080p: 75 channels, 2100 FPS
+3M: 75 channels, 1500 FPS
+5M: 75 channels, 900 FPS
+4K: 55 channels, 550 FPS
+Maximum IP Cameras and Total FPS (H.265)
+1080p: 75 channels, 2250 FPS
+3M: 75 channels, 2250 FPS
+5M: 75 channels, 1500 FPS
+4K: 75 channels, 900 FPS
+1080p: 75 channels, 2250 FPS
+3M: 75 channels, 2250 FPS
+5M: 75 channels, 1500 FPS
+4K: 75 channels, 900 FPS
+Notes
+Performance figures are obtained from testing conducted with the device fully populated with drives, with their default memory configuration, and under a continuous recording setup. Actual system capabilities may vary based on configuration, drive performance, enabled features, and the presence of additional workloads.
+Use
+NVR Selector
+to quickly find a suitable model based on your requirements.
+The number of video channels that can be viewed simultaneously is double the maximum number of cameras for the same codec and resolution.
+The values above are based on testing with RTSP streaming. If SRTP is enabled for all cameras, overall performance will decrease to 70% of the stated figures.
+Performance figures are obtained from testing conducted with the device fully populated with drives, with their default memory configuration, and under a continuous recording setup. Actual system capabilities may vary based on configuration, drive performance, enabled features, and the presence of additional workloads.
+Use
+NVR Selector
+to quickly find a suitable model based on your requirements.
+The number of video channels that can be viewed simultaneously is double the maximum number of cameras for the same codec and resolution.
+The values above are based on testing with RTSP streaming. If SRTP is enabled for all cameras, overall performance will decrease to 70% of the stated figures.
+Surveillance Station 9.1.3 or above is required to support the maximum IP cameras and FPS figures listed.
+Synology Drive
+Maximum Number of Users
+930
+680
+Maximum Number of Hosted Files
+15,000,000 (applies to files indexed or hosted by
+Synology Drive
+. For file access through other standard protocols, refer to the File Services section above)
+5,000,000 (applies to files indexed or hosted by
+Synology Drive
+. For file access through other standard protocols, refer to the File Services section above)
+Notes
+The suggested maximum number of users is based on the following workload: 20% of users randomly perform file operations (upload, download, move, and delete), and 80% of users are logged in but idle.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Exceeding the recommended numbers above will not block application operations, but may result in longer response time.
+Btrfs file system and non-encrypted shared folders were used during the aforementioned testing.
+Synology Office
+Maximum Number of Users
+900
+660
+Notes
+The suggested maximum number of users is based on the following workload: 20% of users are executing random actions at an average of 30-second intervals, and 80% of users are logged in and viewing a file.
+Learn more
+Models with SSD support are tested with a single SSD volume.
+Models with expandable memory are tested with the maximum supported quantity installed.
+Client performance may affect maximum simultaneous editing users. Client PCs used for testing: Intel Core i3-3220 / 8GB RAM
+Virtual Machine Manager
+Recommended Virtual Machine Instances
+8
+(Learn more)
+8
+(Learn more)
+Recommended Virtual DSM Number
+(Licenses required)
+8 (including 1 Free License)
+8 (including 1 Free License)
+Notes
+The specifications vary depending on system configuration and memory size.
+VPN Server
+Maximum Connections
+12
+12
+Notes:
+Model specifications are subject to change without prior notice.
+The figures are based on Synology internal testing. Each performance test is done individually. No other services or applications are processed at the same time.
+The actual performance may be lower than lab testing figure due to differences in server configuration, deployment, and the number of active operations.
+If usage requirements exceed the specifications above, please contact our
+regional partners
+for professional advice.
+NAS Selector
+RAID Calculator
+NVR Selector
+Knowledge Center
+Downloads
+Newsletter
+Company
+About Synology
+Blog
+Newsroom
+Media Coverage
+Customer Stories
+Office Locations
+ESG
+Sales
+Where to Buy
+Contact Us
+Become a Partner
+Compatibility
+HDD/SSD
+IP Cameras
+Network Cards
+I/O Modules, IP Speakers, Access Controllers
+Other Devices
+Resources
+Products A-Z
+Beta Program
+Bounty Program
+Community
+Events
+Subscribe to Newsletter
+Copyright © 2026 Synology Inc. All rights reserved.
+Terms & Conditions
+|
+Privacy
+|
+Cookie Preference
+Global - English
+Continue

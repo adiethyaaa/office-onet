@@ -1,0 +1,129 @@
+                                               PowerEdge R760xs
+                                               Best choice in balanced compute and flexible
+                                               storage for the most popular IT application
+
+
+Buy the performance and flexibility you need
+The new Dell PowerEdge R760xs is a 2U, two-socket rack server. Buy the best fit in scalable performance and large
+storage capability with this purpose-built 2U system. Focused on delivering the latest technology to power the most
+popular applications and workloads used by businesses today, including virtual desktop infrastructure (VDI), virtual
+machines (VMs), and software-defined storage (SDS). All delivered in a thoughtfully crafted platform that will provide
+balanced compute that fits in your current infrastructure.
+
+Easily configurable
+  • Add up to two 5th generation Intel® Xeon® Scalable processors with up to 28 cores and 4th generation Intel®
+    Xeon® Scalable processors with up to 32 cores per socket for faster performance
+  • Accelerate in-memory workloads with up to 16 DDR5 RDIMMS up to 5200 MT/sec
+  • Improve data throughput and reduce latency with support up to 8 I/O device (up to available 6 PCIe slots, 1 OCP
+    3.0 networking slot, and 1 dedicated PERC slot)
+  • Storage options include up to 12x 3.5” HDDs/SSDs, or up to 16x 2.5” HDD/SSDs, plus up to 8x NVMe drives
+
+A breeze to cool
+  • Thoughtfully designed to fit in your current air-cooled infrastructure
+  • Alleviate the worry about expensive liquid cooling retrofitting to your data center
+  • Synchronize your workload needs with a tailored performance configuration that is air cooled
+  • Minimize the carbon footprint of your data center by better matching the system power consumption with
+    anticipated workload requirements
+
+Cyber Resilient Architecture for Zero Trust IT environment & operations
+Security is integrated into every phase of the PowerEdge lifecycle, including protected supply chain and factory-to-site
+integrity assurance. Silicon-based root of trust anchors end-to-end boot resilience while Multi-Factor Authentication
+(MFA) and role-based access controls ensure trusted operations.
+
+Increase efficiency and accelerate operations with autonomous collaboration
+The Dell OpenManage™ systems management portfolio delivers a secure, efficient, and comprehensive solution for
+PowerEdge servers. Simplify, automate and centralize one-to-many management with the OpenManage Enterprise
+console and iDRAC.
+Sustainability
+From recycled materials in our products and packaging, to thoughtful,
+innovative options for energy efficiency, the PowerEdge portfolio is
+                                                                           PowerEdge R760xs
+designed to make, deliver, and recycle products to help reduce the
+carbon footprint and lower your operation costs. We even make it easy      The Dell PowerEdge R760xs offers
+to retire legacy systems responsibly with Dell Technologies Services.      compelling performance in a right-sized
+                                                                           system with the latest PCIe Gen 5
+Rest easier with Dell Technologies Services                                bandwidth and large storage capability
+Maximize your PowerEdge Servers with comprehensive services                to support:
+ranging from Consulting, to ProDeploy and ProSupport suites, Data
+                                                                             • Virtual Desktop Infrastructure (VDI)
+Migration and more – available across 170 locations and backed by
+our 60K+employees and partners.                                              • Virtual Machines (VMs)
+                                                                             • Software-Defined Storage Node
+    Feature              Technical Specifications
+   Processor            Up to two 5th Generation Intel Xeon Scalable processor with up to 28 cores and 4th Generation Intel Xeon Scalable processor with up to 32 cores
+                        per processor
+   Memory                • 16 DDR5 DIMM slots, supports RDIMM 1.5 TB max, speeds up to 5200 MT/s, supports registered ECC DDR5 DIMMs only
+   Storage                • Internal Controllers: PERC H965i, PERC H755, PERC H755N, PERC H355, HBA355i, HBA465i
+   controllers            • Internal Boot: Boot Optimized Storage Subsystem (BOSS-N1): HWRAID 1, 2 x M.2 NVMe SSDs or USB
+                          • External HBA (non-RAID): HBA355e; Software RAID: S160
+   GPU Options          2 x 75 W SW, LP
+   Drive Bays           Front bays:                                                                Rear bays:
+                         • 0 drive bay                                                              • Up to 2 x 2.5-inch SAS/SATA/NVMe (HDD/SSD) max 30.72 TB
+                         • Up to 8 x 3.5-inch SAS/SATA (HDD/SSD) max 192 TB                            (supported only with 12 x 3.5-inch SAS/SATA HDD/SSD
+                         • Up to 12 x 3.5-inch SAS/SATA (HDD/SSD) max 288 TB                           configuration)
+                         • Up to 8 x 2.5-inch SAS/SATA/NVMe (HDD/SSD) max 122.88 TB
+                         • Up to 16 x 2.5-inch SAS/SATA (HDD/SSD) max 121.6 TB
+                         • Up to 16 x 2.5-inch (SAS/SATA) + 8 x 2.5-inch (NVMe)
+                            (HDD/SSD) max 244.48 TB
+   Hot swap              • 1800 W Titanium 200—240 VAC or 240 VDC                                    •   1100 W -(48V — 60V) DC
+   Redundant Power       • 1400 W Titanium 100—240 VAC or 240 VDC                                    •   800 W Platinum 100—240 VAC or 240 VDC
+   Supplies              • 1400 W Platinum 100—240 VAC or 240 VDC                                    •   700 W Titanium 200—240 VAC or 240 VDC
+                         • 1400 W Titanium 277 VAC or HVDC (HVDC stands for High-                    •   600 W Platinum 100—240 VAC or 240 VDC
+                            Voltage DC, with 336V DC)
+                         • 1100 W Titanium 100—240 VAC or 240 VDC
+   Cooling Options       • Air cooling
+   Fans                  • Standard (STD) fans/High performance Silver (HPR) fans/ High performance Gold (VHP) fans, Up to 6 hot swappable fans
+   Dimensions and        • Height – 86.8 mm (3.41 inches)                                     • Depth – 707.78 mm (27.85 inches) – without bezel
+   Weight                • Width – 482 mm (18.97 inches)                                                 721.62 mm (28.4 inches) – with bezel
+                                                                                              • Weight – Max 28.6 kg (63.0 lbs.)
+   Form Factor          2U rack server
+   Embedded              • iDRAC9                                                             • iDRAC Service Module
+   Management            • iDRAC Direct                                                       • Quick Sync 2 wireless module
+                         • iDRAC RESTful API with Redfish
+   Bezel                Optional LCD bezel or security bezel
+   OpenManage            • CloudIQ for PowerEdge plug in                                      • OpenManage Integration with Windows Admin Center
+   Software              • OpenManage Enterprise                                              • OpenManage Power Manager plugin
+                         • OpenManage Enterprise Integration for VMware vCenter               • OpenManage Service plugin
+                         • OpenManage Integration for Microsoft System Center                 • OpenManage Update Manager plugin
+   Mobility             OpenManage Mobile
+   OpenManage            • BMC Truesight                                                      • Red Hat Ansible Modules
+   Integrations          • Microsoft System Center                                            • Terraform Providers
+                         • OpenManage Integration with ServiceNow                             • VMware vCenter and vRealize Operations Manager
+   Security              • Cryptographically signed firmware                                  • Secured Component Verification (Hardware integrity check)
+                         • Data at Rest Encryption (SEDs with local or external key mgmt)     • Silicon Root of Trust
+                         • Secure Boot                                                        • System Lockdown (requires iDRAC9 Enterprise or Datacenter)
+                         • Secure Erase                                                       • TPM 2.0 FIPS, CC-TCG certified, TPM 2.0 China NationZ
+   Embedded NIC         2 x 1 GbE LOM
+   Network options      1 x OCP card 3.0 (optional)
+   Ports                Front Ports:                                                               Rear Ports
+                          • 1 x iDRAC Direct (Micro-AB USB) port, 1 x USB 2.0, 1 x VGA              • 1 x Dedicated iDRAC Ethernet port, 1 x USB 2.0, 1 x USB 3.0,
+                        Internal Ports: 1 x USB 3.0 (optional)                                         1 x VGA, 1 x Serial (optional)
+   PCIe                  • 1 CPU Configuration: Up to 4 PCIe slots (2 x8 Gen5, 1 x16 Gen4, 1 x8 Gen4)
+                         • 2 CPU configuration: Up to 6 PCIe slots (2 x16 Gen5, 3 x16 Gen4, 1 x8 Gen4)
+   Operating System      • Microsoft Windows Server with Hyper-V                                    • VMware ESXi
+   and Hypervisors       • Red Hat Enterprise Linux                                                 • Canonical Ubuntu Server LTS
+                         • SUSE Linux Enterprise Server                                            For specifications and interoperability details, see Dell.com/OSsupport.
+   OEM-ready            From bezel to BIOS to packaging, your servers can look and feel as if they were designed and built by you. For more information, visit Dell.com ->
+   version available    Solutions -> OEM Solutions.
+
+
+  APEX Flex on Demand
+  Acquire the technology you need to support your changing business with payments that scale to match actual usage.
+  For more information, visit https://www.delltechnologies.com/en-us/payment-solutions/flexible-consumption/flex-on-
+  demand.htm.
+
+   Discover more about PowerEdge servers
+
+
+
+
+Learn more about our                    Learn more about our                      Search our                     Follow PowerEdge                     Contact a Dell
+ PowerEdge servers]                     systems management                      Resource Library                 servers on Twitter               Technologies Expert
+                                              solutions                                                                                           for Sales or Support
+
+
+Copyright © 2024 Dell Inc. or its subsidiaries. All Rights Reserved. Dell Technologies, Dell, and other trademarks are
+trademarks of Dell Inc. or its subsidiaries. Other trademarks may be trademarks of their respective owners.
+
+June 2024
+

@@ -10853,7 +10853,7 @@
    "switch_access_48_poe": {
     "ports": 48,
     "uplinks": 4,
-    "poeBudgetW": null
+    "poeBudgetW": 600
    },
    "switch_aggregation": {
     "ports": 24,
@@ -11062,11 +11062,15 @@
   "poeClasses": {
    "3": {
     "pseW": 15.4,
-    "source": "IEEE 802.3af/at Class 3 PSE output"
+    "source": "IEEE 802.3af/at Class 3 PSE output",
+    "pdW": 13.0,
+    "pdSource": "IEEE 802.3-2018 Clause 33: daya maksimum di PD Class 3 = 13,0 W (selisih ke PSE 15,4 W = rugi kabel terburuk 100 m)"
    },
    "4": {
     "pseW": 30.0,
-    "source": "IEEE 802.3at Class 4 PSE output"
+    "source": "IEEE 802.3at Class 4 PSE output",
+    "pdW": 25.5,
+    "pdSource": "IEEE 802.3-2018 Clause 33: daya maksimum di PD Class 4 = 25,5 W (selisih ke PSE 30 W = rugi kabel terburuk 100 m)"
    }
   },
   "assumptions": [
@@ -11076,8 +11080,84 @@
    "AS-ICT-04",
    "AS-ICT-05",
    "AS-ICT-06",
-   "AS-NET-01"
-  ]
+   "AS-NET-01",
+   "AS-ICT-07",
+   "AS-ICT-08"
+  ],
+  "referenceModels": {
+   "status": "model REFERENSI konsep untuk menutup gate daya; bukan keputusan pengadaan, tanpa harga (AS-ICT-07)",
+   "switch_access_48_poe": {
+    "model": "Ubiquiti UniFi USW-Pro-48-POE",
+    "source": "SRC-ICT-01",
+    "ports": 48,
+    "poePlusPorts": 40,
+    "poePlusPlusPorts": 8,
+    "uplinks10G": 4,
+    "rackU": 1,
+    "poeBudgetW": 600,
+    "poePerPortMaxW": {
+     "3": 15.4,
+     "4": 32.0
+    },
+    "noPdAcW": 60,
+    "fullPoeAcW": 660
+   },
+   "switch_aggregation": {
+    "model": "Ubiquiti UniFi USW-Pro-Aggregation",
+    "source": "SRC-ICT-02",
+    "rackU": 1,
+    "maxAcW": 100
+   },
+   "gateway_virtual": {
+    "model": "Ubiquiti UniFi UDM-Pro-Max",
+    "source": "SRC-ICT-03",
+    "rackU": 1,
+    "maxAcW": 60
+   },
+   "server_placeholder": {
+    "model": "Dell PowerEdge R760xs (konfigurasi PSU 600 W Platinum, 1+1)",
+    "source": "SRC-ICT-04",
+    "rackU": 2,
+    "psuOutputW": 600,
+    "psuActiveCount": 1,
+    "basisNote": "PSU redundan dihitung SEKALI (1 aktif); konsumsi nyata tergantung CPU/RAM/disk yang belum dipilih"
+   },
+   "storage_placeholder": {
+    "model": "Synology RackStation RS2423+",
+    "source": "SRC-ICT-05",
+    "rackU": 2,
+    "maxAcW": 119.95,
+    "psuOutputW": 500,
+    "basisNote": "nilai vendor 'Access' terukur (bukan maksimum PSU); PSU 500 W dicatat untuk referensi"
+   },
+   "ups_placeholder": {
+    "model": "CyberPower OL3000ERTXL2U (online double conversion, 230 V)",
+    "source": "SRC-ICT-06",
+    "rackU": 2,
+    "outputVA": 3000,
+    "outputW": 2700,
+    "onlineThermalBTUh": 1139,
+    "runtimeFullLoadMin": 3.5,
+    "runtimeHalfLoadMin": 11
+   }
+  },
+  "powerModel": {
+   "status": "metode konsep; bukan pengukuran (AS-ICT-08)",
+   "sizingMultiplier": 1.25,
+   "loadPowerFactorFloor": 0.9,
+   "psuEfficiencyFloorAssumed": 0.9,
+   "accessoryAllowanceW": 30,
+   "nominalVoltageV": 230,
+   "btuPerW": 3.412142,
+   "sources": {
+    "SRC-ICT-01": "https://techspecs.ui.com/unifi/switching/usw-pro-48-poe",
+    "SRC-ICT-02": "https://techspecs.ui.com/unifi/switching/usw-pro-aggregation",
+    "SRC-ICT-03": "https://techspecs.ui.com/unifi/cloud-gateways/udm-pro-max",
+    "SRC-ICT-04": "https://www.delltechnologies.com/asset/en-us/products/servers/technical-support/poweredge-r760xs-spec-sheet.pdf",
+    "SRC-ICT-05": "https://www.synology.com/en-global/products/RS2423+#specs",
+    "SRC-ICT-06": "https://www.cyberpower.com/global/en/product/sku/ol3000ertxl2u"
+   }
+  }
  },
  "adjacency": [
   {
@@ -11269,12 +11349,22 @@
   {
    "id": "AS-ICT-05",
    "topic": "ict",
-   "text": "Rating UPS, thermal/AC dan harga belum ditentukan; tidak ada harga pengadaan dalam paket ini."
+   "text": "Harga dan pengadaan belum ditentukan; tidak ada harga dalam paket ini. Rating UPS dan panas ICT memakai model referensi konsep (AS-ICT-07/08); sizing AC/listrik oleh MEP."
   },
   {
    "id": "AS-ICT-06",
    "topic": "ict",
    "text": "Clearance rack depan 1,2 m / belakang 0,9 m adalah target konsep; verifikasi ke standar/panduan yang dipilih."
+  },
+  {
+   "id": "AS-ICT-07",
+   "topic": "ict",
+   "text": "Model referensi (USW-Pro-48-POE, USW-Pro-Aggregation, UDM-Pro-Max, R760xs PSU 600 W, RS2423+, OL3000ERTXL2U) dipilih untuk menutup gate PoE/UPS/panas konsep dari datasheet vendor bertanggal 2026-10-04. Bukan keputusan pengadaan; revisi hardware dan konfigurasi final wajib dicek ulang."
+  },
+  {
+   "id": "AS-ICT-08",
+   "topic": "ict",
+   "text": "Metode daya: switch dengan PD memakai plafon vendor termasuk PoE, tanpa switch memakai maksimum vendor tanpa PoE; server = rating PSU aktif / efisiensi 0,90 (asumsi); PF beban 0,90 (asumsi); margin 1,25; allowance aksesori 30 W (asumsi). Panas ruang server = input AC − daya PD yang keluar ruang + disipasi UPS vendor; rugi kabel PoE dihitung di ruang server (konservatif). Runtime UPS dan sizing AC belum dievaluasi."
   },
   {
    "id": "AS-NET-01",

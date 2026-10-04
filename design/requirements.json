@@ -415,9 +415,24 @@
      "status": "terverifikasi"
     },
     {
-     "scope": "PoE budget switch, rating UPS, thermal",
+     "scope": "PoE budget per switch (SW-ACC-01 508,75/600 W), UPS W/VA (74% dari 2700 W/3000 VA), panas ruang server 2,0 kW sebagai input MEP: model referensi konsep, datasheet vendor 2026-10-04 (Nova)",
+     "tests": [
+      "tests/py/test_ict_power.py",
+      "tools/ict_power.py"
+     ],
+     "evidence": [
+      "design/derived/ict-power.json",
+      "docs/evidence/MAX/ict-sources/",
+      "docs/evidence/MAX/v02-ict-build.log"
+     ],
+     "status": "terverifikasi"
+    },
+    {
+     "scope": "Runtime UPS: target otonomi belum ditetapkan Budi (kurva vendor 3,5-11 menit)",
      "tests": [],
-     "evidence": [],
+     "evidence": [
+      "design/derived/ict-power.json"
+     ],
      "status": "asumsi"
     },
     {
