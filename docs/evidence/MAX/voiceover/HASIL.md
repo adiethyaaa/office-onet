@@ -1,4 +1,4 @@
-# VoiceOver nyata — employee-rpg (REQ-ACCESS-01)
+# VoiceOver nyata: employee-rpg (REQ-ACCESS-01)
 
 - Tanggal: 2026-10-04 WITA. Target: https://employee-rpg.air-buddy.site/ release `a041f5a1` (commit a041f5a).
 - Pembaca layar: **macOS VoiceOver asli** di Safari, Mac mini M4, hanya keyboard. Bukan iOS VoiceOver/TalkBack.
