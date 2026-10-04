@@ -1,0 +1,27 @@
+{
+  "ranAt": "2026-10-04T15:26:07.761740+00:00",
+  "screenReader": "macOS VoiceOver (real), Safari, keyboard only",
+  "steps": [
+    {
+      "step": "3 Temui -> dialog -> Escape: fokus kembali ke tombol Direktori",
+      "spoken": {
+        "temui": "Temui Max button",
+        "dialog": "Max web dialog with 6 items Topik lain button",
+        "afterEscapeTab": "Studio button",
+        "shiftTabBack": "Direktori M collapsed button"
+      },
+      "result": "PASS"
+    },
+    {
+      "step": "8 Studio: pilih fixture dengan keyboard, tombol aksi bernama",
+      "spoken": {
+        "focusOnOpen": "actions available You are currently on a button, inside of a toolbar. To click this button, press Control-Option-Space. To Move previous, Move next, and Remove from toolbar, press Control-Option-Command-Space first to bring up the action menu. To navigate items on this toolbar, press @VOModifier(), and then Up Arrow, Down Arrow, Left Arrow, or Right Arrow. To exit this toolbar, press Control-Option-Shift-Up Arrow.",
+        "afterArrowDown": "actions available You are currently on a button, inside of a toolbar. To click this button, press Control-Option-Space. To Move previous, Move next, and Remove from toolbar, press Control-Option-Command-Space first to bring up the action menu. To navigate items on this toolbar, press @VOModifier(), and then Up Arrow, Down Arrow, Left Arrow, or Right Arrow. To exit this toolbar, press Control-Option-Shift-Up Arrow.",
+        "toolNames": []
+      },
+      "result": "FAIL"
+    }
+  ],
+  "passed": 1,
+  "total": 2
+}

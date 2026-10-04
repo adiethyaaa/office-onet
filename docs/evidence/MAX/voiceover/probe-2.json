@@ -1,0 +1,159 @@
+{
+  "url": "https://employee-rpg.air-buddy.site/?a11ylog=1",
+  "ranAt": "2026-10-04T15:20:06.369484+00:00",
+  "screenReader": "macOS VoiceOver (real), Safari",
+  "method": "System Events keystrokes; VoiceOver AppleScript 'content of last phrase'",
+  "steps": [
+    {
+      "step": "1 muat halaman: judul dibacakan",
+      "expect_any": [
+        "Kantor",
+        "SIMULASI",
+        "Employee",
+        "RPG"
+      ],
+      "spoken": "kantor-rpg",
+      "result": "PASS"
+    },
+    {
+      "step": "1b Option+Tab: tautan lewati ke direktori",
+      "expect_any": [
+        "Lewati ke direktori"
+      ],
+      "spoken": "Direktori M collapsed button Menu navigation",
+      "result": "FAIL"
+    },
+    {
+      "step": "2 Enter lalu Tab: masuk direktori",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Lobby",
+        "ruang",
+        "Direktori"
+      ],
+      "spoken": "Tutup direktori button Direktori ruang dan persona complementary",
+      "result": "PASS"
+    },
+    {
+      "step": "2.1 Tab berikut di direktori bernama",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Temui",
+        "tombol",
+        "button"
+      ],
+      "spoken": "Pergi Ruang rapat besar button",
+      "result": "PASS"
+    },
+    {
+      "step": "2.2 Tab berikut di direktori bernama",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Temui",
+        "tombol",
+        "button"
+      ],
+      "spoken": "Pergi Lobby & resepsi button",
+      "result": "PASS"
+    },
+    {
+      "step": "2.3 Tab berikut di direktori bernama",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Temui",
+        "tombol",
+        "button"
+      ],
+      "spoken": "Pergi Galeri portofolio button",
+      "result": "PASS"
+    },
+    {
+      "step": "4 Enter pada Pergi: nama ruang diumumkan",
+      "expect_any": [
+        "Lobby",
+        "Galeri",
+        "Ruang",
+        "rapat"
+      ],
+      "spoken": "Galeri portofolio",
+      "result": "PASS"
+    },
+    {
+      "step": "2c tombol Direktori bernama",
+      "expect_any": [
+        "Direktori"
+      ],
+      "spoken": "kantor-rpg",
+      "result": "FAIL"
+    },
+    {
+      "step": "2d buka direktori",
+      "expect_any": [
+        "direktori",
+        "Direktori",
+        "complementary"
+      ],
+      "spoken": "Lobby & resepsi",
+      "result": "FAIL"
+    },
+    {
+      "step": "3a tombol Temui persona bernama",
+      "expect_any": [
+        "Temui"
+      ],
+      "spoken": "show sidebar button",
+      "result": "FAIL"
+    },
+    {
+      "step": "3b Enter: dialog persona dibacakan",
+      "expect_any": [
+        "dialog",
+        "Nova",
+        "Max",
+        "Rex",
+        "Bruno",
+        "Hugo",
+        "Clara",
+        "Stella",
+        "Kevin"
+      ],
+      "spoken": "Show sidebar You are currently on a button, inside of a toolbar. To click this button, press Control-Option-Space. To navigate items on this toolbar, press @VOModifier(), and then Up Arrow, Down Arrow, Left Arrow, or Right Arrow. To exit this toolbar, press Control-Option-Shift-Up Arrow.",
+      "result": "FAIL"
+    },
+    {
+      "step": "3c Escape: fokus kembali ke Temui",
+      "expect_any": [
+        "Temui"
+      ],
+      "spoken": "Show sidebar You are currently on a button, inside of a toolbar. To click this button, press Control-Option-Space. To navigate items on this toolbar, press @VOModifier(), and then Up Arrow, Down Arrow, Left Arrow, or Right Arrow. To exit this toolbar, press Control-Option-Shift-Up Arrow.",
+      "result": "FAIL"
+    },
+    {
+      "step": "6 pengaturan: legend & checkbox dibacakan",
+      "expect_any": [
+        "Tema",
+        "Kualitas grafis",
+        "Kurangi gerak",
+        "Mode visitor"
+      ],
+      "spoken": "{}",
+      "result": "FAIL"
+    },
+    {
+      "step": "7 tanpa WebGL: ruang/persona dapat dicapai keyboard",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Temui"
+      ],
+      "spoken": "[\"Info Area Bruno button\", \"Info Area Nova (spesifikasi ICT) button\", \"Info Galeri portofolio button\", \"Info Inti tangga & lift L1 button\", \"Info Koridor utama L1 button\", \"Info Koridor utara L1 button\", \"Info Lab ICT button\", \"Info Lobby & resepsi button\", \"Info Pantry kerja button\", \"Info Ruang CEO button\", \"Info Ruang diskusi button\", \"Info Ruang implementasi & review button\", \"Info Ruang rapat besar button\", \"Info Studio Hugo button\", \"Info Studio Kevin button\", \"Info Toilet aksesibel button\"]",
+      "result": "PASS"
+    }
+  ],
+  "passed": 7,
+  "total": 14
+}

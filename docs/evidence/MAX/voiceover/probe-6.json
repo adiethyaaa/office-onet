@@ -1,0 +1,36 @@
+{
+  "ranAt": "2026-10-04T15:29:39.979428+00:00",
+  "screenReader": "macOS VoiceOver (real), Safari, keyboard only",
+  "steps": [
+    {
+      "step": "3 Temui -> dialog -> Escape: fokus kembali ke tombol Direktori",
+      "spoken": {
+        "temui": "Temui Max button",
+        "dialog": "Max web dialog with 6 items Topik lain button",
+        "afterEscapeTab": "Studio button",
+        "shiftTabBack": "Direktori M collapsed button"
+      },
+      "result": "PASS"
+    },
+    {
+      "step": "8 Studio: pilih fixture dengan keyboard, tombol aksi bernama",
+      "spoken": {
+        "studioButton": "Studio button",
+        "focusOnOpen": "Pilih fixture... Pilih fixture collapsed pop up button Office Studio complementary",
+        "afterChoose": "Closing menu no action available pop up button FX-L1-011 · Meja rapat Pilih fixture collapsed pop up button",
+        "toolNames": [
+          "Geser ke barat 0,25 m button",
+          "Geser ke selatan 0,25 m button",
+          "Geser ke timur 0,25 m button",
+          "Geser ke utara 0,25 m button",
+          "Hapus fixture terpilih button",
+          "Putar 90 derajat button",
+          "Simpan draft button"
+        ]
+      },
+      "result": "PASS"
+    }
+  ],
+  "passed": 2,
+  "total": 2
+}

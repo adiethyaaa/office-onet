@@ -1,0 +1,77 @@
+{
+  "url": "https://employee-rpg.air-buddy.site/?a11ylog=1",
+  "ranAt": "2026-10-04T15:17:39.471639+00:00",
+  "screenReader": "macOS VoiceOver (real), Safari",
+  "method": "System Events keystrokes; VoiceOver AppleScript 'content of last phrase'",
+  "steps": [
+    {
+      "step": "1 muat halaman: judul/badge simulasi",
+      "expect_any": [
+        "Kantor",
+        "SIMULASI",
+        "Employee",
+        "RPG"
+      ],
+      "spoken": "kantor-rpg",
+      "result": "PASS"
+    },
+    {
+      "step": "1b Tab pertama: tautan lewati ke direktori",
+      "expect_any": [
+        "Lewati ke direktori"
+      ],
+      "spoken": "Direktori M collapsed button Menu navigation",
+      "result": "FAIL"
+    },
+    {
+      "step": "2 Enter lalu Tab: masuk direktori",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Lobby",
+        "ruang",
+        "Direktori"
+      ],
+      "spoken": "Tutup direktori button Direktori ruang dan persona complementary",
+      "result": "PASS"
+    },
+    {
+      "step": "2.1 Tab berikut di direktori bernama",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Temui",
+        "tombol",
+        "button"
+      ],
+      "spoken": "Pergi Ruang rapat besar button",
+      "result": "PASS"
+    },
+    {
+      "step": "2.2 Tab berikut di direktori bernama",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Temui",
+        "tombol",
+        "button"
+      ],
+      "spoken": "Pergi Lobby & resepsi button",
+      "result": "PASS"
+    },
+    {
+      "step": "2.3 Tab berikut di direktori bernama",
+      "expect_any": [
+        "Pergi",
+        "Info",
+        "Temui",
+        "tombol",
+        "button"
+      ],
+      "spoken": "Pergi Galeri portofolio button",
+      "result": "PASS"
+    }
+  ],
+  "passed": 5,
+  "total": 6
+}

@@ -500,14 +500,22 @@
      "status": "terverifikasi"
     },
     {
-     "scope": "Screen reader nyata (NVDA/VoiceOver/TalkBack): hook ?a11ylog=1 dan runbook siap; uji fisik belum dijalankan",
+     "scope": "Screen reader nyata: macOS VoiceOver + Safari, 8 skenario DEVICE-VALIDATION §2 lewat keyboard pada release a041f5a1 (iOS VoiceOver/TalkBack belum)",
      "tests": [
-      "app/tests/e2e/device.spec.ts"
+      "tools/voiceover_probe.py",
+      "tools/voiceover_keyboard.py",
+      "tools/voiceover_round4.py"
      ],
      "evidence": [
-      "docs/DEVICE-VALIDATION.md"
+      "docs/evidence/MAX/voiceover/HASIL.md",
+      "docs/evidence/MAX/voiceover/probe-1.json",
+      "docs/evidence/MAX/voiceover/probe-2.json",
+      "docs/evidence/MAX/voiceover/probe-3.json",
+      "docs/evidence/MAX/voiceover/probe-4.json",
+      "docs/evidence/MAX/voiceover/probe-5.json",
+      "docs/evidence/MAX/voiceover/probe-6.json"
      ],
-     "status": "belum diuji"
+     "status": "terverifikasi"
     }
    ]
   },
