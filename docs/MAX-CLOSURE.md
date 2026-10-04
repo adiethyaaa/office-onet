@@ -15,7 +15,30 @@ Pelaksana: Max sendiri. Baseline Claude R2: `27423cbafcf3d68ffce1e2e48adca0303f1
 - Verifikasi publik menemukan download GLB tidak selesai dalam batas waktu sehingga Avatar Studio masih memakai placeholder, meski semua hash dan tes localhost lulus. Gzip di origin, hanya pada vhost ini, menurunkan transfer CEO dari 620612 ke 225811 byte (level 5). `Content-Encoding: gzip` publik terverifikasi; 12 tes regression publik lulus tanpa mengubah assertion atau timeout. Backup konfigurasi: `/var/backups/employee-rpg-before-max-gzip.conf`.
 - Clean worktree source `ae1ea8e`: Python 389 dan Vitest 114 lulus; npm audit 0. Semua hasil build identik kecuali timestamp `generated` di `docs/manifest.json`.
 - Release pertama Max `ae1ea8ea3bfa3e3798259dafd4ce5776cd896b5e`: 133/133 SHA256-match. PR implementasi: https://github.com/air-buddy410/kantor-rpg/pull/6. Situs main/about/enterprise/farsight tetap HTTPS 200.
-- Full suite publik pertama setelah gzip: 151 passed, 9 failed, 5 skipped. Failure bukan di-whitelist: karakter/NPC belum selesai dimuat ketika puluhan request furniture berebut bandwidth. Batas concurrency furniture 4 ditambahkan dengan regression test yang sebelumnya gagal (12 request sekaligus). Vitest baru 116 passed; 9 regression browser lokal desktop/tablet/mobile lulus. Hasil public rerun versi antrean wajib dibuktikan sebelum mengklaim semua tes publik hijau.
+- Full suite publik pertama setelah gzip: 151 passed, 9 failed, 5 skipped. Failure bukan di-whitelist: karakter/NPC belum selesai dimuat ketika puluhan request furniture berebut bandwidth. Batas concurrency furniture 4 ditambahkan dengan regression test yang sebelumnya gagal (12 request sekaligus). Vitest baru 116 passed; 9 regression browser lokal desktop/tablet/mobile lulus. Hasil public rerun versi antrean wajib dibuktikan sebelum mengklaim semua tes publik hijau. Probe isolasi satu browser, assertion dan timeout tetap: 18/18 regression publik lulus (dua pengulangan desktop/tablet/mobile). Ini membuktikan fungsi pada satu browser, bukan menutup kegagalan stress dua browser. Full suite publik dengan satu worker berjalan terpisah; lihat `public-isolated-full-stats.json` setelah selesai.
+
+## Verifikasi lanjutan publik, 2026-10-03
+
+- Full suite publik dua worker selesai: 160 passed, 0 failed, 5 skipped, 0 flaky. Assertion dan timeout tidak diubah. Bukti: `docs/evidence/MAX/resume-public-full-results.json` dan `resume-public-full.log`.
+- Avatar Studio publik dua worker: 3/3 passed pada desktop/tablet/mobile. Bukti: `docs/evidence/MAX/resume-parallel.log`.
+- Kegagalan paralel sebelumnya tidak terulang pada full rerun ini; ini bukan bukti beban 40/200 visitor atau FPS ponsel fisik.
+- Preview baru tersedia di `docs/evidence/MAX-RESUME-FULL/screenshots/`. Avatar mobile menampilkan model berambut dan pakaian terakota; screenshot spawn diambil sebelum karakter lengkap terpasang, sehingga bukan bukti visual karakter final.
+- Native plot menggunakan layout A-101 dan device yang dienumerasi `DWG To PDF.pc3`. Probe tidak menghasilkan PDF, log berhenti saat memilih device; native plotting/font tetap BLOCKED. DWG asli tidak disimpan ulang.
+- M4 tetap demo/disabled; target HP dan keputusan integrasi private belum diisi oleh pemilik.
+
+## Lanjutan v0.2: clearance HUD, 2026-10-03
+
+- V1.0/M5 dijeda atas koreksi Budi. Scope aktif hanya acceptance v0.2; belum commit/deploy baru.
+- Reproduksi test-first pada publik: label `Kevin · ngobrol` menabrak HUD. Setelah perbaikan pertama, tes kedua mereproduksi label `Lobby & resepsi` tertutup joystick. Log RED: `docs/evidence/MAX/v02-hud-red.log`, `v02-touch-red.log`.
+- Label dunia/NPC sekarang tidak ditampilkan ketika proyeksinya berpotongan dengan HUD, joystick, tombol sentuh, prompt atau activity chip; margin 6 px. Ini tidak memindahkan NPC atau menonaktifkan directory. Isi label hanya diubah saat aktivitas berubah, bukan setiap frame.
+- Build final/TypeScript lulus; Vitest 116 lulus; Python 389 lulus. Enam tes clearance final lulus pada desktop/tablet/mobile. Bukti: `v02-build-final.log`, `v02-unit-final.log`, `v02-python.log`, `v02-hud-final.log` dalam `docs/evidence/MAX/`.
+- Screenshot final `docs/evidence/MAX-V02-HUD-FINAL/screenshots/mobile-hud-label-clearance.jpg` ditinjau: label Bruno berada di bawah menu; label lobby yang sebelumnya tertutup joystick tidak lagi muncul di bawah kontrol. Ini review AI, bukan persetujuan Budi atau benchmark HP fisik.
+- Safety scan 722 berkas teks: 0 temuan; audit lisensi: runtimeProblems=0, devNotAllowListed=0; contrast light/dark lulus. Bukti `v02-safety.log`, `v02-license.json`, `v02-contrast.log`.
+- Full suite perbaikan awal: 163 lulus, 5 skipped, 0 gagal/flaky (`v02-regression-results.json`). Full suite versi final sempat terputus batas tool 420 detik, bukan hasil lulus. Rerun final selesai: **166 lulus, 5 skipped, 0 gagal, 0 flaky**, durasi 455942.364 ms; hasil dibaca dari `v02-final-complete-results.json`. Skip bukan PASS perangkat fisik.
+- Budi memberi full-auto/full-approve untuk menuntaskan v0.2. Review visual/keputusan konsep teknis boleh ditangani Max dan spesialis; ini bukan bukti tes manusia/HP fisik. M4 status privat baca-saja masuk scope penyelesaian, tetapi tidak mengizinkan endpoint bot publik atau M5.
+- Handoff resmi berjalan: Nova ICT `t_31bfb910`, Hugo native CAD `t_38108d8c`, Bruno exporter status privat/security `t_61e76661`. Artefak di `/Users/air_buddy/Hermes/_Bersama/2026-10-03-employee-rpg-v02-closure/`. Max memverifikasi sebelum integrasi/deploy.
+- Host tidak melaporkan iPhone/iPad pada inventaris USB; `xcrun devicectl` tidak tersedia. Benchmark HP fisik masih memerlukan akses perangkat, bukan sekadar izin.
+- Native plot/font, model/datasheet ICT, HP fisik, screen reader nyata dan sign-off masih terbuka seperti daftar di bawah. M4 tetap gated/disabled; M5 tidak dikerjakan.
 
 ## Review visual oleh Max (AI, bukan sign-off manusia)
 

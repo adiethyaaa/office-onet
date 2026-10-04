@@ -1,0 +1,13 @@
+{
+  "scope": "PRIBADI employee-rpg PRD v0.2",
+  "gate": "REQ-ACCESS-01 real screen reader",
+  "status": "BLOCKED",
+  "observations": {
+    "VoiceOver_Utility_installed": true,
+    "AXIsProcessTrusted_for_python_process": false,
+    "System_Events_UI_elements_enabled_probe": "timed out after 20 seconds"
+  },
+  "interpretation": "The local automation process lacks macOS Accessibility trust. This is not a completed VoiceOver test or proof of how Safari announces the app.",
+  "required_next_step": "Obtain explicit OS-level Accessibility permission for the automation host, verify trust again, then execute the eight scenarios in docs/DEVICE-VALIDATION.md and record actual announcements.",
+  "safety": "No security settings changed, no TCC database modified, no screen reader scenarios marked PASS."
+}

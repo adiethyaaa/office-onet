@@ -1,6 +1,7 @@
 // Renders IdleSim NPCs with their Blender GLBs and maps activity -> clip.
 // The sim runs on a fixed 0.1 s step; rendering interpolates positions.
 import * as THREE from 'three';
+import { labelClear, type LabelBlocker } from './label-visibility';
 import { IdleSim, type NpcState } from '../sim/idle';
 import type { NavGrid } from '../world/navgrid';
 import { toThree } from '../world/build';
@@ -76,7 +77,7 @@ export class NpcLayer {
     }
   }
 
-  update(dt: number, playerFloor: FloorId, camera: THREE.Camera, w: number, h: number, reducedMotion: boolean, playerPos?: [number, number]): void {
+  update(dt: number, playerFloor: FloorId, camera: THREE.Camera, w: number, h: number, reducedMotion: boolean, playerPos?: [number, number], labelBlockers: LabelBlocker[] = []): void {
     this.acc += dt;
     let steps = 0;
     while (this.acc >= STEP && steps < 5) {
@@ -107,10 +108,15 @@ export class NpcLayer {
       v.avatar.update(dt, npc.phase === 'travel' ? 1 : 0, reducedMotion);
       if (!visible) { v.label.style.opacity = '0'; continue; }
       const s = v.avatar.root.position.clone().add(new THREE.Vector3(0, 1.9, 0)).project(camera);
-      const on = s.z < 1 && Math.abs(s.x) < 1.05 && Math.abs(s.y) < 1.05;
+      const screenY = ((1 - s.y) / 2) * h;
+      const screenX = ((s.x + 1) / 2) * w;
+      const activityText = `${npc.name} · ${ACTIVITY_LABEL[npc.activity] ?? npc.activity}`;
+      if (v.label.textContent !== activityText) v.label.textContent = activityText;
+      const on = s.z < 1 && Math.abs(s.x) < 1.05 && Math.abs(s.y) < 1.05
+        && labelClear(screenX - v.label.offsetWidth / 2, screenY - v.label.offsetHeight,
+          v.label.offsetWidth, v.label.offsetHeight, labelBlockers);
       v.label.style.opacity = on ? '1' : '0';
       if (on) {
-        v.label.textContent = `${npc.name} · ${ACTIVITY_LABEL[npc.activity] ?? npc.activity}`;
         v.label.style.transform = `translate(-50%, -100%) translate(${((s.x + 1) / 2) * w}px, ${((1 - s.y) / 2) * h}px)`;
       }
     }
