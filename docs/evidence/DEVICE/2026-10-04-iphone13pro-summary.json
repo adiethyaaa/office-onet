@@ -1,0 +1,38 @@
+{
+ "device": "iPhone 13 Pro, Safari (iOS 18.7 UA), Budi's phone",
+ "release": "a041f5a1",
+ "target": "30 FPS mobile (REQ-PERF-01)",
+ "runs": [
+  {
+   "fpsAverage": 57,
+   "frameMsMedian": 17,
+   "frameMsP95": 17,
+   "frameMsMax": 1607,
+   "framesOver33ms": 5,
+   "dropRate": 0.001
+  },
+  {
+   "fpsAverage": 59.5,
+   "frameMsMedian": 17,
+   "frameMsP95": 17,
+   "frameMsMax": 387,
+   "framesOver33ms": 6,
+   "dropRate": 0.002
+  },
+  {
+   "fpsAverage": 59.9,
+   "frameMsMedian": 17,
+   "frameMsP95": 17,
+   "frameMsMax": 64,
+   "framesOver33ms": 4,
+   "dropRate": 0.001
+  }
+ ],
+ "median": {
+  "fpsAverage": 59.5,
+  "frameMsP95": 17,
+  "frameMsMax": 387
+ },
+ "charging": "tidak dilaporkan",
+ "verdict": "PASS"
+}

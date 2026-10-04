@@ -480,10 +480,14 @@
      "status": "terverifikasi"
     },
     {
-     "scope": "Perangkat mobile/tablet nyata dan screen reader",
-     "tests": [],
-     "evidence": [],
-     "status": "belum diuji"
+     "scope": "Perangkat mobile nyata: iPhone 13 Pro, Safari, benchmark rute tetap 3x60 s tanpa error (tablet fisik dan iOS VoiceOver belum)",
+     "tests": [
+      "app/tests/e2e/perf.spec.ts"
+     ],
+     "evidence": [
+      "docs/evidence/DEVICE/2026-10-04-iphone13pro-summary.json"
+     ],
+     "status": "terverifikasi"
     },
     {
      "scope": "R2: setiap kontrol dan shortcut punya test (61, sebelumnya 25 tanpa test); jalur gagal context loss, aksi tanpa target, GLB hilang; tiga cacat fallback ditemukan dan diperbaiki",
@@ -574,12 +578,17 @@
      "status": "terverifikasi"
     },
     {
-     "scope": "Target 60 FPS desktop / 30 FPS mobile pada perangkat pilihan Budi",
+     "scope": "Target 30 FPS mobile: iPhone 13 Pro fisik, 3 run rute tetap 60 s, median 59,5 FPS (desktop Mac mini M4 179 FPS di MAX/device)",
      "tests": [
       "app/tests/e2e/perf.spec.ts"
      ],
-     "evidence": [],
-     "status": "belum diuji"
+     "evidence": [
+      "docs/evidence/DEVICE/2026-10-04-iphone13pro-summary.json",
+      "docs/evidence/DEVICE/2026-10-04-iphone13pro-run1.json",
+      "docs/evidence/DEVICE/2026-10-04-iphone13pro-run2.json",
+      "docs/evidence/DEVICE/2026-10-04-iphone13pro-run3.json"
+     ],
+     "status": "terverifikasi"
     },
     {
      "scope": "Anggaran draw call mobile <= 150 dan triangle <= 250k: puncak per frame selama rute tetap 25 s, desktop/tablet/mobile (draw call dan triangle tidak bergantung kecepatan GPU)",
