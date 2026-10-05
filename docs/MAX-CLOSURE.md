@@ -62,3 +62,11 @@ Tidak ada Rex/Bruno/worker baru yang mengerjakan implementasi ini. Tidak ada per
 `npm ci --prefix app --ignore-scripts`; `npm test --prefix app`; `npm run build --prefix app`; `KANTOR_MILESTONE=MAX npx playwright test --workers=2` dari `app/`.
 
 Python: `.venv/bin/python -m pytest tests/py -q`. Setelah mengubah/regenerasi DXF, ulangi `cad/autocad/native_batch.py --core <CoreConsole>`; hash DWG lama tidak lagi berlaku. Setelah mengubah GLB, ulangi optimizer dan `tools/glb_compare.py`. Report asset aktif ada di `docs/evidence/current/`.
+
+## Lanjutan v0.2: penutupan 2026-10-05
+
+- Release publik `f3240780` (commit f324078), backup vhost `/var/backups/employee-rpg-before-f3240780.conf`, release lama `a041f5a1` disimpan.
+- Gerbang akhir publik: 166 pass / 0 fail / 5 skip / 0 flaky (`docs/evidence/MAX/v02-public-deploy2-final-results.json`). Run sebelumnya 161/5 gagal dan 156/10 gagal tetap disimpan; sebagian terjadi saat tunnel Cloudflare memberi 502 ke semua situs air-buddy.site (QUIC "failed to dial", sekitar 01:19 UTC).
+- Keputusan Budi: M4 ditunda ke M5; target otonomi UPS 10 menit (1 EBM, 28,7 menit setelah penuaan).
+- Bukti perangkat: iPhone 13 Pro fisik median 59,5 FPS; macOS VoiceOver asli 8 skenario.
+- Matriks: 48 bagian terverifikasi, 2 tidak didukung (M4 ditunda; plot native AutoCAD belum ada). Review manusia gambar karakter dan ICT-401 belum tercatat.
