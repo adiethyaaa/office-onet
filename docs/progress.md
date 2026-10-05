@@ -10,7 +10,7 @@ SHA:
 - Rebuild clean clone: 51d1fb8, exit 0, 32 menit (`docs/evidence/R2/clean-clone-rebuild.txt`).
 - PR #6 Max/Budi di-merge pemilik ke branch ini (1bcdabc); pelaksana tidak me-merge.
 - Perbaikan CI desain setelah merge itu: 1fc2e48 (job design merah di 1bcdabc, hijau di 1fc2e48).
-- Regresi penuh tiga viewport dan CI terakhir: e9a58fc (angka di bawah).
+- Regresi penuh tiga viewport: kode e9a58fc, Playwright 166 lolos, 0 gagal, 5 skip berjustifikasi, 22,8 menit (`docs/evidence/R2/e2e-final-e9a58fc.txt`); pytest 399 lolos, vitest 116 lolos. CI GitHub hijau kedua job di 1fc2e48; e9a58fc dan sesudahnya dicek di PR.
 
 Hasil (detail `docs/QA-REPORT.md` bagian R2, setiap perbaikan dengan evidence merah lalu hijau):
 - Daun pintu runtime satu derivasi dengan CAD/Blender, buka 1,8 m, posisi terbuka solid di navgrid Python dan TS, visitor terkunci di pintu terbatas, Studio menolak furniture di area ayun (ADR-012).
