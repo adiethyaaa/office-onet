@@ -17,3 +17,6 @@ __pycache__/
 blender/out/_render_tmp/
 /build/
 /blender/out/raw-glb/
+# AutoCAD plot-session copies: unverified (saved during plotting) and backups
+docs/evidence/**/_work/*.dwg
+docs/evidence/**/_work/*.bak

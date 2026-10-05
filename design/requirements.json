@@ -423,7 +423,7 @@
      "evidence": [
       "design/derived/ict-power.json",
       "docs/evidence/MAX/ict-sources/",
-      "docs/evidence/MAX/v02-ict-build.log"
+      "docs/evidence/R2/ict-power-rerun.txt"
      ],
      "status": "terverifikasi"
     },
@@ -576,7 +576,7 @@
      ],
      "evidence": [
       "docs/evidence/M2/vitest.txt",
-      "docs/evidence/MAX/v02-public-deploy-results.json"
+      "docs/evidence/MAX/v02-public-deploy2-final-results.json"
      ],
      "status": "terverifikasi"
     }

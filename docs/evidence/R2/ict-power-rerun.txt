@@ -1,0 +1,10 @@
+Rerun of the ICT power derivation in the R2 session (replaces the uncommitted MAX/v02-ict-build.log).
+$ python3 tools/ict_power.py --world design/world.json --portmap design/derived/ict-portmap.json --out <scratch>/ict-power.json
+{"status": "PASS-KONSEP", "gates": {"poe_per_switch": "PASS", "ups_w_va": "PASS", "ups_runtime": "PASS", "thermal_input_for_mep": "PASS-KONSEP"}, "errors": []}
+exit=0
+$ diff against committed design/derived/ict-power.json
+identical
+$ python3 -m pytest -q tests/py/test_ict_power.py
+.........                                                                [100%]
+9 passed in 0.04s
+exit=0
