@@ -1,7 +1,7 @@
 {
  "project": "kantor-rpg",
  "source": "design/sheets.json",
- "generated_utc": "2026-10-02T02:42:18Z",
+ "generated_utc": "2026-10-05T00:32:15Z",
  "note": "DXF/PDF concept drawings. Native DWG hashes/reopen evidence attached separately; native plot/font review pending.",
  "sheets": [
   {
@@ -614,8 +614,8 @@
    "milestone": "M3",
    "status": "produced (konsep)",
    "revision": "P03",
-   "generated_utc": "2026-10-02T02:42:18Z",
-   "generator_command": "python3 cad/generate.py --all-available",
+   "generated_utc": "2026-10-05T00:32:15Z",
+   "generator_command": "python3 cad/generate.py --sheets ICT-201",
    "pdf_pages": 1,
    "page_size_mm": [
     420,
@@ -629,27 +629,27 @@
    "files": {
     "dxf": {
      "path": "cad/out/ICT-201.dxf",
-     "sha256": "2b3ea8861b9ed496259bd49cc82f83336a64f55246b4fea324647d7266014fd8"
+     "sha256": "c0228eb446552822d4e4295721d3e8a32af33ff947c50f3d72cc7b6cfe9bccaf"
     },
     "pdf": {
      "path": "drawings/pdf/ICT-201.pdf",
-     "sha256": "c799dcf8fe09405b41617a5aaedaa6621905d56a3091c9ea634768d6fb3d9ad1"
+     "sha256": "bcef263ab2888a5b868ee2977547e9be3b09ebab604c4465196417c7fe16c23c"
     },
     "counts": {
      "path": "cad/out/ICT-201.counts.json",
-     "sha256": "4380d45144a5c469e361481b381a901e154f9864dbeb10777fd13e354c2d2b4f"
+     "sha256": "4a83bacf0ad7d0c1300b15063591c6b2c1863d582a34c84cac0a4c83aa1e32b2"
     },
     "preview_pdf": {
      "path": "drawings/previews/ICT-201.png",
-     "sha256": "447b138a7f638f43ddb6153b18b4ed209d9d9a527eb4d274fe3c72742de1ae0d"
+     "sha256": "c93c2932bcd77d15bdd824490c7aa20c4e5b0997b03bc847107a5c4220f40551"
     },
     "preview_dxf": {
      "path": "drawings/previews/ICT-201-dxf.png",
-     "sha256": "2be1a929f42797c2630239102bb8146a6bb9632b39e5f0c7a3fb7184ac985e59"
+     "sha256": "5d1a401d3016bda52228c845425506d7cea9379169dd15924d64c57f8dad8028"
     },
     "dwg": {
      "path": "cad/out/ICT-201.dwg",
-     "sha256": "6b9559a55761fbee29c6fbd025c33549156dee85f6fb20f23a75171d776eb3e2"
+     "sha256": "9c716df25d215831261926791c09738e141e7847ea1fff82c8e5ef0b4e7f9ef1"
     }
    }
   },
@@ -805,7 +805,7 @@
     "ICT-401-3"
    ],
    "bookmarks": 15,
-   "sha256": "bd7469b1a3f708fe62f95f72000b241f79be5723d242e81ca750c9101cb684c2"
+   "sha256": "84d79323b3d60d6507cb1639317fdc5470c31b3c3c0cc7ced4459d2da989b128"
   },
   {
    "file": "drawings/pdf/kantor-rpg-sheets-A.pdf",
@@ -873,7 +873,7 @@
     "ICT-401-3"
    ],
    "bookmarks": 6,
-   "sha256": "60f70fb777509ed00b069199f354c6fbac901f22a6603255cd37261c925b2309"
+   "sha256": "2d48cefebf7497189d36fc811073c93400b1dcc68719e039288e3d1a39018998"
   }
  ]
 }

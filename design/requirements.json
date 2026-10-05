@@ -428,12 +428,16 @@
      "status": "terverifikasi"
     },
     {
-     "scope": "Runtime UPS: target otonomi belum ditetapkan Budi (kurva vendor 3,5-11 menit)",
-     "tests": [],
-     "evidence": [
-      "design/derived/ict-power.json"
+     "scope": "Runtime UPS >= 10 menit (target Budi 2026-10-05) pada beban 1609 W: kurva vendor + 1 EBM 35,9 menit, x0,8 penuaan = 28,7 menit; baterai internal saja 7,1 menit (gagal, dicatat)",
+     "tests": [
+      "tests/py/test_ict_power.py"
      ],
-     "status": "asumsi"
+     "evidence": [
+      "design/derived/ict-power.json",
+      "docs/evidence/MAX/ict-sources/ups-runtime-chart-ebm.json",
+      "docs/evidence/MAX/ict-sources/ups-runtime-chart.json"
+     ],
+     "status": "terverifikasi"
     },
     {
      "scope": "M3: gambar ICT-001/101/102/201/301/401 konsisten dengan port map (ID, panjang total, U rack)",
@@ -547,9 +551,11 @@
    "boundary": "visitor/unauth tidak menerima payload private. Disabled sebelum izin.",
    "parts": [
     {
-     "scope": "M4 disabled sampai izin Budi",
+     "scope": "Integrasi private M4 (AC-DATA-01): DITUNDA ke M5 atas keputusan Budi 2026-10-05; tidak dibangun di v0.2",
      "tests": [],
-     "evidence": [],
+     "evidence": [
+      "docs/MAX-CLOSURE.md"
+     ],
      "status": "tidak didukung"
     },
     {
@@ -559,6 +565,18 @@
      ],
      "evidence": [
       "docs/evidence/M2/vitest.txt"
+     ],
+     "status": "terverifikasi"
+    },
+    {
+     "scope": "Boundary v0.2: build publik menolak mode private (AdapterDisabledError) dan hanya meminta origin sendiri",
+     "tests": [
+      "app/tests/unit/adapter.test.ts",
+      "app/tests/e2e/world.spec.ts"
+     ],
+     "evidence": [
+      "docs/evidence/M2/vitest.txt",
+      "docs/evidence/MAX/v02-public-deploy-results.json"
      ],
      "status": "terverifikasi"
     }
@@ -573,14 +591,18 @@
    "boundary": "tidak klaim FPS tanpa benchmark",
    "parts": [
     {
-     "scope": "M0: anggaran transfer/triangle dihitung",
+     "scope": "Anggaran transfer/triangle: dihitung (capacity.json) lalu diukur. Muat awal 5,40 MB <= 6 MB; scene terlihat 189,6k triangle <= 250k pada kualitas tinggi dan rendah. Pass bayangan kualitas tinggi menambah 189k (total 378,6k/frame), dicatat terpisah; iPhone 13 Pro tetap 59,5 FPS",
      "tests": [
-      "tools/capacity.py"
+      "tools/capacity.py",
+      "app/tests/e2e/budget.spec.ts",
+      "app/tests/e2e/bundle.spec.ts"
      ],
      "evidence": [
-      "design/derived/capacity.json"
+      "design/derived/capacity.json",
+      "docs/evidence/MAX/v02-triangle-split.json",
+      "docs/evidence/DEVICE/2026-10-04-iphone13pro-summary.json"
      ],
-     "status": "asumsi"
+     "status": "terverifikasi"
     },
     {
      "scope": "M1: harness rute tetap 60 s berjalan dan tercatat (container SwiftShader)",

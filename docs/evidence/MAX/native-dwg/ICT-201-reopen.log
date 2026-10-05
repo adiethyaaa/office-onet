@@ -1,11 +1,11 @@
 Attribute Qt::AA_PluginApplication must be set before QCoreApplication is created.
-Redirect stdout (file: /var/tmp/accc83492sgdSHx).
+Redirect stdout (file: /var/tmp/accc260823eIztf).
 AcCoreConsole: StdOutConsoleMode: processed-output: enabled,auto
 AutoCAD Core Engine Console - Copyright 2024 Autodesk, Inc.  All rights reserved. (V.58.M.214)
 
 Execution Path:
 /Applications/Autodesk/AutoCAD 2025/AutoCAD 2025.app/Contents/Helpers/AcCoreConsole.app
-Current Directory: /Users/air_buddy/Hermes/00-Umum/Riset/2026-10-02-kantor-rpg-max/kantor-rpg
+Current Directory: /Volumes/Air_Buddy-Work/Local/Hermes/00-Umum/Riset/2026-10-02-kantor-rpg-max/kantor-rpg
 
 Version Number: V.58.M.214 (UNICODE)
 LogFilePath has been set to the working folder.

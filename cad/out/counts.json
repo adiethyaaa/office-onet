@@ -180,8 +180,8 @@
   "ICT-201": {
    "file": "ICT-201.counts.json",
    "world_revision": "P03",
-   "modelspace_total": 279,
-   "paperspace_total": 160,
+   "modelspace_total": 284,
+   "paperspace_total": 168,
    "openings": {
     "window_symbols": 0,
     "windows_per_floor": {},

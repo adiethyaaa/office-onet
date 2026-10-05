@@ -63,6 +63,35 @@ def apply_patch(doc, ops):
 
 
 # ---------- derivation --------------------------------------------------------
+def interp_curve(points, load_w):
+    """Linear interpolation on the vendor runtime curve; refuses to extrapolate."""
+    pts = sorted(points)
+    if not pts[0][0] <= load_w <= pts[-1][0]:
+        raise ValueError(f"load {load_w:.0f} W outside vendor curve {pts[0][0]}-{pts[-1][0]} W")
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        if x0 <= load_w <= x1:
+            return y0 + (y1 - y0) * (load_w - x0) / (x1 - x0)
+    return pts[-1][1]
+
+
+def ups_runtime(ups, ebm, pm, load_w):
+    """Runtime at the connected load (no sizing margin: the margin is for capacity, not
+    autonomy), new-battery vendor curve x ageing factor, against the owner's target."""
+    curves = ups["runtimeCurveMin"]
+    qty = (ebm or {}).get("quantity", 0)
+    key = {0: "internal", 1: "internalPlus1EBM"}.get(qty)
+    if key is None:
+        raise ValueError(f"no vendor curve for {qty} EBM")
+    curve_min = interp_curve(curves[key], load_w)
+    derated = curve_min * pm["upsBatteryAgeingFactor"]
+    target = pm["upsAutonomyTargetMin"]
+    internal_only = interp_curve(curves["internal"], load_w) * pm["upsBatteryAgeingFactor"]
+    return {"curve": key, "ebmQuantity": qty, "loadW": round(load_w, 1), "curveMin": round(curve_min, 1),
+            "derated": round(derated, 1), "internalOnlyDerated": round(internal_only, 1),
+            "targetMin": target, "targetSource": pm["upsAutonomyTargetSource"],
+            "status": "PASS" if derated >= target else "BLOCKED"}
+
+
 def derive_power(world, portmap):
     ict = world["ict"]
     pm = ict["powerModel"]
@@ -117,7 +146,7 @@ def derive_power(world, portmap):
         for item in rack["contents"]:
             kind = item["type"]
             ref = refs.get(kind)
-            if not ref or kind == "ups_placeholder":
+            if not ref or kind in ("ups_placeholder", "ups_battery_module"):
                 continue
             dev = item["device"]
             if kind.startswith("switch_access"):
@@ -151,13 +180,14 @@ def derive_power(world, portmap):
     if not ups_ok:
         errors.append(f"UPS capacity exceeded: need {need_w:.1f} W / {need_va:.1f} VA vs {ups['outputW']} W / {ups['outputVA']} VA")
     gates["ups_w_va"] = "PASS" if ups_ok else "BLOCKED"
-    gates["ups_runtime"] = "BLOCKED"  # no autonomy target given; vendor curve only brackets it
     load_frac = load_w / ups["outputW"]
-    if 0.5 <= load_frac <= 1:
-        runtime_note = (f"antara {ups['runtimeFullLoadMin']} dan {ups['runtimeHalfLoadMin']} menit "
-                        f"(beban {load_frac:.0%} dari rating; kurva vendor, baterai baru)")
-    else:
-        runtime_note = f"beban {load_frac:.0%} di luar braket 50-100% kurva vendor; pakai runtime tool vendor"
+    runtime = ups_runtime(ups, refs.get("ups_battery_module"), pm, load_w)
+    if runtime["status"] != "PASS":
+        errors.append(f"UPS runtime {runtime['derated']} min < target {runtime['targetMin']} min")
+    gates["ups_runtime"] = runtime["status"]
+    runtime_note = (f"{runtime['curveMin']} menit kurva vendor ({runtime['curve']}), "
+                    f"{runtime['derated']} menit setelah faktor penuaan {pm['upsBatteryAgeingFactor']}; "
+                    f"target {runtime['targetMin']} menit; beban {load_frac:.0%} dari rating")
 
     # 3) Thermal: PD power leaves the room; PoE cable loss stays counted in the room (conservative).
     #    UPS loss = vendor online dissipation at full load, added once.
@@ -175,7 +205,8 @@ def derive_power(world, portmap):
                 "connectedW": round(load_w, 1), "connectedVA": round(load_va, 1),
                 "requiredWithMarginW": round(need_w, 1), "requiredWithMarginVA": round(need_va, 1),
                 "utilizationW": round(need_w / ups["outputW"], 4), "utilizationVA": round(need_va / ups["outputVA"], 4),
-                "runtime": runtime_note, "runtimeStatus": "BLOCKED: target otonomi belum ditetapkan; kurva vendor = baterai baru"},
+                "runtime": runtime_note, "runtimeDetail": runtime,
+                "runtimeStatus": runtime["status"]},
         "mepInputForHugo": {
             "circuit": "1 sirkit dedicated untuk UPS-01 di L1-SERVER (rack RK-L1-02)",
             "upsInputW": round(upstream_w, 1),

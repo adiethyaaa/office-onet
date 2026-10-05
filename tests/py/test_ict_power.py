@@ -22,13 +22,38 @@ def test_committed_power_report_matches_generator():
     assert ict_power.derive_power(WORLD, PORTMAP) == committed
 
 
-def test_gates_pass_except_runtime_which_waits_for_an_autonomy_target():
+def test_all_power_gates_pass():
     res = ict_power.derive_power(WORLD, PORTMAP)
     assert res["errors"] == []
-    assert res["gates"]["poe_per_switch"] == "PASS"
-    assert res["gates"]["ups_w_va"] == "PASS"
+    assert res["gates"] == {"poe_per_switch": "PASS", "ups_w_va": "PASS", "ups_runtime": "PASS",
+                            "thermal_input_for_mep": "PASS-KONSEP"}
+
+
+def test_runtime_meets_the_owner_target_only_with_the_battery_module():
+    rt = ict_power.derive_power(WORLD, PORTMAP)["ups"]["runtimeDetail"]
+    assert rt["targetMin"] == 10 and rt["ebmQuantity"] == 1
+    assert rt["derated"] >= 10
+    # Internal battery alone is about 9 min new, about 7 min aged: below target.
+    assert rt["internalOnlyDerated"] < 10
+
+
+def test_without_battery_module_runtime_gate_blocks():
+    w = copy.deepcopy(WORLD)
+    w["ict"]["referenceModels"]["ups_battery_module"]["quantity"] = 0
+    res = ict_power.derive_power(w, PORTMAP)
     assert res["gates"]["ups_runtime"] == "BLOCKED"
-    assert res["gates"]["thermal_input_for_mep"] == "PASS-KONSEP"
+    assert any("UPS runtime" in e for e in res["errors"])
+
+
+def test_curve_interpolation_and_no_extrapolation():
+    pts = [[1600, 8.9], [1700, 8.6]]
+    assert abs(ict_power.interp_curve(pts, 1650) - 8.75) < 1e-9
+    try:
+        ict_power.interp_curve(pts, 1800)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("extrapolation must be refused")
 
 
 def test_poe_is_judged_per_switch_not_averaged():

@@ -5,7 +5,7 @@
  "gates": {
   "poe_per_switch": "PASS",
   "ups_w_va": "PASS",
-  "ups_runtime": "BLOCKED",
+  "ups_runtime": "PASS",
   "thermal_input_for_mep": "PASS-KONSEP"
  },
  "switches": [
@@ -155,8 +155,19 @@
   "requiredWithMarginVA": 2234.5,
   "utilizationW": 0.7448,
   "utilizationVA": 0.7448,
-  "runtime": "antara 3.5 dan 11 menit (beban 60% dari rating; kurva vendor, baterai baru)",
-  "runtimeStatus": "BLOCKED: target otonomi belum ditetapkan; kurva vendor = baterai baru"
+  "runtime": "35.9 menit kurva vendor (internalPlus1EBM), 28.7 menit setelah faktor penuaan 0.8; target 10 menit; beban 60% dari rating",
+  "runtimeDetail": {
+   "curve": "internalPlus1EBM",
+   "ebmQuantity": 1,
+   "loadW": 1608.8,
+   "curveMin": 35.9,
+   "derated": 28.7,
+   "internalOnlyDerated": 7.1,
+   "targetMin": 10,
+   "targetSource": "Budi 2026-10-05 (setuju target 10 menit)",
+   "status": "PASS"
+  },
+  "runtimeStatus": "PASS"
  },
  "mepInputForHugo": {
   "circuit": "1 sirkit dedicated untuk UPS-01 di L1-SERVER (rack RK-L1-02)",

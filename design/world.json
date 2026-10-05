@@ -10838,10 +10838,16 @@
       "height": 1
      },
      {
+      "device": "EBM-01",
+      "type": "ups_battery_module",
+      "u": 4,
+      "height": 2
+     },
+     {
       "device": "UPS-01",
       "type": "ups_placeholder",
       "u": 1,
-      "height": 3
+      "height": 2
      }
     ]
    }
@@ -10870,6 +10876,7 @@
    },
    "pdu": {},
    "ups_placeholder": {},
+   "ups_battery_module": {},
    "cable_manager": {}
   },
   "pathways": {
@@ -11082,7 +11089,8 @@
    "AS-ICT-06",
    "AS-NET-01",
    "AS-ICT-07",
-   "AS-ICT-08"
+   "AS-ICT-08",
+   "AS-ICT-09"
   ],
   "referenceModels": {
    "status": "model REFERENSI konsep untuk menutup gate daya; bukan keputusan pengadaan, tanpa harga (AS-ICT-07)",
@@ -11138,7 +11146,228 @@
     "outputW": 2700,
     "onlineThermalBTUh": 1139,
     "runtimeFullLoadMin": 3.5,
-    "runtimeHalfLoadMin": 11
+    "runtimeHalfLoadMin": 11,
+    "runtimeCurveSource": "SRC-ICT-07",
+    "runtimeCurveMin": {
+     "internal": [
+      [
+       200,
+       98
+      ],
+      [
+       300,
+       63
+      ],
+      [
+       400,
+       48
+      ],
+      [
+       500,
+       36
+      ],
+      [
+       600,
+       29
+      ],
+      [
+       700,
+       24
+      ],
+      [
+       800,
+       20
+      ],
+      [
+       900,
+       20
+      ],
+      [
+       1000,
+       16
+      ],
+      [
+       1100,
+       14
+      ],
+      [
+       1200,
+       13
+      ],
+      [
+       1300,
+       11
+      ],
+      [
+       1400,
+       11
+      ],
+      [
+       1500,
+       10
+      ],
+      [
+       1600,
+       8.9
+      ],
+      [
+       1700,
+       8.6
+      ],
+      [
+       1800,
+       7.8
+      ],
+      [
+       1900,
+       7.1
+      ],
+      [
+       2000,
+       6.5
+      ],
+      [
+       2100,
+       6.1
+      ],
+      [
+       2200,
+       5.5
+      ],
+      [
+       2300,
+       4.9
+      ],
+      [
+       2400,
+       4.4
+      ],
+      [
+       2500,
+       4
+      ],
+      [
+       2600,
+       3.7
+      ],
+      [
+       2700,
+       3.5
+      ]
+     ],
+     "internalPlus1EBM": [
+      [
+       200,
+       341
+      ],
+      [
+       300,
+       206
+      ],
+      [
+       400,
+       165
+      ],
+      [
+       500,
+       132
+      ],
+      [
+       600,
+       107
+      ],
+      [
+       700,
+       94
+      ],
+      [
+       800,
+       82
+      ],
+      [
+       900,
+       77
+      ],
+      [
+       1000,
+       67
+      ],
+      [
+       1100,
+       57
+      ],
+      [
+       1200,
+       54
+      ],
+      [
+       1300,
+       46
+      ],
+      [
+       1400,
+       45
+      ],
+      [
+       1500,
+       39
+      ],
+      [
+       1600,
+       36
+      ],
+      [
+       1700,
+       35
+      ],
+      [
+       1800,
+       33
+      ],
+      [
+       1900,
+       31
+      ],
+      [
+       2000,
+       29
+      ],
+      [
+       2100,
+       27
+      ],
+      [
+       2200,
+       25
+      ],
+      [
+       2300,
+       23
+      ],
+      [
+       2400,
+       21
+      ],
+      [
+       2500,
+       19
+      ],
+      [
+       2600,
+       17
+      ],
+      [
+       2700,
+       16
+      ]
+     ]
+    }
+   },
+   "ups_battery_module": {
+    "model": "CyberPower BPE72V60ART2U (EBM, charger internal)",
+    "source": "SRC-ICT-07",
+    "rackU": 2,
+    "quantity": 1
    }
   },
   "powerModel": {
@@ -11147,6 +11376,9 @@
    "loadPowerFactorFloor": 0.9,
    "psuEfficiencyFloorAssumed": 0.9,
    "accessoryAllowanceW": 30,
+   "upsAutonomyTargetMin": 10,
+   "upsAutonomyTargetSource": "Budi 2026-10-05 (setuju target 10 menit)",
+   "upsBatteryAgeingFactor": 0.8,
    "nominalVoltageV": 230,
    "btuPerW": 3.412142,
    "sources": {
@@ -11155,7 +11387,8 @@
     "SRC-ICT-03": "https://techspecs.ui.com/unifi/cloud-gateways/udm-pro-max",
     "SRC-ICT-04": "https://www.delltechnologies.com/asset/en-us/products/servers/technical-support/poweredge-r760xs-spec-sheet.pdf",
     "SRC-ICT-05": "https://www.synology.com/en-global/products/RS2423+#specs",
-    "SRC-ICT-06": "https://www.cyberpower.com/global/en/product/sku/ol3000ertxl2u"
+    "SRC-ICT-06": "https://www.cyberpower.com/global/en/product/sku/ol3000ertxl2u",
+    "SRC-ICT-07": "https://www.cyberpower.com/global/en/product/sku/ol3000ertxl2u#runtime_chart (Highcharts data, diambil 2026-10-05)"
    }
   }
  },
@@ -11365,6 +11598,11 @@
    "id": "AS-ICT-08",
    "topic": "ict",
    "text": "Metode daya: switch dengan PD memakai plafon vendor termasuk PoE, tanpa switch memakai maksimum vendor tanpa PoE; server = rating PSU aktif / efisiensi 0,90 (asumsi); PF beban 0,90 (asumsi); margin 1,25; allowance aksesori 30 W (asumsi). Panas ruang server = input AC − daya PD yang keluar ruang + disipasi UPS vendor; rugi kabel PoE dihitung di ruang server (konservatif). Runtime UPS dan sizing AC belum dievaluasi."
+  },
+  {
+   "id": "AS-ICT-09",
+   "topic": "ict",
+   "text": "Target otonomi UPS 10 menit pada beban terhubung (Budi, 2026-10-05). Runtime dibaca dari kurva vendor (baterai baru) dengan interpolasi linier, lalu dikali 0,8 untuk penuaan baterai (asumsi). Baterai internal saja tidak cukup; 1 EBM BPE72V60ART2U ditambahkan sebagai model referensi, bukan keputusan pengadaan."
   },
   {
    "id": "AS-NET-01",

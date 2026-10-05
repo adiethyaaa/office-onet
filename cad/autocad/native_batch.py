@@ -18,11 +18,16 @@ def sha(path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--core', required=True)
+    ap.add_argument('--sheets', nargs='+', help='only these sheets; other rows in report.json are kept')
     args = ap.parse_args()
     evidence = ROOT / 'docs/evidence/MAX/native-dwg'
     cache = ROOT / '.cache/autocad'
     evidence.mkdir(parents=True, exist_ok=True)
     cache.mkdir(parents=True, exist_ok=True)
+    report_path = evidence / 'report.json'
+    kept = []
+    if args.sheets and report_path.exists():
+        kept = [r for r in json.loads(report_path.read_text()) if r['sheet'] not in args.sheets]
     lisp = cache / 'counts.lsp'
     lisp.write_text('''(defun c:KRCOUNT (/ ss i ed key pair lst fn f total)
 (setq ss (ssget "_X" '((410 . "Model"))) lst '() total 0)
@@ -35,9 +40,11 @@ def main():
 (princ (strcat "\\nNATIVE_UNITS=" (itoa (getvar "INSUNITS"))))
 (foreach x (dictsearch (namedobjdict) "ACAD_LAYOUT") (if (= (car x) 3) (princ (strcat "\\nNATIVE_LAYOUT=" (cdr x))))) (princ))
 ''')
-    report = []
+    report = list(kept)
     for dxf in sorted((ROOT / 'cad/out').glob('*.dxf')):
         sid = dxf.stem
+        if args.sheets and sid not in args.sheets:
+            continue
         dwg = dxf.with_suffix('.dwg')
         if dwg.exists():
             dwg.unlink()

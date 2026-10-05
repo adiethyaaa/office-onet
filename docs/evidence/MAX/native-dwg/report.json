@@ -183,21 +183,6 @@
     "font_note": "See convert log: substituted fonts; visual native plot review not complete."
   },
   {
-    "sheet": "ICT-201",
-    "dxf_sha256": "2b3ea8861b9ed496259bd49cc82f83336a64f55246b4fea324647d7266014fd8",
-    "dwg_sha256": "6b9559a55761fbee29c6fbd025c33549156dee85f6fb20f23a75171d776eb3e2",
-    "bytes": 41175,
-    "reopen": true,
-    "audit_errors": 0,
-    "units": 4,
-    "model_counts_match": true,
-    "paper_layouts": [
-      "ICT-201",
-      "Model"
-    ],
-    "font_note": "See convert log: substituted fonts; visual native plot review not complete."
-  },
-  {
     "sheet": "ICT-301",
     "dxf_sha256": "c29f6e6f2f197f78d86d25e5cb1948a3406394185ad1bebf3b3cda44adcfa6ba",
     "dwg_sha256": "cc7c8af3d9721bb4ae6b4d077be911f9e98e8cc0d3c750cb1c4e7cc80396f185",
@@ -225,6 +210,21 @@
       "ICT-401-1",
       "ICT-401-2",
       "ICT-401-3",
+      "Model"
+    ],
+    "font_note": "See convert log: substituted fonts; visual native plot review not complete."
+  },
+  {
+    "sheet": "ICT-201",
+    "dxf_sha256": "c0228eb446552822d4e4295721d3e8a32af33ff947c50f3d72cc7b6cfe9bccaf",
+    "dwg_sha256": "9c716df25d215831261926791c09738e141e7847ea1fff82c8e5ef0b4e7f9ef1",
+    "bytes": 42138,
+    "reopen": true,
+    "audit_errors": 0,
+    "units": 4,
+    "model_counts_match": true,
+    "paper_layouts": [
+      "ICT-201",
       "Model"
     ],
     "font_note": "See convert log: substituted fonts; visual native plot review not complete."

@@ -390,13 +390,15 @@ def build_ict_plan(sheet, ctx):
 
 TYPE_FILL = {"patch_panel_24": "#cfe0d6", "cable_manager": "#eef0ee", "switch_access_48_poe": "#bcd3c6",
              "switch_aggregation": "#a9c6b6", "gateway_virtual": "#e8d5b9", "server_placeholder": "#d6e3ea",
-             "storage_placeholder": "#e6dcef", "pdu": "#f0cfc4", "ups_placeholder": "#f3e3c3"}
+             "storage_placeholder": "#e6dcef", "pdu": "#f0cfc4", "ups_placeholder": "#f3e3c3",
+             "ups_battery_module": "#f3e3c3"}
 # Type names short enough to sit beside a 1U slot at a legible size; model,
-# PDU and UPS rating stay TBD (AS-ICT-04, AS-ICT-05, noted on the sheet).
+# PDU stays TBD; UPS and EBM are concept reference models (AS-ICT-07, AS-ICT-09).
 TYPE_SHORT = {"patch_panel_24": "patch panel 24", "cable_manager": "cable manager",
               "switch_access_48_poe": "switch akses 48 PoE", "switch_aggregation": "switch agregasi",
               "gateway_virtual": "gateway virtual", "server_placeholder": "server (placeholder)",
-              "storage_placeholder": "storage (placeholder)", "pdu": "PDU", "ups_placeholder": "UPS (rating TBD)"}
+              "storage_placeholder": "storage (placeholder)", "pdu": "PDU", "ups_placeholder": "UPS 3 kVA (ref.)",
+              "ups_battery_module": "baterai UPS (EBM)"}
 
 
 def build_racks(sheet, ctx):
@@ -490,7 +492,7 @@ def build_racks(sheet, ctx):
     assert y > tb[3] + 2, f"ICT-201 table overflow {y:.1f}"
     yn = fy0 + 50
     for n_ in [f"Skala tampak rack 1:{den}; 1U = 44,45 mm, nomor U dihitung dari bawah. Tg = tinggi dalam U.",
-               "Model switch, PDU dan UPS belum dipilih (AS-ICT-04, AS-ICT-05); tidak ada harga.",
+               "Switch, UPS 3 kVA + 1 EBM = model referensi konsep (AS-ICT-07, AS-ICT-09), bukan keputusan beli; PDU belum dipilih; tanpa harga.",
                f"Clearance depan {fmt_m(clr['front'])} m / belakang {fmt_m(clr['rear'])} m adalah target konsep dari "
                "catalog (AS-ICT-06), wajib diverifikasi ke standar yang dipilih."]:
         yn = paragraph(page, fx0 + 4, yn, n_, tb[0] - fx0 - 12, size=b, bullet=True)
