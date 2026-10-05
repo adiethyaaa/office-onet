@@ -68,7 +68,10 @@ test.describe('persona NPCs (M2)', () => {
   test('blueprint table and virtual activities give real feedback', async ({ page }) => {
     await boot(page);
     expect(await walkTo(page, 23.0, 12.2)).toBe(true);
-    await expect(page.locator('#prompt')).toContainText(/denah|Sapa/);
+    // At 23.0, 12.2 the CEO stands on the plan table's own read slot
+    // (SL-L1-073-1, 0.05 m away), which outranks the table body (0.8 m);
+    // a persona inside 1.6 m outranks both. All three are this table's spot.
+    await expect(page.locator('#prompt')).toContainText(/denah|Membaca|Sapa/);
     await page.evaluate(() => (window.__kantor!.useInteractable as (id: string) => void)('FX-L1-073'));
     await expect(page.locator('#dlg-info')).toContainText('KONSEP');
     await expect(page.locator('#dlg-info a[href="docs/A-101.pdf"]')).toBeVisible();
