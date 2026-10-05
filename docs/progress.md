@@ -2,6 +2,28 @@
 
 Log untuk supervisor (Max). Entri terbaru di atas. Status memakai DONE_Mx / NEEDS_INPUT / BLOCKED; angka test adalah hasil eksekusi, bukan target.
 
+## R2 (branch claude/kantor-rpg-m3-hardening, basis b109cde, PR draft air-buddy410/kantor-rpg#5)
+
+Status: DONE_R2 untuk keempat cacat produk dan audit yang dapat dikerjakan di cloud; bukan klaim 100% PRD. Tidak ada merge, deploy, akses kredensial hosting, paid usage atau top-up. Runtime sesi: model claude-opus-5-5, effort high (get_session; last_served_model sama, isUsingOverage false).
+
+SHA:
+- Rebuild clean clone: 51d1fb8, exit 0, 32 menit (`docs/evidence/R2/clean-clone-rebuild.txt`).
+- PR #6 Max/Budi di-merge pemilik ke branch ini (1bcdabc); pelaksana tidak me-merge.
+- Perbaikan CI desain setelah merge itu: 1fc2e48 (job design merah di 1bcdabc, hijau di 1fc2e48).
+- Regresi penuh tiga viewport dan CI terakhir: e9a58fc (angka di bawah).
+
+Hasil (detail `docs/QA-REPORT.md` bagian R2, setiap perbaikan dengan evidence merah lalu hijau):
+- Daun pintu runtime satu derivasi dengan CAD/Blender, buka 1,8 m, posisi terbuka solid di navgrid Python dan TS, visitor terkunci di pintu terbatas, Studio menolak furniture di area ayun (ADR-012).
+- NPC berjalan: 401 langkah tumpang tindih menjadi 0 pada soak seed 42 (2 jam), 11 dan 3; tidak ada NPC diam lebih dari 10 s (ADR-013).
+- Semua teks 15 sheet A3 >= 2,64 mm, termasuk label jendela.
+- Muat awal 9,73 MB menjadi 5,40 MB; chunk entry 227 kB, three.js 667 kB terpisah, Studio dan harness lazy (ADR-014).
+- Audit: kontrol tanpa test 25/58 menjadi 0/61; Must 50 terverifikasi, 2 tidak didukung (M4); 9 skip menjadi 5 berjustifikasi (`docs/SKIP-LEDGER.md`).
+- Hook perangkat `?perf=route&report=1`, `?a11ylog=1`, runbook `docs/DEVICE-VALIDATION.md`. Budi/Max menjalankannya: iPhone 13 Pro 59,5 FPS, macOS VoiceOver 8 skenario. Temuan VoiceOver (judul halaman) diperbaiki di e9a58fc.
+
+Blocked / belum diuji: DWG native tidak dapat dibuat ulang di cloud (AutoCAD berlisensi hanya di mesin Max/Budi; 15 DWG dan 20/20 plot native sudah tercatat); Android, tablet fisik, iOS VoiceOver dan TalkBack belum diuji; M4 disabled dan ditunda ke M5.
+
+Next safe action: Max/Budi review PR #5 dan putuskan merge ke main; bila DXF berubah lagi, jalankan ulang `cad/autocad/native_batch.py` di mesin berlisensi; uji Android/tablet dan TalkBack dengan `docs/DEVICE-VALIDATION.md`.
+
 ## Hardening (branch claude/kantor-rpg-m3-hardening, basis c9c278a1e5afdca4547a36fb49b1f0ad0dd61e42, PR draft air-buddy410/kantor-rpg#5)
 
 Status: DONE_HARDENING untuk item Max yang dapat dikerjakan di cloud; native DWG BLOCKED; M4 disabled; FPS perangkat dan screen reader belum diuji. Tidak ada merge atau deploy. Runtime sesi: model claude-opus-5-5, effort high (get_session; last_served_model sama). Jendela rate limit 7 hari tetap "rejected" (reset 2026-10-03 16:00 UTC) tetapi sesi tetap melayani; tanpa fallback berbayar. Preview yang dipin ke c9c278a milik tugas Bruno t_99cdde23 dan tidak disentuh; runbook pergantian SHA ada di `docs/PREVIEW-HANDOFF.md`.
