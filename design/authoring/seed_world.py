@@ -300,9 +300,9 @@ def seed_fixtures():
     # Lobby
     f("L1-LOBBY", "reception_desk", 14, 5.0, 0)
     f("L1-LOBBY", "chair", 14, 5.85, 180)
-    f("L1-LOBBY", "sofa", 9.0, 2.0, 270)
+    f("L1-LOBBY", "sofa", 9.0, 2.0, 90)
     f("L1-LOBBY", "coffee_table", 10.3, 2.0, 90)
-    f("L1-LOBBY", "sofa", 18.6, 1.8, 90)
+    f("L1-LOBBY", "sofa", 18.6, 1.8, 270)
     f("L1-LOBBY", "plant_large", 8.6, 0.6)
     f("L1-LOBBY", "plant_large", 19.4, 0.6)
     f("L1-LOBBY", "plant_large", 8.6, 7.4)
@@ -310,11 +310,15 @@ def seed_fixtures():
     f("L1-LOBBY", "poster", 19.9, 6.0, 270, artwork="ART-01")
     # Meeting
     f("L1-MEET", "meeting_table", 4.0, 4.2, 0)
-    for x in (2.5, 3.5, 4.5, 5.5):
+    # No chair at the east end: the double door (D-L1-02) swings into this
+    # room and its open leaves need a clear lane, so the tenth seat goes on
+    # the north side (five there, four south, one at the west end).
+    north = (2.4, 3.2, 4.0, 4.8, 5.6)
+    for x, xn in zip((2.5, 3.5, 4.5, 5.5), north):
         f("L1-MEET", "chair", x, 3.15, 180)
-        f("L1-MEET", "chair", x, 5.25, 0)
+        f("L1-MEET", "chair", xn, 5.25, 0)
     f("L1-MEET", "chair", 1.55, 4.2, 90)
-    f("L1-MEET", "chair", 6.45, 4.2, 270)
+    f("L1-MEET", "chair", north[-1], 5.25, 0)
     f("L1-MEET", "wall_display", 0.2, 4.2, 90)
     f("L1-MEET", "whiteboard", 6.4, 7.88, 0)
     f("L1-MEET", "plant_small", 0.5, 0.5)
@@ -378,7 +382,7 @@ def seed_fixtures():
     b.ws("L1-CEO", 3.5, 22.2, 180, desk="desk_exec")
     f("L1-CEO", "chair_guest", 3.0, 21.05, 180)
     f("L1-CEO", "chair_guest", 4.0, 21.05, 180)
-    f("L1-CEO", "sofa", 6.45, 20.6, 90)
+    f("L1-CEO", "sofa", 6.45, 20.6, 270)
     f("L1-CEO", "bookshelf", 0.38, 21.2, 90)
     f("L1-CEO", "plant_large", 0.6, 23.4)
     # Hugo
@@ -407,17 +411,17 @@ def seed_fixtures():
     # Reading
     for y in (2.0, 4.0, 6.0):
         f("L2-READ", "bookshelf", 0.38, y, 90)
-    f("L2-READ", "armchair", 2.6, 2.5, 270)
-    f("L2-READ", "armchair", 2.6, 5.5, 270)
+    f("L2-READ", "armchair", 2.6, 2.5, 90)
+    f("L2-READ", "armchair", 2.6, 5.5, 90)
     f("L2-READ", "coffee_table", 4.2, 4.0, 90)
     f("L2-READ", "bench", 5.5, 0.45, 180)
     f("L2-READ", "plant_large", 7.4, 7.4)
     f("L2-READ", "plant_small", 7.5, 0.5)
     # Lounge
     f("L2-LOUNGE", "sofa", 11.0, 0.6, 180)
-    f("L2-LOUNGE", "sofa", 8.6, 3.0, 270)
+    f("L2-LOUNGE", "sofa", 8.6, 3.0, 90)
     f("L2-LOUNGE", "coffee_table", 11.0, 2.4, 0)
-    f("L2-LOUNGE", "armchair", 12.8, 3.4, 90)
+    f("L2-LOUNGE", "armchair", 12.8, 3.4, 270)
     f("L2-LOUNGE", "coffee_bar", 16.5, 0.5, 180)
     f("L2-LOUNGE", "beanbag", 15.0, 3.6, 0)
     f("L2-LOUNGE", "beanbag", 16.4, 3.8, 0)
@@ -754,13 +758,15 @@ def rotate(dx, dy, rot):
 
 def derive_slots(fixtures):
     slots = []
+    # A work chair around a meeting table is a meeting seat, not a workstation.
+    meeting_rooms = {fx["room"] for fx in fixtures if fx["type"] == "meeting_table"}
     for fx in fixtures:
         cat = CATALOG[fx["type"]]
         for i, s in enumerate(cat.get("slots", [])):
             ox, oy = rotate(s["dx"], s["dy"], fx["rot"])
             facing = (fx["rot"] - 90 + s.get("facingRel", 0)) % 360
             slots.append({"id": f"SL-{fx['id'][3:]}-{i + 1}", "fixture": fx["id"], "floor": fx["floor"], "room": fx["room"],
-                          "activity": s["activity"], "pos": [round(fx["pos"][0] + ox, 3), round(fx["pos"][1] + oy, 3)],
+                          "activity": "chat" if fx["type"] == "chair" and fx["room"] in meeting_rooms and not fx.get("pairedWith") else s["activity"], "pos": [round(fx["pos"][0] + ox, 3), round(fx["pos"][1] + oy, 3)],
                           "facing": round(facing, 1), "pose": s["pose"], "capacity": 1})
     return slots
 

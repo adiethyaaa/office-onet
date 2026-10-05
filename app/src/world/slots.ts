@@ -10,6 +10,8 @@ const r1 = (v: number) => Math.round(v * 10) / 10;
 
 export function deriveSlots(fixtures: Fixture[], catalog: World['catalog']): ActivitySlot[] {
   const out: ActivitySlot[] = [];
+  // A work chair around a meeting table is a meeting seat, not a workstation.
+  const meetingRooms = new Set(fixtures.filter((f) => f.type === 'meeting_table').map((f) => f.room));
   for (const fx of fixtures) {
     const tpl = ((catalog[fx.type] as unknown as { slots?: SlotTemplate[] }).slots ?? []);
     tpl.forEach((s, i) => {
@@ -18,7 +20,8 @@ export function deriveSlots(fixtures: Fixture[], catalog: World['catalog']): Act
       const oy = s.dx * Math.sin(r) + s.dy * Math.cos(r);
       const facing = (((fx.rot - 90 + (s.facingRel ?? 0)) % 360) + 360) % 360;
       out.push({
-        id: `SL-${fx.id.slice(3)}-${i + 1}`, fixture: fx.id, floor: fx.floor, room: fx.room, activity: s.activity,
+        id: `SL-${fx.id.slice(3)}-${i + 1}`, fixture: fx.id, floor: fx.floor, room: fx.room,
+        activity: fx.type === 'chair' && meetingRooms.has(fx.room) && !fx.pairedWith ? 'chat' : s.activity,
         pos: [r3(fx.pos[0] + ox), r3(fx.pos[1] + oy)], facing: r1(facing), pose: s.pose, capacity: 1,
       });
     });

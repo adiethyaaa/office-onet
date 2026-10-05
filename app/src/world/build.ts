@@ -207,6 +207,19 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
     geo.translate(0, elev + 0.005, 0);
     const color = CATEGORY_TINT[room.category] ?? FINISH_COLOR[room.finish.floor] ?? 0xd8c8ab;
     batch.add(geo, color, id);
+    // A shaft is a closed riser, not a room: fill it to the cutaway height so
+    // it reads as solid casework instead of an empty pocket in the plan.
+    if (room.category === 'shaft') {
+      const xs = room.polygon.map((p) => p[0]);
+      const ys = room.polygon.map((p) => p[1]);
+      const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+      const fill = new THREE.BoxGeometry(x1 - x0, WALL_HEIGHT_INTERIOR, y1 - y0);
+      fill.translate((x0 + x1) / 2, elev + WALL_HEIGHT_INTERIOR / 2, -(y0 + y1) / 2);
+      batch.add(fill, ENV.wallInterior, id, { occluder: true });
+      const cap = new THREE.BoxGeometry(x1 - x0, 0.05, y1 - y0);
+      cap.translate((x0 + x1) / 2, elev + WALL_HEIGHT_INTERIOR + 0.025, -(y0 + y1) / 2);
+      batch.add(cap, ENV.wallCap, id, { occluder: true });
+    }
   }
   const ops = walls.floors[floor].openings;
   const meetsOpening = (axis: string, at: number, v: number) => ops.some((o) => o.axis === axis && Math.abs(o.at - at) < 1e-6 && (Math.abs(o.from - v) < 1e-6 || Math.abs(o.to - v) < 1e-6));
