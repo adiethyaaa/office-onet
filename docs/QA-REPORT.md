@@ -29,12 +29,16 @@ Angka akhir (lokal): pytest 380 lolos (`pytest.txt`), vitest 113 lolos (`vitest.
 - FPS perangkat: container SwiftShader, rute 60 s: desktop 3,9, tablet 4,8, mobile 8,5 FPS. A/B hari yang sama: b109cde 4,1 FPS, R2 3,9 sampai 4,0 FPS (biaya kecil daun pintu + collision simetris, `perf-ab.txt`). Angka 5,6 FPS di laporan hardening berasal dari instance container lain dan tidak sebanding.
 - Target karakter 3,0 MB yang ditetapkan pelaksana tidak tercapai (3,55 MB); direvisi ke 3,6 MB (ADR-014). Muat awal 6 MB tercapai.
 
-### Blocked / belum diuji
+### Blocked / belum diuji (diperbarui setelah PR #6 Max/Budi di-merge ke branch ini)
 
-- DWG native: BLOCKED tanpa AutoCAD berlisensi.
-- FPS perangkat nyata dan screen reader: BLOCKED sampai dijalankan; hook `?perf=route&report=1`, `?a11ylog=1` dan runbook `docs/DEVICE-VALIDATION.md` siap.
-- Review manual silhouette/deform karakter dan review PDF ICT oleh manusia: belum tercatat.
-- M4 data private: disabled.
+Pelaksana cloud tidak menjalankan item fisik di bawah; statusnya mengikuti evidence yang di-commit Max/Budi, dibaca ulang di sini, bukan diulang.
+
+- DWG native: 15 DWG R2018 dibuat dan dibuka ulang AutoCAD 2025 (AUDIT 0 error, hitungan entity cocok DXF) dan 20/20 layout di-plot native ke PDF (`docs/evidence/MAX/native-dwg/`, `docs/evidence/MAX/native-plot-20261005/native-plot-results.json`). Di cloud tetap BLOCKED: tanpa AutoCAD, DXF yang diubah membuat hash DWG lama tidak berlaku sampai `cad/autocad/native_batch.py` dijalankan ulang di mesin berlisensi.
+- FPS perangkat nyata: iPhone 13 Pro Safari, median rata-rata FPS 59,5 dari 3 run rute (target 30, `docs/evidence/DEVICE/2026-10-04-iphone13pro-summary.json`); Mac mini M4 Chrome median 179 FPS (`docs/evidence/MAX/device/summary.json`). Keduanya memakai harness rute `?perf=route`. Belum diuji: Android dan tablet fisik.
+- Screen reader: macOS VoiceOver Safari, 8 skenario `docs/DEVICE-VALIDATION.md` lolos (`docs/evidence/MAX/voiceover/HASIL.md`). Belum diuji: iOS VoiceOver dan TalkBack di HP. Temuan VoiceOver (judul halaman "kantor-rpg" tidak deskriptif) diperbaiki di R2 dengan test merah dulu (`page-title-red.txt`).
+- Review manusia karakter dan ICT-401: disetujui Budi 2026-10-05 lewat Telegram; screenshot disimpan privat, tidak di repo publik.
+- M4 data private: disabled, ditunda ke M5 atas keputusan Budi.
+- Audit Must kini 50 terverifikasi, 2 tidak didukung (keduanya M4). `MUST-AUDIT.md` sempat diedit manual sehingga ringkasan dan sumber JSON tidak sinkron; sumber disinkronkan dan test baru menolak drift (`must-audit-drift-red.txt`).
 
 ### Known issues R2
 

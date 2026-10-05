@@ -1,6 +1,6 @@
 # Validasi perangkat nyata dan screen reader
 
-Status: **BLOCKED sampai dijalankan di perangkat nyata.** Pelaksana (Claude Code cloud) hanya punya Chromium headless dengan SwiftShader tanpa GPU dan tanpa screen reader; hook dan langkah di bawah sudah diuji (`app/tests/e2e/device.spec.ts`), tetapi hasil fisik belum ada. Jangan menandai target FPS atau screen reader "terverifikasi" sebelum tabel hasil di bawah terisi dari run nyata.
+Status: **sebagian dijalankan di perangkat nyata (oleh Budi/Max, bukan oleh pelaksana cloud).** Hasil tercatat: iPhone 13 Pro Safari median rata-rata 59,5 FPS (`docs/evidence/DEVICE/2026-10-04-iphone13pro-summary.json`), Mac mini M4 Chrome median 179 FPS (`docs/evidence/MAX/device/summary.json`), macOS VoiceOver Safari 8 skenario lolos (`docs/evidence/MAX/voiceover/HASIL.md`). Masih belum diuji: Android, tablet fisik, iOS VoiceOver, TalkBack. Pelaksana cloud hanya punya Chromium headless SwiftShader; hook dan langkah di bawah diuji di `app/tests/e2e/device.spec.ts`. Jangan menandai perangkat lain terverifikasi sebelum hasilnya dari run nyata.
 
 ## 1. FPS perangkat (REQ-PERF-01, ADR-011)
 

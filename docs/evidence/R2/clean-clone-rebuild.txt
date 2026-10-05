@@ -1,0 +1,38 @@
+R2 clean-clone rebuild
+=====================
+
+Command : bash tools/rebuild_all.sh   (fresh git clone, no build outputs reused)
+Commit  : 51d1fb8 (R2 branch head before Max/Budi PR #6 was merged into it)
+Wall    : 32 min 14 s, exit 0
+Full log: docs/evidence/R2/clean-clone-rebuild.log.txt (clone path replaced by <clone>)
+
+Step results (from the log)
+- validate_world.py           passed=46 failed=0
+- Blender building/furniture/characters generated, reopened and validated: PASS
+- GLB optimise + compare      COMPARE_DONE passed=True files=61 failed=0
+- pytest                      382 passed
+- vitest                      9 files, 113 tests passed
+- app build                   exit 0
+- Playwright (desktop, tablet, mobile)  160 passed, 2 skipped (see docs/SKIP-LEDGER.md)
+- safety scan                 0 findings; licence audit 0 runtime problems
+
+Determinism (git diff in the clone after the rebuild, 80 files)
+- Shipped runtime assets (app/public GLB, JSON) : no diff, byte-identical.
+- cad/out/*.dxf (15)  : 12 changed lines per file, every one classified:
+  ISO and Julian date stamps, ezdxf "1.4.4 @ <time>" writer stamps, GUIDs, and
+  the LAYOUT / ACDBPLACEHOLDER object pair swapping order (same lines removed
+  and added). No entity or geometry line changed.
+- drawings/pdf, drawings/previews, PRD PDF : re-rendered (embedded creation
+  dates, PNG compression), content not compared pixel-wise here.
+- blender/out/*.blend (9) : Blender writes save metadata on every save.
+- design/derived/capacity.json, validate-world.json, docs/capacity.md:
+  walkable_m2_navgrid 494.0 -> 483.2 (L1) and 506.3 -> 498.2 (L2). The files
+  committed at 51d1fb8 predated the door-leaf strips added to the navgrid
+  (ADR-012). Already corrected on the branch by ae1ea8e; regenerating on
+  1fc2e48 with `python3 tools/build_design.py --skip-pdf` leaves them unchanged.
+- docs/evidence/R2 validator JSON (5) : run timestamps.
+
+Not covered by this run
+- It ran before PR #6 was merged. The merged head was regression-tested by CI
+  and by the targeted reruns listed in docs/QA-REPORT.md, not by a second
+  32 min clean rebuild.

@@ -1,0 +1,13 @@
+# Red: world.spec.ts boot test with the new title assertion, build of 1fc2e48 (title was "kantor-rpg"), desktop project
+      10 |     // VoiceOver read the bare repo slug as the page name (docs/evidence/MAX/voiceover/HASIL.md).
+    > 11 |     await expect(page).toHaveTitle('Kantor RPG, kantor virtual 3D (simulasi)');
+         |                        ^
+      12 |     await page.waitForTimeout(1500);
+      13 |     await shot(page, info, 'spawn');
+      14 |     expect(errors).toEqual([]);
+        at /home/user/kantor-rpg/app/tests/e2e/world.spec.ts:11:24
+
+    Error Context: test-results/world-world-vertical-slice-ec18d-on-badge-and-no-page-errors-desktop/error-context.md
+
+  1 failed
+    [desktop] › tests/e2e/world.spec.ts:5:3 › world vertical slice › boots in lobby with simulation badge and no page errors 

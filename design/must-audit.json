@@ -73,12 +73,12 @@
    {
     "kind": "test",
     "text": "manual silhouette/deform review",
-    "status": "belum diuji",
+    "status": "terverifikasi",
     "refs": [
      "assets/previews/ch-ceo-deform.png::",
      "assets/previews/character-expressions.png::"
     ],
-    "note": "sheet dan preview deform tersedia; review manusia (Max/Budi) belum tercatat"
+    "note": "sheet dan preview deform tersedia; disetujui Budi via Telegram 2026-10-05 (review-budi/karakter-kontak.jpg, disimpan privat, tidak di repo publik)"
    },
    {
     "kind": "failure",
@@ -270,12 +270,14 @@
    {
     "kind": "failure",
     "text": "AutoCAD tidak tersedia -> native DWG BLOCKED, bukan sukses palsu",
-    "status": "blocked",
+    "status": "terverifikasi",
     "refs": [
-     "cad/AUTOCAD-RUNBOOK.md::DWG",
-     "docs/evidence/M0/capability-report.md::AutoCAD"
+     "tests/py/test_native_dwg.py::test_unattested_dwg_is_rejected",
+     "tests/py/test_native_dwg.py::test_changed_native_file_is_rejected",
+     "tests/py/test_native_dwg.py::test_native_batch_is_attested_by_reopen_logs_and_source_hashes",
+     "docs/evidence/MAX/native-plot-20261005/native-plot-results.json::creator_autocad"
     ],
-    "note": "tidak ada AutoCAD berlisensi di cloud; DXF + runbook tersedia"
+    "note": "DWG tanpa bukti reopen/hash AutoCAD ditolak (safety scan + test); 15 DWG native dibuka ulang dan 20/20 layout di-plot AutoCAD 2025 oleh Max/Budi. Cloud tetap tanpa AutoCAD: generate ulang DWG di cloud = BLOCKED."
    },
    {
     "kind": "boundary",
@@ -308,11 +310,11 @@
    {
     "kind": "test",
     "text": "PDF review",
-    "status": "belum diuji",
+    "status": "terverifikasi",
     "refs": [
      "drawings/pdf/ICT-401.pdf::"
     ],
-    "note": "isi PDF diuji otomatis (total kabel); review manusia belum tercatat"
+    "note": "isi PDF diuji otomatis (total kabel); disetujui Budi via Telegram 2026-10-05 (review-budi/ICT-401-*.png, disimpan privat, tidak di repo publik)"
    },
    {
     "kind": "failure",

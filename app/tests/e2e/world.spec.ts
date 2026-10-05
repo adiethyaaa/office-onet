@@ -7,6 +7,8 @@ test.describe('world vertical slice', () => {
     await expect(page.locator('#room-name')).toHaveText('Lobby & resepsi');
     await expect(page.locator('#sim-badge')).toContainText('SIMULASI');
     await expect(page.locator('#directory-panel')).toBeHidden();
+    // VoiceOver read the bare repo slug as the page name (docs/evidence/MAX/voiceover/HASIL.md).
+    await expect(page).toHaveTitle('Kantor RPG, kantor virtual 3D (simulasi)');
     await page.waitForTimeout(1500);
     await shot(page, info, 'spawn');
     expect(errors).toEqual([]);

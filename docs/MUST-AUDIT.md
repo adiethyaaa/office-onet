@@ -2,7 +2,7 @@
 
 Dibuat oleh `tools/must_audit.py` dari `design/must-audit.json`. Status per elemen AC, test, failure dan boundary; referensi diperiksa ada di repo. Elemen selain terverifikasi adalah gap yang terbuka, bukan selesai.
 
-Ringkasan: belum diuji 2, blocked 1, terverifikasi 47, tidak didukung 2
+Ringkasan: terverifikasi 50, tidak didukung 2
 
 ## REQ-WORLD-01
 
@@ -19,7 +19,7 @@ Ringkasan: belum diuji 2, blocked 1, terverifikasi 47, tidak didukung 2
 |---|---|---|---|---|
 | AC | label peran dan animasi konsisten tanpa IP pihak lain | terverifikasi | `app/tests/e2e/npc.spec.ts` (never claim a work status)<br>`tests/py/test_assets.py` (def test_)<br>`tests/py/test_provenance.py` (test_registry_entries_are_original_and_scripted) |  |
 | test | asset validation | terverifikasi | `tests/py/test_assets.py` (def test_)<br>`blender/validate_assets.py` (VALIDATE_DONE) |  |
-| test | manual silhouette/deform review | terverifikasi | `assets/previews/ch-ceo-deform.png`<br>`assets/previews/character-expressions.png` | sheet dan preview deform tersedia; disetujui Budi via Telegram 2026-10-05 (review-budi/karakter-kontak.jpg) |
+| test | manual silhouette/deform review | terverifikasi | `assets/previews/ch-ceo-deform.png`<br>`assets/previews/character-expressions.png` | sheet dan preview deform tersedia; disetujui Budi via Telegram 2026-10-05 (review-budi/karakter-kontak.jpg, disimpan privat, tidak di repo publik) |
 | failure | missing GLB -> honest placeholder | terverifikasi | `app/tests/e2e/failures.spec.ts` (missing character GLB) |  |
 | boundary | tidak mengarang likeness manusia | terverifikasi | `tests/py/test_provenance.py` (original) | karakter procedural original; review likeness manual belum tercatat |
 
@@ -65,7 +65,7 @@ Ringkasan: belum diuji 2, blocked 1, terverifikasi 47, tidak didukung 2
 |---|---|---|---|---|
 | AC | dimensi/pintu/fixture ID konsisten di DXF, PDF, GLB; ketersediaan CAD dilaporkan | terverifikasi | `tests/py/test_cad.py` (test_dxf_door_and_fixture_ids)<br>`tests/py/test_cad_openings.py` (def test_)<br>`tests/py/test_door_leaves.py` (test_blender_leaf_nodes_hinge_where_the_runtime_hinges)<br>`tests/py/test_building.py` (def test_) |  |
 | test | CAD reopen/parse, PDF extract/render, GLB validator, koordinat | terverifikasi | `tests/py/test_cad.py` (test_dxf_reopens_and_audits_clean)<br>`tests/py/test_cad.py` (test_pdf_text_content)<br>`tests/py/test_cad_legibility.py` (def test_)<br>`tests/py/test_cad.py` (test_plan_origin_maps_world_metres_to_paper) |  |
-| failure | AutoCAD tidak tersedia -> native DWG BLOCKED, bukan sukses palsu | blocked | `cad/AUTOCAD-RUNBOOK.md` (DWG)<br>`docs/evidence/M0/capability-report.md` (AutoCAD) | tidak ada AutoCAD berlisensi di cloud; DXF + runbook tersedia |
+| failure | AutoCAD tidak tersedia -> native DWG BLOCKED, bukan sukses palsu | terverifikasi | `tests/py/test_native_dwg.py` (test_unattested_dwg_is_rejected)<br>`tests/py/test_native_dwg.py` (test_changed_native_file_is_rejected)<br>`tests/py/test_native_dwg.py` (test_native_batch_is_attested_by_reopen_logs_and_source_hashes)<br>`docs/evidence/MAX/native-plot-20261005/native-plot-results.json` (creator_autocad) | DWG tanpa bukti reopen/hash AutoCAD ditolak (safety scan + test); 15 DWG native dibuka ulang dan 20/20 layout di-plot AutoCAD 2025 oleh Max/Budi. Cloud tetap tanpa AutoCAD: generate ulang DWG di cloud = BLOCKED. |
 | boundary | konsep bukan signed construction | terverifikasi | `tests/py/test_cad_m3.py` (KONSEP) |  |
 
 ## REQ-ICT-01
@@ -74,7 +74,7 @@ Ringkasan: belum diuji 2, blocked 1, terverifikasi 47, tidak didukung 2
 |---|---|---|---|---|
 | AC | tanpa orphan ID/duplicate port, panjang memakai route | terverifikasi | `tests/py/test_ict.py` (test_portmap_unique_and_routed)<br>`tests/py/test_world.py` (test_orphan_outlet_rejected)<br>`tests/py/test_ict_follow.py` (test_port_map_follows_layout) |  |
 | test | schema/count/rack capacity unit | terverifikasi | `tests/py/test_world.py` (test_rack_unit_collision_rejected) |  |
-| test | PDF review | terverifikasi | `drawings/pdf/ICT-401.pdf` | isi PDF diuji otomatis (total kabel); disetujui Budi via Telegram 2026-10-05 (review-budi/ICT-401-*.png) |
+| test | PDF review | terverifikasi | `drawings/pdf/ICT-401.pdf` | isi PDF diuji otomatis (total kabel); disetujui Budi via Telegram 2026-10-05 (review-budi/ICT-401-*.png, disimpan privat, tidak di repo publik) |
 | failure | spec missing -> belum divalidasi | terverifikasi | `tests/py/test_ict_power.py` (test_smaller_poe_budget_fails_the_gate)<br>`tests/py/test_ict_power.py` (test_smaller_ups_fails_the_gate)<br>`design/requirements.json` (PoE budget per switch) | PoE/UPS W/VA/panas ditutup dengan model referensi datasheet 2026-10-04; budget/rating kurang -> BLOCKED. Runtime UPS menunggu target otonomi. |
 | boundary | no real ISP topology/device access | terverifikasi | `tests/py/test_ict.py` (test_bom_has_no_prices)<br>`tools/safety_scan.py` (def ) |  |
 

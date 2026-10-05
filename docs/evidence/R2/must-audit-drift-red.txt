@@ -1,0 +1,5 @@
+# Red: tests/py/test_must_audit.py on 1fc2e48 state (MUST-AUDIT.md hand-edited, design/must-audit.json not), new drift test added first
+tests/py/test_must_audit.py:16: AssertionError
+=========================== short test summary info ============================
+FAILED tests/py/test_must_audit.py::test_committed_report_matches_the_generator
+1 failed, 1 passed in 0.03s
