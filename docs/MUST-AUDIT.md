@@ -19,7 +19,7 @@ Ringkasan: belum diuji 2, blocked 1, terverifikasi 47, tidak didukung 2
 |---|---|---|---|---|
 | AC | label peran dan animasi konsisten tanpa IP pihak lain | terverifikasi | `app/tests/e2e/npc.spec.ts` (never claim a work status)<br>`tests/py/test_assets.py` (def test_)<br>`tests/py/test_provenance.py` (test_registry_entries_are_original_and_scripted) |  |
 | test | asset validation | terverifikasi | `tests/py/test_assets.py` (def test_)<br>`blender/validate_assets.py` (VALIDATE_DONE) |  |
-| test | manual silhouette/deform review | belum diuji | `assets/previews/ch-ceo-deform.png`<br>`assets/previews/character-expressions.png` | sheet dan preview deform tersedia; review manusia (Max/Budi) belum tercatat |
+| test | manual silhouette/deform review | terverifikasi | `assets/previews/ch-ceo-deform.png`<br>`assets/previews/character-expressions.png` | sheet dan preview deform tersedia; disetujui Budi via Telegram 2026-10-05 (review-budi/karakter-kontak.jpg) |
 | failure | missing GLB -> honest placeholder | terverifikasi | `app/tests/e2e/failures.spec.ts` (missing character GLB) |  |
 | boundary | tidak mengarang likeness manusia | terverifikasi | `tests/py/test_provenance.py` (original) | karakter procedural original; review likeness manual belum tercatat |
 
@@ -74,7 +74,7 @@ Ringkasan: belum diuji 2, blocked 1, terverifikasi 47, tidak didukung 2
 |---|---|---|---|---|
 | AC | tanpa orphan ID/duplicate port, panjang memakai route | terverifikasi | `tests/py/test_ict.py` (test_portmap_unique_and_routed)<br>`tests/py/test_world.py` (test_orphan_outlet_rejected)<br>`tests/py/test_ict_follow.py` (test_port_map_follows_layout) |  |
 | test | schema/count/rack capacity unit | terverifikasi | `tests/py/test_world.py` (test_rack_unit_collision_rejected) |  |
-| test | PDF review | belum diuji | `drawings/pdf/ICT-401.pdf` | isi PDF diuji otomatis (total kabel); review manusia belum tercatat |
+| test | PDF review | terverifikasi | `drawings/pdf/ICT-401.pdf` | isi PDF diuji otomatis (total kabel); disetujui Budi via Telegram 2026-10-05 (review-budi/ICT-401-*.png) |
 | failure | spec missing -> belum divalidasi | terverifikasi | `tests/py/test_ict_power.py` (test_smaller_poe_budget_fails_the_gate)<br>`tests/py/test_ict_power.py` (test_smaller_ups_fails_the_gate)<br>`design/requirements.json` (PoE budget per switch) | PoE/UPS W/VA/panas ditutup dengan model referensi datasheet 2026-10-04; budget/rating kurang -> BLOCKED. Runtime UPS menunggu target otonomi. |
 | boundary | no real ISP topology/device access | terverifikasi | `tests/py/test_ict.py` (test_bom_has_no_prices)<br>`tools/safety_scan.py` (def ) |  |
 
