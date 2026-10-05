@@ -1,0 +1,267 @@
+UniFi Dream Machine Pro Max - Tech Specs
+Start Here
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+What's New
+Support
+Store
+How It Works?
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+More from UI
+UniFi
+UISP
+Branding
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+Accessories
+Back
+Large Scale
+Dream Machine Pro Max
+Dream Machine Pro Max
+UDM-Pro-Max
+Datasheet
+In The Box
+Marketing Images
+Accessories
+Installation Guide
+Download image
+Zoom in
+Download image
+Zoom in
+Download image
+Zoom in
+Overview
+Dimensions
+442.4 x 43.7 x 285.6 mm
+(17.4 x 1.7 x 11.2")
+UniFi Application Suite
+Network
+✓
+Protect
+✓
+Access
+✓
+Talk
+✓
+Connect
+✓
+Managed UniFi Devices
+200+
+Managed Cameras
+(50) HD
+(25) 2K
+(15) 4K
+Managed Access Hubs
+150
+Simultaneous Users Connected
+2,000+
+Max. WAN Port Count
+8
+Default WAN Ports
+(1) 10G SFP+
+(1) 2.5 GbE RJ45
+Port Layout
+1 GbE RJ45
+8
+(1G/100M/10M)
+2.5 GbE RJ45
+1
+(2.5G/1G/100M/10M)
+10G SFP+
+2
+(10G/1G)
+IDS/IPS Throughput
+5 Gbps
+Form Factor
+Rack mount (1U)
+Redundancy
+Shadow Mode (VRRP) Gateway Failover
+DC Power Backup
+Security
+Stateful Firewall
+✓
+Application-Aware Layer 7 Firewall
+✓
+DPI & Traffic Identification
+✓
+Zone-Based Firewall Advanced Filtering (Regions, Domains, Apps)
+✓
+Content Filtering
+✓
+Intrusion Prevention (IPS/IDS)
+✓
+Ad Blocking
+✓
+IDS/IPS Signatures
+55,000+
+with CyberSecure
+VLAN/Subnet-based Traffic Segmentation
+✓
+VPN & SD-WAN
+License-Free SD-WAN
+✓
+Site-to-Site VPN
+Site Magic
+✓
+IPsec
+✓
+OpenVPN
+✓
+VPN Server
+Identity Endpoint One-Click VPN
+✓
+Teleport Zero-Configuration VPN
+✓
+WireGuard
+✓
+OpenVPN
+✓
+L2TP
+✓
+VPN Client
+OpenVPN
+✓
+WireGuard
+✓
+Networking
+Multi-WAN Load Balancing
+✓
+Shadow Mode (VRRP) High Availability
+✓
+LACP Port Aggregation
+✓
+Dynamic Routing
+OSPF
+✓
+BGP
+✓
+Advanced QoS
+✓
+Multicast DNS (mDNS)
+✓
+Advanced NAT (SNAT / DNAT / Masquerade / NAT Pooling / 1-to-1 NAT)
+✓
+Integrated RADIUS Server
+✓
+RADIUS over TLS (RadSec)
+✓
+Additional Internet Failover with UniFi LTE Backup
+✓
+Internet Quality and Outage Reporting
+✓
+MAC Address Table Size
+4,000
+Policy-based WAN and VPN Routing
+✓
+Customizable DHCP Server
+✓
+IPv6 ISP Support
+✓
+IGMP Proxy
+✓
+Virtual Network Override
+✓
+All Traffic Flows
+✓
+Hardware
+NVR Storage
+(2) 3.5" NVR HDD bays
+Built-in 128 GB SSD for Faster Experience
+Max. Power Consumption
+60W
+Power Method
+(1) Universal AC input, 100–240V AC, 2A Max., 50/60 Hz
+(1) USP-RPS DC input, 11.5V DC, 8.7A
+Power Supply
+AC/DC, internal, 100W
+Supported Voltage Range
+100–240V AC
+Heat Dissipation
+205 BTU/hr
+Processor
+Quad-core ARM® Cortex®-A57 at 2.0 GHz
+System Memory
+8 GB
+On-board Storage
+32 GB eMMC
+128 GB SSD (Integrated)
+Weight
+4.7 kg (10.4 lb)
+Enclosure Material
+Aluminium CNC, SGCC steel
+Mount Material
+SGCC steel
+LCM Display
+1.3" touchscreen
+Management
+Ethernet
+Bluetooth
+LEDs
+Ethernet
+✓
+SFP+
+✓
+RPS
+✓
+PSU
+✓
+HDD
+✓
+Button
+(1) Factory reset
+ESD/EMP Protection
+Air: ± 15kV, contact: ± 8kV
+Ambient Operating Temperature
+-10 to 40° C (14 to 104° F)
+Ambient Operating Humidity
+5 to 95% noncondensing
+NDAA Compliant
+✓
+Certifications
+CE, FCC, IC, Anatel: 06369-24-08356, SRRC
+Company
+Blog
+Case Studies
+Careers
+Trust Center
+Partner with UniFi
+Contact Us
+Investors
+Compliance
+Training
+Courses
+Calendar
+Trainers
+Become a Trainer
+Buy Now
+Ubiquiti Store
+Find a Distributor
+Tools
+WiFiman
+UISP
+UniFi Design Center
+UISP Design Center
+Downloads
+Stay in Touch
+Subscribe
+Terms of Service
+|
+Privacy Policy
+|
+Legal
+|
+Cookies Settings
+© 2026 Ubiquiti, Inc. All rights reserved.

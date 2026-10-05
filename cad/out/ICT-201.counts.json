@@ -6,12 +6,12 @@
    "LWPOLYLINE": 92
   },
   "ICT-RACK-IDEN": {
-   "TEXT": 120,
-   "LWPOLYLINE": 17
+   "TEXT": 122,
+   "LWPOLYLINE": 18
   },
   "ICT-RACK-DEV": {
-   "HATCH": 17,
-   "LWPOLYLINE": 17
+   "HATCH": 18,
+   "LWPOLYLINE": 18
   },
   "A-WALL": {
    "LWPOLYLINE": 1
@@ -44,9 +44,9 @@
     "HATCH": 3
    },
    "A-ANNO-SCHD": {
-    "HATCH": 9,
-    "TEXT": 108,
-    "LWPOLYLINE": 19
+    "HATCH": 10,
+    "TEXT": 114,
+    "LWPOLYLINE": 20
    },
    "A-ANNO-VPRT": {
     "VIEWPORT": 3
@@ -54,8 +54,8 @@
   }
  },
  "totals": {
-  "modelspace": 279,
-  "paperspace": 160
+  "modelspace": 284,
+  "paperspace": 168
  },
  "layers": [
   "0",

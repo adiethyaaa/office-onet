@@ -1,5 +1,6 @@
 // Game orchestrator: renderer, floors, CEO, interactions and HUD wiring.
 import * as THREE from 'three';
+import { labelClear, type LabelBlocker } from './label-visibility';
 import { buildFixturesInto, buildFloor, MaterialCache, setFurnitureKit, toThree, type FloorBuild } from '../world/build';
 import { loadFurnitureKit } from '../world/furniture-kit';
 import { withFixtures } from '../world/slots';
@@ -612,14 +613,16 @@ export class Game {
     this.sun.target.position.copy(pv);
     // Seated CEO (activity) is not in the way; standing or walking CEO is.
     this.npcs.sim.setPlayer(this.activity ? null : this.player.floor, this.player.pos);
-    this.npcs.update(dt, this.player.floor, this.rig.camera, this.stage.clientWidth, this.stage.clientHeight, this.settings.reducedMotion, this.player.pos);
+    const labelBlockers = [...document.querySelectorAll('.hud-top, .joystick, .touch-btn, #prompt, .activity-chip')]
+      .map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0);
+    this.npcs.update(dt, this.player.floor, this.rig.camera, this.stage.clientWidth, this.stage.clientHeight, this.settings.reducedMotion, this.player.pos, labelBlockers);
     const agents = [{ floor: this.player.floor, pos: this.player.pos }, ...this.npcs.sim.npcs.map((n) => ({ floor: n.floor, pos: n.pos }))];
     this.doors.update(dt, agents, this.settings.visitor, this.settings.reducedMotion);
     this.doorMeshes.sync(this.world);
     $('sim-clock').textContent = this.npcs.sim.clockLabel();
     this.updateFocus(dt);
     this.updateRoom();
-    this.updateLabels();
+    this.updateLabels(labelBlockers);
     this.onFrame?.(dt);
     this.renderer.render(this.scene, this.rig.camera);
   }
@@ -664,7 +667,7 @@ export class Game {
     }
   }
 
-  private updateLabels() {
+  private updateLabels(labelBlockers: LabelBlocker[]) {
     const cam = this.rig.camera;
     const w = this.stage.clientWidth;
     const h = this.stage.clientHeight;
@@ -675,7 +678,11 @@ export class Game {
       const xs = r.polygon.map((p) => p[0]);
       const ys = r.polygon.map((p) => p[1]);
       const v = toThree((Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2, elev + 1.6).project(cam);
-      const visible = v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1;
+      const screenY = ((1 - v.y) / 2) * h;
+      const screenX = ((v.x + 1) / 2) * w;
+      const visible = v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1
+        && labelClear(screenX - tag.offsetWidth / 2, screenY - tag.offsetHeight / 2,
+          tag.offsetWidth, tag.offsetHeight, labelBlockers);
       tag.style.opacity = visible ? '1' : '0';
       if (visible) tag.style.transform = `translate(-50%, -50%) translate(${((v.x + 1) / 2) * w}px, ${((1 - v.y) / 2) * h}px)`;
       tag.style.left = '0';

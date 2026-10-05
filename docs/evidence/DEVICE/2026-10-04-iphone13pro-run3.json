@@ -1,0 +1,72 @@
+{
+ "label": "fixed route benchmark; client-specific measurement",
+ "seconds": 60,
+ "frames": 3594,
+ "fpsAverage": 59.9,
+ "frameMsMedian": 17,
+ "frameMsP95": 17,
+ "frameMsMax": 64,
+ "framesOver33ms": 4,
+ "dropRate": 0.001,
+ "distanceM": 73.2,
+ "floorSwitches": 2,
+ "renderer": "Apple GPU",
+ "lowQuality": false,
+ "pixelRatio": 1.75,
+ "viewport": [
+  390,
+  699
+ ],
+ "jsHeapMB": null,
+ "stats": {
+  "drawCalls": 100,
+  "triangles": 357378,
+  "geometries": 127,
+  "textures": 42,
+  "floorTriangles": {
+   "L1": 120510,
+   "L2": 100032
+  },
+  "furnitureKit": {
+   "loaded": 54,
+   "failed": []
+  },
+  "npcLod": {
+   "lod0": 2,
+   "lod1": 3
+  }
+ },
+ "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0.1 Mobile/15E148 Safari/604.1",
+ "peak": {
+  "drawCalls": 103,
+  "triangles": 387022,
+  "at": [
+   15.133012373168068,
+   11.231323621167924
+  ],
+  "floor": "L1"
+ },
+ "device": {
+  "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0.1 Mobile/15E148 Safari/604.1",
+  "platform": null,
+  "screen": [
+   390,
+   844
+  ],
+  "viewport": [
+   390,
+   699
+  ],
+  "devicePixelRatio": 3,
+  "hardwareConcurrency": 4,
+  "deviceMemoryGB": null,
+  "gpuRenderer": "Apple GPU"
+ },
+ "url": "?perf=route&seconds=60&report=1",
+ "_meta": {
+  "device": "iPhone 13 Pro (dilaporkan Budi)",
+  "release": "a041f5a1",
+  "run": 3,
+  "source": "ditempel Budi di Telegram 2026-10-04"
+ }
+}

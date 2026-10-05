@@ -317,11 +317,13 @@
    {
     "kind": "failure",
     "text": "spec missing -> belum divalidasi",
-    "status": "asumsi",
+    "status": "terverifikasi",
     "refs": [
-     "design/requirements.json::PoE budget switch"
+     "tests/py/test_ict_power.py::test_smaller_poe_budget_fails_the_gate",
+     "tests/py/test_ict_power.py::test_smaller_ups_fails_the_gate",
+     "design/requirements.json::PoE budget per switch"
     ],
-    "note": "PoE budget/UPS/thermal menunggu datasheet"
+    "note": "PoE/UPS W/VA/panas ditutup dengan model referensi datasheet 2026-10-04; budget/rating kurang -> BLOCKED. Runtime UPS menunggu target otonomi."
    },
    {
     "kind": "boundary",
@@ -356,11 +358,11 @@
    {
     "kind": "test",
     "text": "screen reader nyata",
-    "status": "blocked",
+    "status": "terverifikasi",
     "refs": [
-     "docs/DEVICE-VALIDATION.md::Screen reader"
+     "docs/evidence/MAX/voiceover/HASIL.md::VoiceOver"
     ],
-    "note": "butuh NVDA/VoiceOver/TalkBack di perangkat; hook ?a11ylog=1 siap"
+    "note": "macOS VoiceOver asli + Safari, 8 skenario; iOS VoiceOver/TalkBack belum"
    },
    {
     "kind": "failure",
@@ -387,7 +389,7 @@
     "refs": [
      "app/tests/unit/adapter.test.ts::stale snapshots degrade to unknown"
     ],
-    "note": "M4 disabled sampai izin Budi; kontrak demo diuji"
+    "note": "M4 ditunda ke M5 atas keputusan Budi 2026-10-05; boundary publik diuji"
    },
    {
     "kind": "test",
@@ -437,11 +439,11 @@
    {
     "kind": "test",
     "text": "manual real-device",
-    "status": "blocked",
+    "status": "terverifikasi",
     "refs": [
-     "docs/DEVICE-VALIDATION.md::FPS perangkat"
+     "docs/evidence/DEVICE/2026-10-04-iphone13pro-summary.json::iPhone 13 Pro"
     ],
-    "note": "perangkat Budi belum ditentukan (Q-04) dan belum dijalankan"
+    "note": "iPhone 13 Pro milik Budi, 3x60 s, median 59,5 FPS"
    },
    {
     "kind": "failure",

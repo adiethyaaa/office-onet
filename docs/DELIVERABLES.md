@@ -1,4 +1,6 @@
 # Register deliverable dan brief spesialis
+
+PRD rencana terbaru: `PRD/PRD-v1.0.md`. Baseline M0-M3 tetap; tambahan Must M5 adalah perintah privat ke agen Hermes dari RPG, dialog tiga pilihan kontekstual + satu Ketik manual, routing profil, receipt/progres, approval dan isolasi publik. M4 status baca-saja tidak memenuhi M5. Status M5 target, belum diimplementasikan atau diaktifkan. Persetujuan PRD bukan izin membuka backend/data privat.
 Status per milestone dicatat di [progress](progress.md) dan [matriks requirement](requirements-matrix.md). M0: selesai untuk lingkup data/dokumen (native DWG BLOCKED). M1 sampai M3: target. Claude mengerjakan; nama spesialis adalah reviewer/keahlian acuan, bukan task bot yang telah dikirim.
 
 M0: PRD v0.2 + PDF; keputusan/asumsi; room schedule dan adjacency; design/world.json + schema + validators; sheet register; capability-report (OS, Blender, CAD/native DWG, browsers, libraries); capacity.json dengan perhitungan runnable; requirement matrix.

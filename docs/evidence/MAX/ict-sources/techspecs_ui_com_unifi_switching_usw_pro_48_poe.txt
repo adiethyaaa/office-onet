@@ -1,0 +1,231 @@
+UniFi Pro 48 PoE - Tech Specs
+Start Here
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+What's New
+Support
+Store
+How It Works?
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+More from UI
+UniFi
+UISP
+Branding
+Cloud Gateways
+Switching
+WiFi
+Physical Security
+Door Access
+Integrations
+Accessories
+Back
+Professional
+Pro 48 PoE
+Pro 48 PoE
+USW-Pro-48-POE
+Datasheet
+In The Box
+Marketing Images
+Accessories
+Installation Guide
+Download image
+Zoom in
+Download image
+Zoom in
+Download image
+Zoom in
+Overview
+Dimensions
+442 x 400 x 44 mm
+(17.4 x 15.7 x 1.7")
+Port Layout
+1 GbE RJ45
+48 (40 PoE+; 8 PoE++)
+(1G/100M/10M)
+10G SFP+
+4
+(10G/1G)
+Max. PoE Output
+Up to PoE++
+Total PoE Availability
+600W
+Redundancy
+DC Power Backup
+Layer 3
+✓
+Form Factor
+Rack mount (1U)
+Performance
+Switching Capacity
+176 Gbps
+Total Non-Blocking Throughput
+88 Gbps
+Forwarding Rate
+131 Mpps
+Supported VLANs
+1,000
+MAC Address Table Size
+16,000
+IPv4 Static Routes
+256
+Packet Buffer Size
+4 MB
+Access Lists
+IPv4
+128
+MAC
+128
+Layer 3 Features
+DHCP Server (Local Networks)
+✓
+DHCP Relay
+✓
+Inter-VLAN Routing (Local Networks)
+✓
+Static Routing (Local Networks)
+✓
+Layer 2 Features
+LACP Port Aggregation
+✓
+STP & RSTP
+✓
+QoS (DSCP)
+✓
+Pro AV Profiles (Play, Dante, Q-SYS, NDI, SDVoE, Shure, AES67, Crestron)
+✓
+Advanced IGMP Configuration (Querier, Fast Leave, Router Port)
+✓
+IGMP Snooping
+✓
+802.1X Control
+✓
+MAC-Based ACLs & Device Isolation
+✓
+DHCP Snooping & Guarding
+✓
+Egress Rate Limit
+✓
+Flow Control
+✓
+Storm Control
+✓
+Multicast & Broadcast Rate Limiting
+✓
+MAC Address Blocking
+✓
+IP-Based ACLs & Network Isolation
+✓
+MAC-Based Port Restriction
+✓
+Port Isolation
+✓
+Port Mirroring
+✓
+Jumbo Frames
+✓
+LLDP-MED
+✓
+Voice VLAN
+✓
+Loop Protection
+✓
+Virtual Network Override
+✓
+Hardware
+PoE Ports
+PoE+
+40
+PoE++
+8
+Max. PoE Wattage per Port by PSE
+PoE
+15.4W
+PoE+
+32W
+PoE++
+60W
+Max. Power Consumption
+60W (Excluding PoE Output)
+660W (Including PoE Output)
+Power Method
+(1) Universal input, 100–240V AC, 50/60 Hz
+(1) USP RPS DC input
+Power Input Method
+AC input
+Power Supply
+AC/DC, internal, 660W
+Supported Voltage Range
+100–240V AC
+Management
+Ethernet
+AR
+Heat Dissipation
+204.7 BTU/hr (Excluding PoE Output)
+Weight
+Without mounting brackets: 6.2 kg (13.7 lb)
+With mounting brackets: 6.3 kg (13.9 lb)
+Enclosure Material
+SGCC steel
+Mount Material
+SGCC steel
+Supported Rack Depth
+400~1200 mm
+(15.7-47.2")
+LCM Display
+1.3" touchscreen
+ESD Protection
+Air: ± 16kV, contact: ± 12kV
+Ambient Operating Temperature
+-5 to 40° C (23 to 104° F)
+Ambient Operating Humidity
+10 to 90% noncondensing
+NDAA Compliant
+✓
+Certifications
+CE, FCC, IC, Anatel: 13790-20-08356
+Software
+Application Requirements
+UniFi Network
+Version 5.10.5 and later
+Company
+Blog
+Case Studies
+Careers
+Trust Center
+Partner with UniFi
+Contact Us
+Investors
+Compliance
+Training
+Courses
+Calendar
+Trainers
+Become a Trainer
+Buy Now
+Ubiquiti Store
+Find a Distributor
+Tools
+WiFiman
+UISP
+UniFi Design Center
+UISP Design Center
+Downloads
+Stay in Touch
+Subscribe
+Terms of Service
+|
+Privacy Policy
+|
+Legal
+|
+Cookies Settings
+© 2026 Ubiquiti, Inc. All rights reserved.

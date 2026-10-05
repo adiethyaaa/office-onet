@@ -1,0 +1,30 @@
+{
+  "ranAt": "2026-10-04T15:27:59.476588+00:00",
+  "screenReader": "macOS VoiceOver (real), Safari, keyboard only",
+  "steps": [
+    {
+      "step": "3 Temui -> dialog -> Escape: fokus kembali ke tombol Direktori",
+      "spoken": {
+        "temui": "Temui Max button",
+        "dialog": "Max web dialog with 6 items Topik lain button",
+        "afterEscapeTab": "Studio button",
+        "shiftTabBack": "Direktori M collapsed button"
+      },
+      "result": "PASS"
+    },
+    {
+      "step": "8 Studio: pilih fixture dengan keyboard, tombol aksi bernama",
+      "spoken": {
+        "studioButton": "Studio button",
+        "focusOnOpen": "Pilih fixture... Pilih fixture collapsed pop up button Office Studio complementary",
+        "afterChoose": "Closing menu Pilih fixture... Pilih fixture collapsed pop up button",
+        "toolNames": [
+          "Simpan draft button"
+        ]
+      },
+      "result": "FAIL"
+    }
+  ],
+  "passed": 1,
+  "total": 2
+}

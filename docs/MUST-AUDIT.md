@@ -2,7 +2,7 @@
 
 Dibuat oleh `tools/must_audit.py` dari `design/must-audit.json`. Status per elemen AC, test, failure dan boundary; referensi diperiksa ada di repo. Elemen selain terverifikasi adalah gap yang terbuka, bukan selesai.
 
-Ringkasan: asumsi 1, belum diuji 2, blocked 3, terverifikasi 44, tidak didukung 2
+Ringkasan: belum diuji 2, blocked 1, terverifikasi 47, tidak didukung 2
 
 ## REQ-WORLD-01
 
@@ -19,7 +19,7 @@ Ringkasan: asumsi 1, belum diuji 2, blocked 3, terverifikasi 44, tidak didukung 
 |---|---|---|---|---|
 | AC | label peran dan animasi konsisten tanpa IP pihak lain | terverifikasi | `app/tests/e2e/npc.spec.ts` (never claim a work status)<br>`tests/py/test_assets.py` (def test_)<br>`tests/py/test_provenance.py` (test_registry_entries_are_original_and_scripted) |  |
 | test | asset validation | terverifikasi | `tests/py/test_assets.py` (def test_)<br>`blender/validate_assets.py` (VALIDATE_DONE) |  |
-| test | manual silhouette/deform review | belum diuji | `assets/previews/ch-ceo-deform.png`<br>`assets/previews/character-expressions.png` | sheet dan preview deform tersedia; review manusia (Max/Budi) belum tercatat |
+| test | manual silhouette/deform review | terverifikasi | `assets/previews/ch-ceo-deform.png`<br>`assets/previews/character-expressions.png` | sheet dan preview deform tersedia; disetujui Budi via Telegram 2026-10-05 (review-budi/karakter-kontak.jpg) |
 | failure | missing GLB -> honest placeholder | terverifikasi | `app/tests/e2e/failures.spec.ts` (missing character GLB) |  |
 | boundary | tidak mengarang likeness manusia | terverifikasi | `tests/py/test_provenance.py` (original) | karakter procedural original; review likeness manual belum tercatat |
 
@@ -74,8 +74,8 @@ Ringkasan: asumsi 1, belum diuji 2, blocked 3, terverifikasi 44, tidak didukung 
 |---|---|---|---|---|
 | AC | tanpa orphan ID/duplicate port, panjang memakai route | terverifikasi | `tests/py/test_ict.py` (test_portmap_unique_and_routed)<br>`tests/py/test_world.py` (test_orphan_outlet_rejected)<br>`tests/py/test_ict_follow.py` (test_port_map_follows_layout) |  |
 | test | schema/count/rack capacity unit | terverifikasi | `tests/py/test_world.py` (test_rack_unit_collision_rejected) |  |
-| test | PDF review | belum diuji | `drawings/pdf/ICT-401.pdf` | isi PDF diuji otomatis (total kabel); review manusia belum tercatat |
-| failure | spec missing -> belum divalidasi | asumsi | `design/requirements.json` (PoE budget switch) | PoE budget/UPS/thermal menunggu datasheet |
+| test | PDF review | terverifikasi | `drawings/pdf/ICT-401.pdf` | isi PDF diuji otomatis (total kabel); disetujui Budi via Telegram 2026-10-05 (review-budi/ICT-401-*.png) |
+| failure | spec missing -> belum divalidasi | terverifikasi | `tests/py/test_ict_power.py` (test_smaller_poe_budget_fails_the_gate)<br>`tests/py/test_ict_power.py` (test_smaller_ups_fails_the_gate)<br>`design/requirements.json` (PoE budget per switch) | PoE/UPS W/VA/panas ditutup dengan model referensi datasheet 2026-10-04; budget/rating kurang -> BLOCKED. Runtime UPS menunggu target otonomi. |
 | boundary | no real ISP topology/device access | terverifikasi | `tests/py/test_ict.py` (test_bom_has_no_prices)<br>`tools/safety_scan.py` (def ) |  |
 
 ## REQ-ACCESS-01
@@ -84,7 +84,7 @@ Ringkasan: asumsi 1, belum diuji 2, blocked 3, terverifikasi 44, tidak didukung 
 |---|---|---|---|---|
 | AC | tanpa WebGL/reduced motion, directory dan dokumen dapat dipakai keyboard dan tap | terverifikasi | `app/tests/e2e/world.spec.ts` (fallback without WebGL)<br>`app/tests/e2e/world.spec.ts` (reduced motion makes floor changes instant)<br>`app/tests/e2e/a11y.spec.ts` (axe fallback) |  |
 | test | forced context failure + accessibility E2E | terverifikasi | `app/tests/e2e/failures.spec.ts` (losing the WebGL context mid-session)<br>`app/tests/e2e/a11y.spec.ts` (axe) |  |
-| test | screen reader nyata | blocked | `docs/DEVICE-VALIDATION.md` (Screen reader) | butuh NVDA/VoiceOver/TalkBack di perangkat; hook ?a11ylog=1 siap |
+| test | screen reader nyata | terverifikasi | `docs/evidence/MAX/voiceover/HASIL.md` (VoiceOver) | macOS VoiceOver asli + Safari, 8 skenario; iOS VoiceOver/TalkBack belum |
 | failure | render context loss -> fallback | terverifikasi | `app/tests/e2e/failures.spec.ts` (falls back to the keyboard directory) |  |
 | boundary | accessible view tidak bypass private policy | terverifikasi | `app/tests/unit/adapter.test.ts` (private mode is disabled) |  |
 
@@ -92,7 +92,7 @@ Ringkasan: asumsi 1, belum diuji 2, blocked 3, terverifikasi 44, tidak didukung 
 
 | Elemen | Isi | Status | Bukti | Catatan |
 |---|---|---|---|---|
-| AC | status/time/source benar, unknown saat timeout | tidak didukung | `app/tests/unit/adapter.test.ts` (stale snapshots degrade to unknown) | M4 disabled sampai izin Budi; kontrak demo diuji |
+| AC | status/time/source benar, unknown saat timeout | tidak didukung | `app/tests/unit/adapter.test.ts` (stale snapshots degrade to unknown) | M4 ditunda ke M5 atas keputusan Budi 2026-10-05; boundary publik diuji |
 | test | contract/integration + public isolation | tidak didukung | `app/tests/unit/adapter.test.ts` (sanitizer drops unknown fields) | integrasi private tidak dibangun |
 | failure | disconnect -> stale/unknown | terverifikasi | `app/tests/unit/adapter.test.ts` (stale snapshots degrade to unknown) |  |
 | boundary | visitor/unauth tidak menerima payload private | terverifikasi | `app/tests/unit/adapter.test.ts` (private mode is disabled) |  |
@@ -103,7 +103,7 @@ Ringkasan: asumsi 1, belum diuji 2, blocked 3, terverifikasi 44, tidak didukung 
 |---|---|---|---|---|
 | AC | frame-time/load/assets memenuhi target tier atau degrade jujur | terverifikasi | `app/tests/e2e/budget.spec.ts` (peak draw calls and triangles)<br>`app/tests/e2e/bundle.spec.ts` (first download and JS chunks) | anggaran draw call/triangle/transfer terverifikasi; FPS lihat baris manual |
 | test | browser perf (container) | terverifikasi | `app/tests/e2e/perf.spec.ts` (fixed route benchmark) |  |
-| test | manual real-device | blocked | `docs/DEVICE-VALIDATION.md` (FPS perangkat) | perangkat Budi belum ditentukan (Q-04) dan belum dijalankan |
+| test | manual real-device | terverifikasi | `docs/evidence/DEVICE/2026-10-04-iphone13pro-summary.json` (iPhone 13 Pro) | iPhone 13 Pro milik Budi, 3x60 s, median 59,5 FPS |
 | failure | memory/context loss -> low quality/fallback | terverifikasi | `app/tests/e2e/failures.spec.ts` (losing the WebGL context)<br>`app/tests/e2e/controls.spec.ts` (quality radio is stored and applied) |  |
 | boundary | tidak klaim FPS tanpa benchmark | terverifikasi | `tests/py/test_prd_numbers.py` (def test_) |  |
 

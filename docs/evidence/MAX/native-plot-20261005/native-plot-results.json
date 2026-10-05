@@ -1,0 +1,282 @@
+[
+ {
+  "sheet": "A-001",
+  "layout": "A-001",
+  "ok": true,
+  "source_dwg_sha256": "52c0bb1c638c38795fb8af45e9ede0559d2a83f6c5fb5bca92b0664d9d077e7f",
+  "pdf_sha256": "23ca18ac95242abdf4d4245a37fd1b2eac1830714a429d9aaebca1c97d538389",
+  "bytes": 41954,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-101",
+  "layout": "A-101",
+  "ok": true,
+  "source_dwg_sha256": "8fb479495c3ede7e42d06594f647d1e5fff5c65b23f341e7008e077f156659ed",
+  "pdf_sha256": "4b1fdf7ac063f83c5f42bede2d5455677d008a637acbd343b604696d0c5a8228",
+  "bytes": 78842,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-102",
+  "layout": "A-102",
+  "ok": true,
+  "source_dwg_sha256": "28a4db24b1762b755253d6d8d50f9e5607ab0e78d76100a742ef2c1ea8e486cb",
+  "pdf_sha256": "febb257ee3ebe140e8ec147d9933160edb024518049df0e6c5d69592b115cf95",
+  "bytes": 77729,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-103",
+  "layout": "A-103-1",
+  "ok": true,
+  "source_dwg_sha256": "5745663a76589373e1d7a4d57eab9d2c3c2c484d169188d5e21ac5d9bdf8a3c0",
+  "pdf_sha256": "7bcd3d7ce1c7c5896a259d3d268b37d5ecb4557516b1cbf9c4dc9daa1b2d8345",
+  "bytes": 43558,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-103",
+  "layout": "A-103-2",
+  "ok": true,
+  "source_dwg_sha256": "5745663a76589373e1d7a4d57eab9d2c3c2c484d169188d5e21ac5d9bdf8a3c0",
+  "pdf_sha256": "34a83026a60adefe5b751263091e8269af3808a3f5e6df7107a3392424fe47ca",
+  "bytes": 45861,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-201",
+  "layout": "A-201-1",
+  "ok": true,
+  "source_dwg_sha256": "32d5ee3247affacf1bc983ef41f046aaebae32796f89d83d83bc7b0b8460668e",
+  "pdf_sha256": "49da4c852c645e04b6cce84a35c0a8ab443c55250856dd88d90087ec2497d991",
+  "bytes": 167930,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-201",
+  "layout": "A-201-2",
+  "ok": true,
+  "source_dwg_sha256": "32d5ee3247affacf1bc983ef41f046aaebae32796f89d83d83bc7b0b8460668e",
+  "pdf_sha256": "444461d9d8b87b10af6f8f0b4087530e1a5f38002e027e5f99c2ba86a478e446",
+  "bytes": 41079,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-202",
+  "layout": "A-202-1",
+  "ok": true,
+  "source_dwg_sha256": "0e797bb6707da8fe19a0234e53da3f913f0a99c5e29763a98c283bb509cf9dd5",
+  "pdf_sha256": "c35555fe1177ed078f39b9b98291adb739459f01017bd6d7a016e9cab000d5d6",
+  "bytes": 166850,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-202",
+  "layout": "A-202-2",
+  "ok": true,
+  "source_dwg_sha256": "0e797bb6707da8fe19a0234e53da3f913f0a99c5e29763a98c283bb509cf9dd5",
+  "pdf_sha256": "3b7db235ceb0a218ad92af60cd8feb58de2b4dfff24d80ce26a1f34cabd0e53c",
+  "bytes": 40344,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-301",
+  "layout": "A-301",
+  "ok": true,
+  "source_dwg_sha256": "f8c890d53ff935ad05ca1bc521fa6a066883037277802fd7c2455fb96d27d349",
+  "pdf_sha256": "7528693357dc3a1cf6c222b509e9ce74979c495afb9c957d1621ffb480b07223",
+  "bytes": 101193,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "A-401",
+  "layout": "A-401",
+  "ok": true,
+  "source_dwg_sha256": "5228442f46ac90a427ad68129875c44878d2a287842e5c31af186ba91b11d3a0",
+  "pdf_sha256": "e931988f5954dd98e7ee8f0f3ab143e0943512726babc08e57382601abec8983",
+  "bytes": 68239,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "I-101",
+  "layout": "I-101",
+  "ok": true,
+  "source_dwg_sha256": "de0f20a7e3ef142e7733b1a83a603f4dadd2657e757590558032a1b783d9a40c",
+  "pdf_sha256": "5ab61c050566f25e0f8d2047b046bc251bb8727cda666bffaefe6a3e42ecadb9",
+  "bytes": 57048,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-001",
+  "layout": "ICT-001",
+  "ok": true,
+  "source_dwg_sha256": "56e1bbea34f392a251622f0e7e567bed148f28c3d82822d63c5e69809c40c801",
+  "pdf_sha256": "0a5e4519d6192184c82d9f1fd1fb8bda7c1bbb8d0ffeef588c667283b7691df0",
+  "bytes": 46300,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-101",
+  "layout": "ICT-101",
+  "ok": true,
+  "source_dwg_sha256": "5343f865a194a743681d2c0f696ad3fce3e70b5609a18b32c1c817df2158f2ca",
+  "pdf_sha256": "62effc91a0199518302cfd694c98707960bcca157f5cd5a0edaaa7b36de3466c",
+  "bytes": 203154,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-102",
+  "layout": "ICT-102",
+  "ok": true,
+  "source_dwg_sha256": "7d0c0724528bce48acd0744b9d96102baf3e28d4305ace7bc3109d859774fd74",
+  "pdf_sha256": "fb6d927035c9a3f1f32de9ddd80d27a44017791c73f96310c91542ebc5596cfb",
+  "bytes": 205148,
+  "creator_autocad": true,
+  "page_size": "1684 x 1191 pts (A2)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-201",
+  "layout": "ICT-201",
+  "ok": true,
+  "source_dwg_sha256": "9c716df25d215831261926791c09738e141e7847ea1fff82c8e5ef0b4e7f9ef1",
+  "pdf_sha256": "4211255dc6086b5f28469b82c5319115a1bd9e87588a729fcff0a9dce3c362ca",
+  "bytes": 46180,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-301",
+  "layout": "ICT-301",
+  "ok": true,
+  "source_dwg_sha256": "cc7c8af3d9721bb4ae6b4d077be911f9e98e8cc0d3c750cb1c4e7cc80396f185",
+  "pdf_sha256": "2f026eddd2593d1e924ed282ab38628a0d2827c8d966fff732ff650ea9398c24",
+  "bytes": 70419,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-401",
+  "layout": "ICT-401-1",
+  "ok": true,
+  "source_dwg_sha256": "b00f9bd936034e101309f9c269b44c3e728aa1a92a444129feefd4af8bcb2c65",
+  "pdf_sha256": "b1bbf717bb12dbd1e5271599867f818633d236581ce8c0e3792ad303fc747c4f",
+  "bytes": 40903,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-401",
+  "layout": "ICT-401-2",
+  "ok": true,
+  "source_dwg_sha256": "b00f9bd936034e101309f9c269b44c3e728aa1a92a444129feefd4af8bcb2c65",
+  "pdf_sha256": "5de224dcb7cd0a8a65636bd8159363b57d202b7bf95e13031c0473dc5650015b",
+  "bytes": 39369,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ },
+ {
+  "sheet": "ICT-401",
+  "layout": "ICT-401-3",
+  "ok": true,
+  "source_dwg_sha256": "b00f9bd936034e101309f9c269b44c3e728aa1a92a444129feefd4af8bcb2c65",
+  "pdf_sha256": "ffc17d55144e0f4b95dc8f2b1b00df41d5fbcdf54027383b712e951f303add4f",
+  "bytes": 37288,
+  "creator_autocad": true,
+  "page_size": "1191 x 842 pts (A3)",
+  "fonts_embedded": [
+   "DejaVuSans"
+  ],
+  "simplex_substitution": false
+ }
+]

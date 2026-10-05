@@ -1,0 +1,73 @@
+{
+  "ranAt": "2026-10-04T15:23:25.186637+00:00",
+  "screenReader": "macOS VoiceOver (real), Safari, keyboard only",
+  "steps": [
+    {
+      "step": "1b tautan 'Lewati ke direktori' tercapai (Option+Tab / Shift+Option+Tab)",
+      "spoken": {
+        "optionTab": "Direktori M collapsed button Menu navigation",
+        "shiftOptionTab": "link Lewati ke direktori"
+      },
+      "result": "PASS"
+    },
+    {
+      "step": "2c tombol Direktori bernama",
+      "spoken": "Direktori M collapsed button Menu navigation",
+      "result": "PASS"
+    },
+    {
+      "step": "3a tombol 'Temui <persona>' bernama",
+      "spoken": "Temui Hugo button",
+      "result": "PASS"
+    },
+    {
+      "step": "3b dialog persona dibacakan",
+      "spoken": "Hugo web dialog with 6 items Topik lain button",
+      "result": "PASS"
+    },
+    {
+      "step": "3c Escape: fokus kembali ke tombol Temui",
+      "spoken": "Studio Hugo",
+      "result": "FAIL"
+    },
+    {
+      "step": "5 prompt NPC tidak diulang tiap frame (12 detik diam)",
+      "spoken": [
+        "Studio button",
+        "Avatar dialog pop up button",
+        "Avatar dialog pop up button",
+        "Pengaturan dialog pop up button"
+      ],
+      "result": "PASS"
+    },
+    {
+      "step": "6a tombol Pengaturan bernama",
+      "spoken": "Pengaturan dialog pop up button",
+      "result": "PASS"
+    },
+    {
+      "step": "6b legend Tema/Kualitas grafis + checkbox Kurangi gerak/Mode visitor dibacakan",
+      "spoken": {
+        "Kualitas grafis": "Otomatis selected radio button, 1 of 3 Kualitas grafis group",
+        "Kurangi gerak": "Kurangi gerak (animasi sekunder dimatikan) unchecked checkbox Gerak dan akses group",
+        "Mode visitor": "Mode visitor (ruang terbatas terkunci) unchecked checkbox",
+        "Tema": "Ikuti sistem selected radio button, 1 of 3 Tema group"
+      },
+      "result": "PASS"
+    },
+    {
+      "step": "8a tombol Studio bernama",
+      "spoken": "Studio button",
+      "result": "PASS"
+    },
+    {
+      "step": "8b tombol Studio punya nama aksi (Geser/Putar/Simpan)",
+      "spoken": [
+        "Simpan draft button"
+      ],
+      "result": "FAIL"
+    }
+  ],
+  "passed": 8,
+  "total": 10
+}

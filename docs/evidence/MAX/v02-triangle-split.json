@@ -1,0 +1,42 @@
+{
+ "low": {
+  "lowQuality": true,
+  "threePeak": {
+   "drawCalls": 54,
+   "triangles": 193707,
+   "at": [
+    12.37838638786497,
+    8.840903142039789
+   ],
+   "floor": "L1"
+  },
+  "webglPeakPerFrame": {
+   "vis": 193707,
+   "off": 0,
+   "visCalls": 54,
+   "offCalls": 0,
+   "total": 193707
+  }
+ },
+ "high": {
+  "lowQuality": false,
+  "threePeak": {
+   "drawCalls": 115,
+   "triangles": 378572,
+   "at": [
+    12.228407630276655,
+    8.870220129925233
+   ],
+   "floor": "L1"
+  },
+  "webglPeakPerFrame": {
+   "vis": 189581,
+   "off": 188991,
+   "visCalls": 54,
+   "offCalls": 61,
+   "total": 378572
+  }
+ },
+ "method": "Playwright Chromium (SwiftShader), iPhone 13 Pro viewport, live a041f5a1, 25 s fixed route; WebGL2 draw wrapper splits default framebuffer (visible) from offscreen (shadow map)",
+ "measuredAt": "2026-10-05T00:23:14.291Z"
+}
