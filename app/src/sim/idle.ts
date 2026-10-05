@@ -443,11 +443,11 @@ export class IdleSim {
     const blocker = this.blockerFor(npc, next);
     if (blocker) {
       if (npc.yieldTo !== blocker.id) { npc.yieldTo = blocker.id; npc.yieldSince = this.time; this.yields++; }
-      else if (this.mutualAndMineToGive(npc, blocker.id) && this.time - npc.yieldSince >= YIELD_DETOUR_SECONDS / 2) this.giveWay(npc, blocker.pos);
+      else if (this.mutualAndMineToGive(npc, blocker.id) && this.time - npc.yieldSince >= YIELD_DETOUR_SECONDS / 2) this.giveWay(npc, blocker.pos, blocker.id);
       else if (this.time - npc.yieldSince >= this.detourDelay(npc)) {
         // The first snapped path cell can be inside a stationary agent's disc.
         // Back out in continuous space before asking the grid for a new route.
-        if (!npc.resumeTo) this.giveWay(npc, blocker.pos);
+        if (!npc.resumeTo) this.giveWay(npc, blocker.pos, blocker.id);
         if (!npc.resumeTo) this.detour(npc);
       }
     } else {
@@ -495,12 +495,23 @@ export class IdleSim {
     return !!o && o.yieldTo === npc.id && this.npcs.indexOf(npc) > this.npcs.indexOf(o) && !npc.resumeTo;
   }
 
-  /** Back off to the free spot 0.7 to 1.2 m away that is furthest from the
-   * other agent (straight, walkable, clear of everyone), hold 1.5 s there and
-   * then re-plan. Resolves head-on meetings in doorways and narrow rooms. */
-  private giveWay(npc: NpcState, from: Vec2): void {
+  /** Back off to a free spot 0.7 to 1.2 m away (straight, walkable, clear of
+   * everyone), hold 1.5 s there and then re-plan. Resolves head-on meetings
+   * in doorways and narrow rooms. When the other agent is walking, the spot
+   * is scored by how far it sits off that agent's heading: backing straight
+   * up its route only keeps the two in each other's way (corridor livelock). */
+  private giveWay(npc: NpcState, from: Vec2, otherId?: string): void {
     const nav = this.nav[npc.floor];
     const goal = npc.path[npc.path.length - 1] ?? npc.pos;
+    const other = otherId ? this.npcs.find((o) => o.id === otherId) : undefined;
+    const ahead = other && other.pathIndex < other.path.length ? other.path[other.pathIndex] : null;
+    let heading: Vec2 | null = null;
+    if (ahead) {
+      const hx = ahead[0] - from[0];
+      const hy = ahead[1] - from[1];
+      const hl = Math.hypot(hx, hy);
+      if (hl > 1e-3) heading = [hx / hl, hy / hl];
+    }
     let best: Vec2 | null = null;
     let bestScore = -Infinity;
     for (const r of [0.7, 0.95, 1.2]) {
@@ -511,7 +522,9 @@ export class IdleSim {
         const clear = this.npcs.every((o) => o === npc || o.floor !== npc.floor || Math.hypot(o.pos[0] - c[0], o.pos[1] - c[1]) >= AGENT_GAP + 0.1)
           && !(this.player && this.player.floor === npc.floor && Math.hypot(this.player.pos[0] - c[0], this.player.pos[1] - c[1]) < AGENT_GAP + 0.1);
         if (!clear) continue;
-        const score = Math.hypot(c[0] - from[0], c[1] - from[1]);
+        const rx = c[0] - from[0];
+        const ry = c[1] - from[1];
+        const score = heading ? 2 * Math.abs(rx * heading[1] - ry * heading[0]) + 0.25 * Math.hypot(rx, ry) : Math.hypot(rx, ry);
         if (score > bestScore) { bestScore = score; best = c; }
       }
     }
