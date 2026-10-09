@@ -2,7 +2,7 @@
 
 Dibuat oleh `tools/must_audit.py` dari `design/must-audit.json`. Status per elemen AC, test, failure dan boundary; referensi diperiksa ada di repo. Elemen selain terverifikasi adalah gap yang terbuka, bukan selesai.
 
-Ringkasan: terverifikasi 50, tidak didukung 2
+Ringkasan: terverifikasi 52
 
 ## REQ-WORLD-01
 
@@ -92,10 +92,10 @@ Ringkasan: terverifikasi 50, tidak didukung 2
 
 | Elemen | Isi | Status | Bukti | Catatan |
 |---|---|---|---|---|
-| AC | status/time/source benar, unknown saat timeout | tidak didukung | `app/tests/unit/adapter.test.ts` (stale snapshots degrade to unknown) | M4 ditunda ke M5 atas keputusan Budi 2026-10-05; boundary publik diuji |
-| test | contract/integration + public isolation | tidak didukung | `app/tests/unit/adapter.test.ts` (sanitizer drops unknown fields) | integrasi private tidak dibangun |
-| failure | disconnect -> stale/unknown | terverifikasi | `app/tests/unit/adapter.test.ts` (stale snapshots degrade to unknown) |  |
-| boundary | visitor/unauth tidak menerima payload private | terverifikasi | `app/tests/unit/adapter.test.ts` (private mode is disabled) |  |
+| AC | status/time/source benar, unknown saat timeout | terverifikasi | `server/test/api.test.mjs` (sumber Kanban rusak tampil gagal)<br>`app/tests/e2e/private.spec.ts` (Basi: pembaruan gagal) | M4 dibangun 2026-10-10 (ADR-016) |
+| test | contract/integration + public isolation | terverifikasi | `server/test/api.test.mjs` (papan: handoff/pekerjaan/log sesuai sumber)<br>`app/tests/e2e/private.spec.ts` (pengunjung: papan Demo) |  |
+| failure | disconnect -> stale/unknown | terverifikasi | `app/tests/unit/adapter.test.ts` (stale snapshots degrade to unknown)<br>`app/tests/e2e/private.spec.ts` (Basi: pembaruan gagal) |  |
+| boundary | visitor/unauth tidak menerima payload private | terverifikasi | `server/test/api.test.mjs` (visitor tanpa login ditolak)<br>`app/tests/e2e/private.spec.ts` (not.toMatch(/Villa E2E) |  |
 
 ## REQ-PERF-01
 

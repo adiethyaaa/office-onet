@@ -10,6 +10,14 @@ import { showPersonaCard, showRoomCard } from './game/game';
 import type { StudioUI } from './studio/ui';
 import { AvatarStudio, availableHair, loadChoice, paletteColors } from './studio/avatar-studio';
 import { store } from './studio/layout';
+import type { PrivatePanel } from './private/panel';
+import { ACTOR_PROFILE } from './game/game';
+
+// Private panel (boards + agent commands) is fetched on first use.
+let panel: PrivatePanel | null = null;
+const loadPanel = () => import('./private/panel').then((m) => (panel ??= new m.PrivatePanel()));
+const openBoards = (tab: 'handoffs' | 'tasks' | 'log' = 'handoffs') => void loadPanel().then((p) => p.openBoards(tab, document.activeElement as HTMLElement));
+const openAgent = (profile: string) => void loadPanel().then((p) => p.openAgent(profile, document.activeElement as HTMLElement));
 
 const world = worldJson as unknown as World;
 const walls = wallsJson as unknown as DerivedWalls;
@@ -60,8 +68,11 @@ function enterFallback(reason: string) {
     go: () => {},
     showRoom: (r) => showRoomCard(world, r, !(settings.visitor && r.access === 'restricted')),
     showPersona: (id) => showPersonaCard(world, id),
+    command: openAgent,
+    profiles: ACTOR_PROFILE,
+    boards: openBoards,
   });
-  window.__kantor = { mode: 'fallback', reason };
+  window.__kantor = { mode: 'fallback', reason, openBoards, openAgent };
 }
 
 function wireSettings(game: Game | null, s: Settings) {
@@ -88,6 +99,7 @@ function wireSettings(game: Game | null, s: Settings) {
 }
 
 function wireCommon() {
+  $('btn-boards').addEventListener('click', () => openBoards());
   $('btn-help').addEventListener('click', (e) => openDialog($('dlg-help') as HTMLDialogElement, e.currentTarget as HTMLElement));
   $('directory-close').addEventListener('click', () => {
     $('directory-panel').hidden = true;
@@ -143,8 +155,13 @@ function boot() {
   // is the whole UI then, so the button focuses it instead of toggling it away.
   $('btn-directory').addEventListener('click', () => ($('app').dataset.mode === 'fallback' ? showFallbackDirectory() : game.toggleDirectory()));
   window.addEventListener('kantor:fallback', (e) => enterFallback((e as CustomEvent<string>).detail));
+  game.onBoard = openBoards;
+  game.onAgent = openAgent;
+  game.renderDirectory();
   game.start();
   window.__kantor = {
+    openBoards,
+    openAgent,
     mode: 'world',
     state: () => ({ floor: game.player.floor, pos: game.player.pos, facing: game.player.facing, room: game.roomId, visitor: game.settings.visitor, avatarPlaceholder: game.player.avatar.isPlaceholder, clips: game.player.avatar.clipNames, recoveries: game.player.stuckRecoveries, floorSwitches: game.floorSwitches }),
     stats: () => game.stats(),

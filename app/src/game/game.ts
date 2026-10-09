@@ -19,6 +19,18 @@ import dialogueJson from '@design/dialogue.json';
 
 const DIALOGUE = dialogueJson as { personas: Record<string, string[]> };
 
+export type BoardTab = 'handoffs' | 'tasks' | 'log';
+/** In-world boards (PRD 18.1): coordination room, work areas on both floors, IMPL screen. */
+export const BOARD_FIXTURES: Record<string, BoardTab> = {
+  'FX-L1-050': 'handoffs', 'FX-L1-023': 'tasks', 'FX-L2-034': 'tasks', 'FX-L1-065': 'log',
+};
+const BOARD_LABEL: Record<BoardTab, string> = { handoffs: 'Papan Handoff', tasks: 'Daftar Pekerjaan', log: 'Log Aktivitas' };
+/** Persona -> Hermes profile that receives commands (server roster is the authority). */
+export const ACTOR_PROFILE: Record<string, string> = {
+  'ACT-MAX': 'default', 'ACT-ECHO': 'echo', 'ACT-LEO': 'leo', 'ACT-NOVA': 'enterprise', 'ACT-HUGO': 'sipil',
+  'ACT-BRUNO': 'infra', 'ACT-KEVIN': 'sales', 'ACT-REX': 'labs',
+};
+
 export interface Interactable {
   id: string;
   kind: 'link' | 'fixture';
@@ -60,6 +72,8 @@ export class Game {
   private doorMeshes!: DoorMeshes;
   studioOpen = false;
   onAvatarLoaded: (() => void) | null = null;
+  onBoard: ((tab: BoardTab) => void) | null = null;
+  onAgent: ((profile: string) => void) | null = null;
   studioFocus: THREE.Vector3 | null = null;
   /** world.json fixtures before any local layout was applied */
   readonly baseFixtures: Fixture[];
@@ -220,6 +234,11 @@ export class Game {
       list.push({ id: `slot:${slot.id}`, kind: 'fixture', floor: slot.floor, pos: slot.pos, radius: 0.85, label: slotVerb(slot), run: () => this.startActivity(slot) });
     }
     for (const fx of this.world.fixtures) {
+      const board = BOARD_FIXTURES[fx.id];
+      if (board) {
+        list.push({ id: fx.id, kind: 'fixture', floor: fx.floor, pos: fx.pos, radius: Math.max(fx.size[0], fx.size[1]) / 2 + 0.9, label: `Buka ${BOARD_LABEL[board]}`, run: () => this.onBoard?.(board) });
+        continue;
+      }
       const inter = this.world.catalog[fx.type]?.interaction;
       if (!inter) continue;
       list.push({ id: fx.id, kind: 'fixture', floor: fx.floor, pos: fx.pos, radius: Math.max(fx.size[0], fx.size[1]) / 2 + 0.9, label: this.fixtureLabel(fx, inter), run: () => this.useFixture(fx, inter) });
@@ -250,6 +269,7 @@ export class Game {
       else if (k === '-') this.rig.zoom(1.18);
       else if (k === 'm') this.toggleDirectory();
       else if (k === 'h') openDialog($('dlg-help') as HTMLDialogElement);
+      else if (k === 'b') this.onBoard?.('handoffs');
       else if (k === 'escape' && this.activity) this.endActivity(true);
     };
     $('touch-interact').addEventListener('click', () => this.interact());
@@ -269,6 +289,9 @@ export class Game {
       showRoom: (room) => showRoomCard(this.world, room, this.roomTarget(room) !== null),
       showPersona: (id) => showPersonaCard(this.world, id),
       meet: (id) => this.meet(id),
+      command: (profile) => this.onAgent?.(profile),
+      profiles: ACTOR_PROFILE,
+      boards: (tab) => this.onBoard?.(tab),
     });
   }
 
@@ -502,6 +525,12 @@ export class Game {
     next();
     const more = el('button', { type: 'button', class: 'btn' }, 'Topik lain');
     more.addEventListener('click', next);
+    const profile = ACTOR_PROFILE[id];
+    const command = el('button', { type: 'button', class: 'btn primary', 'data-command': profile ?? '' }, 'Bicara & beri tugas');
+    command.addEventListener('click', () => {
+      ($('dlg-info') as HTMLDialogElement).close();
+      if (profile) this.onAgent?.(profile);
+    });
     const room = this.world.rooms.find((r) => r.floor === npc.floor && insidePoly(npc.pos, r.polygon));
     const body = [
       el('p', { class: 'sim-note' }, 'SIMULASI: persona virtual, dialog fiksi statis.'),
@@ -513,8 +542,9 @@ export class Game {
         ['Lokasi', room ? room.name : '-'],
         ['Jam simulasi', this.npcs.sim.clockLabel()],
       ]),
-      more,
+      el('div', { class: 'row' }),
     ];
+    (body[body.length - 1] as HTMLElement).append(more, ...(profile && this.onAgent ? [command] : []));
     $('dlg-info-title').textContent = npc.name;
     $('dlg-info-body').replaceChildren(...body);
     const dlg = $('dlg-info') as HTMLDialogElement;

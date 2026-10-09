@@ -25,6 +25,7 @@
         <button type="button" class="btn" id="btn-directory" aria-controls="directory-panel" aria-expanded="false"><span>Direktori</span><kbd>M</kbd></button>
         <button type="button" class="btn" id="btn-studio" aria-controls="studio-panel"><span>Studio</span></button>
         <button type="button" class="btn" id="btn-avatar" aria-haspopup="dialog"><span>Avatar</span></button>
+        <button type="button" class="btn" id="btn-boards" aria-haspopup="dialog"><span>Papan kerja</span><kbd>B</kbd></button>
         <button type="button" class="btn" id="btn-settings" aria-haspopup="dialog"><span>Pengaturan</span></button>
         <button type="button" class="btn" id="btn-help" aria-haspopup="dialog"><span>Kontrol</span><kbd>H</kbd></button>
       </nav>
@@ -123,6 +124,18 @@
       <button type="button" class="btn" id="avatar-cancel">Batal</button>
       <button type="button" class="btn primary" id="avatar-save">Simpan</button>
     </div>
+  </dialog>
+
+  <dialog class="dialog wide" id="dlg-boards" aria-labelledby="dlg-boards-title">
+    <h2 id="dlg-boards-title">Papan kerja tim</h2>
+    <div id="boards-body"></div>
+    <form method="dialog"><button class="btn primary" value="close">Tutup</button></form>
+  </dialog>
+
+  <dialog class="dialog wide" id="dlg-agent" aria-labelledby="agent-title">
+    <h2 id="agent-title">Bicara &amp; beri tugas</h2>
+    <div id="agent-body"></div>
+    <form method="dialog"><button class="btn" value="close">Tutup</button></form>
   </dialog>
 
   <dialog class="dialog wide" id="dlg-info" aria-labelledby="dlg-info-title">
