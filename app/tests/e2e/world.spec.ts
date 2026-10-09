@@ -25,12 +25,16 @@ test.describe('world vertical slice', () => {
     const personaNear = (p: number[]) => page.evaluate((q) => (window.__kantor!.npcs as () => { floor: string; pos: number[] }[])()
       .some((n) => n.floor === 'L1' && Math.hypot(n.pos[0] - q[0], n.pos[1] - q[1]) < 0.8), p);
     await page.keyboard.down('w');
+    // Two still samples in a row: with eight personas loading their GLBs a
+    // single 500 ms window can pass without a rendered frame on a busy host.
     let last = s0.pos[1];
+    let still = 0;
     for (let k = 0; k < 60; k++) {
       await page.waitForTimeout(500);
       const st = await state(page);
       const y = st.pos[1];
-      if (y > s0.pos[1] + 1 && Math.abs(y - last) < 0.01 && !(await personaNear(st.pos))) break;
+      still = y > s0.pos[1] + 1 && Math.abs(y - last) < 0.01 && !(await personaNear(st.pos)) ? still + 1 : 0;
+      if (still >= 2) break;
       last = y;
     }
     await page.keyboard.up('w');

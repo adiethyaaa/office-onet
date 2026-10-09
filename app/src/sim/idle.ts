@@ -444,7 +444,11 @@ export class IdleSim {
     if (blocker) {
       if (npc.yieldTo !== blocker.id) { npc.yieldTo = blocker.id; npc.yieldSince = this.time; this.yields++; }
       else if (this.mutualAndMineToGive(npc, blocker.id) && this.time - npc.yieldSince >= YIELD_DETOUR_SECONDS / 2) this.giveWay(npc, blocker.pos, blocker.id);
-      else if (this.time - npc.yieldSince >= this.detourDelay(npc)) {
+      else if (this.time - npc.lastProgressAt >= STUCK_SECONDS - 0.5 && this.wrapUp(blocker.id)) {
+        // A performer standing in the only way out of a pocket (gap between
+        // two treadmills) never moves on its own and detours cannot pass it;
+        // measured from lastProgressAt because detour() restarts yieldSince.
+      } else if (this.time - npc.yieldSince >= this.detourDelay(npc)) {
         // The first snapped path cell can be inside a stationary agent's disc.
         // Back out in continuous space before asking the grid for a new route.
         if (!npc.resumeTo) this.giveWay(npc, blocker.pos, blocker.id);
@@ -489,6 +493,26 @@ export class IdleSim {
     return null;
   }
 
+  /** True when walking straight from a to b steps into other's disc somewhere. */
+  private cutsThrough(a: Vec2, b: Vec2, other: Vec2): boolean {
+    let prev = a;
+    for (let s = 1; s <= 8; s++) {
+      const p: Vec2 = [a[0] + ((b[0] - a[0]) * s) / 8, a[1] + ((b[1] - a[1]) * s) / 8];
+      if (stepBlocked(prev, p, other)) return true;
+      prev = p;
+    }
+    return false;
+  }
+
+  /** Ask a performing NPC to finish now so it walks off; true when it did. */
+  private wrapUp(otherId: string): boolean {
+    const o = this.npcs.find((x) => x.id === otherId);
+    if (!o || o.phase !== 'perform' || o.until <= this.time) return false;
+    o.until = this.time;
+    this.log.push({ t: this.time, npc: o.id, event: 'wrap-up', detail: '' });
+    return true;
+  }
+
   /** Two walkers waiting on each other: the one with the higher index gives way. */
   private mutualAndMineToGive(npc: NpcState, otherId: string): boolean {
     const o = this.npcs.find((x) => x.id === otherId);
@@ -522,6 +546,10 @@ export class IdleSim {
         const clear = this.npcs.every((o) => o === npc || o.floor !== npc.floor || Math.hypot(o.pos[0] - c[0], o.pos[1] - c[1]) >= AGENT_GAP + 0.1)
           && !(this.player && this.player.floor === npc.floor && Math.hypot(this.player.pos[0] - c[0], this.player.pos[1] - c[1]) < AGENT_GAP + 0.1);
         if (!clear) continue;
+        // The straight walk to the spot must not cut through the agent we are
+        // giving way to: blockerFor() would refuse that first step, and two
+        // walkers picking such spots for each other livelock (8-persona soak).
+        if (this.cutsThrough(npc.pos, c, from)) continue;
         const rx = c[0] - from[0];
         const ry = c[1] - from[1];
         const score = heading ? 2 * Math.abs(rx * heading[1] - ry * heading[0]) + 0.25 * Math.hypot(rx, ry) : Math.hypot(rx, ry);
