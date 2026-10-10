@@ -199,12 +199,15 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
   const slab = new THREE.BoxGeometry(W + 0.3, 0.3, D + 0.3);
   slab.translate(W / 2, elev - 0.15, -D / 2);
   batch.add(slab, ENV.slab, id);
+  let plate = 0;
   for (const room of world.rooms) {
     if (room.floor !== floor) continue;
     const shape = new THREE.Shape(room.polygon.map(([x, y]) => new THREE.Vector2(x, y)));
     const geo = new THREE.ShapeGeometry(shape);
     geo.rotateX(-Math.PI / 2); // plan (x, y) -> three (x, -y) on the XZ plane
-    geo.translate(0, elev + 0.005, 0);
+    // Plates that share an edge or overlap slightly used to z-fight (flicker
+    // while the camera moves); each plate gets its own 1 mm step.
+    geo.translate(0, elev + 0.01 + (plate++ % 8) * 0.001, 0);
     const color = CATEGORY_TINT[room.category] ?? FINISH_COLOR[room.finish.floor] ?? 0xd8c8ab;
     batch.add(geo, color, id);
     // A shaft is a closed riser, not a room: fill it to the cutaway height so

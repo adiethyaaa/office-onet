@@ -161,6 +161,7 @@ export class Game {
     const c = this.sun.shadow.camera as THREE.OrthographicCamera;
     c.left = -20; c.right = 20; c.top = 20; c.bottom = -20; c.near = 1; c.far = 80;
     this.sun.shadow.bias = -0.0006;
+    this.sun.shadow.normalBias = 0.03; // stops shadow acne shimmering on walls/floors as the camera moves
     this.scene.add(this.sun, this.sun.target);
   }
 

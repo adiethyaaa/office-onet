@@ -19,6 +19,7 @@ const STEP = 0.1;
 // Personas further than this from the CEO (plan metres) render their LOD1
 // mesh: at the default 3/4 camera they cover a few dozen pixels there.
 export const LOD1_DISTANCE = 8;
+export const LOD_HYSTERESIS = 1;
 
 interface View { avatar: Avatar; prev: THREE.Vector3; next: THREE.Vector3; label: HTMLElement; floor: FloorId }
 
@@ -105,7 +106,14 @@ export class NpcLayer {
       v.avatar.root.visible = visible;
       v.avatar.root.position.lerpVectors(v.prev, v.next, t);
       v.avatar.setFacing(npc.facing);
-      if (playerPos) v.avatar.setLod(Math.hypot(npc.pos[0] - playerPos[0], npc.pos[1] - playerPos[1]) > LOD1_DISTANCE ? 1 : 0);
+      if (playerPos) {
+        // Hysteresis band: an NPC walking along the LOD radius used to swap
+        // meshes every frame, which read as the model flashing.
+        const d = Math.hypot(npc.pos[0] - playerPos[0], npc.pos[1] - playerPos[1]);
+        const lod = v.avatar.lodLevel;
+        if (lod === 0 && d > LOD1_DISTANCE + LOD_HYSTERESIS) v.avatar.setLod(1);
+        else if (lod === 1 && d < LOD1_DISTANCE - LOD_HYSTERESIS) v.avatar.setLod(0);
+      }
       v.avatar.talking = npc.phase === 'paused';
       v.avatar.play(this.clipFor(npc));
       v.avatar.update(dt, npc.phase === 'travel' ? 1 : 0, reducedMotion);

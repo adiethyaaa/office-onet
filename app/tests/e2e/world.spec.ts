@@ -70,11 +70,15 @@ test.describe('world vertical slice', () => {
 
   test('visitor mode locks the server room (UI toggle, path and directory)', async ({ page }) => {
     await boot(page);
-    expect(await page.evaluate(() => (window.__kantor!.walkTo as (x: number, y: number) => Promise<boolean>)(22.5, 17.5))).toBe(true);
+    // Route checks, not a full walk: the CI runner has no GPU and a cross-map
+    // walk there exceeded the 90 s driver timeout.
+    const canReach = (x: number, y: number) => page.evaluate(([px, py]) => (window.__kantor!.canReach as (a: number, b: number) => boolean)(px, py), [x, y]);
+    expect(await canReach(27, 21)).toBe(true);
     await page.locator('#btn-settings').click();
     await page.getByLabel('Mode visitor (ruang terbatas terkunci)').check();
     await page.getByRole('button', { name: 'Selesai' }).click();
     expect((await state(page)).visitor).toBe(true);
+    expect(await canReach(27, 21)).toBe(false);
     expect(await walkTo(page, 27, 21)).toBe(false);
     await page.locator('#btn-directory').click();
     const server = page.locator('.dir-item', { hasText: 'Ruang server' });

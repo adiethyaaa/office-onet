@@ -66,6 +66,14 @@ export function telegramTranscript(home, profile, sessionId, limit = TRANSCRIPT_
   });
 }
 
+/** Times (ms) of the agent replies in the session, newest last; for unread counts. */
+export function agentReplyTimes(home, profile, sessionId, limit = 50) {
+  const db = path.join(profileHome(home, profile), 'state.db');
+  const rows = sql(db, `select timestamp from messages where session_id=? and role='assistant' and coalesce(content,'') <> '' and _compressed_summary = 0
+    order by id desc limit ${Number(limit) | 0}`, [sessionId]);
+  return rows.map((r) => Math.round(r.timestamp * 1000)).reverse();
+}
+
 function botToken(home, profile) {
   try {
     const env = fs.readFileSync(path.join(profileHome(home, profile), '.env'), 'utf8');

@@ -11,7 +11,7 @@ export interface LogItem { at: number; kind: 'task' | 'tool'; bot: string; verb:
 export interface Board<T> { ok: boolean; source: string; error?: string; items: T[] }
 export interface Boards { observedAt: string; mode: 'private' | 'demo'; handoffs: Board<HandoffItem>; tasks: Board<TaskItem>; log: Board<LogItem> }
 export interface Agent { profile: string; name: string; lane: string; actorId: string | null; badan: string; tasks: Record<string, number> }
-export interface Presence { profile: string; name: string; actorId: string | null; status: 'working' | 'waiting' | 'idle' | 'unknown'; source: string; summary: string }
+export interface Presence { profile: string; name: string; actorId: string | null; status: 'working' | 'waiting' | 'idle' | 'unknown'; source: string; summary: string; replies?: number[] }
 export interface Option { id: string; label: string; message: string; requiresApproval: boolean }
 export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 'telegram' | 'rpg' | 'agent' | 'system'; pending?: boolean; text: string; taskId: string | null; at: number; options: Option[] | null; optionsExpired: boolean; expiresAt: number | null }
 export interface TaskView { id: string; status: string; source: string; observed_at: number; created_at: number; error: string | null; terminal: boolean }

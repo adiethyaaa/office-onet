@@ -13,7 +13,17 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const TASK_STATUS: Record<string, string> = { todo: 'Antre', ready: 'Antre', triage: 'Antre', scheduled: 'Terjadwal', running: 'Sedang jalan', claimed: 'Diambil', blocked: 'Diblokir', done: 'Selesai' };
 
-const fmtTime = (ms: number) => new Date(ms).toLocaleString('id-ID', { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+const fmtTime = (ms: number) =>
+  new Date(ms).toLocaleString('id-ID', { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+
+// Read position per agent, kept in this browser only (no server state, no content).
+const READ_KEY = 'kantor-rpg:read:';
+export function readMark(profile: string): number | null {
+  try { const v = localStorage.getItem(READ_KEY + profile); return v ? Number(v) || null : null; } catch { return null; }
+}
+function setReadMark(profile: string, at: number) {
+  try { localStorage.setItem(READ_KEY + profile, String(at)); } catch { /* private mode: unread state just isn't kept */ }
+}
 const fmtAge = (h: number) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} mnt` : h < 48 ? `${Math.round(h)} jam` : `${Math.round(h / 24)} hari`);
 const newIdem = () => `idem-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -36,6 +46,23 @@ export class PrivatePanel {
   private presenceTimer = 0;
   /** Receives real agent status while logged in; null = back to simulation. */
   onPresence: ((agents: Presence[] | null) => void) | null = null;
+  onUnreadChange: (() => void) | null = null;
+  private readMarkAtOpen: number | null = null;
+  private presenceList: Presence[] = [];
+
+  /**
+   * Agent replies Budi has not seen yet. The first time a profile shows up in
+   * this browser its history counts as read (baseline), so a new device does
+   * not start with every bot flagged; only later replies count.
+   */
+  unreadFor(profile: string): number {
+    const times = this.presenceList.find((p) => p.profile === profile)?.replies ?? [];
+    const mark = readMark(profile);
+    if (mark === null) { if (times.length) setReadMark(profile, times[times.length - 1]); return 0; }
+    return times.filter((t) => t > mark).length;
+  }
+
+  unreadTotal(): number { return this.presenceList.reduce((n, p) => n + this.unreadFor(p.profile), 0); }
 
   constructor(private onOpenChange?: (open: boolean) => void) {}
 
@@ -44,7 +71,12 @@ export class PrivatePanel {
     window.clearTimeout(this.presenceTimer);
     if (!this.me) await this.refreshMe();
     if (!this.authenticated) { this.onPresence?.(null); return; }
-    try { this.onPresence?.((await api.presence()).agents); } catch (e) {
+    try {
+      const agents = (await api.presence()).agents;
+      this.presenceList = agents;
+      this.onPresence?.(agents);
+      this.onUnreadChange?.();
+    } catch (e) {
       if (e instanceof ApiError && e.status === 401) { this.me = null; this.onPresence?.(null); return; }
     }
     this.presenceTimer = window.setTimeout(() => void this.startPresence(), document.hidden ? 30_000 : 10_000);
@@ -70,6 +102,7 @@ export class PrivatePanel {
     try {
       this.agents = (await api.agents()).agents;
       presence = (await api.presence()).agents;
+      this.presenceList = presence;
     } catch (e) {
       body.append(el('p', { class: 'warn', role: 'alert' }, `Daftar agen tidak dapat dibuka: ${(e as Error).message}`));
       if (!dlg.open) openDialog(dlg, opener);
@@ -82,6 +115,8 @@ export class PrivatePanel {
       const btn = el('button', { type: 'button', class: 'btn agent-pick-btn', 'data-agent': a.profile });
       btn.append(el('span', { class: 'agent-pick-name' }, a.name), el('span', { class: 'muted small' }, a.lane),
         el('span', { class: `tag ${p?.status === 'working' ? 'live' : p?.status === 'waiting' ? 'warn' : 'demo'}` }, state));
+      const unread = this.unreadFor(a.profile);
+      if (unread) btn.append(el('span', { class: 'unread-badge', 'aria-label': `${unread} pesan belum dibaca` }, unread > 9 ? '9+' : String(unread)));
       if (p?.summary) btn.title = p.summary;
       btn.addEventListener('click', () => void this.openAgent(a.profile, opener));
       const li = el('li'); li.append(btn); list.append(li);
@@ -321,7 +356,7 @@ export class PrivatePanel {
       if (!dlg.open) openDialog(dlg, opener);
       return;
     }
-    this.renderConversation();
+    this.renderConversation(false, true);
     if (!dlg.open) {
       openDialog(dlg, opener);
       this.onOpenChange?.(true);
@@ -349,8 +384,10 @@ export class PrivatePanel {
     }, busy ? 2000 : 5000);
   }
 
-  private renderConversation(keepInput = false) {
+  private renderConversation(keepInput = false, opening = false) {
     const c = this.conv!;
+    const prevLog = document.querySelector<HTMLElement>('#agent-body .chat');
+    const prevScroll = prevLog ? { top: prevLog.scrollTop, atBottom: prevLog.scrollHeight - prevLog.scrollTop - prevLog.clientHeight < 40 } : null;
     const draft = keepInput ? ($('agent-manual-text') as HTMLTextAreaElement | null)?.value : undefined;
     const lastAgentId = [...c.turns].reverse().find((t) => t.role === 'agent')?.id ?? null;
     // A new agent turn with choices starts with the choices, not the manual box.
@@ -368,7 +405,17 @@ export class PrivatePanel {
     else if (c.channel === 'telegram-unavailable') body.append(el('p', { class: 'warn', role: 'status' }, 'Riwayat Telegram bot ini tidak bisa dibaca sekarang. Pesan yang kamu kirim tetap masuk ke sesi Telegram-nya bila sesinya ada.'));
     else body.append(el('p', { class: 'muted small' }, 'Bot ini belum punya chat Telegram denganmu, jadi percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.'));
     const log = el('ol', { class: 'chat', 'aria-live': 'polite', 'aria-label': `Percakapan dengan ${c.agent}` });
-    for (const t of c.turns) log.append(this.turnView(t));
+    // Unread = agent/system messages newer than what Budi last saw (per profile, this browser).
+    if (opening) this.readMarkAtOpen = readMark(c.profile);
+    const mark = this.readMarkAtOpen;
+    let divider: HTMLElement | null = null;
+    for (const t of c.turns) {
+      if (!divider && mark !== null && t.role !== 'owner' && t.at > mark) {
+        divider = el('li', { class: 'unread-divider', role: 'separator' }, 'Belum dibaca');
+        log.append(divider);
+      }
+      log.append(this.turnView(t));
+    }
     if (!c.turns.length) log.append(el('li', { class: 'muted' }, `Belum ada pesan. Tulis tugas pertama untuk ${c.agent}.`));
     body.append(log);
     for (const t of c.tasks.filter((x) => !x.terminal || x.status === 'blocked' || x.status === 'waiting_owner')) {
@@ -421,8 +468,25 @@ export class PrivatePanel {
     fresh.addEventListener('click', async () => { this.conv = await api.conversation(c.profile, true); this.renderConversation(); });
     // A Telegram-bound chat has one history (Telegram's); /new is done in Telegram.
     if (c.channel !== 'telegram') body.append(fresh);
-    log.lastElementChild?.scrollIntoView?.({ block: 'nearest' });
-    if (hadFocus && document.getElementById(hadFocus)) document.getElementById(hadFocus)!.focus();
+    log.addEventListener('scroll', () => { if (log.scrollHeight - log.scrollTop - log.clientHeight < 40) this.markRead(); }, { passive: true });
+    // Open at the first unread message, else at the latest one; on refresh keep
+    // the reader's place unless they were already at the bottom.
+    requestAnimationFrame(() => {
+      const smooth = !opening && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (opening && divider) log.scrollTop = Math.max(0, divider.offsetTop - log.offsetTop - 8);
+      else if (opening || !prevScroll || prevScroll.atBottom) log.scrollTo({ top: log.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
+      else log.scrollTop = prevScroll.top;
+      if (log.scrollHeight - log.scrollTop - log.clientHeight < 40) this.markRead();
+    });
+    if (hadFocus && document.getElementById(hadFocus)) document.getElementById(hadFocus)!.focus({ preventScroll: true });
+  }
+
+  /** Everything up to the newest agent/system message counts as read. */
+  private markRead() {
+    const c = this.conv;
+    if (!c) return;
+    const last = Math.max(0, ...c.turns.filter((t) => t.role !== 'owner').map((t) => t.at));
+    if (last > (readMark(c.profile) ?? 0)) { setReadMark(c.profile, last); this.onUnreadChange?.(); }
   }
 
   private turnView(t: Turn): HTMLElement {

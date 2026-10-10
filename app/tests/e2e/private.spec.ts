@@ -17,6 +17,7 @@ let server: { close: () => void; address: () => { port: number } };
 let backend = '';
 const calls: { profile: string; message: string }[] = [];
 let tmp = '';
+let tgTs = 0; // Telegram fixture clock (s); unread tests set read marks relative to it
 // The server clock advances one TOTP step per login so every login has a
 // fresh code (the server rejects a reused one) without waiting 30 s.
 let clockOffset = 0;
@@ -40,11 +41,13 @@ test.beforeAll(async () => {
   fs.mkdirSync(tgDir, { recursive: true });
   fs.writeFileSync(path.join(home, '.hermes', '.env'), 'TELEGRAM_ALLOWED_USERS=777\n');
   const ts = Date.now() / 1000;
+  tgTs = ts;
   execFileSync('sqlite3', [path.join(tgDir, 'state.db'), `
     create table sessions(id text primary key, source text, session_key text, started_at real, ended_at real);
     create table messages(id integer primary key autoincrement, session_id text, role text, content text, timestamp real, platform_message_id text, _compressed_summary int default 0);
     insert into sessions values('tg_kevin','telegram','agent:sales:telegram:dm:777',${ts - 4000},null);
     insert into messages(session_id,role,content,timestamp,platform_message_id) values
+${Array.from({ length: 15 }, (_, i) => `      ('tg_kevin','user','Catatan lama ${i + 1}',${ts - 3600 + i * 60},'${4000 + i}'),\n      ('tg_kevin','assistant','Balasan lama ${i + 1}',${ts - 3590 + i * 60},null),`).join('\n')}
       ('tg_kevin','user','Kevin, follow up Villa E2E besok pagi ya',${ts - 600},'5001'),
       ('tg_kevin','assistant','Siap, aku jadwalkan follow up jam 09.00.',${ts - 590},null);
   `]);
@@ -259,8 +262,40 @@ test('sync Telegram: chat Kevin di RPG menampilkan obrolan Telegram yang sama (A
   const dlg = page.locator('#dlg-agent');
   await expect(dlg.locator('#agent-sync-note')).toContainText('percakapan Telegram-mu dengan Kevin');
   await expect(dlg.getByText('Sama dengan chat Telegram')).toBeVisible();
-  await expect(dlg.locator('.turn.owner').first()).toContainText('follow up Villa E2E besok pagi');
+  await expect(dlg.locator('.turn.owner').filter({ hasText: 'follow up Villa E2E besok pagi' })).toHaveCount(1);
   await expect(dlg.locator('.turn.owner .who').first()).toContainText('Telegram');
-  await expect(dlg.locator('.turn.agent').first()).toContainText('jam 09.00');
+  await expect(dlg.locator('.turn.agent').last()).toContainText('jam 09.00');
   await shot(page, info, 'agent-telegram-sync');
+});
+
+test('chat seperti aplikasi pesan: badge belum dibaca, dibuka dari pesan belum dibaca, lalu terbaca', async ({ page }, info) => {
+  await wireApi(page);
+  await boot(page);
+  // Kevin's chat was last read between "Balasan lama 15" and his 09.00 reply.
+  const mark = Math.round((tgTs - 595) * 1000);
+  await page.evaluate((at) => localStorage.setItem('kantor-rpg:read:sales', String(at)), mark);
+  await page.keyboard.press('b');
+  await login(page);
+  await expect(page.locator('#dlg-boards').getByText('Data nyata')).toBeVisible();
+  await page.locator('#dlg-boards').getByRole('button', { name: 'Tutup' }).click();
+  await expect(page.locator('#btn-chat .unread-badge')).toBeVisible({ timeout: 15_000 });
+  await page.keyboard.press('c');
+  await expect(page.locator('.agent-pick-btn[data-agent="sales"] .unread-badge')).toHaveText('1');
+  await page.locator('.agent-pick-btn[data-agent="sales"]').click();
+  const dlg = page.locator('#dlg-agent');
+  const divider = dlg.locator('.unread-divider');
+  await expect(divider).toHaveText('Belum dibaca');
+  await expect(dlg.locator('.unread-divider + li')).toContainText('jam 09.00');
+  // The log is scrolled so the unread part is in view, not the top of the history.
+  await expect.poll(async () => dlg.locator('.chat').evaluate((log: HTMLElement) => {
+    const d = log.querySelector<HTMLElement>('.unread-divider')!;
+    const top = d.offsetTop - log.offsetTop;
+    return log.scrollTop > 0 && top >= log.scrollTop - 1 && top <= log.scrollTop + log.clientHeight;
+  })).toBe(true);
+  await expect.poll(() => page.evaluate(() => Number(localStorage.getItem('kantor-rpg:read:sales')))).toBeGreaterThan(mark);
+  await shot(page, info, 'agent-unread');
+  await dlg.getByRole('button', { name: 'Tutup' }).click();
+  await page.keyboard.press('c');
+  await expect(page.locator('.agent-pick-btn[data-agent="sales"]')).toBeVisible();
+  await expect(page.locator('.agent-pick-btn[data-agent="sales"] .unread-badge')).toHaveCount(0);
 });

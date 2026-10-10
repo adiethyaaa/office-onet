@@ -11,7 +11,7 @@ import path from 'node:path';
 import { openStore, RETENTION } from './store.mjs';
 import { loadOwner, verifyPassword, verifyTotp, hashPassword, base32Encode, token } from './auth.mjs';
 import { boardCache, buildPresence, makeSources } from './boards.mjs';
-import { ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
+import { agentReplyTimes, ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
 import { ROSTER, byProfile } from './roster.mjs';
 import { checkMessage, LIMITS } from './policy.mjs';
 import { createDispatcher, hermesRunner, TERMINAL } from './dispatcher.mjs';
@@ -35,6 +35,7 @@ export function createServer(cfg) {
     chatId: () => ownerChatId(home),
     session: (profile) => telegramSession(home, profile, ownerChatId(home)),
     transcript: (profile, sessionId) => telegramTranscript(home, profile, sessionId),
+    replyTimes: (profile, sessionId) => agentReplyTimes(home, profile, sessionId),
     post: (profile, text) => postToTelegram(home, profile, ownerChatId(home), text),
     ...cfg.telegram,
   };
@@ -223,7 +224,15 @@ export function createServer(cfg) {
     const t = now();
     if (!presenceMemo.value || t - presenceMemo.at > 4000) {
       const rpg = q("select profile, status, message from tasks where status in ('queued','working','waiting_owner') order by created_at desc").all();
-      presenceMemo = { at: t, value: { observedAt: new Date(t).toISOString(), agents: buildPresence(sources, rpg, t) } };
+      const agents = buildPresence(sources, rpg, t).map((a) => {
+        // Agent reply times (Telegram DM, or RPG chat for bots without one) for unread badges.
+        let replies = [];
+        const sid = tgSession(a.profile);
+        if (sid) { try { replies = tg.replyTimes(a.profile, sid); } catch { replies = []; } }
+        else replies = q("select t.created_at at from turns t join conversations c on c.id=t.conversation_id where c.profile=? and t.role='agent' order by t.created_at desc limit 50").all(a.profile).map((r) => r.at).reverse();
+        return { ...a, replies };
+      });
+      presenceMemo = { at: t, value: { observedAt: new Date(t).toISOString(), agents } };
     }
     send(res, 200, presenceMemo.value);
   });

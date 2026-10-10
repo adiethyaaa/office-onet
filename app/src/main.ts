@@ -17,7 +17,21 @@ import { ACTOR_PROFILE } from './game/game';
 let panel: PrivatePanel | null = null;
 let onPresence: PrivatePanel['onPresence'] = null;
 const loadPanel = () => import('./private/panel').then((m) => {
-  if (!panel) { panel = new m.PrivatePanel(); panel.onPresence = onPresence; }
+  if (!panel) {
+    panel = new m.PrivatePanel();
+    panel.onPresence = onPresence;
+    // Unread agent replies on the HUD "Chat agen" button, like a messaging app.
+    panel.onUnreadChange = () => {
+      const n = panel?.unreadTotal() ?? 0;
+      const btn = document.getElementById('btn-chat');
+      if (!btn) return;
+      let badge = btn.querySelector<HTMLElement>('.unread-badge');
+      if (!n) { badge?.remove(); btn.setAttribute('aria-label', 'Chat agen'); return; }
+      if (!badge) { badge = document.createElement('span'); badge.className = 'unread-badge'; badge.setAttribute('aria-hidden', 'true'); btn.append(badge); }
+      badge.textContent = n > 9 ? '9+' : String(n);
+      btn.setAttribute('aria-label', `Chat agen, ${n} pesan belum dibaca`);
+    };
+  }
   return panel;
 });
 const openBoards = (tab: 'handoffs' | 'tasks' | 'log' = 'handoffs') => void loadPanel().then((p) => p.openBoards(tab, document.activeElement as HTMLElement));
@@ -196,6 +210,8 @@ function boot() {
     reserveForTest: (slot: string, npc: string) => game.npcs.sim.reservations.set(slot, { npc, expires: game.npcs.sim.time + 600 }),
     reservations: () => [...game.npcs.sim.reservations.entries()].map(([k, r]) => [k, r.npc]),
     renderer: game.rendererName,
+    // Test helper: is there a walkable route from the CEO to (x, y) right now?
+    canReach: (x: number, y: number) => game.nav.findPath(game.player.pos, [x, y]) !== null,
     // Test/benchmark helper: drives the CEO with the normal movement code along
     // a navgrid path (no teleport). Resolves false when no path exists.
     walkTo: (x: number, y: number, timeoutMs = 90000) => new Promise<boolean>((resolve) => {
