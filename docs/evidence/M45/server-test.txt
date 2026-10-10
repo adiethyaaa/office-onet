@@ -1,17 +1,17 @@
-✔ visitor tanpa login ditolak di semua API privat (AC-CMD-04, REQ-BOARD-04) (26.311708ms)
-✔ tanpa header proxy ditolak (backend tidak bisa diakses langsung) (1.018167ms)
-✔ login: sandi salah, kode salah, kode dipakai ulang, dan rate limit (248.793542ms)
-✔ CSRF dan origin asing ditolak untuk owner yang login (28.472167ms)
-✔ pesan manual sampai ke profil yang tepat, receipt + idempotensi (AC-CMD-01, AC-CMD-05, AC-MANUAL-01) (35.263417ms)
-✔ pilihan: dikirim sesuai ID turn, pilihan lama kedaluwarsa, ID palsu ditolak (AC-CHOICE-01) (41.463958ms)
-✔ aksi berisiko menunggu approval terpisah; ditolak/kedaluwarsa/replay tidak mengirim (AC-CMD-03) (148.900542ms)
-✔ rahasia di chat ditolak; gagal/offline jujur; cancel (REQ-CMD-02, REQ-CMD-05) (42.373ms)
-✔ logout mematikan sesi (27.1405ms)
-✔ papan: handoff/pekerjaan/log sesuai sumber, tanpa rahasia/path, profil pribadi tersamar (REQ-BOARD-01..03) (40.3295ms)
-✔ sumber Kanban rusak tampil gagal, bukan kosong sukses (REQ-BOARD-05) (4.773667ms)
-✔ cache papan: viewer berulang dalam TTL tidak membaca sumber lagi (8.936959ms)
-✔ kebijakan: parseOptions tepat tiga, berbeda; scrub; deteksi risiko (0.162208ms)
-✔ setup owner: tautan sekali pakai, kode wajib benar, lalu tidak berlaku (80.546125ms)
+✔ visitor tanpa login ditolak di semua API privat (AC-CMD-04, REQ-BOARD-04) (24.463458ms)
+✔ tanpa header proxy ditolak (backend tidak bisa diakses langsung) (1.502083ms)
+✔ login: sandi salah, kode salah, kode dipakai ulang, dan rate limit (284.146042ms)
+✔ CSRF dan origin asing ditolak untuk owner yang login (36.055ms)
+✔ pesan manual sampai ke profil yang tepat, receipt + idempotensi (AC-CMD-01, AC-CMD-05, AC-MANUAL-01) (47.602916ms)
+✔ pilihan: dikirim sesuai ID turn, pilihan lama kedaluwarsa, ID palsu ditolak (AC-CHOICE-01) (37.631833ms)
+✔ aksi berisiko menunggu approval terpisah; ditolak/kedaluwarsa/replay tidak mengirim (AC-CMD-03) (148.176458ms)
+✔ rahasia di chat ditolak; gagal/offline jujur; cancel (REQ-CMD-02, REQ-CMD-05) (46.503833ms)
+✔ logout mematikan sesi (29.207166ms)
+✔ papan: handoff/pekerjaan/log sesuai sumber, tanpa rahasia/path, profil pribadi tersamar (REQ-BOARD-01..03) (40.532083ms)
+✔ sumber Kanban rusak tampil gagal, bukan kosong sukses (REQ-BOARD-05) (3.53875ms)
+✔ cache papan: viewer berulang dalam TTL tidak membaca sumber lagi (6.102708ms)
+✔ kebijakan: parseOptions tepat tiga, berbeda; scrub; deteksi risiko (0.155041ms)
+✔ setup owner: tautan sekali pakai, kode wajib benar, lalu tidak berlaku (84.560541ms)
 ℹ tests 14
 ℹ suites 0
 ℹ pass 14
@@ -19,4 +19,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 867.857917
+ℹ duration_ms 932.82175

@@ -43,7 +43,10 @@ export function createServer(cfg) {
     }
     res.writeHead(code, {
       'Content-Type': typeof body === 'string' ? 'text/html; charset=utf-8' : 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
+      'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
+      // HTML here is only the setup form; with no-referrer Chrome posts it
+      // with `Origin: null`, which the origin check rightly rejects.
+      'Referrer-Policy': typeof body === 'string' ? 'same-origin' : 'no-referrer',
       'X-Frame-Options': 'DENY', 'X-Robots-Tag': 'noindex, nofollow', ...headers,
     });
     res.end(data);

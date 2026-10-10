@@ -298,6 +298,7 @@ test('setup owner: tautan sekali pakai, kode wajib benar, lalu tidak berlaku', a
   const html = await get.text();
   assert.equal(get.status, 200);
   assert.match(html, /data:image\/png;base64/);
+  assert.equal(get.headers.get('referrer-policy'), 'same-origin', 'no-referrer makes Chrome post the form with Origin: null');
   const secret = /<code>([A-Z2-7]+)<\/code>/.exec(html)[1];
   const post = (code, pw = 'sandi-baru-panjang-9') => fetch(`${b2}/api/setup`, { method: 'POST', headers: { 'x-kantor-proxy': PROXY, 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ t, password: pw, password2: pw, code }).toString() });
   assert.equal((await post('000000')).status, 400);
