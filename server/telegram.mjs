@@ -83,6 +83,26 @@ export function lastChatLine(home, profile, sessionId) {
   return row ? { role: row.role === 'assistant' ? 'agent' : 'owner', at: Math.round(row.timestamp * 1000) } : null;
 }
 
+/**
+ * Full-history search of the session (not just the last 40 lines). The term
+ * is a quoted SQL literal (quotes doubled, control chars dropped) because the
+ * sqlite3 CLI has no bind parameters.
+ */
+export function searchTelegram(home, profile, sessionId, term, limit = 30) {
+  const db = path.join(profileHome(home, profile), 'state.db');
+  const t = String(term ?? '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 60).toLowerCase();
+  if (t.length < 2 || !/^[\w:.-]{1,80}$/.test(String(sessionId))) return [];
+  const lit = `'${t.replace(/'/g, "''")}'`;
+  const rows = execFileSync('sqlite3', ['-readonly', '-json', db, `select id, role, content, timestamp, platform_message_id from messages
+    where session_id='${sessionId}' and role in ('user','assistant') and _compressed_summary = 0 and instr(lower(content), ${lit}) > 0
+    order by id desc limit ${Number(limit) | 0}`], { timeout: 4000, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  return (rows ? JSON.parse(rows) : []).map((r) => {
+    const raw = String(r.content);
+    const fromRpg = raw.includes(RPG_NOTE);
+    return { id: `tg_${r.id}`, role: r.role === 'assistant' ? 'agent' : r.platform_message_id || fromRpg ? 'owner' : 'system', text: (r.role === 'assistant' ? parseOptions(raw).body : stripRpgNote(raw)).slice(0, TEXT_LIMIT), at: Math.round(r.timestamp * 1000) };
+  });
+}
+
 function botToken(home, profile) {
   try {
     const env = fs.readFileSync(path.join(profileHome(home, profile), '.env'), 'utf8');

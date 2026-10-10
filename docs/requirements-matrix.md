@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit f9d4709; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit c94e6ad; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -72,8 +72,11 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-CHATKEY-01 | M6 | Daftar semua agen dengan lane + status; memilih membuka profil yang benar; menu HUD HP tidak terpotong. | app/tests/e2e/private.spec.ts | docs/evidence/M45/e2e-private.txt | terverifikasi |
 | REQ-TGSYNC-01 | M6 | Transkrip Telegram tampil; kirim dari RPG melanjutkan sesi Telegram aktif; /new diikuti; balasan ikut ke Telegram; pilihan kedaluwarsa bila obrolan Telegram berlanjut. | server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M6/server-test.txt<br>docs/evidence/M6/desktop-agent-telegram-sync.jpg | terverifikasi |
 | REQ-SHARE-01 | M6 | Ekspor repo komunitas + INSTALL + pindai | - | - | target |
+| REQ-CHATFEEL-01 | M7 | Mengetik dari tugas RPG berjalan atau pesan Telegram Budi belum dibalas (maks 10 menit); centang sent/delivered/read; aktif X menit lalu; pemisah tanggal WITA; Balas/Salin; bunyi + (n) di judul tab. | server/test/chat-state.test.mjs<br>server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M7/server-test.txt<br>docs/evidence/M7/desktop-agent-telegram-sync.jpg | terverifikasi |
+| REQ-CHATPUSH-01 | M7 | Web Push RFC 8291 + VAPID ES256 dari backend sendiri; izin lewat tombol; bisu per bot per perangkat; ketuk membuka chat; manifest PWA + ikon. | server/test/media-push.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M7/server-test.txt | terverifikasi |
+| REQ-CHATMEDIA-01 | M7 | Lampiran <=10 MB, <=5/pesan, daftar putih + magic bytes; agen menerima path lokal format gateway Telegram; suara -> mlx-whisper lokal; URL bertanda tangan HMAC; lampiran Telegram tampil; cari seluruh riwayat sesi; retensi 30 hari. | server/test/media-push.test.mjs<br>server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M7/server-test.txt<br>docs/evidence/M7/desktop-agent-media-search.jpg | terverifikasi |
 
-Ringkasan status bagian: target 1, terverifikasi 66.
+Ringkasan status bagian: target 1, terverifikasi 69.
 
 ## Story, AC, failure dan boundary
 
@@ -308,3 +311,27 @@ Kantor RPG dibagikan gratis ke komunitas tanpa data internal.
 Repo komunitas riwayat baru, konfigurasi pemakai, pindai pola nol temuan sebelum publikasi.
 
 Failure: temuan pindai -> tidak dipublikasi. Boundary: repo kerja internal tetap privat.
+
+### REQ-CHATFEEL-01 (M7)
+
+Sebagai Budi, chat agen terasa seperti Telegram: mengetik, centang, terakhir aktif.
+
+Mengetik dari tugas RPG berjalan atau pesan Telegram Budi belum dibalas (maks 10 menit); centang sent/delivered/read; aktif X menit lalu; pemisah tanggal WITA; Balas/Salin; bunyi + (n) di judul tab.
+
+Failure: tanpa data -> baris status kosong, bukan karangan. Boundary: status diturunkan dari tugas + transkrip; tidak dikarang.
+
+### REQ-CHATPUSH-01 (M7)
+
+Sebagai Budi, notifikasi balasan agen walau tab ditutup.
+
+Web Push RFC 8291 + VAPID ES256 dari backend sendiri; izin lewat tombol; bisu per bot per perangkat; ketuk membuka chat; manifest PWA + ikon.
+
+Failure: endpoint bukan push service resmi -> 400; langganan 404/410 dihapus. Boundary: isi notifikasi nama bot + <=120 karakter; kunci VAPID 0600.
+
+### REQ-CHATMEDIA-01 (M7)
+
+Sebagai Budi, kirim foto/berkas/pesan suara dan cari pesan lama.
+
+Lampiran <=10 MB, <=5/pesan, daftar putih + magic bytes; agen menerima path lokal format gateway Telegram; suara -> mlx-whisper lokal; URL bertanda tangan HMAC; lampiran Telegram tampil; cari seluruh riwayat sesi; retensi 30 hari.
+
+Failure: jenis/isi tidak cocok -> 415; token palsu/keluar folder -> 404; berkas hilang -> 'sudah dihapus'. Boundary: path server tidak pernah ke browser; transkrip lokal tanpa API berbayar.

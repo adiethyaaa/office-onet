@@ -49,7 +49,7 @@ export function hermesRunner({ home = os.homedir(), bin = 'hermes', budgetSecond
   });
 }
 
-export function createDispatcher(store, { runner, now = () => Date.now(), onChange, onReply, sessionFor } = {}) {
+export function createDispatcher(store, { runner, now = () => Date.now(), onChange, onReply, sessionFor, prepare } = {}) {
   const q = store.q;
   const running = new Map(); // profile -> { taskId, child }
 
@@ -86,7 +86,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
     }
     try {
       out = await runner({
-        profile, hermesSession: wanted, message: t.message + OPTION_INSTRUCTION,
+        profile, hermesSession: wanted, message: (prepare ? await prepare(t) : t.message) + OPTION_INSTRUCTION,
         onStart: (child) => { const r = running.get(profile); if (r) r.child = child; },
       });
     } catch (e) {
@@ -106,7 +106,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
         turnId, t.conversation_id, 'agent', sanitizeReply(parsed.body), parsed.options ? JSON.stringify(parsed.options) : null,
         parsed.options ? now() + LIMITS.turnMinutes * 60_000 : null, t.id, now());
       q('update tasks set result_turn=? where id=?').run(turnId, t.id);
-      if (conv?.channel === 'telegram') onReply?.({ profile, ownerText: t.message, agentText: sanitizeReply(parsed.body) });
+      onReply?.({ profile, ownerText: t.message, agentText: sanitizeReply(parsed.body), channel: conv?.channel, taskId: t.id });
       if (parsed.invalid) event(t.id, 'completed', `Balasan diterima. ${parsed.invalid} Hanya input manual yang tersedia.`);
       else event(t.id, parsed.options ? 'waiting_owner' : 'completed', `${parsed.options ? 'Agen menunggu keputusan Budi.' : 'Balasan agen diterima.'}${out.note ? ` ${out.note}` : ''}`);
     } else {
@@ -120,7 +120,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
   return {
     running,
     /** Idempotent: the same key returns the existing task instead of a second one. */
-    enqueue({ conversationId, profile, message, decisionId, idem, risks = [] }) {
+    enqueue({ conversationId, profile, message, decisionId, idem, risks = [], uploads = [] }) {
       const dup = q('select * from tasks where idem=?').get(idem);
       if (dup) return { task: dup, duplicate: true };
       const queued = q("select count(*) n from tasks where profile=? and status in ('queued','working','blocked')").get(profile).n;
@@ -130,6 +130,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
       q('insert into tasks(id,conversation_id,profile,idem,message,decision_id,status,source,observed_at,created_at) values(?,?,?,?,?,?,?,?,?,?)').run(
         id, conversationId, profile, idem, message, decisionId ?? null, 'queued', `hermes:${profile}`, at, at);
       q('insert into turns(id,conversation_id,role,text,options,expires_at,task_id,created_at) values(?,?,?,?,?,?,?,?)').run(`turn_${token(9)}`, conversationId, 'owner', message, null, null, id, at);
+      for (const u of uploads) q('update uploads set task_id=? where id=? and task_id is null').run(id, u);
       q('update conversations set updated_at=? where id=?').run(at, conversationId);
       let approval = null;
       if (risks.length) {

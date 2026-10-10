@@ -37,6 +37,17 @@ const loadPanel = () => import('./private/panel').then((m) => {
 const openBoards = (tab: 'handoffs' | 'tasks' | 'log' = 'handoffs') => void loadPanel().then((p) => p.openBoards(tab, document.activeElement as HTMLElement));
 const openAgent = (profile: string) => void loadPanel().then((p) => p.openAgent(profile, document.activeElement as HTMLElement));
 const openPicker = () => void loadPanel().then((p) => p.openPicker(document.activeElement as HTMLElement));
+// A tapped notification opens that bot's chat (./?chat=<profile>), in this tab or a new one.
+const chatParam = new URLSearchParams(location.search).get('chat');
+if (chatParam && /^[\w-]{1,30}$/.test(chatParam)) {
+  history.replaceState(null, '', location.pathname);
+  window.setTimeout(() => openAgent(chatParam), 1500);
+}
+navigator.serviceWorker?.addEventListener('message', (e) => {
+  const u = typeof e.data?.url === 'string' ? new URL(e.data.url, location.href) : null;
+  const p = u?.searchParams.get('chat');
+  if (e.data?.type === 'open-chat' && p && /^[\w-]{1,30}$/.test(p)) openAgent(p);
+});
 
 const world = worldJson as unknown as World;
 const walls = wallsJson as unknown as DerivedWalls;

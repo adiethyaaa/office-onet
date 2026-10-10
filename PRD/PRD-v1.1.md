@@ -370,6 +370,32 @@ Ditambahkan setelah Budi mencoba M4 + M5 di produksi. Tiga keluhan: NPC tetap be
 - Failure: riwayat tidak terbaca → peringatan, bukan daftar kosong; sesi Telegram hilang → tugas gagal dengan alasan, tidak dikirim ke sesi lain.
 - Batas: bot tidak bisa mengirim atas nama Budi. Gateway yang menyimpan riwayat di memori bisa belum melihat giliran RPG sampai sesinya dimuat ulang.
 
+### 19.5 Chat terasa seperti Telegram (v1.3, 2026-10-10)
+
+Permintaan Budi: chat agen di RPG harus terasa sama dengan Telegram, termasuk notifikasi dan tanda mengetik. Dikerjakan tiga tahap. Semua status diturunkan dari data nyata (tugas RPG, transkrip Telegram); tidak ada yang dikarang.
+
+- REQ-CHATFEEL-01 (Tahap 1): Sebagai Budi, saya ingin tahu apakah agen sedang mengerjakan pesanku. AC:
+  - Header chat dan daftar agen menampilkan `sedang mengetik…` selama tugas RPG agen berjalan, atau selama pesan Telegram terakhir Budi belum dibalas (maks 10 menit, lalu padam supaya bot macet tidak terlihat mengetik selamanya). Gelembung titik tampil di akhir log.
+  - Tiap pesan Budi diberi centang: ✓ diterima server, ✓✓ diterima agen, ✓✓ biru setelah agen membalas.
+  - `aktif X menit lalu` dihitung dari waktu balasan agen terakhir; tanpa data, baris kosong.
+  - Pemisah tanggal (Hari ini / Kemarin / tanggal) dalam WITA; tombol Balas (mengutip pesan) dan Salin per pesan.
+  - Pesan baru membunyikan nada pendek (bisa dimatikan) dan judul tab menampilkan `(n)` belum dibaca.
+- REQ-CHATPUSH-01 (Tahap 2): Sebagai Budi, saya ingin notifikasi balasan agen walau tab ditutup. AC:
+  - Web Push standar (RFC 8291 + VAPID ES256) dari backend sendiri, tanpa layanan berbayar; kunci VAPID di folder data 0600.
+  - Izin hanya diminta lewat tombol `Aktifkan notifikasi`; notifikasi uji dikirim saat aktif. Notifikasi bisa dibisukan per bot per perangkat.
+  - Isi notifikasi: nama bot + potongan ≤120 karakter. Mengetuk notifikasi membuka chat bot itu.
+  - Endpoint hanya push service resmi browser (cegah SSRF); langganan 404/410 dihapus otomatis.
+  - Aplikasi bisa dipasang ke layar utama (manifest + ikon). Service worker hanya menangani push, tidak meng-cache aset.
+- REQ-CHATMEDIA-01 (Tahap 3): Sebagai Budi, saya ingin mengirim foto, berkas dan pesan suara, dan mencari pesan lama. AC:
+  - Lampiran ≤10 MB, ≤5 per pesan: foto (JPG/PNG/WebP/GIF), PDF, DOCX, XLSX, TXT/CSV, ZIP, audio. Jenis dicek dari daftar putih + magic bytes; nama berkas dibersihkan.
+  - Agen menerima lampiran sebagai path lokal dengan format gateway Telegram Hermes, jadi alatnya membaca seperti lampiran Telegram.
+  - Pesan suara direkam di browser, diubah jadi teks di Mac mini (mlx-whisper small, bahasa Indonesia, lokal, gratis); transkrip ikut ke agen dan tampil di bawah pemutar.
+  - Browser hanya menerima URL bertanda tangan HMAC; path server tidak pernah dikirim. Token hanya membuka berkas di folder unggahan atau cache lampiran Hermes.
+  - Lampiran Telegram yang sudah ada di transkrip tampil sebagai foto/berkas; berkas yang sudah dihapus tampil `sudah dihapus`.
+  - Cari pesan mencari seluruh riwayat sesi Telegram (bukan hanya 40 pesan terakhir) atau percakapan RPG.
+  - Lampiran ikut retensi 30 hari.
+- Batas: bot tidak bisa mengirim atas nama Budi, jadi pesan dari RPG tetap tampil di Telegram sebagai pesan bot berlabel `Dari kantor RPG` (lampiran disebut jumlahnya saja). Status mengetik Budi di Telegram tidak bisa dibaca bot. Push di iPhone hanya jalan dari ikon layar utama (iOS 16.4+).
+
 ### 19.4 Distribusi komunitas
 
 - REQ-SHARE-01: Kantor RPG boleh dibagikan gratis ke komunitas Hermes. AC: repo komunitas punya riwayat git baru, berisi kode, aset, dan cara install; tidak memuat nama usaha, nama orang, hostname, IP, path rumah, chat id, token, isi Kanban, atau bukti uji dari mesin kita (pindai pola sebelum push). Roster, origin, dan host backend diatur lewat konfigurasi pemakai, bukan ditanam di kode. Repo kerja internal tetap privat.

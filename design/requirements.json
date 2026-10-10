@@ -1105,6 +1105,73 @@
      "status": "target"
     }
    ]
+  },
+  {
+   "id": "REQ-CHATFEEL-01",
+   "milestone": "M7",
+   "story": "Sebagai Budi, chat agen terasa seperti Telegram: mengetik, centang, terakhir aktif.",
+   "ac": "Mengetik dari tugas RPG berjalan atau pesan Telegram Budi belum dibalas (maks 10 menit); centang sent/delivered/read; aktif X menit lalu; pemisah tanggal WITA; Balas/Salin; bunyi + (n) di judul tab.",
+   "failure": "tanpa data -> baris status kosong, bukan karangan",
+   "boundary": "status diturunkan dari tugas + transkrip; tidak dikarang",
+   "parts": [
+    {
+     "scope": "Mengetik dari tugas RPG berjalan atau pesan Telegram Budi belum dibalas (maks 10 menit); centang sent/delivered/read; aktif X menit lalu; pemisah tanggal WITA; Balas/Salin; bunyi + (n) di judul tab.",
+     "tests": [
+      "server/test/chat-state.test.mjs",
+      "server/test/api.test.mjs",
+      "app/tests/e2e/private.spec.ts"
+     ],
+     "evidence": [
+      "docs/evidence/M7/server-test.txt",
+      "docs/evidence/M7/desktop-agent-telegram-sync.jpg"
+     ],
+     "status": "terverifikasi"
+    }
+   ]
+  },
+  {
+   "id": "REQ-CHATPUSH-01",
+   "milestone": "M7",
+   "story": "Sebagai Budi, notifikasi balasan agen walau tab ditutup.",
+   "ac": "Web Push RFC 8291 + VAPID ES256 dari backend sendiri; izin lewat tombol; bisu per bot per perangkat; ketuk membuka chat; manifest PWA + ikon.",
+   "failure": "endpoint bukan push service resmi -> 400; langganan 404/410 dihapus",
+   "boundary": "isi notifikasi nama bot + <=120 karakter; kunci VAPID 0600",
+   "parts": [
+    {
+     "scope": "Web Push RFC 8291 + VAPID ES256 dari backend sendiri; izin lewat tombol; bisu per bot per perangkat; ketuk membuka chat; manifest PWA + ikon.",
+     "tests": [
+      "server/test/media-push.test.mjs",
+      "app/tests/e2e/private.spec.ts"
+     ],
+     "evidence": [
+      "docs/evidence/M7/server-test.txt"
+     ],
+     "status": "terverifikasi"
+    }
+   ]
+  },
+  {
+   "id": "REQ-CHATMEDIA-01",
+   "milestone": "M7",
+   "story": "Sebagai Budi, kirim foto/berkas/pesan suara dan cari pesan lama.",
+   "ac": "Lampiran <=10 MB, <=5/pesan, daftar putih + magic bytes; agen menerima path lokal format gateway Telegram; suara -> mlx-whisper lokal; URL bertanda tangan HMAC; lampiran Telegram tampil; cari seluruh riwayat sesi; retensi 30 hari.",
+   "failure": "jenis/isi tidak cocok -> 415; token palsu/keluar folder -> 404; berkas hilang -> 'sudah dihapus'",
+   "boundary": "path server tidak pernah ke browser; transkrip lokal tanpa API berbayar",
+   "parts": [
+    {
+     "scope": "Lampiran <=10 MB, <=5/pesan, daftar putih + magic bytes; agen menerima path lokal format gateway Telegram; suara -> mlx-whisper lokal; URL bertanda tangan HMAC; lampiran Telegram tampil; cari seluruh riwayat sesi; retensi 30 hari.",
+     "tests": [
+      "server/test/media-push.test.mjs",
+      "server/test/api.test.mjs",
+      "app/tests/e2e/private.spec.ts"
+     ],
+     "evidence": [
+      "docs/evidence/M7/server-test.txt",
+      "docs/evidence/M7/desktop-agent-media-search.jpg"
+     ],
+     "status": "terverifikasi"
+    }
+   ]
   }
  ]
 }

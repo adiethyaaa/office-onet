@@ -333,9 +333,11 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .turn .meta { display: flex; justify-content: flex-end; gap: 4px; font-size: 0.72rem; opacity: 0.8; margin-top: 2px; font-variant-numeric: tabular-nums; }
 .turn .receipt { letter-spacing: -0.2em; padding-right: 0.2em; }
 .turn .receipt.read { color: var(--receipt-read); opacity: 1; font-weight: 700; }
-.turn-actions { display: flex; gap: 8px; justify-content: flex-end; opacity: 0; transition: opacity 120ms; }
-.turn:hover .turn-actions, .turn:focus-within .turn-actions { opacity: 1; }
-@media (hover: none) { .turn-actions { opacity: 1; } }
+.turn { position: relative; }
+/* Hover tools float over the bubble corner so they take no height until needed. */
+.turn-actions { position: absolute; top: -12px; right: 8px; display: flex; gap: 2px; padding: 0 4px; border-radius: 999px; background: var(--surface); color: var(--ink); box-shadow: 0 1px 4px rgb(0 0 0 / 0.2); opacity: 0; pointer-events: none; transition: opacity 120ms; }
+.turn:hover .turn-actions, .turn:focus-within .turn-actions { opacity: 1; pointer-events: auto; }
+@media (hover: none) { .turn-actions { position: static; box-shadow: none; background: transparent; color: inherit; opacity: 0.85; pointer-events: auto; justify-content: flex-end; } }
 .turn-actions .btn.small { font-size: 0.75rem; min-height: 28px; padding: 0 6px; color: inherit; }
 .day-divider { list-style: none; justify-self: center; font-size: 0.75rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
 .chat-status { margin: 0 0 4px; min-height: 1.2em; font-size: 0.85rem; color: var(--ink-2); }
@@ -380,3 +382,30 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .agent-pick-btn .muted { grid-column: 1; }
 .agent-pick-btn .tag { grid-column: 2; grid-row: 1 / span 2; }
 .agent-pick-name { font-weight: 700; }
+
+/* Lampiran, cari, notifikasi (chat tahap 2-3) */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.attachments { display: grid; gap: 6px; margin-top: 4px; }
+.att-image img { display: block; max-width: min(260px, 100%); max-height: 220px; border-radius: 8px; object-fit: cover; }
+.att-voice audio { width: min(260px, 100%); height: 36px; }
+.att-voice video { max-width: min(260px, 100%); border-radius: 8px; }
+.att-voice .transcript { margin: 2px 0 0; font-style: italic; }
+.turn.owner .att-voice .transcript, .turn.owner .muted { color: inherit; opacity: 0.85; }
+.att-chip { display: inline-flex; gap: 4px; align-items: center; padding: 6px 10px; border-radius: 8px; background: var(--surface); color: var(--ink); text-decoration: none; border: 1px solid var(--control-border); }
+.att-chip.gone { opacity: 0.7; }
+.staged { list-style: none; margin: 0 0 6px; padding: 0; display: grid; gap: 4px; }
+.staged-item { display: flex; gap: 8px; align-items: center; padding: 4px 8px; border-radius: 8px; background: var(--surface-2); font-size: 0.85rem; }
+.staged-item > span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.composer-tools { gap: 8px; justify-content: flex-start; margin: 6px 0; }
+#agent-mic[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.manual.drop { outline: 2px dashed var(--accent-ink); outline-offset: 4px; }
+.chat-search summary, .notify-settings summary { cursor: pointer; font-weight: 700; min-height: 32px; display: flex; align-items: center; }
+.chat-search form { gap: 8px; }
+.chat-search input { flex: 1; min-width: 0; min-height: 36px; }
+.search-results { list-style: none; margin: 6px 0; padding: 0; display: grid; gap: 6px; max-height: 30vh; overflow: auto; }
+.search-results .hit { padding: 6px 10px; border-radius: 8px; background: var(--surface-2); font-size: 0.9rem; }
+.search-results .who { display: block; font-size: 0.75rem; font-weight: 700; }
+.search-results mark { background: var(--accent); color: var(--on-accent); border-radius: 3px; padding: 0 2px; }
+.notify-settings { margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--control-border); display: grid; gap: 8px; }
+.notify-settings .mute-list { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 4px 12px; }
+.notify-settings .mute-list label { display: flex; gap: 6px; align-items: center; min-height: 32px; }

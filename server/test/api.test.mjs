@@ -85,7 +85,7 @@ before(async () => {
     if (r.wait) await r.wait;
     return r;
   };
-  const { server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, now: () => clock(), cookieSecure: false, boardTtlMs: 0, telegram: { post: (profile, text) => { posts.push({ profile, text }); return { ok: true }; } } });
+  const { server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, now: () => clock(), cookieSecure: false, boardTtlMs: 0, pushFetch: async () => ({ ok: true, status: 201 }), transcriber: async () => 'uji suara', telegram: { post: (profile, text) => { posts.push({ profile, text }); return { ok: true }; } } });
   srv = server;
   tgHome = home;
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
@@ -406,4 +406,42 @@ test('sync Telegram: transkrip DM nyata, kirim dari RPG melanjutkan sesi Telegra
   // Bot tanpa sesi Telegram tetap memakai percakapan RPG sendiri.
   const ent = (await api('POST', '/api/conversations', { cookie: s.cookie, csrf: s.csrf, body: { profile: 'enterprise' } })).json;
   assert.equal(ent.channel, 'rpg');
+});
+
+test('lampiran + cari + push lewat API: hanya owner, path asli tidak bocor, agen menerima path lokal', async () => {
+  const s = await login();
+  for (const [m, p] of [['POST', '/api/conversations/conv_abcdefgh/uploads'], ['GET', '/api/media/abc.def'], ['GET', '/api/push'], ['POST', '/api/push/subscribe'], ['GET', '/api/conversations/conv_abcdefgh/search']]) {
+    assert.equal((await api(m, p)).status, 401, `${m} ${p} tanpa login`);
+  }
+  const conv = (await api('POST', '/api/conversations', { cookie: s.cookie, csrf: s.csrf, body: { profile: 'enterprise', fresh: true } })).json;
+  const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3]);
+  const up = await fetch(`${base}/api/conversations/${conv.id}/uploads`, { method: 'POST', body: png, headers: { 'content-type': 'image/png', 'x-file-name': encodeURIComponent('denah lantai 1.png'), 'x-kantor-proxy': PROXY, cookie: s.cookie, 'x-csrf': s.csrf, origin: ORIGIN } });
+  assert.equal(up.status, 201);
+  const { upload } = await up.json();
+  assert.equal(upload.name, 'denah lantai 1.png');
+  const nocsrf = await fetch(`${base}/api/conversations/${conv.id}/uploads`, { method: 'POST', body: png, headers: { 'content-type': 'image/png', 'x-kantor-proxy': PROXY, cookie: s.cookie, origin: ORIGIN } });
+  assert.equal(nocsrf.status, 403, 'unggah butuh CSRF');
+  const got = await fetch(`${base}/${upload.url}`, { headers: { 'x-kantor-proxy': PROXY, cookie: s.cookie } });
+  assert.equal(got.status, 200);
+  assert.equal(got.headers.get('content-type'), 'image/png');
+  assert.deepEqual(Buffer.from(await got.arrayBuffer()), png);
+  const n0 = calls.length;
+  const sent = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: '', attachments: [upload.id], idem: 'idem-att-0001' } });
+  assert.equal(sent.status, 202, sent.text);
+  await waitFor(() => calls.length > n0);
+  const job = calls[calls.length - 1];
+  assert.match(job.message, /\[Image attached at: \/.+\.png\]/, 'agen menerima path lokal seperti lampiran Telegram');
+  const view = (await api('GET', `/api/conversations/${conv.id}`, { cookie: s.cookie })).json;
+  const ownerTurn = view.turns.find((t) => t.role === 'owner' && t.attachments?.length);
+  assert.equal(ownerTurn.attachments[0].kind, 'image');
+  assert.ok(!JSON.stringify(view).includes(tmp), 'tidak ada path server di respons');
+  const again = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: 'lagi', attachments: [upload.id], idem: 'idem-att-0002' } });
+  assert.equal(again.status, 400, 'lampiran yang sudah terkirim tidak bisa dipakai ulang');
+  await waitFor(async () => (await api('GET', `/api/conversations/${conv.id}`, { cookie: s.cookie })).json.tasks.every((t) => t.terminal));
+  const found = (await api('GET', `/api/conversations/${conv.id}/search?q=${encodeURIComponent('siap')}`, { cookie: s.cookie })).json;
+  assert.ok(found.results.length >= 1, 'cari menemukan balasan agen');
+  const info = (await api('GET', '/api/push', { cookie: s.cookie })).json;
+  assert.equal(Buffer.from(info.publicKey, 'base64url').length, 65);
+  const bad = await api('POST', '/api/push/subscribe', { cookie: s.cookie, csrf: s.csrf, body: { subscription: { endpoint: 'https://evil.io/x', keys: { p256dh: info.publicKey, auth: 'AAAAAAAAAAAAAAAAAAAAAA' } } } });
+  assert.equal(bad.status, 400);
 });

@@ -24,6 +24,10 @@ create table if not exists approvals (
   status text not null, created_at integer not null, expires_at integer not null, decided_at integer
 );
 create table if not exists audit (seq integer primary key autoincrement, at integer not null, actor text not null, kind text not null, profile text, ref text, detail text);
+create table if not exists uploads (id text primary key, conversation_id text not null, task_id text, kind text not null, name text not null, path text not null, size integer not null, mime text not null, transcript text, created_at integer not null);
+create table if not exists push_subs (id text primary key, sub text not null, ua text, muted text not null default '[]', created_at integer not null);
+create table if not exists notified (profile text primary key, at integer not null);
+create index if not exists ix_uploads_task on uploads(task_id);
 create index if not exists ix_turns_conv on turns(conversation_id, created_at);
 create index if not exists ix_events_task on events(task_id, seq);
 `;

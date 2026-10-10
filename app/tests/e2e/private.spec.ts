@@ -60,7 +60,7 @@ ${Array.from({ length: 15 }, (_, i) => `      ('tg_kevin','user','Catatan lama $
     if (job.message.startsWith('Tinjau')) return { ok: true, text: 'Sudah aku tinjau. Tidak ada keputusan lagi.\n```json\n{"pilihan":[]}\n```', session: 'hs' };
     return { ok: true, text: `Siap, ${job.profile} menerima.\n\`\`\`json\n{"pilihan":[{"label":"Cek progres","pesan":"Cek progres tugas ini"},{"label":"Tinjau hasil","pesan":"Tinjau hasil yang ada"},{"label":"Deploy ke produksi","pesan":"Deploy ke produksi sekarang"}]}\n\`\`\``, session: 'hs' };
   };
-  ({ server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: 'http://127.0.0.1:4173', runner, cookieSecure: false, boardTtlMs: 0, now: () => Date.now() + clockOffset }));
+  ({ server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: `http://127.0.0.1:${process.env.KANTOR_PORT ?? '4173'}`, runner, cookieSecure: false, boardTtlMs: 0, now: () => Date.now() + clockOffset, transcriber: async () => 'tolong cek denah lantai satu', pushFetch: async () => ({ ok: true, status: 201 }) }));
   await new Promise<void>((r) => (server as unknown as { listen: (p: number, h: string, cb: () => void) => void }).listen(0, '127.0.0.1', r));
   backend = `http://127.0.0.1:${server.address().port}`;
 });
@@ -304,4 +304,61 @@ test('chat seperti aplikasi pesan: badge belum dibaca, dibuka dari pesan belum d
   await page.keyboard.press('c');
   await expect(page.locator('.agent-pick-btn[data-agent="sales"]')).toBeVisible();
   await expect(page.locator('.agent-pick-btn[data-agent="sales"] .unread-badge')).toHaveCount(0);
+});
+
+test('chat tahap 2-3: kirim foto, pesan suara jadi teks, cari pesan, setelan notifikasi', async ({ page, context }, info) => {
+  await context.grantPermissions(['microphone']).catch(() => {});
+  await wireApi(page);
+  await boot(page);
+  await page.keyboard.press('b');
+  await login(page);
+  await expect(page.locator('#dlg-boards').getByText('Data nyata')).toBeVisible();
+  await page.locator('#dlg-boards').getByRole('button', { name: 'Tutup' }).click();
+  await page.keyboard.press('c');
+  const dlg = page.locator('#dlg-agent');
+  await expect(dlg.locator('.notify-settings summary')).toHaveText(/Notifikasi/);
+  await dlg.locator('.notify-settings summary').click();
+  await expect(dlg.locator('#push-help')).not.toBeEmpty();
+  await dlg.locator('.agent-pick-btn[data-agent="infra"]').click();
+  await expect(page.locator('#agent-title')).toContainText('Bruno');
+  if (await dlg.locator('#agent-manual').isHidden()) await dlg.locator('#agent-manual-toggle').click();
+  // Foto: unggah, chip muncul, kirim tanpa teks; agen menerima path lokal.
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
+  await dlg.locator('#agent-file').setInputFiles({ name: 'denah.png', mimeType: 'image/png', buffer: png });
+  await expect(dlg.locator('.staged-item')).toContainText('denah.png');
+  const before = calls.length;
+  await dlg.locator('#agent-manual-text').fill('Ini denahnya');
+  await dlg.locator('#agent-send').click();
+  await expect.poll(() => calls.length).toBeGreaterThan(before);
+  expect(calls.at(-1)!.message).toMatch(/\[Image attached at: \/.+\.png\]/);
+  await expect(dlg.locator('.turn.owner .att-image img').last()).toBeVisible();
+  await expect.poll(async () => dlg.locator('.turn.owner .att-image img').last().evaluate((i: HTMLImageElement) => i.naturalWidth)).toBe(1);
+  await expect(dlg.locator('.turn.agent').last()).toContainText('infra menerima', { timeout: 15_000 });
+  // Pesan suara: berkas audio masuk lewat pemilih berkas (perekam nyata butuh mikrofon fisik).
+  if (await dlg.locator('#agent-manual').isHidden()) await dlg.locator('#agent-manual-toggle').click();
+  await dlg.locator('#agent-file').setInputFiles({ name: 'suara.webm', mimeType: 'audio/webm', buffer: Buffer.from('1a45dfa3', 'hex') });
+  await expect(dlg.locator('.staged-item')).toContainText('pesan-suara');
+  const b2 = calls.length;
+  await dlg.locator('#agent-send').click();
+  await expect.poll(() => calls.length).toBeGreaterThan(b2);
+  expect(calls.at(-1)!.message).toContain('Transkrip otomatis: "tolong cek denah lantai satu"');
+  await expect(dlg.locator('.turn.owner .att-voice audio').last()).toBeAttached();
+  await expect(dlg.locator('.turn.owner .att-voice .transcript').last()).toContainText('tolong cek denah');
+  // Cari pesan.
+  await dlg.locator('.chat-search summary').click();
+  await dlg.locator('#agent-search').fill('denahnya');
+  await dlg.locator('.chat-search').getByRole('button', { name: 'Cari' }).click();
+  await expect(dlg.locator('.search-results mark').first()).toHaveText(/denahnya/i);
+  await shot(page, info, 'agent-media-search');
+});
+
+test('PWA: manifest, ikon dan service worker tersedia', async ({ page }) => {
+  await boot(page);
+  const href = await page.locator('link[rel="manifest"]').getAttribute('href');
+  const m = await (await page.request.get(new URL(href!, page.url()).href)).json();
+  expect(m.display).toBe('standalone');
+  for (const i of m.icons) expect((await page.request.get(new URL(i.src, page.url()).href)).status()).toBe(200);
+  const sw = await page.request.get(new URL('sw.js', page.url()).href);
+  expect(sw.status()).toBe(200);
+  expect(await sw.text()).toContain('showNotification');
 });

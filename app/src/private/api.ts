@@ -14,7 +14,9 @@ export interface Agent { profile: string; name: string; lane: string; actorId: s
 export interface Presence { profile: string; name: string; actorId: string | null; status: 'working' | 'waiting' | 'idle' | 'unknown'; source: string; summary: string; replies?: number[]; typing?: boolean; lastSeen?: number | null }
 export interface Option { id: string; label: string; message: string; requiresApproval: boolean }
 export type Receipt = 'sent' | 'delivered' | 'read';
-export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 'telegram' | 'rpg' | 'agent' | 'system'; pending?: boolean; receipt?: Receipt; text: string; taskId: string | null; at: number; options: Option[] | null; optionsExpired: boolean; expiresAt: number | null }
+export interface Attachment { id: string; kind: 'image' | 'file' | 'voice' | 'video'; name: string; size: number; url: string | null; transcript: string | null; transcribing?: boolean }
+export interface SearchHit { id: string; role: 'owner' | 'agent' | 'system'; text: string; at: number }
+export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 'telegram' | 'rpg' | 'agent' | 'system'; pending?: boolean; receipt?: Receipt; attachments?: Attachment[]; text: string; taskId: string | null; at: number; options: Option[] | null; optionsExpired: boolean; expiresAt: number | null }
 export interface TaskView { id: string; status: string; source: string; observed_at: number; created_at: number; error: string | null; terminal: boolean }
 export interface EventView { seq: number; task_id: string; status: string; note: string | null; at: number }
 export interface ApprovalView { id: string; task_id: string; action: string; impact: string; rollback: string; status: string; expires_at: number }
@@ -48,8 +50,27 @@ export const api = {
   presence: () => call<{ observedAt: string; agents: Presence[] }>('GET', 'presence'),
   conversation: (profile: string, fresh = false) => call<Conversation>('POST', 'conversations', { profile, fresh }),
   conversationById: (id: string) => call<Conversation>('GET', `conversations/${encodeURIComponent(id)}`),
-  send: (id: string, body: { text?: string; decision?: { turnId: string; optionId: string }; idem: string }) =>
+  send: (id: string, body: { text?: string; decision?: { turnId: string; optionId: string }; idem: string; attachments?: string[] }) =>
     call<{ taskId: string; duplicate: boolean; approval: { id: string } | null; conversation: Conversation }>('POST', `conversations/${encodeURIComponent(id)}/messages`, body),
   approve: (id: string, taskId: string, decision: 'approve' | 'reject') => call<{ conversation: Conversation }>('POST', `approvals/${encodeURIComponent(id)}`, { decision, taskId }),
+  async upload(convId: string, file: Blob, name: string): Promise<{ upload: Attachment }> {
+    let res: Response;
+    try {
+      res = await fetch(`api/conversations/${encodeURIComponent(convId)}/uploads`, {
+        method: 'POST', body: file, credentials: 'same-origin', cache: 'no-store',
+        headers: { 'Content-Type': file.type || 'application/octet-stream', 'X-File-Name': encodeURIComponent(name), ...(csrf ? { 'X-CSRF': csrf } : {}) },
+      });
+    } catch { throw new ApiError(0, 'Jaringan putus saat mengunggah. Coba lagi.'); }
+    const data = await res.json().catch(() => ({ error: `HTTP ${res.status}` })) as { upload: Attachment; error?: string };
+    if (!res.ok) throw new ApiError(res.status, data.error ?? `HTTP ${res.status}`);
+    return data;
+  },
+  uploadStatus: (id: string) => call<{ transcript: string | null; transcribing: boolean }>('GET', `uploads/${encodeURIComponent(id)}`),
+  search: (convId: string, q: string) => call<{ results: SearchHit[] }>('GET', `conversations/${encodeURIComponent(convId)}/search?q=${encodeURIComponent(q)}`),
+  pushInfo: (endpoint = '') => call<{ publicKey: string; muted: string[] | null }>('GET', `push?endpoint=${encodeURIComponent(endpoint)}`),
+  pushSubscribe: (subscription: PushSubscriptionJSON) => call<{ ok: true }>('POST', 'push/subscribe', { subscription }),
+  pushUnsubscribe: (endpoint: string) => call<{ ok: true }>('POST', 'push/unsubscribe', { endpoint }),
+  pushMute: (endpoint: string, muted: string[]) => call<{ ok: true; muted: string[] }>('POST', 'push/mute', { endpoint, muted }),
+  pushTest: () => call<{ delivered: number }>('POST', 'push/test'),
   cancel: (taskId: string) => call<{ ok: true }>('POST', `tasks/${encodeURIComponent(taskId)}/cancel`),
 };

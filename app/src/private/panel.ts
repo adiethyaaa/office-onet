@@ -4,8 +4,9 @@
 // dan tombol kirim tidak ada: halaman publik tidak bisa memerintah agen.
 import { $, el, openDialog, toast } from '../ui/dom';
 import { DEMO_BOARDS } from './demo';
+import { disablePush, enablePush, mutedBots, PUSH_HELP, pushState, setMutedBots, type PushState } from './push';
 import { clock, dayLabel, ping, quoteFor, RECEIPT, sameDay, setTitleCount, statusLine, unlockAudio } from './chat-ui';
-import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type Presence, type HandoffItem, type TaskItem, type LogItem, type Turn } from './api';
+import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type Presence, type HandoffItem, type TaskItem, type LogItem, type Turn, type Attachment } from './api';
 
 type Tab = 'handoffs' | 'tasks' | 'log';
 const STATUS_LABEL: Record<string, string> = {
@@ -25,6 +26,7 @@ export function readMark(profile: string): number | null {
 function setReadMark(profile: string, at: number) {
   try { localStorage.setItem(READ_KEY + profile, String(at)); } catch { /* private mode: unread state just isn't kept */ }
 }
+const fmtSize = (n: number) => (n < 1024 * 1024 ? `${Math.max(1, Math.round(n / 1024))} KB` : `${(n / 1048576).toFixed(1)} MB`);
 const fmtAge = (h: number) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} mnt` : h < 48 ? `${Math.round(h)} jam` : `${Math.round(h / 24)} hari`);
 const newIdem = () => `idem-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -50,6 +52,10 @@ export class PrivatePanel {
   onUnreadChange: (() => void) | null = null;
   private readMarkAtOpen: number | null = null;
   private presenceList: Presence[] = [];
+  /** Uploaded but not yet sent with a message (this chat only). */
+  private staged: Attachment[] = [];
+  private recorder: MediaRecorder | null = null;
+  private searchTerm = '';
 
   /**
    * Agent replies Budi has not seen yet. The first time a profile shows up in
@@ -88,7 +94,7 @@ export class PrivatePanel {
     this.presenceTimer = window.setTimeout(() => void this.startPresence(), document.hidden ? 30_000 : 10_000);
   }
 
-  private loggedIn() { this.me = null; void this.startPresence(); }
+  private loggedIn() { this.me = null; void this.startPresence(); void import('./push').then((m) => m.swRegistration()); }
   private loggedOut() { window.clearTimeout(this.presenceTimer); this.onPresence?.(null); }
 
   /** Shortcut (C / HUD): pick any agent and chat, no walking to the NPC. */
@@ -128,6 +134,10 @@ export class PrivatePanel {
       const li = el('li'); li.append(btn); list.append(li);
     }
     body.append(el('p', { class: 'muted small' }, 'Pilih agen untuk chat atau memberi tugas. Tombol C membuka daftar ini dari mana saja.'), list);
+    // Settings fill in afterwards: a slow push service must not hold up the agent list.
+    const slot = el('div', { id: 'notify-slot' });
+    body.append(slot);
+    void this.notifySettings().then((n) => slot.replaceChildren(n));
     if (!dlg.open) {
       openDialog(dlg, opener);
       this.onOpenChange?.(true);
@@ -356,7 +366,9 @@ export class PrivatePanel {
     }
     try {
       this.agents = (await api.agents()).agents;
-      this.conv = await api.conversation(profile);
+      const next = await api.conversation(profile);
+      if (next.id !== this.conv?.id) { this.staged = []; this.searchTerm = ''; }
+      this.conv = next;
     } catch (e) {
       body.append(el('p', { class: 'warn', role: 'alert' }, `Agen tidak dapat dibuka: ${(e as Error).message}`));
       if (!dlg.open) openDialog(dlg, opener);
@@ -413,6 +425,7 @@ export class PrivatePanel {
     if (c.channel === 'telegram') body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, `Ini percakapan Telegram-mu dengan ${c.agent}. Pesan dari sini masuk ke sesi yang sama, dan balasannya juga dikirim bot ke Telegram. Jangan ketik sandi, OTP, atau token.`));
     else if (c.channel === 'telegram-unavailable') body.append(el('p', { class: 'warn', role: 'status' }, 'Riwayat Telegram bot ini tidak bisa dibaca sekarang. Pesan yang kamu kirim tetap masuk ke sesi Telegram-nya bila sesinya ada.'));
     else body.append(el('p', { class: 'muted small' }, 'Bot ini belum punya chat Telegram denganmu, jadi percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.'));
+    body.append(this.searchBox());
     const log = el('ol', { class: 'chat', 'aria-live': 'polite', 'aria-label': `Percakapan dengan ${c.agent}` });
     // Unread = agent/system messages newer than what Budi last saw (per profile, this browser).
     if (opening) this.readMarkAtOpen = readMark(c.profile);
@@ -475,8 +488,26 @@ export class PrivatePanel {
       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); manual.requestSubmit(); }
     });
     const sendBtn = el('button', { type: 'submit', class: 'btn primary', id: 'agent-send' }, 'Kirim');
-    manual.append(ta, el('div', { class: 'row' }));
-    (manual.lastChild as HTMLElement).append(el('span', { class: 'muted small' }, 'Ctrl/⌘+Enter untuk kirim. Esc menutup tanpa mengirim.'), sendBtn);
+    const chips = el('ul', { class: 'staged', id: 'agent-staged', 'aria-label': 'Lampiran siap dikirim' });
+    this.renderStaged(chips);
+    const file = el('input', { type: 'file', id: 'agent-file', multiple: '', class: 'visually-hidden', accept: 'image/*,application/pdf,.docx,.xlsx,.txt,.csv,.zip,audio/*' });
+    file.addEventListener('change', () => { void this.attachFiles([...(file.files ?? [])], chips); file.value = ''; });
+    const attach = el('button', { type: 'button', class: 'btn', id: 'agent-attach', 'aria-label': 'Lampirkan foto atau berkas' }, '📎 Lampiran');
+    attach.addEventListener('click', () => file.click());
+    const mic = el('button', { type: 'button', class: 'btn', id: 'agent-mic', 'aria-pressed': String(!!this.recorder) }, this.recorder ? '■ Selesai rekam' : '🎤 Suara');
+    mic.addEventListener('click', () => void this.toggleRecord(mic, chips));
+    if (!('MediaRecorder' in window) || !navigator.mediaDevices?.getUserMedia) mic.hidden = true;
+    ta.addEventListener('paste', (e) => {
+      const files = [...(e.clipboardData?.files ?? [])];
+      if (files.length) { e.preventDefault(); void this.attachFiles(files, chips); }
+    });
+    manual.addEventListener('dragover', (e) => { e.preventDefault(); manual.classList.add('drop'); });
+    manual.addEventListener('dragleave', () => manual.classList.remove('drop'));
+    manual.addEventListener('drop', (e) => { e.preventDefault(); manual.classList.remove('drop'); void this.attachFiles([...(e.dataTransfer?.files ?? [])], chips); });
+    const tools = el('div', { class: 'row composer-tools' });
+    tools.append(attach, mic, file);
+    manual.append(chips, ta, tools, el('div', { class: 'row' }));
+    (manual.lastChild as HTMLElement).append(el('span', { class: 'muted small' }, 'Ctrl/⌘+Enter untuk kirim. Esc menutup tanpa mengirim. Foto bisa ditempel atau diseret ke sini.'), sendBtn);
     manual.addEventListener('submit', (e) => { e.preventDefault(); void this.send({ text: ta.value }, sendBtn); });
     manualBtn.setAttribute('aria-expanded', String(!manual.hidden));
     manualBtn.addEventListener('click', () => { manual.hidden = !manual.hidden; manualBtn.setAttribute('aria-expanded', String(!manual.hidden)); if (!manual.hidden) ta.focus(); });
@@ -513,7 +544,12 @@ export class PrivatePanel {
     li.append(el('span', { class: 'who' }, `${who}${where}`));
     const p = el('div', { class: 'text' });
     p.textContent = t.text; // agent output is untrusted: rendered as text, never HTML
-    li.append(p);
+    if (t.text) li.append(p);
+    if (t.attachments?.length) {
+      const box = el('div', { class: 'attachments' });
+      for (const a of t.attachments) box.append(this.attachmentView(a));
+      li.append(box);
+    }
     const meta = el('span', { class: 'meta' });
     meta.append(el('time', { datetime: new Date(t.at).toISOString(), title: fmtTime(t.at) }, clock(t.at)));
     if (t.receipt) {
@@ -532,6 +568,185 @@ export class PrivatePanel {
     }
     if (t.optionsExpired) li.append(el('span', { class: 'muted small' }, 'Pilihan di giliran ini sudah tidak berlaku.'));
     return li;
+  }
+
+  /** Photo inline (tap = full size), voice as player + transcript, other files as a download chip. */
+  private attachmentView(a: Attachment): HTMLElement {
+    if (!a.url) return el('span', { class: 'att-chip gone' }, `${a.name} (sudah dihapus)`);
+    if (a.kind === 'image') {
+      const link = el('a', { href: a.url, target: '_blank', rel: 'noopener', class: 'att-image' });
+      link.append(el('img', { src: a.url, alt: `Foto ${a.name}`, loading: 'lazy', decoding: 'async' }));
+      return link;
+    }
+    if (a.kind === 'voice' || a.kind === 'video') {
+      const wrap = el('div', { class: 'att-voice' });
+      const player = el(a.kind === 'voice' ? 'audio' : 'video', { controls: '', preload: 'none', src: a.url });
+      wrap.append(player);
+      if (a.kind === 'voice') wrap.append(el('p', { class: 'muted small transcript' }, a.transcript ? `“${a.transcript}”` : a.transcribing ? 'Mengubah suara jadi teks…' : ''));
+      return wrap;
+    }
+    const chip = el('a', { href: a.url, class: 'att-chip', target: '_blank', rel: 'noopener' }, `📄 ${a.name}`);
+    if (a.size) chip.append(el('span', { class: 'muted small' }, ` ${fmtSize(a.size)}`));
+    return chip;
+  }
+
+  private renderStaged(list: HTMLElement) {
+    list.replaceChildren();
+    list.hidden = !this.staged.length;
+    for (const a of this.staged) {
+      const li = el('li', { class: 'staged-item' });
+      li.append(el('span', {}, `${a.kind === 'image' ? '🖼' : a.kind === 'voice' ? '🎤' : '📄'} ${a.name}`));
+      if (a.kind === 'voice') li.append(el('span', { class: 'muted small', 'data-transcript': a.id }, a.transcript ? `“${a.transcript}”` : 'mengubah jadi teks…'));
+      const rm = el('button', { type: 'button', class: 'btn link small', 'aria-label': `Batalkan lampiran ${a.name}` }, '✕');
+      rm.addEventListener('click', () => { this.staged = this.staged.filter((x) => x.id !== a.id); this.renderStaged(list); });
+      li.append(rm);
+      list.append(li);
+    }
+  }
+
+  private async attachFiles(files: File[], list: HTMLElement) {
+    if (!this.conv || !files.length) return;
+    for (const f of files.slice(0, 5 - this.staged.length)) {
+      if (f.size > 10 * 1024 * 1024) { toast(`${f.name} lebih dari 10 MB.`, 4000); continue; }
+      try {
+        toast(`Mengunggah ${f.name}…`, 1500);
+        const { upload } = await api.upload(this.conv.id, f, f.name);
+        this.staged.push(upload);
+        this.renderStaged(document.getElementById('agent-staged') ?? list);
+      } catch (e) { toast((e as Error).message, 5000); }
+    }
+    if (files.length + this.staged.length > 5) toast('Maksimal 5 lampiran per pesan.', 3000);
+    (document.getElementById('agent-manual-text') as HTMLTextAreaElement | null)?.focus();
+  }
+
+  /** Hold-free voice note: tap to start, tap again to stop; uploaded as one file, transcribed on the server. */
+  private async toggleRecord(btn: HTMLButtonElement, initialList: HTMLElement) {
+    let list = initialList;
+    if (this.recorder) { this.recorder.stop(); return; }
+    let stream: MediaStream;
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { toast('Mikrofon tidak diizinkan.', 4000); return; }
+    const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find((t) => MediaRecorder.isTypeSupported(t)) ?? '';
+    const rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+    const parts: Blob[] = [];
+    const started = Date.now();
+    rec.ondataavailable = (e) => { if (e.data.size) parts.push(e.data); };
+    rec.onstop = async () => {
+      stream.getTracks().forEach((t) => t.stop());
+      this.recorder = null;
+      // The chat may have re-rendered while recording: update the live controls, not the captured ones.
+      const live = (document.getElementById('agent-mic') as HTMLButtonElement | null) ?? btn;
+      live.textContent = '🎤 Suara'; live.setAttribute('aria-pressed', 'false');
+      list = document.getElementById('agent-staged') ?? list;
+      if (Date.now() - started < 700 || !this.conv) return;
+      const mime = (rec.mimeType || 'audio/webm').split(';')[0];
+      try {
+        const { upload } = await api.upload(this.conv.id, new Blob(parts, { type: mime }), 'pesan-suara');
+        this.staged.push(upload);
+        this.renderStaged(list);
+        void this.followTranscript(upload.id, list);
+      } catch (e) { toast((e as Error).message, 5000); }
+    };
+    rec.start();
+    this.recorder = rec;
+    btn.textContent = '■ Selesai rekam'; btn.setAttribute('aria-pressed', 'true');
+    // Telegram caps voice notes too; 3 minutes keeps upload and transcription quick.
+    window.setTimeout(() => { if (this.recorder === rec) rec.stop(); }, 180_000);
+  }
+
+  private async followTranscript(id: string, list: HTMLElement) {
+    for (let i = 0; i < 60; i++) {
+      await new Promise((r) => setTimeout(r, 2000));
+      const s = await api.uploadStatus(id).catch(() => null);
+      const a = this.staged.find((x) => x.id === id);
+      if (!a) return;
+      if (s?.transcript) { a.transcript = s.transcript; this.renderStaged(document.getElementById('agent-staged') ?? list); return; }
+      if (s && !s.transcribing) return;
+    }
+  }
+
+  /** Search the whole chat history (Telegram session included), results jump-free as a list. */
+  private searchBox(): HTMLElement {
+    const c = this.conv!;
+    const wrap = el('details', { class: 'chat-search' });
+    if (this.searchTerm) wrap.setAttribute('open', '');
+    wrap.append(el('summary', {}, '🔍 Cari pesan'));
+    const form = el('form', { class: 'row', role: 'search' });
+    const input = el('input', { type: 'search', id: 'agent-search', 'aria-label': `Cari di chat ${c.agent}`, placeholder: 'Kata yang dicari', maxlength: '60' });
+    input.value = this.searchTerm;
+    const out = el('ol', { class: 'search-results', 'aria-live': 'polite' });
+    const run = async () => {
+      this.searchTerm = input.value.trim();
+      out.replaceChildren();
+      if (this.searchTerm.length < 2) return;
+      try {
+        const { results } = await api.search(c.id, this.searchTerm);
+        if (!results.length) { out.append(el('li', { class: 'muted small' }, 'Tidak ada pesan yang cocok.')); return; }
+        for (const r of results) {
+          const li = el('li', { class: `hit ${r.role}` });
+          li.append(el('span', { class: 'who' }, `${r.role === 'owner' ? 'Kamu' : r.role === 'agent' ? c.agent ?? 'Agen' : 'Sistem'} · ${fmtTime(r.at)}`));
+          const txt = el('span', { class: 'text' });
+          const i = r.text.toLowerCase().indexOf(this.searchTerm.toLowerCase());
+          const from = Math.max(0, i - 60);
+          const snip = (from ? '…' : '') + r.text.slice(from, i + this.searchTerm.length + 100);
+          const j = snip.toLowerCase().indexOf(this.searchTerm.toLowerCase());
+          if (j >= 0) txt.append(document.createTextNode(snip.slice(0, j)), el('mark', {}, snip.slice(j, j + this.searchTerm.length)), document.createTextNode(snip.slice(j + this.searchTerm.length)));
+          else txt.textContent = snip;
+          li.append(txt);
+          out.append(li);
+        }
+      } catch (e) { out.append(el('li', { class: 'warn' }, (e as Error).message)); }
+    };
+    form.addEventListener('submit', (e) => { e.preventDefault(); void run(); });
+    const go = el('button', { type: 'submit', class: 'btn' }, 'Cari');
+    form.append(input, go);
+    wrap.append(form, out);
+    if (this.searchTerm) void run();
+    return wrap;
+  }
+
+  /** Per-device notification switch and per-bot mute, like Telegram's notification settings. */
+  private async notifySettings(): Promise<HTMLElement> {
+    const box = el('details', { class: 'notify-settings' });
+    box.append(el('summary', {}, '🔔 Notifikasi'));
+    const state = await pushState().catch(() => 'unsupported' as PushState);
+    const help = el('p', { class: 'muted small', id: 'push-help' }, PUSH_HELP[state]);
+    box.append(help);
+    if (state === 'off' || state === 'on') {
+      const toggle = el('button', { type: 'button', class: 'btn primary', id: 'push-toggle' }, state === 'on' ? 'Matikan notifikasi' : 'Aktifkan notifikasi');
+      toggle.addEventListener('click', async () => {
+        toggle.disabled = true;
+        try {
+          const next = (await pushState()) === 'on' ? await disablePush() : await enablePush();
+          help.textContent = PUSH_HELP[next];
+          toggle.textContent = next === 'on' ? 'Matikan notifikasi' : 'Aktifkan notifikasi';
+          if (next === 'on') { await api.pushTest().catch(() => null); toast('Notifikasi uji dikirim.', 3000); }
+          box.querySelector('.mute-list')?.toggleAttribute('hidden', next !== 'on');
+        } catch (e) { toast((e as Error).message, 5000); }
+        toggle.disabled = false;
+      });
+      box.append(toggle);
+      const muted = new Set(state === 'on' ? await mutedBots().catch(() => []) : []);
+      const list = el('fieldset', { class: 'mute-list' });
+      list.append(el('legend', {}, 'Bunyikan notifikasi dari'));
+      if (state !== 'on') list.hidden = true;
+      for (const a of this.agents) {
+        const id = `mute-${a.profile}`;
+        const lab = el('label', { for: id });
+        const cb = el('input', { type: 'checkbox', id });
+        cb.checked = !muted.has(a.profile);
+        cb.addEventListener('change', () => { if (cb.checked) muted.delete(a.profile); else muted.add(a.profile); void setMutedBots([...muted]).catch(() => toast('Gagal menyimpan.', 3000)); });
+        lab.append(cb, document.createTextNode(` ${a.name}`));
+        list.append(lab);
+      }
+      box.append(list);
+    }
+    const sound = el('label', { class: 'row small' });
+    const sc = el('input', { type: 'checkbox', id: 'sound-toggle' });
+    sc.checked = localStorage.getItem('kantor-rpg:sound') !== 'off';
+    sc.addEventListener('change', () => localStorage.setItem('kantor-rpg:sound', sc.checked ? 'on' : 'off'));
+    sound.append(sc, document.createTextNode(' Bunyi pesan masuk saat halaman terbuka'));
+    box.append(sound);
+    return box;
   }
 
   /** Opens the manual box with a quote of the message, like Telegram's reply. */
@@ -579,14 +794,18 @@ export class PrivatePanel {
   /** One idempotency key per intended send: double clicks and retries reuse it. */
   private async send(payload: { text?: string; decision?: { turnId: string; optionId: string } }, btn: HTMLButtonElement) {
     if (this.sending || !this.conv) return;
-    if (payload.text !== undefined && !payload.text.trim()) { toast('Pesan kosong.'); return; }
+    if (payload.text !== undefined && !payload.text.trim() && !this.staged.length) { toast('Pesan kosong.'); return; }
+    if (this.recorder) { toast('Selesaikan rekaman dulu.'); return; }
     this.sending = true;
     btn.disabled = true;
     unlockAudio();
     this.pendingIdem ??= newIdem();
     try {
-      const r = await api.send(this.conv.id, { ...payload, idem: this.pendingIdem });
+      const attachments = payload.text !== undefined ? this.staged.map((a) => a.id) : [];
+      const r = await api.send(this.conv.id, { ...payload, idem: this.pendingIdem, ...(attachments.length ? { attachments } : {}) });
       this.pendingIdem = null;
+      if (attachments.length) this.staged = [];
+      if (payload.text !== undefined) { const t = document.getElementById('agent-manual-text') as HTMLTextAreaElement | null; if (t) t.value = ''; }
       this.conv = r.conversation;
       if (r.approval) toast('Pesan ditahan: butuh persetujuanmu dulu.', 4000);
       else toast(r.duplicate ? 'Sudah terkirim sebelumnya (tidak dikirim dua kali).' : 'Diterima server. Belum berarti selesai.', 3000);

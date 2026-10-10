@@ -17,6 +17,9 @@ import { checkMessage, LIMITS } from './policy.mjs';
 import { createDispatcher, hermesRunner, TERMINAL } from './dispatcher.mjs';
 import { setupPage } from './setup-page.mjs';
 import { chatState, TYPING_WINDOW_MS } from './chat-state.mjs';
+import { createMedia, MEDIA_LIMITS } from './media.mjs';
+import { createPush, validSubscription } from './push.mjs';
+import { searchTelegram } from './telegram.mjs';
 
 const MAX_BODY = 16 * 1024;
 const LOGIN_MAX = 5;
@@ -27,6 +30,8 @@ export function createServer(cfg) {
   const setupFile = path.join(dataDir, 'setup.json');
   const store = cfg.store ?? openStore(dataDir);
   const now = cfg.now ?? (() => Date.now());
+  const media = createMedia({ dataDir, home: cfg.home ?? os.homedir(), secret: cfg.proxySecret || 'dev', q: store.q, now, transcriber: cfg.transcriber });
+  const push = cfg.push ?? createPush({ dataDir, q: store.q, now, fetchImpl: cfg.pushFetch });
   const sources = makeSources(cfg.home ?? os.homedir());
   const boards = cfg.boards ?? boardCache(sources, cfg.boardTtlMs ?? 5000);
   let presenceMemo = { at: 0, value: null };
@@ -39,6 +44,7 @@ export function createServer(cfg) {
     replyTimes: (profile, sessionId) => agentReplyTimes(home, profile, sessionId),
     lastLine: (profile, sessionId) => lastChatLine(home, profile, sessionId),
     post: (profile, text) => postToTelegram(home, profile, ownerChatId(home), text),
+    search: (profile, sessionId, term) => searchTelegram(home, profile, sessionId, term),
     ...cfg.telegram,
   };
   const tgSession = (profile) => { try { return tg.session(profile); } catch { return null; } };
@@ -46,16 +52,26 @@ export function createServer(cfg) {
     runner: cfg.runner ?? hermesRunner({ home }), now, sessionFor: tgSession,
     // A task changing state must show at once (typing on/off), not after the 4 s presence cache.
     onChange: () => { presenceMemo.at = 0; },
+    // Attachments reach the agent as local paths (voice waits for its transcript), like Telegram's gateway.
+    prepare: async (task) => {
+      const rows = q('select * from uploads where task_id=? order by created_at, rowid').all(task.id);
+      return rows.length ? `${task.message}\n\n${await media.agentText(rows)}` : task.message;
+    },
     // The RPG exchange also shows up in the bot's Telegram chat (sent by the bot, labelled).
-    onReply: ({ profile, ownerText, agentText }) => {
+    onReply: ({ profile, ownerText, agentText, channel, taskId }) => {
       const name = byProfile(profile)?.name ?? profile;
-      void Promise.resolve(tg.post(profile, `🎮 Dari kantor RPG\nBudi: ${ownerText}\n\n${name}: ${agentText}`))
+      const n = taskId ? media.forTask(taskId).length : 0;
+      const said = [ownerText, n ? `📎 ${n} lampiran (lihat di kantor RPG)` : ''].filter(Boolean).join('\n');
+      const reply = media.fromTranscript(agentText).text;
+      void Promise.resolve(push.notify(profile, { title: name, body: reply.replace(/\s+/g, ' ').slice(0, 120) || 'Balasan baru', tag: `chat-${profile}`, url: `./?chat=${encodeURIComponent(profile)}` })).catch(() => {});
+      if (channel !== 'telegram') return;
+      void Promise.resolve(tg.post(profile, `🎮 Dari kantor RPG\nBudi: ${said}\n\n${name}: ${reply}`))
         .then((r) => { if (!r?.ok) store.audit('system', 'telegram.post_failed', profile, null, r?.error ?? 'gagal'); })
         .catch(() => store.audit('system', 'telegram.post_failed', profile, null, 'error'));
     },
   });
   const q = store.q;
-  const purgeTimer = setInterval(() => store.purge(now()), 3600_000);
+  const purgeTimer = setInterval(() => { store.purge(now()); media.purge(now() - RETENTION.messagesDays * 86400_000); }, 3600_000);
   purgeTimer.unref?.();
 
   const owner = () => { try { return loadOwner(ownerFile); } catch { return null; } };
@@ -129,7 +145,10 @@ export function createServer(cfg) {
   function telegramTurns(conv, rpgTurns, tasks) {
     const tr = tgTranscript(conv.profile);
     if (!tr) return null;
-    const turns = tr.turns.map((t) => ({ id: t.id, role: t.role, via: t.via, text: t.text, taskId: null, at: t.at, options: null, optionsExpired: false, expiresAt: null }));
+    const turns = tr.turns.map((t) => {
+      const m = media.fromTranscript(t.text);
+      return { id: t.id, role: t.role, via: t.via, text: m.text, attachments: m.attachments, taskId: null, at: t.at, options: null, optionsExpired: false, expiresAt: null };
+    });
     const lastRpgAgent = [...rpgTurns].reverse().find((t) => t.role === 'agent');
     const lastTgAgent = [...turns].reverse().find((t) => t.role === 'agent');
     if (lastRpgAgent?.options && lastTgAgent && lastRpgAgent.expires_at > now() && Math.abs(lastTgAgent.at - lastRpgAgent.created_at) < 120_000) {
@@ -139,7 +158,7 @@ export function createServer(cfg) {
     for (const t of rpgTurns) {
       if (t.role !== 'owner' || !['queued', 'working'].includes(status.get(t.task_id))) continue;
       const seen = turns.some((x) => x.via === 'rpg' && x.at >= t.created_at - 5000 && x.text.trim() === t.text.trim());
-      if (!seen) turns.push({ id: t.id, role: 'owner', via: 'rpg', pending: true, text: t.text, taskId: t.task_id, at: t.created_at, options: null, optionsExpired: false, expiresAt: null });
+      if (!seen) turns.push({ id: t.id, role: 'owner', via: 'rpg', pending: true, text: t.text, attachments: media.forTask(t.task_id), taskId: t.task_id, at: t.created_at, options: null, optionsExpired: false, expiresAt: null });
     }
     return { sessionId: tr.sessionId, turns };
   }
@@ -165,6 +184,7 @@ export function createServer(cfg) {
     const tgView = conv.channel === 'telegram' ? telegramTurns(conv, turns, tasks) : null;
     const baseTurns = tgView ? tgView.turns : turns.map((t) => ({
       id: t.id, role: t.role, text: t.text, taskId: t.task_id, at: t.created_at,
+      attachments: t.role === 'owner' && t.task_id ? media.forTask(t.task_id) : [],
       options: t.options && t.id === lastAgent?.id && t.expires_at > now() ? JSON.parse(t.options) : null,
       optionsExpired: !!(t.options && (t.id !== lastAgent?.id || t.expires_at <= now())),
       expiresAt: t.expires_at,
@@ -290,9 +310,12 @@ export function createServer(cfg) {
       if (!opt) return fail(res, 400, 'Pilihan tidak dikenal.');
       text = opt.message; decisionId = `${turn.id}:${opt.id}`;
     } else text = typeof b.text === 'string' ? b.text : '';
+    const claimed = media.claim(conv.id, b.attachments ?? []);
+    if (claimed.error) return fail(res, 400, claimed.error);
+    if (!text.trim() && claimed.rows.length) text = claimed.rows.some((r) => r.kind === 'voice') ? '🎤 Pesan suara' : `📎 ${claimed.rows.length} lampiran`;
     const check = checkMessage(text);
     if (!check.ok) { store.audit('owner', 'message.rejected', conv.profile, conv.id, check.reason); return fail(res, 422, check.reason); }
-    const out = dispatcher.enqueue({ conversationId: conv.id, profile: conv.profile, message: text, decisionId, idem: b.idem, risks: check.risks });
+    const out = dispatcher.enqueue({ conversationId: conv.id, profile: conv.profile, message: text, decisionId, idem: b.idem, risks: check.risks, uploads: claimed.rows.map((r) => r.id) });
     if (out.error) return fail(res, 429, out.error);
     store.audit('owner', decisionId ? 'message.option' : 'message.manual', conv.profile, out.task.id, decisionId);
     send(res, 202, { taskId: out.task.id, duplicate: out.duplicate, approval: out.approval, conversation: conversationView(conv.id) });
@@ -325,6 +348,79 @@ export function createServer(cfg) {
       return h.length === st.tokenHash.length && crypto.timingSafeEqual(Buffer.from(h), Buffer.from(st.tokenHash)) ? st : null;
     } catch { return null; }
   }
+  // ---- lampiran (Tahap 3) ----
+  route('POST', /^\/api\/conversations\/(conv_[\w-]{6,20})\/uploads$/, {}, async (req, res, s, m) => {
+    const conv = q('select id from conversations where id=?').get(m[1]);
+    if (!conv) return fail(res, 404, 'Percakapan tidak ditemukan.');
+    const open = q('select count(*) n from uploads where conversation_id=? and task_id is null').get(conv.id).n;
+    if (open >= MEDIA_LIMITS.perMessage * 2) return fail(res, 429, 'Terlalu banyak lampiran yang belum dikirim.');
+    const declared = Number(req.headers['content-length'] ?? 0);
+    if (declared > MEDIA_LIMITS.bytes) return fail(res, 413, 'Berkas lebih dari 10 MB.');
+    const chunks = []; let size = 0;
+    for await (const c of req) { size += c.length; if (size > MEDIA_LIMITS.bytes) return fail(res, 413, 'Berkas lebih dari 10 MB.'); chunks.push(c); }
+    let name = '';
+    try { name = decodeURIComponent(String(req.headers['x-file-name'] ?? '')); } catch { name = ''; }
+    const out = await media.save(conv.id, String(req.headers['content-type'] ?? ''), name, Buffer.concat(chunks));
+    if (out.error) return fail(res, 415, out.error);
+    store.audit('owner', 'upload', null, out.upload.id, `${out.upload.kind} ${size}`);
+    send(res, 201, out);
+  });
+
+  route('GET', /^\/api\/uploads\/(up_[\w-]{6,20})$/, {}, (req, res, s, m) => {
+    const r = q('select * from uploads where id=?').get(m[1]);
+    if (!r) return fail(res, 404, 'Lampiran tidak ditemukan.');
+    send(res, 200, { transcript: r.transcript, transcribing: r.kind === 'voice' && r.transcript === null && media.pending.has(r.id) });
+  });
+
+  route('GET', /^\/api\/media\/([\w-]+\.[\w-]+)$/, {}, (req, res, s, m) => {
+    const file = media.resolveToken(m[1]);
+    if (!file) return fail(res, 404, 'Lampiran tidak ada atau sudah dihapus.');
+    media.stream(res, file);
+  });
+
+  // ---- cari pesan (Tahap 3) ----
+  route('GET', /^\/api\/conversations\/(conv_[\w-]{6,20})\/search$/, {}, (req, res, s, m, url) => {
+    const conv = q('select * from conversations where id=?').get(m[1]);
+    if (!conv) return fail(res, 404, 'Percakapan tidak ditemukan.');
+    const term = String(url.searchParams.get('q') ?? '').trim().slice(0, 60);
+    if (term.length < 2) return send(res, 200, { results: [] });
+    let results = [];
+    const sid = conv.channel === 'telegram' ? tgSession(conv.profile) : null;
+    if (sid) { try { results = tg.search(conv.profile, sid, term).map((r) => ({ ...r, text: media.fromTranscript(r.text).text })); } catch { return fail(res, 503, 'Riwayat Telegram tidak terbaca sekarang.'); } }
+    else {
+      const like = `%${term.replace(/[%_\\]/g, (c) => `\\${c}`)}%`;
+      results = q("select id, role, text, created_at at from turns where conversation_id=? and text like ? escape '\\' order by created_at desc limit 30").all(conv.id, like);
+    }
+    send(res, 200, { results });
+  });
+
+  // ---- notifikasi push (Tahap 2) ----
+  route('GET', /^\/api\/push$/, {}, (req, res, s, m, url) => {
+    send(res, 200, { publicKey: push.publicKey, muted: push.muted(url.searchParams.get('endpoint') ?? '') });
+  });
+  route('POST', /^\/api\/push\/subscribe$/, {}, async (req, res) => {
+    const b = await readJson(req);
+    if (!validSubscription(b.subscription ?? {})) return fail(res, 400, 'Langganan push tidak sah.');
+    const id = push.subscribe(b.subscription, req.headers['user-agent']);
+    store.audit('owner', 'push.subscribe', null, id);
+    send(res, 200, { ok: true });
+  });
+  route('POST', /^\/api\/push\/unsubscribe$/, {}, async (req, res) => {
+    const b = await readJson(req);
+    push.unsubscribe(String(b.endpoint ?? ''));
+    send(res, 200, { ok: true });
+  });
+  route('POST', /^\/api\/push\/mute$/, {}, async (req, res) => {
+    const b = await readJson(req);
+    const list = Array.isArray(b.muted) ? b.muted.filter((p) => byProfile(p)).map(String) : [];
+    push.setMuted(String(b.endpoint ?? ''), list);
+    send(res, 200, { ok: true, muted: list });
+  });
+  route('POST', /^\/api\/push\/test$/, {}, async (req, res) => {
+    const n = await push.notify('__test__', { title: 'Kantor RPG', body: 'Notifikasi aktif. Balasan agen akan muncul seperti ini.', tag: 'test', url: './' });
+    send(res, 200, { delivered: n });
+  });
+
   route('GET', /^\/api\/setup$/, { auth: false }, async (req, res, s, m, url) => {
     const st = setupState(url.searchParams.get('t'));
     if (!st) return send(res, 410, setupPage({ error: 'Tautan setup tidak berlaku (kedaluwarsa, salah, atau owner sudah dibuat).' }));
