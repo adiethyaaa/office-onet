@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit bd30e4c; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit f9d4709; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -68,8 +68,12 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-CMD-04 | M5 | Visitor/tanpa header proxy/tanpa CSRF/origin asing ditolak; nol dispatch | server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M45/server-test.txt<br>docs/evidence/M45/e2e-private.txt | terverifikasi |
 | REQ-CMD-05 | M5 | Idempotency key: klik ganda dan kirim ulang tidak membuat tugas kedua; gagal dan unknown ditampilkan jujur tanpa retry otomatis | server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M45/server-test.txt<br>docs/evidence/M45/e2e-private.txt | terverifikasi |
 | REQ-AUTH-01 | M4/M5 | Login sandi scrypt + TOTP RFC 6238, setup sekali pakai, rate limit, logout | server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M45/server-test.txt<br>docs/evidence/M45/e2e-private.txt | terverifikasi |
+| REQ-PRESENCE-01 | M6 | NPC dengan bukti kerja (tugas RPG, Kanban running/claimed, agent.log <=5 menit) duduk di mejanya dan mengetik sampai bukti hilang; visitor tetap simulasi. | server/test/api.test.mjs<br>app/tests/unit/idle.test.ts | docs/evidence/M6/server-test.txt<br>docs/evidence/M45/vitest.txt | terverifikasi |
+| REQ-CHATKEY-01 | M6 | Daftar semua agen dengan lane + status; memilih membuka profil yang benar; menu HUD HP tidak terpotong. | app/tests/e2e/private.spec.ts | docs/evidence/M45/e2e-private.txt | terverifikasi |
+| REQ-TGSYNC-01 | M6 | Transkrip Telegram tampil; kirim dari RPG melanjutkan sesi Telegram aktif; /new diikuti; balasan ikut ke Telegram; pilihan kedaluwarsa bila obrolan Telegram berlanjut. | server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M6/server-test.txt<br>docs/evidence/M6/desktop-agent-telegram-sync.jpg | terverifikasi |
+| REQ-SHARE-01 | M6 | Ekspor repo komunitas + INSTALL + pindai | - | - | target |
 
-Ringkasan status bagian: terverifikasi 63.
+Ringkasan status bagian: target 1, terverifikasi 66.
 
 ## Story, AC, failure dan boundary
 
@@ -272,3 +276,35 @@ Sebagai Budi, saya login dengan sandi + 2FA di aplikasi sendiri (keputusan 2026-
 Sandi salah/kode salah/kode dipakai ulang ditolak; 5 gagal per 15 menit dikunci; setup sekali pakai; owner.json 0600 tanpa sandi polos; logout mematikan sesi.
 
 Failure: backend mati -> papan Demo, perintah tidak tersedia. Boundary: rahasia tidak pernah dikirim ke browser.
+
+### REQ-PRESENCE-01 (M6)
+
+Sebagai Budi, karakter agen yang sedang bekerja terlihat bekerja (status nyata).
+
+NPC dengan bukti kerja (tugas RPG, Kanban running/claimed, agent.log <=5 menit) duduk di mejanya dan mengetik sampai bukti hilang; visitor tetap simulasi.
+
+Failure: sumber tidak terbaca -> status tidak diketahui, bukan bekerja. Boundary: profil pribadi tidak muncul; ringkasan disaring.
+
+### REQ-CHATKEY-01 (M6)
+
+Sebagai Budi, saya membuka chat agen mana pun dengan tombol C / Chat agen.
+
+Daftar semua agen dengan lane + status; memilih membuka profil yang benar; menu HUD HP tidak terpotong.
+
+Failure: visitor mendapat penjelasan khusus owner. Boundary: tanpa data nyata untuk visitor.
+
+### REQ-TGSYNC-01 (M6)
+
+Sebagai Budi, chat agen di RPG = percakapan Telegram DM yang sama (ADR-017).
+
+Transkrip Telegram tampil; kirim dari RPG melanjutkan sesi Telegram aktif; /new diikuti; balasan ikut ke Telegram; pilihan kedaluwarsa bila obrolan Telegram berlanjut.
+
+Failure: riwayat tidak terbaca -> peringatan; sesi hilang -> gagal dengan alasan. Boundary: token bot hanya di server; state.db dibaca -readonly.
+
+### REQ-SHARE-01 (M6)
+
+Kantor RPG dibagikan gratis ke komunitas tanpa data internal.
+
+Repo komunitas riwayat baru, konfigurasi pemakai, pindai pola nol temuan sebelum publikasi.
+
+Failure: temuan pindai -> tidak dipublikasi. Boundary: repo kerja internal tetap privat.

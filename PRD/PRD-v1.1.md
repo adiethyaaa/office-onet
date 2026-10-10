@@ -4,7 +4,7 @@
 
 Pemilik produk: Budi. Penulis v1.0: Max (Air Buddy). Badan: PRIBADI. Tanggal revisi: 2026-10-05 (v1.1; v1.0 2026-10-03). Baseline desain: PRD v0.2, dipertahankan untuk program ruang, aset, CAD dan ICT. Rencana tambahan ini berasal dari permintaan langsung Budi: memerintah agen Hermes dari RPG, dengan tiga pilihan dari agen dan satu pilihan ketik manual.
 
-Status dokumen (2026-10-10): M4 dan M5 dibangun dan diuji di branch `max/m4-m5-hub` (bagian 0C). Acceptance otomatis untuk REQ-BOARD-01..05, REQ-CMD-01..05, REQ-CHOICE-01, REQ-MANUAL-01 dan REQ-AUTH-01 lulus; hasil di `docs/evidence/M45/`. Hal yang tetap butuh manusia (HP fisik, pembaca layar nyata, sign-off Budi) tercatat di `docs/MAX-CLOSURE.md`. Persetujuan fitur di PRD ini bukan izin mengubah produksi ISP.
+Status dokumen (2026-10-10, v1.2): bagian 19 menambah status kerja nyata, chat cepat, sinkron Telegram, dan distribusi komunitas. M4 dan M5 dibangun dan diuji di branch `max/m4-m5-hub` (bagian 0C). Acceptance otomatis untuk REQ-BOARD-01..05, REQ-CMD-01..05, REQ-CHOICE-01, REQ-MANUAL-01 dan REQ-AUTH-01 lulus; hasil di `docs/evidence/M45/`. Hal yang tetap butuh manusia (HP fisik, pembaca layar nyata, sign-off Budi) tercatat di `docs/MAX-CLOSURE.md`. Persetujuan fitur di PRD ini bukan izin mengubah produksi ISP.
 
 Catatan baseline: angka dan audit M0 pada bagian berikut adalah riwayat desain, bukan inventaris host terkini. AutoCAD native sudah menghasilkan DWG sesuai laporan closure; plot PDF native dikeluarkan dari lingkup (keputusan Budi 2026-10-10, bagian 0C). Max menjadi pelaksana saat ini sesuai arahan Budi; penugasan Claude pada baseline adalah riwayat, bukan instruksi menjalankan worker baru.
 
@@ -344,6 +344,35 @@ Isi per kartu: proyek, badan usaha (ISP/ENT/LABS/PRIBADI), dari bot, ke bot, rin
 - Menyetujui, memindah, menugaskan ulang, atau menutup tugas dari papan (M5, mengikuti 17.4).
 - Notifikasi keluar (Telegram/email) dari papan.
 - Riwayat lebih lama dari 7 hari untuk tugas selesai dan 24 jam untuk log.
+
+## 19. Agen hidup: status nyata, chat cepat, sinkron Telegram, distribusi (v1.2, 2026-10-10)
+
+Ditambahkan setelah Budi mencoba M4 + M5 di produksi. Tiga keluhan: NPC tetap bersantai walau agennya bekerja, tiap agen harus didatangi satu per satu, dan obrolan RPG terpisah dari Telegram. Ketiganya live (rilis e950228 dan f9d4709). Bagian 19.4 menyiapkan versi komunitas.
+
+### 19.1 Status kerja nyata pada NPC
+
+- REQ-PRESENCE-01: Sebagai Budi, saya ingin karakter agen yang sedang bekerja terlihat bekerja. AC: Given owner login dan agen punya bukti kerja, When dunia berjalan, Then NPC meninggalkan aktivitas santai, duduk di mejanya sendiri dan mengetik sampai buktinya hilang; labelnya `<Nama> · bekerja` atau `menunggu keputusanmu`. Bukti, berurutan: tugas RPG antre/berjalan, tugas RPG menunggu Budi, tugas Kanban `running`/`claimed`, panggilan alat di `agent.log` profil ≤5 menit. Tanpa bukti = siap. Visitor tetap melihat simulasi dan badge `SIMULASI: data demo`; owner melihat `Status kerja: nyata`.
+- `GET /api/presence` hanya owner, dicache 4 detik, dipanggil tiap 10 detik (30 detik bila tab tersembunyi). Ringkasan disaring (`scrub`, maks 70 karakter); profil pribadi tidak muncul.
+
+### 19.2 Shortcut chat agen
+
+- REQ-CHATKEY-01: Sebagai Budi, saya ingin membuka chat agen mana pun tanpa berjalan ke mejanya. AC: tombol `Chat agen` di HUD dan tombol C membuka daftar semua agen dengan lane dan status (Bekerja / Menunggu kamu / Siap); memilih satu membuka percakapan profil itu. Di HP, tombol menu HUD tersusun grid tanpa label terpotong (lebar 360 dan 390 px).
+
+### 19.3 Chat agen = percakapan Telegram yang sama (ADR-017)
+
+- REQ-TGSYNC-01: Sebagai Budi, saya ingin chat agen di RPG berisi data nyata dari Telegram, dan pesan dari RPG menyambung obrolan Telegram itu. AC:
+  - Given agen punya sesi Telegram DM dengan Budi, When chat dibuka, Then isinya transkrip sesi itu (pesan Budi dan balasan agen, tanpa langkah alat), berlabel asal (Telegram / dari RPG / Sistem) dan jam.
+  - When Budi mengirim dari RPG, Then Hermes melanjutkan sesi Telegram aktif (`hermes chat -r`), bukan sesi baru; sesi dicari ulang tiap kirim sehingga `/new` di Telegram langsung diikuti.
+  - Pesan Telegram dan RPG yang datang bersamaan antre lewat kunci giliran Hermes, tidak saling timpa.
+  - Balasan atas pesan RPG juga dikirim bot ke Telegram berlabel `Dari kantor RPG`; token bot hanya di server.
+  - Tiga pilihan balasan berlaku selama balasan itu masih yang terbaru; obrolan Telegram berikutnya membuatnya kedaluwarsa (HTTP 410).
+  - Agen tanpa sesi Telegram memakai percakapan khusus RPG dan panel mengatakannya.
+- Failure: riwayat tidak terbaca → peringatan, bukan daftar kosong; sesi Telegram hilang → tugas gagal dengan alasan, tidak dikirim ke sesi lain.
+- Batas: bot tidak bisa mengirim atas nama Budi. Gateway yang menyimpan riwayat di memori bisa belum melihat giliran RPG sampai sesinya dimuat ulang.
+
+### 19.4 Distribusi komunitas
+
+- REQ-SHARE-01: Kantor RPG boleh dibagikan gratis ke komunitas Hermes. AC: repo komunitas punya riwayat git baru, berisi kode, aset, dan cara install; tidak memuat nama usaha, nama orang, hostname, IP, path rumah, chat id, token, isi Kanban, atau bukti uji dari mesin kita (pindai pola sebelum push). Roster, origin, dan host backend diatur lewat konfigurasi pemakai, bukan ditanam di kode. Repo kerja internal tetap privat.
 
 ## Sumber
 

@@ -1025,6 +1025,86 @@
      "status": "terverifikasi"
     }
    ]
+  },
+  {
+   "id": "REQ-PRESENCE-01",
+   "milestone": "M6",
+   "story": "Sebagai Budi, karakter agen yang sedang bekerja terlihat bekerja (status nyata).",
+   "ac": "NPC dengan bukti kerja (tugas RPG, Kanban running/claimed, agent.log <=5 menit) duduk di mejanya dan mengetik sampai bukti hilang; visitor tetap simulasi.",
+   "failure": "sumber tidak terbaca -> status tidak diketahui, bukan bekerja",
+   "boundary": "profil pribadi tidak muncul; ringkasan disaring",
+   "parts": [
+    {
+     "scope": "NPC dengan bukti kerja (tugas RPG, Kanban running/claimed, agent.log <=5 menit) duduk di mejanya dan mengetik sampai bukti hilang; visitor tetap simulasi.",
+     "tests": [
+      "server/test/api.test.mjs",
+      "app/tests/unit/idle.test.ts"
+     ],
+     "evidence": [
+      "docs/evidence/M6/server-test.txt",
+      "docs/evidence/M45/vitest.txt"
+     ],
+     "status": "terverifikasi"
+    }
+   ]
+  },
+  {
+   "id": "REQ-CHATKEY-01",
+   "milestone": "M6",
+   "story": "Sebagai Budi, saya membuka chat agen mana pun dengan tombol C / Chat agen.",
+   "ac": "Daftar semua agen dengan lane + status; memilih membuka profil yang benar; menu HUD HP tidak terpotong.",
+   "failure": "visitor mendapat penjelasan khusus owner",
+   "boundary": "tanpa data nyata untuk visitor",
+   "parts": [
+    {
+     "scope": "Daftar semua agen dengan lane + status; memilih membuka profil yang benar; menu HUD HP tidak terpotong.",
+     "tests": [
+      "app/tests/e2e/private.spec.ts"
+     ],
+     "evidence": [
+      "docs/evidence/M45/e2e-private.txt"
+     ],
+     "status": "terverifikasi"
+    }
+   ]
+  },
+  {
+   "id": "REQ-TGSYNC-01",
+   "milestone": "M6",
+   "story": "Sebagai Budi, chat agen di RPG = percakapan Telegram DM yang sama (ADR-017).",
+   "ac": "Transkrip Telegram tampil; kirim dari RPG melanjutkan sesi Telegram aktif; /new diikuti; balasan ikut ke Telegram; pilihan kedaluwarsa bila obrolan Telegram berlanjut.",
+   "failure": "riwayat tidak terbaca -> peringatan; sesi hilang -> gagal dengan alasan",
+   "boundary": "token bot hanya di server; state.db dibaca -readonly",
+   "parts": [
+    {
+     "scope": "Transkrip Telegram tampil; kirim dari RPG melanjutkan sesi Telegram aktif; /new diikuti; balasan ikut ke Telegram; pilihan kedaluwarsa bila obrolan Telegram berlanjut.",
+     "tests": [
+      "server/test/api.test.mjs",
+      "app/tests/e2e/private.spec.ts"
+     ],
+     "evidence": [
+      "docs/evidence/M6/server-test.txt",
+      "docs/evidence/M6/desktop-agent-telegram-sync.jpg"
+     ],
+     "status": "terverifikasi"
+    }
+   ]
+  },
+  {
+   "id": "REQ-SHARE-01",
+   "milestone": "M6",
+   "story": "Kantor RPG dibagikan gratis ke komunitas tanpa data internal.",
+   "ac": "Repo komunitas riwayat baru, konfigurasi pemakai, pindai pola nol temuan sebelum publikasi.",
+   "failure": "temuan pindai -> tidak dipublikasi",
+   "boundary": "repo kerja internal tetap privat",
+   "parts": [
+    {
+     "scope": "Ekspor repo komunitas + INSTALL + pindai",
+     "tests": [],
+     "evidence": [],
+     "status": "target"
+    }
+   ]
   }
  ]
 }
