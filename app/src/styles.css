@@ -327,6 +327,8 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .turn.agent { background: var(--surface-2); justify-self: start; }
 .turn .who { display: block; font-size: 0.8rem; font-weight: 700; opacity: 0.85; }
 .turn .text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.turn.system { background: transparent; border: 1px dashed var(--control-border); color: var(--ink-2); justify-self: center; font-size: 0.85rem; }
+.turn.pending { opacity: 0.75; }
 .task-status { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 0; }
 .choices { display: grid; gap: 6px; margin: 8px 0; }
 .btn.choice { justify-content: flex-start; text-align: left; min-height: 44px; white-space: normal; }

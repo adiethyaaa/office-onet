@@ -36,6 +36,9 @@ export function openStore(dir) {
   const db = new DatabaseSync(file);
   db.exec('pragma journal_mode=wal; pragma foreign_keys=on;');
   db.exec(SCHEMA);
+  // Telegram sync (ADR-017): a conversation can be bound to the bot's Telegram DM session.
+  const cols = db.prepare('pragma table_info(conversations)').all().map((c) => c.name);
+  if (!cols.includes('channel')) db.exec("alter table conversations add column channel text not null default 'rpg'");
   try { fs.chmodSync(file, 0o600); } catch { /* best effort */ }
   const q = (sql) => db.prepare(sql);
   return {

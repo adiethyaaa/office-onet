@@ -333,12 +333,20 @@ export class PrivatePanel {
   private schedulePoll() {
     window.clearTimeout(this.pollTimer);
     const busy = this.conv?.tasks.some((t) => !t.terminal || t.status === 'blocked');
-    if (!busy) return;
+    // A Telegram-bound chat keeps refreshing while open: Budi may type in Telegram.
+    const live = this.conv?.channel === 'telegram';
+    if (!busy && !live) return;
     this.pollTimer = window.setTimeout(async () => {
       if (!($('dlg-agent') as HTMLDialogElement).open || !this.conv) return;
-      try { this.conv = await api.conversationById(this.conv.id); this.renderConversation(true); } catch { /* keep last view; next tick retries */ }
+      try {
+        const next = await api.conversationById(this.conv.id);
+        const sig = (c: Conversation) => JSON.stringify([c.turns.map((t) => [t.id, t.pending, !!t.options]), c.tasks.map((t) => t.status), c.cursor]);
+        const changed = sig(next) !== sig(this.conv);
+        this.conv = next;
+        if (changed) this.renderConversation(true);
+      } catch { /* keep last view; next tick retries */ }
       this.schedulePoll();
-    }, 2000);
+    }, busy ? 2000 : 5000);
   }
 
   private renderConversation(keepInput = false) {
@@ -353,9 +361,12 @@ export class PrivatePanel {
     const body = $('agent-body');
     body.replaceChildren();
     const info = el('dl', { class: 'info-grid' });
-    for (const [k, v] of [['Profil', c.profile], ['Lane', c.lane ?? '-'], ['Mode', 'Privat (owner login)']]) info.append(el('dt', {}, k), el('dd', {}, v));
+    const mode = c.channel === 'telegram' ? 'Sama dengan chat Telegram' : c.channel === 'telegram-unavailable' ? 'Telegram tidak terbaca' : 'Khusus RPG';
+    for (const [k, v] of [['Profil', c.profile], ['Lane', c.lane ?? '-'], ['Percakapan', mode]]) info.append(el('dt', {}, k), el('dd', {}, v));
     body.append(info);
-    body.append(el('p', { class: 'muted small' }, 'Pesan masuk ke profil ini saja. Jobdesk dan batas produksi ISP tetap berlaku. Jangan ketik sandi, OTP, atau token di sini.'));
+    if (c.channel === 'telegram') body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, `Ini percakapan Telegram-mu dengan ${c.agent}. Pesan dari sini masuk ke sesi yang sama, dan balasannya juga dikirim bot ke Telegram. Jangan ketik sandi, OTP, atau token.`));
+    else if (c.channel === 'telegram-unavailable') body.append(el('p', { class: 'warn', role: 'status' }, 'Riwayat Telegram bot ini tidak bisa dibaca sekarang. Pesan yang kamu kirim tetap masuk ke sesi Telegram-nya bila sesinya ada.'));
+    else body.append(el('p', { class: 'muted small' }, 'Bot ini belum punya chat Telegram denganmu, jadi percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.'));
     const log = el('ol', { class: 'chat', 'aria-live': 'polite', 'aria-label': `Percakapan dengan ${c.agent}` });
     for (const t of c.turns) log.append(this.turnView(t));
     if (!c.turns.length) log.append(el('li', { class: 'muted' }, `Belum ada pesan. Tulis tugas pertama untuk ${c.agent}.`));
@@ -408,14 +419,17 @@ export class PrivatePanel {
     body.append(manual);
     const fresh = el('button', { type: 'button', class: 'btn link' }, 'Mulai percakapan baru');
     fresh.addEventListener('click', async () => { this.conv = await api.conversation(c.profile, true); this.renderConversation(); });
-    body.append(fresh);
+    // A Telegram-bound chat has one history (Telegram's); /new is done in Telegram.
+    if (c.channel !== 'telegram') body.append(fresh);
     log.lastElementChild?.scrollIntoView?.({ block: 'nearest' });
     if (hadFocus && document.getElementById(hadFocus)) document.getElementById(hadFocus)!.focus();
   }
 
   private turnView(t: Turn): HTMLElement {
-    const li = el('li', { class: `turn ${t.role}` });
-    li.append(el('span', { class: 'who' }, t.role === 'owner' ? 'Kamu' : this.conv!.agent ?? 'Agen'));
+    const li = el('li', { class: `turn ${t.role}${t.pending ? ' pending' : ''}` });
+    const who = t.role === 'owner' ? 'Kamu' : t.role === 'system' ? 'Sistem' : this.conv!.agent ?? 'Agen';
+    const where = t.pending ? ' · dari RPG, menunggu' : t.via === 'rpg' ? ' · dari RPG' : t.via === 'telegram' ? ' · Telegram' : '';
+    li.append(el('span', { class: 'who' }, `${who}${where} · ${fmtTime(t.at)}`));
     const p = el('div', { class: 'text' });
     p.textContent = t.text; // agent output is untrusted: rendered as text, never HTML
     li.append(p);

@@ -17,7 +17,7 @@ const PROXY = 'proxy-secret-for-tests-0123456789';
 const BAD = 'bukan-itu'.toUpperCase();
 const PW = ['sandi', 'uji', 'panjang', '1'].join('-'); // test-only owner credential
 const ORIGIN = 'https://employee-rpg.air-buddy.site';
-let tmp; let srv; let base; let calls; let replies; let clock;
+let tmp; let srv; let base; let calls; let replies; let clock; let posts; let tgHome;
 
 function fakeHome(root) {
   const h = path.join(root, 'home');
@@ -77,7 +77,7 @@ before(async () => {
   const dataDir = path.join(tmp, 'data');
   fs.mkdirSync(dataDir, { mode: 0o700 });
   fs.writeFileSync(path.join(dataDir, 'owner.json'), JSON.stringify({ username: 'budi', passwordHash: hashPassword(PW), totpSecret: SECRET }), { mode: 0o600 });
-  calls = []; replies = [];
+  calls = []; replies = []; posts = [];
   let t = Date.now(); clock = () => t; clock.advance = (ms) => { t += ms; };
   const runner = async (job) => {
     calls.push(job);
@@ -85,8 +85,9 @@ before(async () => {
     if (r.wait) await r.wait;
     return r;
   };
-  const { server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, now: () => clock(), cookieSecure: false, boardTtlMs: 0 });
+  const { server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, now: () => clock(), cookieSecure: false, boardTtlMs: 0, telegram: { post: (profile, text) => { posts.push({ profile, text }); return { ok: true }; } } });
   srv = server;
+  tgHome = home;
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   base = `http://127.0.0.1:${server.address().port}`;
 });
@@ -322,4 +323,80 @@ test('presence: status nyata per agen untuk NPC (Kanban running = bekerja, profi
   assert.equal(by.echo.status, 'idle');
   assert.ok(!('yupus' in by) && !('wealth' in by));
   assert.doesNotMatch(JSON.stringify(r.json), /\/Users\/|sk-abc/);
+});
+
+// Telegram sync (opsi 3, ADR-017): chat Leo di RPG = sesi Telegram DM Leo.
+function tgDb(home) {
+  const dir = path.join(home, '.hermes', 'profiles', 'leo');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(home, '.hermes', '.env'), 'TELEGRAM_ALLOWED_USERS=777\n');
+  fs.writeFileSync(path.join(dir, '.env'), 'TELEGRAM_BOT_TOKEN=123:abc\n');
+  const db = path.join(dir, 'state.db');
+  const s = clock() / 1000;
+  execFileSync('sqlite3', [db, `
+    create table sessions(id text primary key, source text, session_key text, started_at real, ended_at real);
+    create table messages(id integer primary key autoincrement, session_id text, role text, content text, timestamp real, platform_message_id text, _compressed_summary int default 0);
+    insert into sessions values('tg_lama','telegram','agent:leo:telegram:dm:777',${s - 9000},${s - 5000});
+    insert into sessions values('tg_aktif','telegram','agent:leo:telegram:dm:777',${s - 4000},null);
+    insert into messages(session_id,role,content,timestamp,platform_message_id) values
+      ('tg_aktif','user','Leo, cek harga emas hari ini',${s - 300},'9001'),
+      ('tg_aktif','assistant','',${s - 290},null),
+      ('tg_aktif','tool','{"rahasia":"isi tool"}',${s - 289},null),
+      ('tg_aktif','assistant','Emas naik 0,4% hari ini.',${s - 280},null),
+      ('tg_aktif','user','[Kanban] tugas t_1 selesai',${s - 200},null);
+  `]);
+  return db;
+}
+
+test('sync Telegram: transkrip DM nyata, kirim dari RPG melanjutkan sesi Telegram, balasan ikut ke Telegram (ADR-017)', async () => {
+  const db = tgDb(tgHome);
+  const s = await login();
+  const conv = (await api('POST', '/api/conversations', { cookie: s.cookie, csrf: s.csrf, body: { profile: 'leo' } })).json;
+  assert.equal(conv.channel, 'telegram');
+  assert.deepEqual(conv.turns.map((t) => [t.role, t.via, t.text]), [
+    ['owner', 'telegram', 'Leo, cek harga emas hari ini'],
+    ['agent', 'agent', 'Emas naik 0,4% hari ini.'],
+    ['system', 'system', '[Kanban] tugas t_1 selesai'],
+  ], 'hanya pesan, tanpa langkah tool');
+  let release;
+  replies.push({ ok: true, text: 'Perak juga naik.\n```json\n{"pilihan":[{"label":"Pantau","pesan":"Pantau harga"},{"label":"Ringkas","pesan":"Ringkas mingguan"},{"label":"Stop","pesan":"Cukup dulu"}]}\n```', session: 'tg_aktif', wait: new Promise((r) => { release = r; }) });
+  const a = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: 'Kalau perak?', idem: 'idem-tg-0001' } });
+  assert.equal(a.status, 202, a.text);
+  await waitFor(() => calls.some((c) => c.profile === 'leo'));
+  const call = calls.find((c) => c.profile === 'leo');
+  assert.equal(call.hermesSession, 'tg_aktif', 'melanjutkan sesi Telegram aktif, bukan sesi RPG baru');
+  const pending = (await api('GET', `/api/conversations/${conv.id}`, { cookie: s.cookie })).json;
+  assert.ok(pending.turns.at(-1).pending && pending.turns.at(-1).text === 'Kalau perak?', 'pesan RPG tampil menunggu');
+  const t = clock() / 1000;
+  execFileSync('sqlite3', [db, `insert into messages(session_id,role,content,timestamp) values
+    ('tg_aktif','user','Kalau perak?${'\n\n'}[Catatan sistem dari kantor RPG, bukan bagian pesan Budi] dst',${t}),
+    ('tg_aktif','assistant','Perak juga naik.${'\n'}\`\`\`json${'\n'}{"pilihan":[]}${'\n'}\`\`\`',${t + 5});`]);
+  release();
+  const done = await waitFor(async () => { const v = (await api('GET', `/api/conversations/${conv.id}`, { cookie: s.cookie })).json; return v.tasks.at(-1).status === 'waiting_owner' ? v : null; });
+  const rpgOwner = done.turns.find((x) => x.via === 'rpg');
+  assert.equal(rpgOwner.text, 'Kalau perak?', 'catatan sistem RPG tidak tampil');
+  assert.ok(!done.turns.some((x) => x.pending), 'tidak dobel setelah masuk transkrip');
+  const last = done.turns.at(-1);
+  assert.equal(last.text, 'Perak juga naik.');
+  assert.equal(last.options?.length, 3, 'tiga pilihan tetap ada pada balasan terbaru');
+  await waitFor(() => posts.length === 1);
+  assert.equal(posts[0].profile, 'leo');
+  assert.ok(posts[0].text.includes('Kalau perak?') && posts[0].text.includes('Perak juga naik.'), 'balasan RPG ikut ke Telegram');
+  // Budi lalu chat di Telegram dan Leo membalas: pilihan RPG lama kedaluwarsa.
+  execFileSync('sqlite3', [db, `insert into messages(session_id,role,content,timestamp,platform_message_id) values
+    ('tg_aktif','user','oke makasih',${t + 600},'9002'),('tg_aktif','assistant','Sama-sama.',${t + 605},null);`]);
+  const after = (await api('GET', `/api/conversations/${conv.id}`, { cookie: s.cookie })).json;
+  assert.equal(after.turns.at(-1).text, 'Sama-sama.');
+  assert.ok(!after.turns.some((x) => x.options), 'pilihan hilang setelah obrolan Telegram berlanjut');
+  const stale = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { decision: { turnId: last.id, optionId: 'o1' }, idem: 'idem-tg-0002' } });
+  assert.equal(stale.status, 410);
+  // Sesi Telegram diganti (/new): pesan berikut pakai sesi baru.
+  execFileSync('sqlite3', [db, `update sessions set ended_at=${t + 700} where id='tg_aktif'; insert into sessions values('tg_baru','telegram','agent:leo:telegram:dm:777',${t + 700},null);`]);
+  replies.push({ ok: true, text: 'Halo lagi.', session: 'tg_baru' });
+  await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: 'Halo', idem: 'idem-tg-0003' } });
+  await waitFor(() => calls.filter((c) => c.profile === 'leo').length === 2);
+  assert.equal(calls.filter((c) => c.profile === 'leo')[1].hermesSession, 'tg_baru');
+  // Bot tanpa sesi Telegram tetap memakai percakapan RPG sendiri.
+  const ent = (await api('POST', '/api/conversations', { cookie: s.cookie, csrf: s.csrf, body: { profile: 'enterprise' } })).json;
+  assert.equal(ent.channel, 'rpg');
 });

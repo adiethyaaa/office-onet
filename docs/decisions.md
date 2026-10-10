@@ -61,3 +61,14 @@ Alasan: tidak ada API Hermes jarak jauh yang aman untuk dipakai browser; CLI per
 
 ## Batas yang tidak diputuskan pelaksana
 Lahan, lokasi, luas sah, okupansi manusia, biaya, hosting, client benchmark, logo. Integrasi Hermes diputuskan di ADR-016. Pertanyaan terbuka Q-01 sampai Q-04 ada di PRD v0.2 bagian 2.
+
+## ADR-017: Chat agen RPG = percakapan Telegram DM yang sama (2026-10-10)
+
+Keputusan Budi: opsi 3, satu percakapan penuh.
+
+- Bot yang punya sesi Telegram DM dengan Budi (`session_key agent:<profil>:telegram:dm:<chat_id>`) memakai percakapan `channel='telegram'`. Transkrip dibaca langsung dari `state.db` profil (sqlite3 `-readonly`), hanya pesan user/assistant; langkah tool tidak tampil. Catatan sistem RPG di pesan Budi dibuang dari tampilan.
+- Kirim dari RPG menjalankan `hermes chat -r <sesi Telegram aktif>`. Sesi dicari ulang tiap kirim, jadi `/new` atau reset di Telegram langsung diikuti. Hermes mengunci giliran per sesi (`session_turn_leases`), jadi pesan Telegram dan RPG yang datang bersamaan antre, tidak saling timpa.
+- Balasan dari RPG juga dikirim bot ke chat Telegram (Bot API, token dibaca di server, tidak pernah ke browser), berlabel "Dari kantor RPG". Bot tidak bisa mengirim atas nama Budi.
+- Tiga pilihan RPG berlaku hanya selama balasan itu masih balasan terbaru di chat; obrolan Telegram berikutnya membuatnya kedaluwarsa (410).
+- Bot tanpa sesi Telegram tetap memakai percakapan RPG sendiri. Gateway Telegram yang sedang menyimpan riwayat di memori bisa belum melihat giliran dari RPG sampai sesinya dimuat ulang; konteks tetap tersimpan di sesi yang sama.
+- Jalan mundur: kembalikan rilis backend sebelumnya; kolom `channel` diabaikan versi lama.

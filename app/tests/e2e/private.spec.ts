@@ -35,6 +35,19 @@ test.beforeAll(async () => {
     insert into tasks values('t_b','Audit backup E2E','x','infra','blocked','default',${n - 900},null,null);
     insert into task_events(task_id,kind,created_at) values('t_b','blocked',${n - 120});
   `]);
+  // Kevin (sales) has a Telegram DM with Budi: his RPG chat is that chat (ADR-017).
+  const tgDir = path.join(home, '.hermes', 'profiles', 'sales');
+  fs.mkdirSync(tgDir, { recursive: true });
+  fs.writeFileSync(path.join(home, '.hermes', '.env'), 'TELEGRAM_ALLOWED_USERS=777\n');
+  const ts = Date.now() / 1000;
+  execFileSync('sqlite3', [path.join(tgDir, 'state.db'), `
+    create table sessions(id text primary key, source text, session_key text, started_at real, ended_at real);
+    create table messages(id integer primary key autoincrement, session_id text, role text, content text, timestamp real, platform_message_id text, _compressed_summary int default 0);
+    insert into sessions values('tg_kevin','telegram','agent:sales:telegram:dm:777',${ts - 4000},null);
+    insert into messages(session_id,role,content,timestamp,platform_message_id) values
+      ('tg_kevin','user','Kevin, follow up Villa E2E besok pagi ya',${ts - 600},'5001'),
+      ('tg_kevin','assistant','Siap, aku jadwalkan follow up jam 09.00.',${ts - 590},null);
+  `]);
   const dataDir = path.join(tmp, 'data');
   fs.mkdirSync(dataDir, { mode: 0o700 });
   fs.writeFileSync(path.join(dataDir, 'owner.json'), JSON.stringify({ username: 'budi', passwordHash: hashPassword('sandi-e2e-panjang-1'), totpSecret: SECRET }), { mode: 0o600 });
@@ -186,7 +199,7 @@ test('owner: beri tugas ke Nova, 3 pilihan + manual, approval, tanpa kirim ganda
   await dlg.getByRole('button', { name: 'Batalkan' }).click();
   await expect(dlg.getByText('Butuh persetujuanmu')).toHaveCount(0);
   const n1 = calls.length;
-  await dlg.getByRole('button', { name: 'Ketik pesan' }).click().catch(() => {});
+  if (await dlg.locator('#agent-manual').isHidden()) await dlg.getByRole('button', { name: 'Ketik pesan' }).click();
   await ta.fill('Hapus snapshot lama VM 105');
   await dlg.locator('#agent-send').click();
   await dlg.getByRole('button', { name: 'Setujui untuk tugas ini' }).click();
@@ -232,4 +245,22 @@ test('shortcut C: chat agen tanpa mendatangi NPC; status nyata membuat Leo beker
   await expect(page.locator('.npc-label.busy', { hasText: 'Leo · bekerja' })).toHaveCount(1);
   const echo = await page.evaluate(() => (window.__kantor!.npcs as () => { id: string; workStatus: string }[])().find((n) => n.id === 'ACT-ECHO'));
   expect(echo?.workStatus).toBe('done');
+});
+
+test('sync Telegram: chat Kevin di RPG menampilkan obrolan Telegram yang sama (ADR-017)', async ({ page }, info) => {
+  await wireApi(page);
+  await boot(page);
+  await page.keyboard.press('b');
+  await login(page);
+  await expect(page.locator('#dlg-boards').getByText('Data nyata')).toBeVisible();
+  await page.locator('#dlg-boards').getByRole('button', { name: 'Tutup' }).click();
+  await page.keyboard.press('c');
+  await page.locator('.agent-pick-btn[data-agent="sales"]').click();
+  const dlg = page.locator('#dlg-agent');
+  await expect(dlg.locator('#agent-sync-note')).toContainText('percakapan Telegram-mu dengan Kevin');
+  await expect(dlg.getByText('Sama dengan chat Telegram')).toBeVisible();
+  await expect(dlg.locator('.turn.owner').first()).toContainText('follow up Villa E2E besok pagi');
+  await expect(dlg.locator('.turn.owner .who').first()).toContainText('Telegram');
+  await expect(dlg.locator('.turn.agent').first()).toContainText('jam 09.00');
+  await shot(page, info, 'agent-telegram-sync');
 });

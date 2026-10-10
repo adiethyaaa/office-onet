@@ -11,6 +11,7 @@ import path from 'node:path';
 import { openStore, RETENTION } from './store.mjs';
 import { loadOwner, verifyPassword, verifyTotp, hashPassword, base32Encode, token } from './auth.mjs';
 import { boardCache, buildPresence, makeSources } from './boards.mjs';
+import { ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
 import { ROSTER, byProfile } from './roster.mjs';
 import { checkMessage, LIMITS } from './policy.mjs';
 import { createDispatcher, hermesRunner, TERMINAL } from './dispatcher.mjs';
@@ -28,7 +29,26 @@ export function createServer(cfg) {
   const sources = makeSources(cfg.home ?? os.homedir());
   const boards = cfg.boards ?? boardCache(sources, cfg.boardTtlMs ?? 5000);
   let presenceMemo = { at: 0, value: null };
-  const dispatcher = createDispatcher(store, { runner: cfg.runner ?? hermesRunner({ home: cfg.home ?? os.homedir() }), now });
+  const home = cfg.home ?? os.homedir();
+  // Telegram sync (ADR-017). Tests inject `telegram` to avoid real state.db/Bot API.
+  const tg = {
+    chatId: () => ownerChatId(home),
+    session: (profile) => telegramSession(home, profile, ownerChatId(home)),
+    transcript: (profile, sessionId) => telegramTranscript(home, profile, sessionId),
+    post: (profile, text) => postToTelegram(home, profile, ownerChatId(home), text),
+    ...cfg.telegram,
+  };
+  const tgSession = (profile) => { try { return tg.session(profile); } catch { return null; } };
+  const dispatcher = createDispatcher(store, {
+    runner: cfg.runner ?? hermesRunner({ home }), now, sessionFor: tgSession,
+    // The RPG exchange also shows up in the bot's Telegram chat (sent by the bot, labelled).
+    onReply: ({ profile, ownerText, agentText }) => {
+      const name = byProfile(profile)?.name ?? profile;
+      void Promise.resolve(tg.post(profile, `🎮 Dari kantor RPG\nBudi: ${ownerText}\n\n${name}: ${agentText}`))
+        .then((r) => { if (!r?.ok) store.audit('system', 'telegram.post_failed', profile, null, r?.error ?? 'gagal'); })
+        .catch(() => store.audit('system', 'telegram.post_failed', profile, null, 'error'));
+    },
+  });
   const q = store.q;
   const purgeTimer = setInterval(() => store.purge(now()), 3600_000);
   purgeTimer.unref?.();
@@ -88,6 +108,45 @@ export function createServer(cfg) {
     } catch { throw Object.assign(new Error('JSON tidak sah.'), { code: 400 }); }
   }
 
+  /** Telegram transcript of the profile, or null (no session / unreadable). */
+  function tgTranscript(profile) {
+    const sid = tgSession(profile);
+    if (!sid) return null;
+    try { return { sessionId: sid, turns: tg.transcript(profile, sid) }; } catch { return null; }
+  }
+
+  /**
+   * Telegram-bound view: the turns ARE the Telegram DM transcript. RPG owner
+   * messages not yet picked up by Hermes are shown as pending; the 3 options
+   * of the latest RPG reply stay valid only while that reply is still the
+   * newest agent message in the chat (a later Telegram reply expires them).
+   */
+  function telegramTurns(conv, rpgTurns, tasks) {
+    const tr = tgTranscript(conv.profile);
+    if (!tr) return null;
+    const turns = tr.turns.map((t) => ({ id: t.id, role: t.role, via: t.via, text: t.text, taskId: null, at: t.at, options: null, optionsExpired: false, expiresAt: null }));
+    const lastRpgAgent = [...rpgTurns].reverse().find((t) => t.role === 'agent');
+    const lastTgAgent = [...turns].reverse().find((t) => t.role === 'agent');
+    if (lastRpgAgent?.options && lastTgAgent && lastRpgAgent.expires_at > now() && Math.abs(lastTgAgent.at - lastRpgAgent.created_at) < 120_000) {
+      Object.assign(lastTgAgent, { id: lastRpgAgent.id, taskId: lastRpgAgent.task_id, options: JSON.parse(lastRpgAgent.options), expiresAt: lastRpgAgent.expires_at });
+    }
+    const status = new Map(tasks.map((t) => [t.id, t.status]));
+    for (const t of rpgTurns) {
+      if (t.role !== 'owner' || !['queued', 'working'].includes(status.get(t.task_id))) continue;
+      const seen = turns.some((x) => x.via === 'rpg' && x.at >= t.created_at - 5000 && x.text.trim() === t.text.trim());
+      if (!seen) turns.push({ id: t.id, role: 'owner', via: 'rpg', pending: true, text: t.text, taskId: t.task_id, at: t.created_at, options: null, optionsExpired: false, expiresAt: null });
+    }
+    return { sessionId: tr.sessionId, turns };
+  }
+
+  /** Options of an RPG turn are still the live ones (Telegram-bound check included). */
+  function optionsLive(conv, turn) {
+    if (conv.channel !== 'telegram') return true;
+    const tr = tgTranscript(conv.profile);
+    const lastTgAgent = tr && [...tr.turns].reverse().find((t) => t.role === 'agent');
+    return !!lastTgAgent && Math.abs(lastTgAgent.at - turn.created_at) < 120_000;
+  }
+
   function conversationView(convId, after = 0) {
     const conv = q('select * from conversations where id=?').get(convId);
     if (!conv) return null;
@@ -98,9 +157,11 @@ export function createServer(cfg) {
     const events = ids.length ? q(`select seq,task_id,status,note,at from events where task_id in (${ids.map(() => '?').join(',')}) and seq > ? order by seq`).all(...ids, after) : [];
     const approvals = ids.length ? q(`select id,task_id,action,impact,rollback,status,expires_at from approvals where task_id in (${ids.map(() => '?').join(',')})`).all(...ids) : [];
     const r = byProfile(conv.profile);
+    const tgView = conv.channel === 'telegram' ? telegramTurns(conv, turns, tasks) : null;
     return {
       id: conv.id, profile: conv.profile, agent: r?.name, lane: r?.lane,
-      turns: turns.map((t) => ({
+      channel: conv.channel === 'telegram' ? (tgView ? 'telegram' : 'telegram-unavailable') : 'rpg',
+      turns: tgView ? tgView.turns : turns.map((t) => ({
         id: t.id, role: t.role, text: t.text, taskId: t.task_id, at: t.created_at,
         options: t.options && t.id === lastAgent?.id && t.expires_at > now() ? JSON.parse(t.options) : null,
         optionsExpired: !!(t.options && (t.id !== lastAgent?.id || t.expires_at <= now())),
@@ -171,11 +232,13 @@ export function createServer(cfg) {
     const b = await readJson(req);
     const r = byProfile(b.profile);
     if (!r) return fail(res, 404, 'Profil tidak ada di roster RPG.');
-    let conv = b.fresh ? null : q('select * from conversations where profile=? order by updated_at desc limit 1').get(r.profile);
+    // A bot with a Telegram DM session gets the Telegram-bound conversation (ADR-017).
+    const channel = tgSession(r.profile) ? 'telegram' : 'rpg';
+    let conv = b.fresh ? null : q('select * from conversations where profile=? and channel=? order by updated_at desc limit 1').get(r.profile, channel);
     if (!conv) {
       const id = `conv_${token(9)}`;
-      q('insert into conversations(id,profile,hermes_session,created_at,updated_at) values(?,?,?,?,?)').run(id, r.profile, null, now(), now());
-      store.audit('owner', 'conversation.create', r.profile, id);
+      q('insert into conversations(id,profile,hermes_session,created_at,updated_at,channel) values(?,?,?,?,?,?)').run(id, r.profile, null, now(), now(), channel);
+      store.audit('owner', 'conversation.create', r.profile, id, channel);
       conv = { id };
     }
     send(res, 200, conversationView(conv.id));
@@ -203,7 +266,7 @@ export function createServer(cfg) {
       const turn = q("select * from turns where id=? and conversation_id=? and role='agent'").get(String(b.decision.turnId ?? ''), conv.id);
       const latest = q("select id from turns where conversation_id=? and role='agent' order by created_at desc, rowid desc limit 1").get(conv.id);
       if (!turn || !turn.options) return fail(res, 400, 'Pilihan tidak berasal dari giliran agen ini.');
-      if (turn.id !== latest?.id || turn.expires_at <= now()) return fail(res, 410, 'Pilihan ini sudah kedaluwarsa. Pilih dari giliran terbaru atau ketik manual.');
+      if (turn.id !== latest?.id || turn.expires_at <= now() || !optionsLive(conv, turn)) return fail(res, 410, 'Pilihan ini sudah kedaluwarsa. Pilih dari giliran terbaru atau ketik manual.');
       const opt = JSON.parse(turn.options).find((o) => o.id === b.decision.optionId);
       if (!opt) return fail(res, 400, 'Pilihan tidak dikenal.');
       text = opt.message; decisionId = `${turn.id}:${opt.id}`;

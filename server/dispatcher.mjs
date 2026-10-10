@@ -1,7 +1,9 @@
 // M5 dispatcher (PRD 17.2): satu pekerjaan aktif per profil, sisanya antre.
 // Pesan diteruskan ke profil Hermes lewat `hermes chat --oneshot` dengan
 // HERMES_HOME profil itu, jadi jobdesk, alat dan izin profil tetap berlaku.
-// Percakapan RPG memakai sesi Hermes sendiri (-r), terpisah dari Telegram.
+// Percakapan bersumber Telegram (channel='telegram') melanjutkan sesi Telegram
+// DM bot itu (-r <id>); Hermes mengunci giliran per sesi (turn lease), jadi
+// pesan Telegram dan RPG yang datang bersamaan antre, tidak saling timpa.
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -47,7 +49,7 @@ export function hermesRunner({ home = os.homedir(), bin = 'hermes', budgetSecond
   });
 }
 
-export function createDispatcher(store, { runner, now = () => Date.now(), onChange } = {}) {
+export function createDispatcher(store, { runner, now = () => Date.now(), onChange, onReply, sessionFor } = {}) {
   const q = store.q;
   const running = new Map(); // profile -> { taskId, child }
 
@@ -73,9 +75,18 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
     event(t.id, 'working', 'Pesan diteruskan ke profil.');
     store.audit('system', 'task.dispatch', profile, t.id);
     let out;
+    // Telegram-bound: resolve the bot's live DM session now, it may have rotated (/new, reset).
+    const wanted = conv?.channel === 'telegram' ? (sessionFor?.(profile) ?? null) : (conv?.hermes_session ?? null);
+    if (conv?.channel === 'telegram' && !wanted) {
+      running.delete(profile);
+      q('update tasks set error=? where id=?').run('Sesi Telegram bot ini tidak ditemukan.', t.id);
+      event(t.id, 'failed', 'Sesi Telegram bot ini tidak ditemukan; pesan tidak dikirim.');
+      void runNext(profile);
+      return;
+    }
     try {
       out = await runner({
-        profile, hermesSession: conv?.hermes_session ?? null, message: t.message + OPTION_INSTRUCTION,
+        profile, hermesSession: wanted, message: t.message + OPTION_INSTRUCTION,
         onStart: (child) => { const r = running.get(profile); if (r) r.child = child; },
       });
     } catch (e) {
@@ -84,6 +95,9 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
     const cur = q('select status from tasks where id=?').get(t.id);
     running.delete(profile);
     if (out.session) q('update conversations set hermes_session=?, updated_at=? where id=?').run(out.session, now(), t.conversation_id);
+    if (conv?.channel === 'telegram' && out.session && out.session !== wanted) {
+      out = { ...out, note: 'Hermes membuka sesi lain, bukan sesi Telegram; balasan ini tidak tersambung ke Telegram.' };
+    }
     if (cur?.status === 'cancelled') { void runNext(profile); return; }
     if (out.ok) {
       const parsed = parseOptions(out.text);
@@ -92,8 +106,9 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
         turnId, t.conversation_id, 'agent', sanitizeReply(parsed.body), parsed.options ? JSON.stringify(parsed.options) : null,
         parsed.options ? now() + LIMITS.turnMinutes * 60_000 : null, t.id, now());
       q('update tasks set result_turn=? where id=?').run(turnId, t.id);
+      if (conv?.channel === 'telegram') onReply?.({ profile, ownerText: t.message, agentText: sanitizeReply(parsed.body) });
       if (parsed.invalid) event(t.id, 'completed', `Balasan diterima. ${parsed.invalid} Hanya input manual yang tersedia.`);
-      else event(t.id, parsed.options ? 'waiting_owner' : 'completed', parsed.options ? 'Agen menunggu keputusan Budi.' : 'Balasan agen diterima.');
+      else event(t.id, parsed.options ? 'waiting_owner' : 'completed', `${parsed.options ? 'Agen menunggu keputusan Budi.' : 'Balasan agen diterima.'}${out.note ? ` ${out.note}` : ''}`);
     } else {
       q('update tasks set error=? where id=?').run(out.error ?? 'gagal', t.id);
       event(t.id, out.unknown ? 'unknown' : 'failed', out.error);
