@@ -256,8 +256,13 @@ kbd {
   .hud-top { gap: 6px; }
   .hud-brand { display: none; }
   .hud-actions .btn kbd { display: none; }
-  .hud-actions { margin-left: 0; width: 100%; justify-content: space-between; }
-  .hud-actions .btn { flex: 1; justify-content: center; padding: 6px 8px; }
+  /* Seven buttons do not fit one row on a phone: a grid of equal cells, as
+     many columns as fit (4 on a 390 px iPhone, 3 on 360 px), labels on one line. */
+  .hud-actions { margin-left: 0; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 6px; }
+  .hud-actions .btn { justify-content: center; padding: 4px 6px; min-width: 0; font-size: 0.8rem; white-space: nowrap; }
+  .hud-actions .btn span { overflow: hidden; text-overflow: ellipsis; }
+  /* Daily use first: chat, boards, directory; tools after. */
+  #btn-chat { order: -3; } #btn-boards { order: -2; } #btn-directory { order: -1; }
   .sim-badge { font-size: 0.8rem; }
   .toast { top: auto; bottom: 180px; }
   .activity-chip { bottom: 240px; font-size: 0.9rem; }
