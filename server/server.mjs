@@ -11,11 +11,12 @@ import path from 'node:path';
 import { openStore, RETENTION } from './store.mjs';
 import { loadOwner, verifyPassword, verifyTotp, hashPassword, base32Encode, token } from './auth.mjs';
 import { boardCache, buildPresence, makeSources } from './boards.mjs';
-import { agentReplyTimes, ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
+import { agentReplyTimes, lastChatLine, ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
 import { ROSTER, byProfile } from './roster.mjs';
 import { checkMessage, LIMITS } from './policy.mjs';
 import { createDispatcher, hermesRunner, TERMINAL } from './dispatcher.mjs';
 import { setupPage } from './setup-page.mjs';
+import { chatState, TYPING_WINDOW_MS } from './chat-state.mjs';
 
 const MAX_BODY = 16 * 1024;
 const LOGIN_MAX = 5;
@@ -36,12 +37,15 @@ export function createServer(cfg) {
     session: (profile) => telegramSession(home, profile, ownerChatId(home)),
     transcript: (profile, sessionId) => telegramTranscript(home, profile, sessionId),
     replyTimes: (profile, sessionId) => agentReplyTimes(home, profile, sessionId),
+    lastLine: (profile, sessionId) => lastChatLine(home, profile, sessionId),
     post: (profile, text) => postToTelegram(home, profile, ownerChatId(home), text),
     ...cfg.telegram,
   };
   const tgSession = (profile) => { try { return tg.session(profile); } catch { return null; } };
   const dispatcher = createDispatcher(store, {
     runner: cfg.runner ?? hermesRunner({ home }), now, sessionFor: tgSession,
+    // A task changing state must show at once (typing on/off), not after the 4 s presence cache.
+    onChange: () => { presenceMemo.at = 0; },
     // The RPG exchange also shows up in the bot's Telegram chat (sent by the bot, labelled).
     onReply: ({ profile, ownerText, agentText }) => {
       const name = byProfile(profile)?.name ?? profile;
@@ -159,15 +163,17 @@ export function createServer(cfg) {
     const approvals = ids.length ? q(`select id,task_id,action,impact,rollback,status,expires_at from approvals where task_id in (${ids.map(() => '?').join(',')})`).all(...ids) : [];
     const r = byProfile(conv.profile);
     const tgView = conv.channel === 'telegram' ? telegramTurns(conv, turns, tasks) : null;
+    const baseTurns = tgView ? tgView.turns : turns.map((t) => ({
+      id: t.id, role: t.role, text: t.text, taskId: t.task_id, at: t.created_at,
+      options: t.options && t.id === lastAgent?.id && t.expires_at > now() ? JSON.parse(t.options) : null,
+      optionsExpired: !!(t.options && (t.id !== lastAgent?.id || t.expires_at <= now())),
+      expiresAt: t.expires_at,
+    }));
+    const chat = chatState(baseTurns, tasks, now());
     return {
       id: conv.id, profile: conv.profile, agent: r?.name, lane: r?.lane,
       channel: conv.channel === 'telegram' ? (tgView ? 'telegram' : 'telegram-unavailable') : 'rpg',
-      turns: tgView ? tgView.turns : turns.map((t) => ({
-        id: t.id, role: t.role, text: t.text, taskId: t.task_id, at: t.created_at,
-        options: t.options && t.id === lastAgent?.id && t.expires_at > now() ? JSON.parse(t.options) : null,
-        optionsExpired: !!(t.options && (t.id !== lastAgent?.id || t.expires_at <= now())),
-        expiresAt: t.expires_at,
-      })),
+      turns: chat.turns, typing: chat.typing, lastSeen: chat.lastSeen,
       tasks: tasks.map((t) => ({ ...t, terminal: TERMINAL.has(t.status) })),
       events, approvals, cursor: events.length ? events[events.length - 1].seq : after,
     };
@@ -228,9 +234,13 @@ export function createServer(cfg) {
         // Agent reply times (Telegram DM, or RPG chat for bots without one) for unread badges.
         let replies = [];
         const sid = tgSession(a.profile);
-        if (sid) { try { replies = tg.replyTimes(a.profile, sid); } catch { replies = []; } }
+        let line = null;
+        if (sid) { try { replies = tg.replyTimes(a.profile, sid); line = tg.lastLine?.(a.profile, sid) ?? null; } catch { replies = []; } }
         else replies = q("select t.created_at at from turns t join conversations c on c.id=t.conversation_id where c.profile=? and t.role='agent' order by t.created_at desc limit 50").all(a.profile).map((r) => r.at).reverse();
-        return { ...a, replies };
+        // Typing like Telegram: the bot is on an RPG task, or Budi's last Telegram line is still unanswered.
+        const rpgWorking = rpg.some((x) => x.profile === a.profile && x.status === 'working');
+        const typing = rpgWorking || (line?.role === 'owner' && t - line.at < TYPING_WINDOW_MS);
+        return { ...a, replies, typing, lastSeen: replies.length ? replies[replies.length - 1] : null };
       });
       presenceMemo = { at: t, value: { observedAt: new Date(t).toISOString(), agents } };
     }

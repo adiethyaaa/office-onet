@@ -11,13 +11,14 @@ export interface LogItem { at: number; kind: 'task' | 'tool'; bot: string; verb:
 export interface Board<T> { ok: boolean; source: string; error?: string; items: T[] }
 export interface Boards { observedAt: string; mode: 'private' | 'demo'; handoffs: Board<HandoffItem>; tasks: Board<TaskItem>; log: Board<LogItem> }
 export interface Agent { profile: string; name: string; lane: string; actorId: string | null; badan: string; tasks: Record<string, number> }
-export interface Presence { profile: string; name: string; actorId: string | null; status: 'working' | 'waiting' | 'idle' | 'unknown'; source: string; summary: string; replies?: number[] }
+export interface Presence { profile: string; name: string; actorId: string | null; status: 'working' | 'waiting' | 'idle' | 'unknown'; source: string; summary: string; replies?: number[]; typing?: boolean; lastSeen?: number | null }
 export interface Option { id: string; label: string; message: string; requiresApproval: boolean }
-export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 'telegram' | 'rpg' | 'agent' | 'system'; pending?: boolean; text: string; taskId: string | null; at: number; options: Option[] | null; optionsExpired: boolean; expiresAt: number | null }
+export type Receipt = 'sent' | 'delivered' | 'read';
+export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 'telegram' | 'rpg' | 'agent' | 'system'; pending?: boolean; receipt?: Receipt; text: string; taskId: string | null; at: number; options: Option[] | null; optionsExpired: boolean; expiresAt: number | null }
 export interface TaskView { id: string; status: string; source: string; observed_at: number; created_at: number; error: string | null; terminal: boolean }
 export interface EventView { seq: number; task_id: string; status: string; note: string | null; at: number }
 export interface ApprovalView { id: string; task_id: string; action: string; impact: string; rollback: string; status: string; expires_at: number }
-export interface Conversation { id: string; profile: string; agent?: string; lane?: string; channel?: 'telegram' | 'telegram-unavailable' | 'rpg'; turns: Turn[]; tasks: TaskView[]; events: EventView[]; approvals: ApprovalView[]; cursor: number }
+export interface Conversation { id: string; profile: string; agent?: string; lane?: string; channel?: 'telegram' | 'telegram-unavailable' | 'rpg'; turns: Turn[]; typing?: boolean; lastSeen?: number | null; tasks: TaskView[]; events: EventView[]; approvals: ApprovalView[]; cursor: number }
 
 let csrf: string | null = null;
 

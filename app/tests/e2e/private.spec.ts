@@ -265,6 +265,12 @@ test('sync Telegram: chat Kevin di RPG menampilkan obrolan Telegram yang sama (A
   await expect(dlg.locator('.turn.owner').filter({ hasText: 'follow up Villa E2E besok pagi' })).toHaveCount(1);
   await expect(dlg.locator('.turn.owner .who').first()).toContainText('Telegram');
   await expect(dlg.locator('.turn.agent').last()).toContainText('jam 09.00');
+  // Telegram feel: day separator, double tick on answered messages, "last active" line, reply quote.
+  await expect(dlg.locator('.day-divider').first()).toBeVisible();
+  await expect(dlg.locator('.turn.owner').filter({ hasText: 'follow up Villa E2E besok pagi' }).locator('[data-receipt="read"]')).toHaveText('✓✓');
+  await expect(dlg.locator('#agent-status')).toContainText(/aktif|mengetik/);
+  await dlg.locator('.turn.agent').last().getByRole('button', { name: /Balas pesan/ }).click();
+  await expect(dlg.locator('#agent-manual-text')).toHaveValue(/^↩ Membalas Kevin: ".*jam 09\.00/);
   await shot(page, info, 'agent-telegram-sync');
 });
 

@@ -74,6 +74,15 @@ export function agentReplyTimes(home, profile, sessionId, limit = 50) {
   return rows.map((r) => Math.round(r.timestamp * 1000)).reverse();
 }
 
+/** Newest owner-or-agent line of the session (system notices skipped), for the "typing" dot. */
+export function lastChatLine(home, profile, sessionId) {
+  const db = path.join(profileHome(home, profile), 'state.db');
+  const row = sql(db, `select role, timestamp from messages where session_id=? and coalesce(content,'') <> '' and _compressed_summary = 0
+    and (role='assistant' or (role='user' and (platform_message_id is not null or content like '%${RPG_NOTE}%')))
+    order by id desc limit 1`, [sessionId])[0];
+  return row ? { role: row.role === 'assistant' ? 'agent' : 'owner', at: Math.round(row.timestamp * 1000) } : null;
+}
+
 function botToken(home, profile) {
   try {
     const env = fs.readFileSync(path.join(profileHome(home, profile), '.env'), 'utf8');

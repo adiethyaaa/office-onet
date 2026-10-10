@@ -12,6 +12,7 @@
   --ink: #1d2a23;
   --ink-2: #4b5a51;
   --green: #1f4d3a;
+  --receipt-read: #7fd3ff;
   --on-green: #fffaf0;
   --accent: #a34a27;
   --on-accent: #fffaf0;
@@ -33,6 +34,7 @@
     --ink: #f2e9d6;
     --ink-2: #c2b8a2;
     --green: #9bd0b1;
+    --receipt-read: #003a70;
     --on-green: #10201a;
     --accent: #e48b62;
     --on-accent: #1b120c;
@@ -52,6 +54,7 @@
   --ink: #f2e9d6;
   --ink-2: #c2b8a2;
   --green: #9bd0b1;
+  --receipt-read: #003a70;
   --on-green: #10201a;
   --accent: #e48b62;
   --on-accent: #1b120c;
@@ -327,6 +330,19 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .turn.agent { background: var(--surface-2); justify-self: start; }
 .turn .who { display: block; font-size: 0.8rem; font-weight: 700; opacity: 0.85; }
 .turn .text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.turn .meta { display: flex; justify-content: flex-end; gap: 4px; font-size: 0.72rem; opacity: 0.8; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.turn .receipt { letter-spacing: -0.2em; padding-right: 0.2em; }
+.turn .receipt.read { color: var(--receipt-read); opacity: 1; font-weight: 700; }
+.turn-actions { display: flex; gap: 8px; justify-content: flex-end; opacity: 0; transition: opacity 120ms; }
+.turn:hover .turn-actions, .turn:focus-within .turn-actions { opacity: 1; }
+@media (hover: none) { .turn-actions { opacity: 1; } }
+.turn-actions .btn.small { font-size: 0.75rem; min-height: 28px; padding: 0 6px; color: inherit; }
+.day-divider { list-style: none; justify-self: center; font-size: 0.75rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); }
+.chat-status { margin: 0 0 4px; min-height: 1.2em; font-size: 0.85rem; color: var(--ink-2); }
+.chat-status.typing { color: var(--accent-ink); font-weight: 700; }
+.typing-bubble .dots { display: inline-block; letter-spacing: 0.2em; animation: typing-dots 1.2s ease-in-out infinite; }
+@keyframes typing-dots { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .typing-bubble .dots { animation: none; } }
 .turn.system { background: transparent; border: 1px dashed var(--control-border); color: var(--ink-2); justify-self: center; font-size: 0.85rem; }
 .turn.pending { opacity: 0.75; }
 .chat { scroll-behavior: auto; overscroll-behavior: contain; }

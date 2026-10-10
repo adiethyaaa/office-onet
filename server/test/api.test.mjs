@@ -367,6 +367,10 @@ test('sync Telegram: transkrip DM nyata, kirim dari RPG melanjutkan sesi Telegra
   assert.equal(call.hermesSession, 'tg_aktif', 'melanjutkan sesi Telegram aktif, bukan sesi RPG baru');
   const pending = (await api('GET', `/api/conversations/${conv.id}`, { cookie: s.cookie })).json;
   assert.ok(pending.turns.at(-1).pending && pending.turns.at(-1).text === 'Kalau perak?', 'pesan RPG tampil menunggu');
+  assert.equal(pending.typing, true, 'agen sedang mengerjakan = mengetik');
+  assert.ok(['sent', 'delivered'].includes(pending.turns.at(-1).receipt), 'pesan menunggu belum centang dua biru');
+  const pres = (await api('GET', '/api/presence', { cookie: s.cookie })).json.agents.find((x) => x.profile === 'leo');
+  assert.equal(pres.typing, true, 'daftar agen juga menampilkan mengetik');
   const t = clock() / 1000;
   execFileSync('sqlite3', [db, `insert into messages(session_id,role,content,timestamp) values
     ('tg_aktif','user','Kalau perak?${'\n\n'}[Catatan sistem dari kantor RPG, bukan bagian pesan Budi] dst',${t}),
@@ -379,6 +383,9 @@ test('sync Telegram: transkrip DM nyata, kirim dari RPG melanjutkan sesi Telegra
   const last = done.turns.at(-1);
   assert.equal(last.text, 'Perak juga naik.');
   assert.equal(last.options?.length, 3, 'tiga pilihan tetap ada pada balasan terbaru');
+  assert.equal(done.typing, false, 'selesai membalas = berhenti mengetik');
+  assert.equal(rpgOwner.receipt, 'read', 'dibalas = centang dua biru');
+  assert.equal(done.lastSeen, last.at);
   await waitFor(() => posts.length === 1);
   assert.equal(posts[0].profile, 'leo');
   assert.ok(posts[0].text.includes('Kalau perak?') && posts[0].text.includes('Perak juga naik.'), 'balasan RPG ikut ke Telegram');

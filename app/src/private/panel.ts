@@ -4,6 +4,7 @@
 // dan tombol kirim tidak ada: halaman publik tidak bisa memerintah agen.
 import { $, el, openDialog, toast } from '../ui/dom';
 import { DEMO_BOARDS } from './demo';
+import { clock, dayLabel, ping, quoteFor, RECEIPT, sameDay, setTitleCount, statusLine, unlockAudio } from './chat-ui';
 import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type Presence, type HandoffItem, type TaskItem, type LogItem, type Turn } from './api';
 
 type Tab = 'handoffs' | 'tasks' | 'log';
@@ -73,9 +74,14 @@ export class PrivatePanel {
     if (!this.authenticated) { this.onPresence?.(null); return; }
     try {
       const agents = (await api.presence()).agents;
+      const before = this.presenceList.length ? this.unreadTotal() : null;
       this.presenceList = agents;
       this.onPresence?.(agents);
       this.onUnreadChange?.();
+      const after = this.unreadTotal();
+      setTitleCount(after);
+      if (before !== null && after > before) ping();
+      this.refreshHeader();
     } catch (e) {
       if (e instanceof ApiError && e.status === 401) { this.me = null; this.onPresence?.(null); return; }
     }
@@ -111,9 +117,9 @@ export class PrivatePanel {
     const list = el('ul', { class: 'agent-pick', 'aria-label': 'Pilih agen' });
     for (const a of this.agents) {
       const p = presence.find((x) => x.profile === a.profile);
-      const state = p?.status === 'working' ? 'Bekerja' : p?.status === 'waiting' ? 'Menunggu kamu' : p?.status === 'unknown' ? 'Tidak diketahui' : 'Siap';
+      const state = p?.typing ? 'mengetik…' : p?.status === 'working' ? 'Bekerja' : p?.status === 'waiting' ? 'Menunggu kamu' : p?.status === 'unknown' ? 'Tidak diketahui' : 'Siap';
       const btn = el('button', { type: 'button', class: 'btn agent-pick-btn', 'data-agent': a.profile });
-      btn.append(el('span', { class: 'agent-pick-name' }, a.name), el('span', { class: 'muted small' }, a.lane),
+      btn.append(el('span', { class: 'agent-pick-name' }, a.name), el('span', { class: 'muted small' }, p?.typing ? 'sedang mengetik…' : statusLine(false, p?.lastSeen) || a.lane),
         el('span', { class: `tag ${p?.status === 'working' ? 'live' : p?.status === 'waiting' ? 'warn' : 'demo'}` }, state));
       const unread = this.unreadFor(a.profile);
       if (unread) btn.append(el('span', { class: 'unread-badge', 'aria-label': `${unread} pesan belum dibaca` }, unread > 9 ? '9+' : String(unread)));
@@ -376,12 +382,14 @@ export class PrivatePanel {
       try {
         const next = await api.conversationById(this.conv.id);
         const sig = (c: Conversation) => JSON.stringify([c.turns.map((t) => [t.id, t.pending, !!t.options]), c.tasks.map((t) => t.status), c.cursor]);
-        const changed = sig(next) !== sig(this.conv);
+        const changed = sig(next) !== sig(this.conv) || next.typing !== this.conv.typing;
+        const lastAgent = (c: Conversation) => [...c.turns].reverse().find((t) => t.role === 'agent')?.id;
+        if (lastAgent(next) && lastAgent(next) !== lastAgent(this.conv)) ping();
         this.conv = next;
         if (changed) this.renderConversation(true);
       } catch { /* keep last view; next tick retries */ }
       this.schedulePoll();
-    }, busy ? 2000 : 5000);
+    }, busy || this.conv?.typing ? 2000 : 5000);
   }
 
   private renderConversation(keepInput = false, opening = false) {
@@ -397,6 +405,7 @@ export class PrivatePanel {
     $('agent-title').textContent = `${c.agent} · bicara & beri tugas`;
     const body = $('agent-body');
     body.replaceChildren();
+    body.append(el('p', { class: `chat-status${c.typing ? ' typing' : ''}`, id: 'agent-status', role: 'status', 'aria-live': 'polite' }, statusLine(c.typing, c.lastSeen)));
     const info = el('dl', { class: 'info-grid' });
     const mode = c.channel === 'telegram' ? 'Sama dengan chat Telegram' : c.channel === 'telegram-unavailable' ? 'Telegram tidak terbaca' : 'Khusus RPG';
     for (const [k, v] of [['Profil', c.profile], ['Lane', c.lane ?? '-'], ['Percakapan', mode]]) info.append(el('dt', {}, k), el('dd', {}, v));
@@ -409,12 +418,20 @@ export class PrivatePanel {
     if (opening) this.readMarkAtOpen = readMark(c.profile);
     const mark = this.readMarkAtOpen;
     let divider: HTMLElement | null = null;
+    let prevAt: number | null = null;
     for (const t of c.turns) {
+      if (prevAt === null || !sameDay(prevAt, t.at)) log.append(el('li', { class: 'day-divider', role: 'separator' }, dayLabel(t.at)));
+      prevAt = t.at;
       if (!divider && mark !== null && t.role !== 'owner' && t.at > mark) {
         divider = el('li', { class: 'unread-divider', role: 'separator' }, 'Belum dibaca');
         log.append(divider);
       }
       log.append(this.turnView(t));
+    }
+    if (c.typing) {
+      const bubble = el('li', { class: 'turn agent typing-bubble', 'aria-label': `${c.agent} sedang mengetik` });
+      bubble.append(el('span', { class: 'dots', 'aria-hidden': 'true' }, '•••'));
+      log.append(bubble);
     }
     if (!c.turns.length) log.append(el('li', { class: 'muted' }, `Belum ada pesan. Tulis tugas pertama untuk ${c.agent}.`));
     body.append(log);
@@ -486,19 +503,58 @@ export class PrivatePanel {
     const c = this.conv;
     if (!c) return;
     const last = Math.max(0, ...c.turns.filter((t) => t.role !== 'owner').map((t) => t.at));
-    if (last > (readMark(c.profile) ?? 0)) { setReadMark(c.profile, last); this.onUnreadChange?.(); }
+    if (last > (readMark(c.profile) ?? 0)) { setReadMark(c.profile, last); this.onUnreadChange?.(); setTitleCount(this.unreadTotal()); }
   }
 
   private turnView(t: Turn): HTMLElement {
-    const li = el('li', { class: `turn ${t.role}${t.pending ? ' pending' : ''}` });
+    const li = el('li', { class: `turn ${t.role}${t.pending ? ' pending' : ''}`, 'data-turn': t.id });
     const who = t.role === 'owner' ? 'Kamu' : t.role === 'system' ? 'Sistem' : this.conv!.agent ?? 'Agen';
     const where = t.pending ? ' · dari RPG, menunggu' : t.via === 'rpg' ? ' · dari RPG' : t.via === 'telegram' ? ' · Telegram' : '';
-    li.append(el('span', { class: 'who' }, `${who}${where} · ${fmtTime(t.at)}`));
+    li.append(el('span', { class: 'who' }, `${who}${where}`));
     const p = el('div', { class: 'text' });
     p.textContent = t.text; // agent output is untrusted: rendered as text, never HTML
     li.append(p);
+    const meta = el('span', { class: 'meta' });
+    meta.append(el('time', { datetime: new Date(t.at).toISOString(), title: fmtTime(t.at) }, clock(t.at)));
+    if (t.receipt) {
+      const r = RECEIPT[t.receipt];
+      meta.append(el('span', { class: `receipt ${t.receipt}`, title: r.label, 'aria-label': r.label, 'data-receipt': t.receipt }, r.mark));
+    }
+    li.append(meta);
+    if (t.role !== 'system') {
+      const acts = el('span', { class: 'turn-actions' });
+      const reply = el('button', { type: 'button', class: 'btn link small', 'aria-label': `Balas pesan ${who}` }, 'Balas');
+      reply.addEventListener('click', () => this.replyTo(who, t.text));
+      const copy = el('button', { type: 'button', class: 'btn link small', 'aria-label': `Salin pesan ${who}` }, 'Salin');
+      copy.addEventListener('click', () => { void navigator.clipboard?.writeText(t.text).then(() => toast('Pesan disalin.'), () => toast('Tidak bisa menyalin di browser ini.')); });
+      acts.append(reply, copy);
+      li.append(acts);
+    }
     if (t.optionsExpired) li.append(el('span', { class: 'muted small' }, 'Pilihan di giliran ini sudah tidak berlaku.'));
     return li;
+  }
+
+  /** Opens the manual box with a quote of the message, like Telegram's reply. */
+  private replyTo(who: string, text: string) {
+    const manual = document.getElementById('agent-manual');
+    const ta = document.getElementById('agent-manual-text') as HTMLTextAreaElement | null;
+    if (!manual || !ta) return;
+    manual.hidden = false;
+    document.getElementById('agent-manual-toggle')?.setAttribute('aria-expanded', 'true');
+    ta.value = quoteFor(who, text) + ta.value.replace(/^↩ Membalas[^\n]*\n\n/, '');
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  }
+
+  /** Keeps the open chat's "typing / last seen" line in step with presence ticks. */
+  private refreshHeader() {
+    const c = this.conv;
+    const line = document.getElementById('agent-status');
+    if (!c || !line) return;
+    const p = this.presenceList.find((x) => x.profile === c.profile);
+    const typing = c.typing || p?.typing;
+    line.textContent = statusLine(typing, c.lastSeen ?? p?.lastSeen);
+    line.classList.toggle('typing', !!typing);
   }
 
   private approvalView(id: string, taskId: string, action: string, impact: string, rollback: string, expiresAt: number): HTMLElement {
@@ -526,6 +582,7 @@ export class PrivatePanel {
     if (payload.text !== undefined && !payload.text.trim()) { toast('Pesan kosong.'); return; }
     this.sending = true;
     btn.disabled = true;
+    unlockAudio();
     this.pendingIdem ??= newIdem();
     try {
       const r = await api.send(this.conv.id, { ...payload, idem: this.pendingIdem });
