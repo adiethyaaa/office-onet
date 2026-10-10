@@ -6,13 +6,14 @@ Pemilik produk: Budi. Penulis v1.0: Max (Air Buddy). Badan: PRIBADI. Tanggal rev
 
 Status dokumen (2026-10-10): M4 dan M5 dibangun dan diuji di branch `max/m4-m5-hub` (bagian 0C). Acceptance otomatis untuk REQ-BOARD-01..05, REQ-CMD-01..05, REQ-CHOICE-01, REQ-MANUAL-01 dan REQ-AUTH-01 lulus; hasil di `docs/evidence/M45/`. Hal yang tetap butuh manusia (HP fisik, pembaca layar nyata, sign-off Budi) tercatat di `docs/MAX-CLOSURE.md`. Persetujuan fitur di PRD ini bukan izin mengubah produksi ISP.
 
-Catatan baseline: angka dan audit M0 pada bagian berikut adalah riwayat desain, bukan inventaris host terkini. AutoCAD native sudah menghasilkan DWG sesuai laporan closure, tetapi plot/font masih terbuka. Max menjadi pelaksana saat ini sesuai arahan Budi; penugasan Claude pada baseline adalah riwayat, bukan instruksi menjalankan worker baru.
+Catatan baseline: angka dan audit M0 pada bagian berikut adalah riwayat desain, bukan inventaris host terkini. AutoCAD native sudah menghasilkan DWG sesuai laporan closure; plot PDF native dikeluarkan dari lingkup (keputusan Budi 2026-10-10, bagian 0C). Max menjadi pelaksana saat ini sesuai arahan Budi; penugasan Claude pada baseline adalah riwayat, bukan instruksi menjalankan worker baru.
 
 ## 0C. Pelaksanaan M4 + M5 (2026-10-10)
 
 - Budi memilih M4 + M5 sekaligus dan login sandi + 2FA di aplikasi sendiri. Keputusan terbuka di 0A dikunci di ADR-016: backend di Mac mini lewat Tailscale di belakang nginx employee-rpg, transport `hermes chat --oneshot` per profil, retensi 30/90 hari.
 - REQ-AUTH-01 (baru): Sebagai Budi, saya login dengan sandi + kode 2FA. AC: sandi salah, kode salah, atau kode yang sudah dipakai ditolak; 5 kali gagal dalam 15 menit dikunci; akun dibuat lewat tautan setup sekali pakai; sandi tidak pernah tersimpan polos dan rahasia tidak dikirim ke browser; Keluar mematikan sesi.
 - Papan dibuka dari tombol `Papan kerja` (B), dari directory, atau dari papan di dunia (FX-L1-050 handoff, FX-L1-023 dan FX-L2-034 pekerjaan, FX-L1-065 log). Agen dibuka dari karakter (`Bicara & beri tugas`) atau directory (`Beri tugas`); Atlas, Clara dan Stella yang belum punya karakter ada di directory.
+- Keputusan Budi 2026-10-10: plot PDF native AutoCAD dikeluarkan dari lingkup karena tidak ada akun Autodesk. DWG native (15 sheet, reopen + AUDIT) tetap; PDF vektor dari generator menjadi PDF resmi. REQ-BLUEPRINT-01 tidak lagi menunggu plot native.
 - Tingkat model dari log tangga-model (18.3) belum ditampilkan: log itu belum mencatat tugas Kanban per baris. Tidak memblokir AC.
 
 ## 0B. Perubahan v1.1 (2026-10-05)

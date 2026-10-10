@@ -85,3 +85,9 @@ Yang masih terbuka setelah M4/M5 (tidak bisa ditutup pelaksana):
 1. Setup akun owner: Budi membuka tautan setup sekali pakai, memindai QR, dan memilih sandi. Max tidak memegang sandi atau seed.
 2. Uji perintah nyata pertama dari HP Budi, termasuk satu approval.
 3. Item lama: plot native AutoCAD, screen reader/HP pada fitur baru, model/datasheet ICT, sign-off manusia.
+
+## Keputusan lingkup CAD, 2026-10-10
+
+Budi tidak punya akun Autodesk, dan AutoCAD 2025 di Mac mini menolak plot karena belum login. Atas keputusan Budi ("hapus"), plot PDF native AutoCAD dikeluarkan dari lingkup PRD. DWG native 15 sheet (reopen, AUDIT 0 error, mm, entitas cocok) tetap berlaku; PDF vektor generator menjadi PDF resmi. Matriks: 63/63 bagian terverifikasi.
+
+Masih terbuka di luar matriks: uji di HP fisik, VoiceOver nyata, dan sign-off manusia.

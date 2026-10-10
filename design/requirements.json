@@ -302,14 +302,15 @@
      "status": "terverifikasi"
     },
     {
-     "scope": "M0: capability CAD dilaporkan; native DWG",
+     "scope": "M0: capability CAD dilaporkan; native DWG (15 DWG R2018 AutoCAD 2025: reopen, AUDIT 0 error, unit mm, jumlah entitas cocok DXF). Plot PDF native AutoCAD dikeluarkan dari lingkup atas keputusan Budi 2026-10-10 (tanpa akun Autodesk); PDF resmi = PDF vektor generator",
      "tests": [
       "docs/evidence/M0/capability-report.md"
      ],
      "evidence": [
-      "docs/evidence/M0/capability-report.md"
+      "docs/evidence/M0/capability-report.md",
+      "docs/evidence/MAX/native-dwg/report.json"
      ],
-     "status": "tidak didukung"
+     "status": "terverifikasi"
     },
     {
      "scope": "M1: A-101/A-102 DXF+PDF konsisten dengan dataset (reopen, audit, luas, ID pintu/fixture, skala)",

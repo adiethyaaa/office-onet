@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit bc9572d; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit bd30e4c; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -24,7 +24,7 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-STUDIO-01 | M3 | M3: Office Studio edit/undo/redo/save/load/publish/rollback, validasi overlap/pintu/navigasi, import terjaga | app/tests/unit/studio.test.ts<br>app/tests/e2e/studio.spec.ts | docs/evidence/M3/vitest.txt<br>docs/evidence/M3/e2e-all.txt<br>docs/evidence/M3/screenshots/desktop-studio.jpg | terverifikasi |
 | REQ-AVATAR-01 | M3 | M3: Avatar Studio preview/save/reset, persist, fallback default untuk pilihan tanpa aset | app/tests/e2e/studio.spec.ts | docs/evidence/M3/e2e-all.txt<br>docs/evidence/M3/screenshots/desktop-avatar-studio.jpg | terverifikasi |
 | REQ-BLUEPRINT-01 | M0/M3 | M0: schema satu sumber, ruang tanpa overlap/gap, pintu di dinding bersama, fixture dalam ruang | tools/validate_world.py<br>tests/py/test_world.py | docs/evidence/M0/validate-world.json<br>docs/evidence/M0/pytest.txt | terverifikasi |
-| REQ-BLUEPRINT-01 | M0/M3 | M0: capability CAD dilaporkan; native DWG | docs/evidence/M0/capability-report.md | docs/evidence/M0/capability-report.md | tidak didukung |
+| REQ-BLUEPRINT-01 | M0/M3 | M0: capability CAD dilaporkan; native DWG (15 DWG R2018 AutoCAD 2025: reopen, AUDIT 0 error, unit mm, jumlah entitas cocok DXF). Plot PDF native AutoCAD dikeluarkan dari lingkup atas keputusan Budi 2026-10-10 (tanpa akun Autodesk); PDF resmi = PDF vektor generator | docs/evidence/M0/capability-report.md | docs/evidence/M0/capability-report.md<br>docs/evidence/MAX/native-dwg/report.json | terverifikasi |
 | REQ-BLUEPRINT-01 | M0/M3 | M1: A-101/A-102 DXF+PDF konsisten dengan dataset (reopen, audit, luas, ID pintu/fixture, skala) | tests/py/test_cad.py | docs/evidence/M1/cad-pytest.txt<br>drawings/register.json | terverifikasi |
 | REQ-BLUEPRINT-01 | M0/M3 | M3: 15 sheet DXF+PDF, paket gabungan; GLB bangunan konsisten dengan dataset (dinding, bukaan, slab, axis) | tests/py/test_cad_m3.py<br>blender/building/validate_building.py<br>tests/py/test_building.py | docs/evidence/M3/cad-pytest.txt<br>docs/evidence/M3/building-validate.json<br>drawings/register.json | terverifikasi |
 | REQ-BLUEPRINT-01 | M0/M3 | P03: arah bukaan pintu dan 39 jendela konsep satu sumber di world.json, dibaca CAD (denah, tampak, potongan, jadwal pintu/jendela), Blender (bukaan, kaca, daun pintu) dan runtime (dinding terpotong jendela) | tests/py/test_openings.py<br>tests/py/test_cad_openings.py<br>tests/py/test_building.py<br>blender/building/validate_building.py<br>app/tests/unit/openings.test.ts | docs/evidence/HARDENING/pytest.txt<br>docs/evidence/HARDENING/pytest-cad.txt<br>docs/evidence/HARDENING/blender-building-validate.txt<br>docs/evidence/HARDENING/vitest.txt | terverifikasi |
@@ -69,7 +69,7 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-CMD-05 | M5 | Idempotency key: klik ganda dan kirim ulang tidak membuat tugas kedua; gagal dan unknown ditampilkan jujur tanpa retry otomatis | server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M45/server-test.txt<br>docs/evidence/M45/e2e-private.txt | terverifikasi |
 | REQ-AUTH-01 | M4/M5 | Login sandi scrypt + TOTP RFC 6238, setup sekali pakai, rate limit, logout | server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M45/server-test.txt<br>docs/evidence/M45/e2e-private.txt | terverifikasi |
 
-Ringkasan status bagian: terverifikasi 62, tidak didukung 1.
+Ringkasan status bagian: terverifikasi 63.
 
 ## Story, AC, failure dan boundary
 
