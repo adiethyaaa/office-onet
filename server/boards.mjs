@@ -94,6 +94,36 @@ function tailTools(file, sinceMs) {
   return out;
 }
 
+export const PRESENCE_ACTIVE_MS = 5 * 60_000;
+
+/**
+ * What each roster agent is really doing right now, for the NPCs. Order of
+ * evidence: an RPG task in flight, a running Kanban task, tool calls in the
+ * profile's agent.log in the last 5 minutes. No evidence = idle.
+ * `rpg` is [{profile, status, message}] from the dispatcher.
+ */
+export function buildPresence(src, rpg = [], now = Date.now()) {
+  let kanban = null;
+  try {
+    kanban = sql(src.kanbanDb, "select assignee,status,title from tasks where status in ('running','claimed','blocked') order by created_at desc limit 200");
+  } catch { kanban = null; }
+  const since = now - PRESENCE_ACTIVE_MS;
+  return ROSTER.map((r) => {
+    const base = { profile: r.profile, name: r.name, actorId: r.actorId };
+    const mine = rpg.filter((t) => t.profile === r.profile);
+    const w = mine.find((t) => t.status === 'working' || t.status === 'queued');
+    if (w) return { ...base, status: 'working', source: 'perintah dari RPG', summary: clip(scrub(w.message), 70) };
+    if (mine.some((t) => t.status === 'waiting_owner')) return { ...base, status: 'waiting', source: 'perintah dari RPG', summary: 'Menunggu persetujuanmu' };
+    const k = kanban?.filter((t) => t.assignee === r.profile) ?? [];
+    const run = k.find((t) => t.status === 'running' || t.status === 'claimed');
+    if (run) return { ...base, status: 'working', source: 'Kanban', summary: clip(scrub(run.title), 70) };
+    const tools = tailTools(src.logFile(r.profile), since);
+    if (tools.length) return { ...base, status: 'working', source: 'agent.log', summary: `Aktif di Hermes (${tools.length} langkah, 5 menit terakhir)` };
+    if (kanban === null) return { ...base, status: 'unknown', source: 'Kanban tidak terbaca', summary: '' };
+    return { ...base, status: 'idle', source: 'Kanban + agent.log', summary: k.length ? `${k.length} tugas diblokir` : '' };
+  });
+}
+
 /**
  * Builds the three boards. Each board carries its own source/observedAt and
  * an `ok` flag; a source that fails yields ok=false, never an empty success.

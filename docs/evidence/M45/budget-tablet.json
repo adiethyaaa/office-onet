@@ -1,14 +1,14 @@
 {
  "label": "fixed route benchmark; client-specific measurement",
- "seconds": 25.1,
- "frames": 301,
- "fpsAverage": 12,
- "frameMsMedian": 77.3,
- "frameMsP95": 120.8,
- "frameMsMax": 519.8,
- "framesOver33ms": 296,
- "dropRate": 0.983,
- "distanceM": 33,
+ "seconds": 25,
+ "frames": 257,
+ "fpsAverage": 10.3,
+ "frameMsMedian": 83.9,
+ "frameMsP95": 215,
+ "frameMsMax": 999.7,
+ "framesOver33ms": 253,
+ "dropRate": 0.984,
+ "distanceM": 32.7,
  "floorSwitches": 1,
  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)",
  "lowQuality": true,
@@ -17,7 +17,7 @@
   820,
   1180
  ],
- "jsHeapMB": 42.6,
+ "jsHeapMB": 54.2,
  "stats": {
   "drawCalls": 41,
   "triangles": 133531,
@@ -41,8 +41,8 @@
   "drawCalls": 59,
   "triangles": 226454,
   "at": [
-   11.92894625098094,
-   8.94343820136825
+   11.9456928315696,
+   8.939832179685895
   ],
   "floor": "L1"
  },
@@ -63,6 +63,6 @@
   "gpuRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)"
  },
  "url": "?perf=route&seconds=25",
- "measuredAt": "2026-10-09T19:04:34.020Z",
+ "measuredAt": "2026-10-10T06:20:26.291Z",
  "note": "peak over fixed 25 s route; SwiftShader container, FPS not a device result"
 }

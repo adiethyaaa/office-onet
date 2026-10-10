@@ -93,7 +93,7 @@ before(async () => {
 after(() => { srv.close(); fs.rmSync(tmp, { recursive: true, force: true }); });
 
 test('visitor tanpa login ditolak di semua API privat (AC-CMD-04, REQ-BOARD-04)', async () => {
-  for (const [m, p] of [['GET', '/api/boards'], ['GET', '/api/agents'], ['POST', '/api/conversations'], ['GET', '/api/conversations/conv_abcdefgh'], ['POST', '/api/conversations/conv_abcdefgh/messages'], ['POST', '/api/approvals/appr_abcdefgh'], ['POST', '/api/tasks/task_abcdefgh/cancel']]) {
+  for (const [m, p] of [['GET', '/api/boards'], ['GET', '/api/agents'], ['GET', '/api/presence'], ['POST', '/api/conversations'], ['GET', '/api/conversations/conv_abcdefgh'], ['POST', '/api/conversations/conv_abcdefgh/messages'], ['POST', '/api/approvals/appr_abcdefgh'], ['POST', '/api/tasks/task_abcdefgh/cancel']]) {
     const r = await api(m, p, { body: m === 'POST' ? { profile: 'enterprise', text: 'x', idem: 'aaaaaaaaaa' } : undefined });
     assert.equal(r.status, 401, `${m} ${p}`);
     assert.ok(!/HANDOFF|Villa|enterprise/.test(r.text.replace('Perlu login owner.', '')));
@@ -309,4 +309,17 @@ test('setup owner: tautan sekali pakai, kode wajib benar, lalu tidak berlaku', a
   assert.equal((fs.statSync(path.join(dataDir, 'owner.json')).mode & 0o777), 0o600);
   assert.equal((await fetch(`${b2}/api/setup?t=${t}`, { headers: { 'x-kantor-proxy': PROXY } })).status, 410);
   server.close();
+});
+
+test('presence: status nyata per agen untuk NPC (Kanban running = bekerja, profil pribadi tidak ada)', async () => {
+  const s = await login();
+  const r = await api('GET', '/api/presence', { cookie: s.cookie });
+  assert.equal(r.status, 200);
+  const by = Object.fromEntries(r.json.agents.map((a) => [a.profile, a]));
+  assert.equal(by.finance.status, 'working');
+  assert.equal(by.finance.source, 'Kanban');
+  assert.equal(by.infra.status, 'idle');
+  assert.equal(by.echo.status, 'idle');
+  assert.ok(!('yupus' in by) && !('wealth' in by));
+  assert.doesNotMatch(JSON.stringify(r.json), /\/Users\/|sk-abc/);
 });

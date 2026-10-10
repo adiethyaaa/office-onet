@@ -208,3 +208,28 @@ test('NPC di dunia: Sapa lalu Bicara & beri tugas membuka profil yang benar', as
   await expect(page.locator('#dlg-agent')).toContainText('leo');
   await expect(page.locator('#agent-title')).toContainText('Leo');
 });
+
+test('shortcut C: chat agen tanpa mendatangi NPC; status nyata membuat Leo bekerja di mejanya', async ({ page }, info) => {
+  await wireApi(page);
+  await boot(page);
+  await expect(page.locator('#sim-badge')).toHaveText('SIMULASI: data demo');
+  await page.keyboard.press('c');
+  const dlg = page.locator('#dlg-agent');
+  await expect(dlg).toContainText('hanya untuk owner yang login');
+  await login(page);
+  await expect(page.locator('#agent-title')).toHaveText('Chat agen');
+  const leo = dlg.locator('[data-agent="leo"]');
+  await expect(leo).toContainText('Bekerja'); // Kanban: Render poster E2E, running
+  await expect(dlg.locator('[data-agent="echo"]')).toContainText('Siap');
+  await shot(page, info, 'agent-picker');
+  await dlg.locator('[data-agent="enterprise"]').click();
+  await expect(page.locator('#agent-title')).toContainText('Nova');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#sim-badge')).toHaveText('Status kerja: nyata');
+  // Leo walks to his own desk and keeps typing; the label says he is working.
+  await expect.poll(async () => page.evaluate(() => (window.__kantor!.npcs as () => { id: string; phase: string; activity: string; slot: string | null; workStatus: string }[])().find((n) => n.id === 'ACT-LEO')),
+    { timeout: 60_000 }).toMatchObject({ workStatus: 'working', phase: 'perform', activity: 'desk', slot: 'SL-L1-099-1' });
+  await expect(page.locator('.npc-label.busy', { hasText: 'Leo · bekerja' })).toHaveCount(1);
+  const echo = await page.evaluate(() => (window.__kantor!.npcs as () => { id: string; workStatus: string }[])().find((n) => n.id === 'ACT-ECHO'));
+  expect(echo?.workStatus).toBe('done');
+});

@@ -10,7 +10,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { openStore, RETENTION } from './store.mjs';
 import { loadOwner, verifyPassword, verifyTotp, hashPassword, base32Encode, token } from './auth.mjs';
-import { boardCache, makeSources } from './boards.mjs';
+import { boardCache, buildPresence, makeSources } from './boards.mjs';
 import { ROSTER, byProfile } from './roster.mjs';
 import { checkMessage, LIMITS } from './policy.mjs';
 import { createDispatcher, hermesRunner, TERMINAL } from './dispatcher.mjs';
@@ -25,7 +25,9 @@ export function createServer(cfg) {
   const setupFile = path.join(dataDir, 'setup.json');
   const store = cfg.store ?? openStore(dataDir);
   const now = cfg.now ?? (() => Date.now());
-  const boards = cfg.boards ?? boardCache(makeSources(cfg.home ?? os.homedir()), cfg.boardTtlMs ?? 5000);
+  const sources = makeSources(cfg.home ?? os.homedir());
+  const boards = cfg.boards ?? boardCache(sources, cfg.boardTtlMs ?? 5000);
+  let presenceMemo = { at: 0, value: null };
   const dispatcher = createDispatcher(store, { runner: cfg.runner ?? hermesRunner({ home: cfg.home ?? os.homedir() }), now });
   const q = store.q;
   const purgeTimer = setInterval(() => store.purge(now()), 3600_000);
@@ -153,6 +155,16 @@ export function createServer(cfg) {
   route('GET', /^\/api\/agents$/, {}, (req, res) => {
     const active = q("select profile, status, count(*) n from tasks where status in ('queued','working','blocked','waiting_owner') group by profile, status").all();
     send(res, 200, { agents: ROSTER.map((r) => ({ ...r, tasks: Object.fromEntries(active.filter((a) => a.profile === r.profile).map((a) => [a.status, a.n])) })) });
+  });
+
+  // Real per-agent status for the NPCs (owner only). Cached 4 s: polled every 10 s.
+  route('GET', /^\/api\/presence$/, {}, (req, res) => {
+    const t = now();
+    if (!presenceMemo.value || t - presenceMemo.at > 4000) {
+      const rpg = q("select profile, status, message from tasks where status in ('queued','working','waiting_owner') order by created_at desc").all();
+      presenceMemo = { at: t, value: { observedAt: new Date(t).toISOString(), agents: buildPresence(sources, rpg, t) } };
+    }
+    send(res, 200, presenceMemo.value);
   });
 
   route('POST', /^\/api\/conversations$/, {}, async (req, res) => {

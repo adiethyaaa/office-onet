@@ -12,7 +12,8 @@ import type { Settings } from '../ui/settings';
 import { CameraRig } from './camera';
 import { Input } from './input';
 import { Player } from './player';
-import { ACTIVITY_LABEL, NpcLayer } from './npcs';
+import { ACTIVITY_LABEL, NpcLayer, WORK_LABEL } from './npcs';
+import type { WorkStatus } from '../sim/idle';
 import { DoorController } from '../world/doors';
 import { DoorMeshes } from '../world/door-meshes';
 import dialogueJson from '@design/dialogue.json';
@@ -74,6 +75,27 @@ export class Game {
   onAvatarLoaded: (() => void) | null = null;
   onBoard: ((tab: BoardTab) => void) | null = null;
   onAgent: ((profile: string) => void) | null = null;
+  onAgentPicker: (() => void) | null = null;
+  /** True while the owner is logged in and real presence drives the NPCs. */
+  livePresence = false;
+
+  /**
+   * Real agent status (owner only). Working/waiting agents go to their desk
+   * and type; everything else falls back to the idle simulation.
+   */
+  applyPresence(list: { actorId: string | null; status: string; source: string; summary: string }[] | null) {
+    this.livePresence = list !== null;
+    const map: Record<string, WorkStatus> = { working: 'working', waiting: 'waiting', idle: 'done', unknown: 'unknown' };
+    for (const npc of this.npcs.sim.npcs) {
+      const p = list?.find((a) => a.actorId === npc.id);
+      if (!p) this.npcs.sim.setWork(npc.id, 'unknown', list ? 'tidak ada profil Hermes' : 'tidak ada adapter (demo offline)');
+      else this.npcs.sim.setWork(npc.id, map[p.status] ?? 'unknown', p.source, p.summary);
+    }
+    const badge = $('sim-badge');
+    badge.textContent = list ? 'Status kerja: nyata' : 'SIMULASI: data demo';
+    badge.title = list ? 'Agen yang sedang bekerja duduk dan mengetik di mejanya (Kanban, perintah RPG, agent.log). Aktivitas santai tetap simulasi.' : 'Semua aktivitas dan status adalah fixture demo, bukan data kerja nyata';
+    badge.classList.toggle('live', !!list);
+  }
   studioFocus: THREE.Vector3 | null = null;
   /** world.json fixtures before any local layout was applied */
   readonly baseFixtures: Fixture[];
@@ -270,6 +292,7 @@ export class Game {
       else if (k === 'm') this.toggleDirectory();
       else if (k === 'h') openDialog($('dlg-help') as HTMLDialogElement);
       else if (k === 'b') this.onBoard?.('handoffs');
+      else if (k === 'c') this.onAgentPicker?.();
       else if (k === 'escape' && this.activity) this.endActivity(true);
     };
     $('touch-interact').addEventListener('click', () => this.interact());
@@ -532,13 +555,17 @@ export class Game {
       if (profile) this.onAgent?.(profile);
     });
     const room = this.world.rooms.find((r) => r.floor === npc.floor && insidePoly(npc.pos, r.polygon));
+    const busy = npc.workStatus === 'working' || npc.workStatus === 'waiting';
+    const work = !this.livePresence || npc.workStatus === 'unknown' ? `tidak diketahui: ${npc.workStatusSource}`
+      : busy ? `${WORK_LABEL[npc.workStatus]}${npc.workSummary ? `: ${npc.workSummary}` : ''} (${npc.workStatusSource})`
+      : `tidak ada tugas berjalan (${npc.workStatusSource})${npc.workSummary ? `, ${npc.workSummary}` : ''}`;
     const body = [
-      el('p', { class: 'sim-note' }, 'SIMULASI: persona virtual, dialog fiksi statis.'),
+      el('p', { class: 'sim-note' }, this.livePresence ? 'Status kerja dari Hermes. Dialog dan aktivitas santai tetap fiksi.' : 'SIMULASI: persona virtual, dialog fiksi statis.'),
       quote,
       dlRows([
         ['Peran', npc.role],
-        ['Aktivitas tampilan', `${ACTIVITY_LABEL[npc.activity] ?? npc.activity} (simulasi)`],
-        ['Status kerja', `tidak diketahui: ${npc.workStatusSource}`],
+        ['Aktivitas tampilan', `${ACTIVITY_LABEL[npc.activity] ?? npc.activity}${busy && this.livePresence ? '' : ' (simulasi)'}`],
+        ['Status kerja', work],
         ['Lokasi', room ? room.name : '-'],
         ['Jam simulasi', this.npcs.sim.clockLabel()],
       ]),

@@ -4,7 +4,7 @@
 // dan tombol kirim tidak ada: halaman publik tidak bisa memerintah agen.
 import { $, el, openDialog, toast } from '../ui/dom';
 import { DEMO_BOARDS } from './demo';
-import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type HandoffItem, type TaskItem, type LogItem, type Turn } from './api';
+import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type Presence, type HandoffItem, type TaskItem, type LogItem, type Turn } from './api';
 
 type Tab = 'handoffs' | 'tasks' | 'log';
 const STATUS_LABEL: Record<string, string> = {
@@ -33,7 +33,67 @@ export class PrivatePanel {
   private focusTask: string | null = null;
   private stale: string | null = null;
 
+  private presenceTimer = 0;
+  /** Receives real agent status while logged in; null = back to simulation. */
+  onPresence: ((agents: Presence[] | null) => void) | null = null;
+
   constructor(private onOpenChange?: (open: boolean) => void) {}
+
+  /** Polls /api/presence every 10 s while logged in; stops and resets on logout. */
+  async startPresence(): Promise<void> {
+    window.clearTimeout(this.presenceTimer);
+    if (!this.me) await this.refreshMe();
+    if (!this.authenticated) { this.onPresence?.(null); return; }
+    try { this.onPresence?.((await api.presence()).agents); } catch (e) {
+      if (e instanceof ApiError && e.status === 401) { this.me = null; this.onPresence?.(null); return; }
+    }
+    this.presenceTimer = window.setTimeout(() => void this.startPresence(), document.hidden ? 30_000 : 10_000);
+  }
+
+  private loggedIn() { this.me = null; void this.startPresence(); }
+  private loggedOut() { window.clearTimeout(this.presenceTimer); this.onPresence?.(null); }
+
+  /** Shortcut (C / HUD): pick any agent and chat, no walking to the NPC. */
+  async openPicker(opener?: HTMLElement | null) {
+    await this.refreshMe();
+    const dlg = $('dlg-agent') as HTMLDialogElement;
+    $('agent-title').textContent = 'Chat agen';
+    const body = $('agent-body');
+    body.replaceChildren();
+    if (!this.authenticated) {
+      body.append(el('p', {}, 'Chat dengan agen nyata hanya untuk owner yang login.'));
+      body.append(this.loginForm(() => void this.openPicker(opener)));
+      if (!dlg.open) openDialog(dlg, opener);
+      return;
+    }
+    let presence: Presence[] = [];
+    try {
+      this.agents = (await api.agents()).agents;
+      presence = (await api.presence()).agents;
+    } catch (e) {
+      body.append(el('p', { class: 'warn', role: 'alert' }, `Daftar agen tidak dapat dibuka: ${(e as Error).message}`));
+      if (!dlg.open) openDialog(dlg, opener);
+      return;
+    }
+    const list = el('ul', { class: 'agent-pick', 'aria-label': 'Pilih agen' });
+    for (const a of this.agents) {
+      const p = presence.find((x) => x.profile === a.profile);
+      const state = p?.status === 'working' ? 'Bekerja' : p?.status === 'waiting' ? 'Menunggu kamu' : p?.status === 'unknown' ? 'Tidak diketahui' : 'Siap';
+      const btn = el('button', { type: 'button', class: 'btn agent-pick-btn', 'data-agent': a.profile });
+      btn.append(el('span', { class: 'agent-pick-name' }, a.name), el('span', { class: 'muted small' }, a.lane),
+        el('span', { class: `tag ${p?.status === 'working' ? 'live' : p?.status === 'waiting' ? 'warn' : 'demo'}` }, state));
+      if (p?.summary) btn.title = p.summary;
+      btn.addEventListener('click', () => void this.openAgent(a.profile, opener));
+      const li = el('li'); li.append(btn); list.append(li);
+    }
+    body.append(el('p', { class: 'muted small' }, 'Pilih agen untuk chat atau memberi tugas. Tombol C membuka daftar ini dari mana saja.'), list);
+    if (!dlg.open) {
+      openDialog(dlg, opener);
+      this.onOpenChange?.(true);
+      dlg.addEventListener('close', () => { window.clearTimeout(this.pollTimer); this.onOpenChange?.(false); }, { once: true });
+    }
+    (list.querySelector('button') as HTMLButtonElement | null)?.focus();
+  }
 
   get authenticated() { return !!this.me?.authenticated; }
 
@@ -82,7 +142,7 @@ export class PrivatePanel {
       : `Diamati ${fmtTime(Date.parse(b.observedAt))} WITA. Baca-saja; ubah tugas tetap lewat bot.`));
     if (!demo) {
       const out = el('button', { type: 'button', class: 'btn link', id: 'btn-logout' }, 'Keluar');
-      out.addEventListener('click', async () => { try { await api.logout(); } catch { /* session already gone */ } this.me = null; toast('Sudah keluar.'); void this.openBoards(this.tab); });
+      out.addEventListener('click', async () => { try { await api.logout(); } catch { /* session already gone */ } this.me = null; this.loggedOut(); toast('Sudah keluar.'); void this.openBoards(this.tab); });
       head.append(out);
     }
     body.append(head);
@@ -229,6 +289,7 @@ export class PrivatePanel {
       const fd = new FormData(form);
       try {
         await api.login(String(fd.get('username')), String(fd.get('password')), String(fd.get('code')));
+        this.loggedIn();
         await this.refreshMe();
         toast('Login owner berhasil.');
         after();
@@ -396,6 +457,7 @@ export class PrivatePanel {
       else toast(r.duplicate ? 'Sudah terkirim sebelumnya (tidak dikirim dua kali).' : 'Diterima server. Belum berarti selesai.', 3000);
       this.renderConversation();
       this.schedulePoll();
+      void this.startPresence(); // the NPC heads for its desk now, not on the next tick
     } catch (e) {
       // 4xx: the server decided; a new attempt is a new intent. Network
       // errors keep the key so a retry cannot create a second task.

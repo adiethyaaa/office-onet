@@ -15,9 +15,14 @@ import { ACTOR_PROFILE } from './game/game';
 
 // Private panel (boards + agent commands) is fetched on first use.
 let panel: PrivatePanel | null = null;
-const loadPanel = () => import('./private/panel').then((m) => (panel ??= new m.PrivatePanel()));
+let onPresence: PrivatePanel['onPresence'] = null;
+const loadPanel = () => import('./private/panel').then((m) => {
+  if (!panel) { panel = new m.PrivatePanel(); panel.onPresence = onPresence; }
+  return panel;
+});
 const openBoards = (tab: 'handoffs' | 'tasks' | 'log' = 'handoffs') => void loadPanel().then((p) => p.openBoards(tab, document.activeElement as HTMLElement));
 const openAgent = (profile: string) => void loadPanel().then((p) => p.openAgent(profile, document.activeElement as HTMLElement));
+const openPicker = () => void loadPanel().then((p) => p.openPicker(document.activeElement as HTMLElement));
 
 const world = worldJson as unknown as World;
 const walls = wallsJson as unknown as DerivedWalls;
@@ -122,6 +127,7 @@ function boot() {
     enterFallback(reason);
     wireSettings(null, settings);
     $('btn-directory').addEventListener('click', showFallbackDirectory);
+    $('btn-chat').addEventListener('click', openPicker);
     return;
   }
   let game: Game;
@@ -157,11 +163,20 @@ function boot() {
   window.addEventListener('kantor:fallback', (e) => enterFallback((e as CustomEvent<string>).detail));
   game.onBoard = openBoards;
   game.onAgent = openAgent;
+  game.onAgentPicker = openPicker;
+  $('btn-chat').addEventListener('click', openPicker);
+  onPresence = (list) => game.applyPresence(list);
+  // Owner already logged in (cookie): start real status without opening a panel.
+  void fetch('api/me', { credentials: 'same-origin', cache: 'no-store' })
+    .then((r) => (r.ok && (r.headers.get('content-type') ?? '').includes('json') ? r.json() : null))
+    .then((me: { authenticated?: boolean } | null) => { if (me?.authenticated) void loadPanel().then((p) => p.startPresence()); })
+    .catch(() => { /* no backend: simulation only */ });
   game.renderDirectory();
   game.start();
   window.__kantor = {
     openBoards,
     openAgent,
+    openPicker,
     mode: 'world',
     state: () => ({ floor: game.player.floor, pos: game.player.pos, facing: game.player.facing, room: game.roomId, visitor: game.settings.visitor, avatarPlaceholder: game.player.avatar.isPlaceholder, clips: game.player.avatar.clipNames, recoveries: game.player.stuckRecoveries, floorSwitches: game.floorSwitches }),
     stats: () => game.stats(),

@@ -35,6 +35,8 @@ export interface NpcState {
   cooldown: Record<string, number>;
   workStatus: WorkStatus;
   workStatusSource: string;
+  /** Short real task summary from the private backend (owner only). */
+  workSummary: string;
   group: string | null;
   speed: number;
   /** id of the agent this NPC is waiting for (player or NPC), null when walking freely */
@@ -193,7 +195,7 @@ export class IdleSim {
       id: a.id, name: a.displayName, role: a.role, floor, pos: [start[0], start[1]], facing: seat?.facing ?? 90,
       phase: 'choose', activity: 'idle', slot: null, path: [], pathIndex: 0, via: null, until: 0,
       lastProgressAt: 0, lastPos: [start[0], start[1]], failures: 0, recentActivities: [], cooldown: {},
-      workStatus: 'unknown', workStatusSource: 'tidak ada adapter (demo offline)', group: null,
+      workStatus: 'unknown', workStatusSource: 'tidak ada adapter (demo offline)', workSummary: '', group: null,
       speed: 1.3 + this.rand() * 0.25, yieldTo: null, yieldSince: 0, holdUntil: 0, resumeTo: null, stats: { activities: {}, recoveries: 0, cancelled: 0, distance: 0 },
     };
   }
@@ -225,6 +227,15 @@ export class IdleSim {
 
   /** Utility selection; evaluated only when an NPC needs a new activity. */
   private choose(npc: NpcState): void {
+    if (this.atWork(npc)) {
+      const desk = this.deskSlot(npc);
+      if (desk && this.assign(npc, desk)) return;
+      // Desk taken or unreachable: work in place rather than wander off.
+      npc.phase = 'perform';
+      npc.activity = 'idle';
+      npc.until = this.time + 5;
+      return;
+    }
     const actor = this.world.actors.find((a) => a.id === npc.id)!;
     const pref = actor.rolePreference;
     const working = this.workHours();
@@ -304,6 +315,37 @@ export class IdleSim {
     return true;
   }
 
+  /**
+   * Real status from the private backend. An NPC whose agent is really
+   * working (or waiting on the owner) drops any leisure activity and sits at
+   * its own desk until the status changes; idle simulation resumes after.
+   */
+  setWork(id: string, status: WorkStatus, source: string, summary = ''): void {
+    const npc = this.npcs.find((n) => n.id === id);
+    if (!npc) return;
+    const was = npc.workStatus;
+    npc.workStatus = status;
+    npc.workStatusSource = source;
+    npc.workSummary = summary;
+    if (!this.atWork(npc) || was === status) return;
+    this.log.push({ t: this.time, npc: id, event: 'work', detail: status });
+    if (npc.phase === 'paused') return; // talking to the CEO; resume() heads for the desk
+    if (npc.activity === 'desk' && (npc.phase === 'perform' || npc.phase === 'travel')) return;
+    if (npc.group) npc.group = null;
+    this.release(npc, 'real work');
+    npc.phase = 'choose';
+  }
+
+  /** Agent is busy for real: belongs at its desk, not at leisure. */
+  atWork(npc: NpcState): boolean {
+    return npc.workStatus === 'working' || npc.workStatus === 'waiting';
+  }
+
+  private deskSlot(npc: NpcState): ActivitySlot | undefined {
+    const actor = this.world.actors.find((a) => a.id === npc.id);
+    return actor?.homeSeat ? this.slots.find((s) => s.activity === 'desk' && s.fixture === actor.homeSeat) : undefined;
+  }
+
   /** Player started talking to this NPC: highest priority, pause in place. */
   pauseForPlayer(id: string): NpcState | null {
     const npc = this.npcs.find((n) => n.id === id);
@@ -327,6 +369,10 @@ export class IdleSim {
       npc.phase = this.planRoute(npc, slot) ? 'travel' : 'choose';
       if (npc.phase === 'choose') this.release(npc, 'resume without route');
     } else npc.phase = 'choose';
+    if (this.atWork(npc) && npc.activity !== 'desk') {
+      this.release(npc, 'real work after talk');
+      npc.phase = 'choose';
+    }
     npc.lastProgressAt = this.time;
   }
 
@@ -341,7 +387,7 @@ export class IdleSim {
     const rooms = [...byRoom.entries()].filter(([, l]) => l.length >= 2);
     if (!rooms.length) return;
     const [room, list] = rooms[Math.floor(this.rand() * rooms.length)];
-    const free = this.npcs.filter((n) => (n.phase === 'perform' || n.phase === 'choose') && n.group === null && n.activity !== 'talk');
+    const free = this.npcs.filter((n) => (n.phase === 'perform' || n.phase === 'choose') && n.group === null && n.activity !== 'talk' && !this.atWork(n));
     if (free.length < 2) return;
     const size = Math.min(list.length, free.length, 2 + Math.floor(this.rand() * 2), this.activityCap - this.activeCount('chat'));
     if (size < 2) return;
@@ -373,6 +419,13 @@ export class IdleSim {
         this.choose(npc);
         return;
       case 'perform':
+        // Real work keeps the agent typing at its desk for as long as it lasts.
+        if (this.atWork(npc) && npc.activity === 'desk' && this.time >= npc.until) {
+          npc.until = this.time + 30;
+          const r = npc.slot ? this.reservations.get(npc.slot) : undefined;
+          if (r) r.expires = npc.until + 1;
+          return;
+        }
         if (this.time >= npc.until) {
           this.release(npc, 'done');
           npc.cooldown[npc.activity] = this.time + (COOLDOWN_SECONDS[npc.activity] ?? 30);

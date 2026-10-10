@@ -13,6 +13,8 @@ export const ACTIVITY_LABEL: Record<string, string> = {
   billiards: 'main biliar', exercise: 'olahraga', rest: 'istirahat', walk: 'berjalan', idle: 'santai', talk: 'bicara dengan CEO',
 };
 
+export const WORK_LABEL: Record<string, string> = { working: 'bekerja', waiting: 'menunggu keputusanmu' };
+
 const STEP = 0.1;
 // Personas further than this from the CEO (plan metres) render their LOD1
 // mesh: at the default 3/4 camera they cover a few dozen pixels there.
@@ -64,6 +66,7 @@ export class NpcLayer {
     if (npc.phase === 'travel' || npc.phase === 'recover') return 'walk';
     if (npc.phase === 'paused') return 'talk';
     if (npc.phase !== 'perform') return 'idle';
+    if (npc.workStatus === 'working' && npc.activity === 'idle') return 'type';
     const slot = npc.slot ? this.world.activitySlots.find((s) => s.id === npc.slot) : undefined;
     const sit = slot?.pose === 'sit';
     switch (npc.activity) {
@@ -110,7 +113,9 @@ export class NpcLayer {
       const s = v.avatar.root.position.clone().add(new THREE.Vector3(0, 1.9, 0)).project(camera);
       const screenY = ((1 - s.y) / 2) * h;
       const screenX = ((s.x + 1) / 2) * w;
-      const activityText = `${npc.name} · ${ACTIVITY_LABEL[npc.activity] ?? npc.activity}`;
+      const busy = npc.workStatus === 'working' || npc.workStatus === 'waiting';
+      const activityText = `${npc.name} · ${busy ? WORK_LABEL[npc.workStatus] : (ACTIVITY_LABEL[npc.activity] ?? npc.activity)}`;
+      v.label.classList.toggle('busy', busy);
       if (v.label.textContent !== activityText) v.label.textContent = activityText;
       const on = s.z < 1 && Math.abs(s.x) < 1.05 && Math.abs(s.y) < 1.05
         && labelClear(screenX - v.label.offsetWidth / 2, screenY - v.label.offsetHeight,

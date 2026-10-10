@@ -29,6 +29,8 @@ INVENTORY = [
     ("Pengaturan button", "html:btn-settings", ["#btn-settings"]),
     ("Kontrol/help button", "html:btn-help", ["#btn-help"]),
     ("Papan kerja button (M4)", "html:btn-boards", ["#btn-boards", "Papan kerja"]),
+    ("Chat agen shortcut (M5)", "html:btn-chat", ["keyboard.press('c')", "Chat agen"]),
+    ("Pilih agen di daftar chat", "src:data-agent", ["data-agent="]),
     ("Papan tab", "src:role: 'tab'", ["Daftar Pekerjaan"]),
     ("Papan filter bot", "src:filter-${key}", ["getByLabel('Bot')"]),
     ("Papan keluar", "src:btn-logout", ["#btn-logout"]),
