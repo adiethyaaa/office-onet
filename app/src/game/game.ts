@@ -165,6 +165,26 @@ export class Game {
     this.scene.add(this.sun, this.sun.target);
   }
 
+  private sunAxes: THREE.Vector3[] | null = null;
+  /** Sun follows the CEO in whole shadow-map texels: a sub-texel shift
+   * re-rasterises every shadow edge each frame, which shimmered on thin walls,
+   * door leaves and under desks while walking. */
+  private followSun(pv: THREE.Vector3) {
+    const off = new THREE.Vector3(-14, 22, 10);
+    if (!this.sunAxes) {
+      const z = off.clone().normalize();
+      const x = new THREE.Vector3(0, 1, 0).cross(z).normalize();
+      this.sunAxes = [x, z.clone().cross(x), z];
+    }
+    const c = this.sun.shadow.camera as THREE.OrthographicCamera;
+    const texel = (c.right - c.left) / this.sun.shadow.mapSize.x;
+    const [x, y, z] = this.sunAxes;
+    const snap = (v: number) => Math.round(v / texel) * texel;
+    const t = x.clone().multiplyScalar(snap(pv.dot(x))).addScaledVector(y, snap(pv.dot(y))).addScaledVector(z, pv.dot(z));
+    this.sun.target.position.copy(t);
+    this.sun.position.copy(t).add(off);
+  }
+
   private buildFloors() {
     for (const f of this.world.floors) {
       const build = buildFloor(this.world, this.walls, f.id, this.materials, !this.lowQuality);
@@ -667,8 +687,7 @@ export class Game {
     this.rig.update(this.studioOpen && this.studioFocus ? this.studioFocus : pv, dt);
     this.materials.cutaway.uPlayer.value.set(pv.x, pv.y + 0.9, pv.z);
     this.materials.cutaway.uCamera.value.copy(this.rig.camera.position);
-    this.sun.position.set(pv.x - 14, pv.y + 22, pv.z + 10);
-    this.sun.target.position.copy(pv);
+    this.followSun(pv);
     // Seated CEO (activity) is not in the way; standing or walking CEO is.
     this.npcs.sim.setPlayer(this.activity ? null : this.player.floor, this.player.pos);
     const labelBlockers = [...document.querySelectorAll('.hud-top, .joystick, .touch-btn, #prompt, .activity-chip')]

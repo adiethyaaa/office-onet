@@ -53,10 +53,13 @@ export class MaterialCache {
     const key = `${color}|${emissive}|${glass}`;
     let m = this.cache.get(key);
     if (!m) {
+      // Glass never writes depth: with depth writes, whichever transparent mesh
+      // three.js sorted first (shower glass vs window glass) hid the other, and
+      // the order flips as the camera moves.
       if (this.lowQuality) {
-        m = new THREE.MeshLambertMaterial({ color, emissive: emissive ? color : 0x000000, emissiveIntensity: emissive ? 0.5 : 0, transparent: glass, opacity: glass ? 0.35 : 1 });
+        m = new THREE.MeshLambertMaterial({ color, emissive: emissive ? color : 0x000000, emissiveIntensity: emissive ? 0.5 : 0, transparent: glass, opacity: glass ? 0.35 : 1, depthWrite: !glass });
       } else {
-        m = new THREE.MeshStandardMaterial({ color, roughness: 0.85, metalness: 0, emissive: emissive ? color : 0x000000, emissiveIntensity: emissive ? 0.45 : 0, transparent: glass, opacity: glass ? 0.35 : 1 });
+        m = new THREE.MeshStandardMaterial({ color, roughness: 0.85, metalness: 0, emissive: emissive ? color : 0x000000, emissiveIntensity: emissive ? 0.45 : 0, transparent: glass, opacity: glass ? 0.35 : 1, depthWrite: !glass });
       }
       this.cache.set(key, m);
     }
@@ -79,7 +82,12 @@ export class MaterialCache {
         Object.assign(shader.uniforms, this.cutaway);
         shader.vertexShader = shader.vertexShader
           .replace('#include <common>', '#include <common>\nvarying vec3 vCutWorld;')
-          .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvCutWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+          .replace('#include <worldpos_vertex>', `#include <worldpos_vertex>
+#ifdef USE_INSTANCING
+vCutWorld = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;
+#else
+vCutWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
+#endif`);
         shader.fragmentShader = shader.fragmentShader
           .replace('#include <common>', '#include <common>\nvarying vec3 vCutWorld;\nuniform vec3 uPlayer;\nuniform vec3 uCamera;\nuniform float uRadius;')
           .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
@@ -209,8 +217,10 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
     const geo = new THREE.ShapeGeometry(shape);
     geo.rotateX(-Math.PI / 2); // plan (x, y) -> three (x, -y) on the XZ plane
     // Plates that share an edge or overlap slightly used to z-fight (flicker
-    // while the camera moves); each plate gets its own 1 mm step.
-    geo.translate(0, elev + 0.01 + (plate++ % 8) * 0.001, 0);
+    // while the camera moves); each plate gets its own 2 mm step (1 mm still
+    // fought at 30 m on phone depth buffers). Range +4..+18 mm: above the slab
+    // top, below 20 mm floor mats and the +22 mm threshold underside.
+    geo.translate(0, elev + 0.004 + (plate++ % 8) * 0.002, 0);
     const color = CATEGORY_TINT[room.category] ?? FINISH_COLOR[room.finish.floor] ?? 0xd8c8ab;
     batch.add(geo, color, id);
     // A shaft is a closed riser, not a room: fill it to the cutaway height so
@@ -280,8 +290,9 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
     const len = op.to - op.from;
     const mid = (op.from + op.to) / 2;
     const [cx, cy] = op.axis === 'x' ? [mid, op.at] : [op.at, mid];
+    // Top at +34 mm: clear of the highest floor plate (+18 mm) by 16 mm.
     const th = new THREE.BoxGeometry(op.axis === 'x' ? len : 0.32, 0.012, op.axis === 'x' ? 0.32 : len);
-    th.translate(cx, elev + 0.012, -cy);
+    th.translate(cx, elev + 0.028, -cy);
     batch.add(th, op.access === 'restricted' ? ENV.accent : ENV.woodDark, id);
     if (op.exit) {
       const sign = new THREE.BoxGeometry(op.axis === 'x' ? 0.5 : 0.06, 0.18, op.axis === 'x' ? 0.06 : 0.5);
