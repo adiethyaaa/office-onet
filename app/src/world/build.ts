@@ -36,7 +36,7 @@ class Batcher {
       const merged = mergeGeometries(b.geos, false);
       b.geos.forEach((g) => g.dispose());
       if (!merged) continue;
-      const mesh = new THREE.Mesh(merged, b.occluder ? materials.occluder(b.color) : materials.get(b.color, b.emissive, b.glass));
+      const mesh = new THREE.Mesh(merged, b.occluder ? materials.occluder(b.color, b.glass) : materials.get(b.color, b.emissive, b.glass));
       mesh.castShadow = castShadow && !b.glass;
       mesh.receiveShadow = true;
       mesh.matrixAutoUpdate = false;
@@ -67,11 +67,14 @@ export class MaterialCache {
 
   /** Wall material that discards fragments inside a capsule between camera
    * and avatar, so walls never hide the CEO (PRD 7 occlusion fade). */
-  occluder(color: number): THREE.Material {
-    const key = `occ|${color}`;
+  occluder(color: number, glass = false): THREE.Material {
+    const key = `occ|${color}|${glass}`;
     let m = this.cache.get(key);
     if (!m) {
-      const mat = this.lowQuality ? new THREE.MeshLambertMaterial({ color }) : new THREE.MeshStandardMaterial({ color, roughness: 0.9, metalness: 0 });
+      // Window glass and sills use the same cut as the wall around them;
+      // otherwise they stay drawn while the wall is cut and blink as the CEO walks.
+      const look = { color, transparent: glass, opacity: glass ? 0.35 : 1, depthWrite: !glass };
+      const mat = this.lowQuality ? new THREE.MeshLambertMaterial(look) : new THREE.MeshStandardMaterial({ ...look, roughness: 0.9, metalness: 0 });
       mat.onBeforeCompile = (shader) => {
         Object.assign(shader.uniforms, this.cutaway);
         shader.vertexShader = shader.vertexShader
@@ -85,7 +88,7 @@ export class MaterialCache {
   float d = length(vCutWorld - (uCamera + seg * t));
   if (t < 0.97 && d < uRadius * t) discard;`);
       };
-      mat.customProgramCacheKey = () => `occ-${this.lowQuality}`;
+      mat.customProgramCacheKey = () => `occ-${this.lowQuality}-${glass}`;
       m = mat;
       this.cache.set(key, m);
     }
@@ -257,13 +260,14 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
       const b = along(w) + w.width / 2;
       if (w.sill < hgt) {
         box(cursor, a, 0, hgt, color, { occluder: true });
-        box(a, b, 0, w.sill, color, { occluder: true });
-        box(a, b, w.sill - 0.04, w.sill, ENV.wallCap, {}, t + 0.08);
-        box(a, b, w.sill, hgt, w.glazing === 'obscured' ? ENV.wallCap : ENV.glass, { glass: true }, 0.04);
+        // Wall stops under the sill board so their top faces never share a plane.
+        box(a, b, 0, w.sill - 0.04, color, { occluder: true });
+        box(a, b, w.sill - 0.04, w.sill, ENV.wallCap, { occluder: true }, t + 0.08);
+        box(a, b, w.sill + 0.001, hgt - 0.001, w.glazing === 'obscured' ? ENV.wallCap : ENV.glass, { glass: true, occluder: true }, 0.04);
         cursor = b;
         winCount.full++;
       } else {
-        box(a, b, hgt + 0.05, hgt + 0.09, ENV.glass, { glass: true }, t + 0.03);
+        box(a, b, hgt + 0.051, hgt + 0.09, ENV.glass, { glass: true, occluder: true }, t + 0.03);
         winCount.high++;
       }
     }
