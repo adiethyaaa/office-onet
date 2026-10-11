@@ -243,9 +243,16 @@ function boot() {
       // last metre (the CEO stops at their disc, as a player would).
       let lastPos = [...game.player.pos];
       let lastMove = performance.now();
+      let prev = [...game.player.pos];
       const finish = (ok: boolean) => { game.autopilot = null; game.onFrame = null; resolve(ok); };
       game.onFrame = () => {
         const now = performance.now();
+        // On a slow software-rendered runner one frame can move the CEO further
+        // than the 0.2 m waypoint radius; widen the radius to the last step so
+        // the driver does not orbit a waypoint it already passed.
+        const step = Math.hypot(game.player.pos[0] - prev[0], game.player.pos[1] - prev[1]);
+        prev = [...game.player.pos];
+        const reach = Math.max(0.2, Math.min(0.9, step * 1.5));
         if (Math.hypot(game.player.pos[0] - lastPos[0], game.player.pos[1] - lastPos[1]) > 0.05) { lastPos = [...game.player.pos]; lastMove = now; }
         if (now - lastMove > 1500) {
           if (Math.hypot(x - game.player.pos[0], y - game.player.pos[1]) < 1.0) { finish(true); return; }
@@ -257,9 +264,9 @@ function boot() {
         const dx = tgt[0] - game.player.pos[0];
         const dy = tgt[1] - game.player.pos[1];
         const d = Math.hypot(dx, dy);
-        if (d < 0.2) i++;
-        if (i >= path.length || now - t0 > timeoutMs) { finish(i >= path.length); return; }
-        game.autopilot = d < 0.2 ? null : { dir: [dx / d, dy / d], run: true };
+        if (d < reach) i++;
+        if (i >= path.length || now - t0 > timeoutMs) { finish(i >= path.length || Math.hypot(x - game.player.pos[0], y - game.player.pos[1]) < 0.6); return; }
+        game.autopilot = d < reach ? null : { dir: [dx / d, dy / d], run: true };
       };
     }),
     useInteractable: (id: string) => {
