@@ -1,3 +1,5 @@
+<p align="center"><b>Bahasa Indonesia</b> · <a href="README.en.md">English</a></p>
+
 <p align="center"><img src="docs/brand/icon.svg" alt="" width="112"></p>
 
 <h1 align="center">kantor-rpg</h1>

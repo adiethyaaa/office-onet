@@ -1,3 +1,5 @@
+**Bahasa Indonesia** · [English](FEATURES.md)
+
 # Fitur Kantor RPG
 
 Dokumen ini menjelaskan setiap fitur dari sisi pemakai: apa yang terlihat, cara memakainya, dan batasnya. Untuk pemasangan lihat [INSTALL.md](../INSTALL.md).

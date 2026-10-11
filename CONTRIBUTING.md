@@ -1,3 +1,5 @@
+**Bahasa Indonesia** · [English](CONTRIBUTING.en.md)
+
 # Berkontribusi
 
 Laporan bug, ide, dan pull request diterima. Panduan ini menjelaskan cara menyiapkan repo dan apa yang diperiksa sebelum perubahan digabung.

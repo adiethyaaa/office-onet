@@ -1,3 +1,5 @@
+**Bahasa Indonesia** · [English](INSTALL.en.md)
+
 # Panduan instalasi Kantor RPG
 
 Kantor RPG punya dua bagian:
