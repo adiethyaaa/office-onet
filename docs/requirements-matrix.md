@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit c94e6ad; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit 9bcfc20; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -75,8 +75,10 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-CHATFEEL-01 | M7 | Mengetik dari tugas RPG berjalan atau pesan Telegram Budi belum dibalas (maks 10 menit); centang sent/delivered/read; aktif X menit lalu; pemisah tanggal WITA; Balas/Salin; bunyi + (n) di judul tab. | server/test/chat-state.test.mjs<br>server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M7/server-test.txt<br>docs/evidence/M7/desktop-agent-telegram-sync.jpg | terverifikasi |
 | REQ-CHATPUSH-01 | M7 | Web Push RFC 8291 + VAPID ES256 dari backend sendiri; izin lewat tombol; bisu per bot per perangkat; ketuk membuka chat; manifest PWA + ikon. | server/test/media-push.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M7/server-test.txt | terverifikasi |
 | REQ-CHATMEDIA-01 | M7 | Lampiran <=10 MB, <=5/pesan, daftar putih + magic bytes; agen menerima path lokal format gateway Telegram; suara -> mlx-whisper lokal; URL bertanda tangan HMAC; lampiran Telegram tampil; cari seluruh riwayat sesi; retensi 30 hari. | server/test/media-push.test.mjs<br>server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M7/server-test.txt<br>docs/evidence/M7/desktop-agent-media-search.jpg | terverifikasi |
+| REQ-MINIMAP-01 | M8 | Minimap selalu tampil tanpa menutupi HUD/joystick/Aksi; ruang, tangga/lift, avatar berarah, titik persona, cincin saat bekerja; lencana arah+jumlah persona di lantai lain; 4 Hz; klik membuka peta penuh; label pembaca layar. | app/tests/unit/map.test.ts<br>app/tests/e2e/map.spec.ts | - | belum diuji |
+| REQ-MAP-01 | M8 | P/klik minimap membuka Peta kantor; tab per lantai + jumlah; nama ruang dan persona; daftar dikelompokkan lantai kamu/lantai lain dengan tag beda lantai dan status menuju lantai lain; Lihat/klik titik menandai; Temui memakai jalur meet; tombol >=44 px; kontras dicek. | app/tests/unit/map.test.ts<br>app/tests/e2e/map.spec.ts | - | belum diuji |
 
-Ringkasan status bagian: target 1, terverifikasi 69.
+Ringkasan status bagian: belum diuji 2, target 1, terverifikasi 69.
 
 ## Story, AC, failure dan boundary
 
@@ -335,3 +337,19 @@ Sebagai Budi, kirim foto/berkas/pesan suara dan cari pesan lama.
 Lampiran <=10 MB, <=5/pesan, daftar putih + magic bytes; agen menerima path lokal format gateway Telegram; suara -> mlx-whisper lokal; URL bertanda tangan HMAC; lampiran Telegram tampil; cari seluruh riwayat sesi; retensi 30 hari.
 
 Failure: jenis/isi tidak cocok -> 415; token palsu/keluar folder -> 404; berkas hilang -> 'sudah dihapus'. Boundary: path server tidak pernah ke browser; transkrip lokal tanpa API berbayar.
+
+### REQ-MINIMAP-01 (M8)
+
+Sebagai pemilik, lihat denah kecil berisi posisi saya dan persona di lantai ini.
+
+Minimap selalu tampil tanpa menutupi HUD/joystick/Aksi; ruang, tangga/lift, avatar berarah, titik persona, cincin saat bekerja; lencana arah+jumlah persona di lantai lain; 4 Hz; klik membuka peta penuh; label pembaca layar.
+
+Failure: modul peta gagal dimuat -> dunia jalan tanpa minimap. Boundary: posisi dari IdleSim, bukan lokasi fisik; chunk terpisah.
+
+### REQ-MAP-01 (M8)
+
+Sebagai pemilik, cari persona di peta penuh dan temui, termasuk di lantai lain.
+
+P/klik minimap membuka Peta kantor; tab per lantai + jumlah; nama ruang dan persona; daftar dikelompokkan lantai kamu/lantai lain dengan tag beda lantai dan status menuju lantai lain; Lihat/klik titik menandai; Temui memakai jalur meet; tombol >=44 px; kontras dicek.
+
+Failure: persona tak terjangkau di mode visitor -> alasan, avatar tidak dipindah. Boundary: posisi simulasi, bukan lokasi fisik orang.
