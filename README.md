@@ -31,7 +31,7 @@ npm run dev        # http://localhost:5173
 
 Kontrol: WASD atau panah untuk jalan, Shift untuk lari, Q/Z memutar kamera, R meluruskan kamera, +/- zoom, E untuk interaksi, H untuk bantuan.
 
-Build produksi, nginx, backend chat, dan masalah umum ada di **[INSTALL.md](INSTALL.md)**.
+Penjelasan lengkap setiap fitur ada di **[docs/FITUR.md](docs/FITUR.md)**. Build produksi, nginx, backend chat, dan masalah umum ada di **[INSTALL.md](INSTALL.md)**.
 
 ## Struktur repo
 
@@ -66,6 +66,7 @@ python3 -m pytest tests/py -q
 
 ## Dokumen
 
+- [Fitur lengkap](docs/FITUR.md)
 - [Keputusan arsitektur](docs/decisions.md), ADR-001 sampai ADR-017
 - [Laporan QA](docs/QA-REPORT.md) dan [daftar tes yang dilewati](docs/SKIP-LEDGER.md)
 - [Audit 3D: z-fighting dan kedip](docs/evidence/AUDIT-3D/LAPORAN.md)
@@ -74,6 +75,6 @@ python3 -m pytest tests/py -q
 
 ## Catatan
 
-Proyek pribadi Budi Prabhawa, dikerjakan bersama agen Hermes dengan Max sebagai supervisor. Repo ini tidak berisi aset/kode Holixora, Pokemon, chat pribadi, atau kredensial. Angka ukuran dan performa di dokumen desain adalah target, kecuali yang jelas disebut hasil pengukuran.
+Proyek pribadi, dikerjakan bersama agen AI. Karakter dan aset dibuat sendiri; repo ini tidak berisi aset pihak ketiga, chat pribadi, atau kredensial. Angka ukuran dan performa di dokumen desain adalah target, kecuali yang jelas disebut hasil pengukuran.
 
 Lisensi belum ditentukan. Kode boleh dibaca dan dicoba; pemakaian ulang atau distribusi butuh izin pemilik.
