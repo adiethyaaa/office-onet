@@ -198,6 +198,11 @@ function boot() {
     .catch(() => { /* no backend: simulation only */ });
   game.renderDirectory();
   game.start();
+  // Minimap + floor map: own chunk, loaded right after the world starts.
+  let map: import('./ui/map').MapUI | null = null;
+  const mapLoad = () => import('./ui/map').then((m) => (map ??= new m.MapUI(world, { snapshot: () => game.mapSnapshot(), meet: (id) => game.meet(id) })));
+  void mapLoad();
+  game.onMap = () => void mapLoad().then((m) => (m.isOpen ? m.close() : m.open()));
   window.__kantor = {
     openBoards,
     openAgent,
@@ -207,6 +212,8 @@ function boot() {
     stats: () => game.stats(),
     studioOpen: () => studio?.isOpen ?? false,
     npcFace: (id: string) => game.npcs.face(id),
+    map: () => game.mapSnapshot(),
+    openMap: (id?: string) => mapLoad().then((m) => m.open(id)),
     camera: () => ({ yaw: game.rig.yaw, pitch: game.rig.pitch, distance: game.rig.distance }),
     render: () => ({ lowQuality: game.lowQuality, shadows: game.renderer.shadowMap.enabled, theme: document.documentElement.dataset.theme ?? null }),
     motion: () => ({ speed: game.player.speed, runToggle: game.input.runToggle }),

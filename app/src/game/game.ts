@@ -76,6 +76,7 @@ export class Game {
   onBoard: ((tab: BoardTab) => void) | null = null;
   onAgent: ((profile: string) => void) | null = null;
   onAgentPicker: (() => void) | null = null;
+  onMap: (() => void) | null = null;
   /** True while the owner is logged in and real presence drives the NPCs. */
   livePresence = false;
 
@@ -313,6 +314,7 @@ export class Game {
       else if (k === 'm') this.toggleDirectory();
       else if (k === 'h') openDialog($('dlg-help') as HTMLDialogElement);
       else if (k === 'b') this.onBoard?.('handoffs');
+      else if (k === 'p') this.onMap?.();
       else if (k === 'c') this.onAgentPicker?.();
       else if (k === 'escape' && this.activity) this.endActivity(true);
     };
@@ -603,6 +605,21 @@ export class Game {
     openDialog(dlg);
   }
 
+  /** Plan-view state for the minimap and floor map: the CEO and every persona. */
+  mapSnapshot() {
+    return {
+      floor: this.player.floor, pos: [this.player.pos[0], this.player.pos[1]] as Vec2, facing: this.player.facing, visitor: this.settings.visitor,
+      people: this.npcs.sim.npcs.map((n) => {
+        const busy = n.workStatus === 'working' || n.workStatus === 'waiting';
+        return {
+          id: n.id, name: n.name, role: n.role, floor: n.floor, pos: [n.pos[0], n.pos[1]] as Vec2, busy,
+          doing: busy ? WORK_LABEL[n.workStatus] : (ACTIVITY_LABEL[n.activity] ?? n.activity),
+          movingTo: n.via?.to ?? null,
+        };
+      }),
+    };
+  }
+
   /** Accessible path: move next to an NPC and open the dialog without 3D navigation. */
   meet(id: string) {
     const npc = this.npcs.sim.npcs.find((n) => n.id === id);
@@ -690,7 +707,7 @@ export class Game {
     this.followSun(pv);
     // Seated CEO (activity) is not in the way; standing or walking CEO is.
     this.npcs.sim.setPlayer(this.activity ? null : this.player.floor, this.player.pos);
-    const labelBlockers = [...document.querySelectorAll('.hud-top, .joystick, .touch-btn, #prompt, .activity-chip')]
+    const labelBlockers = [...document.querySelectorAll('.hud-top, .joystick, .touch-btn, #prompt, .activity-chip, .minimap')]
       .map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0);
     this.npcs.update(dt, this.player.floor, this.rig.camera, this.stage.clientWidth, this.stage.clientHeight, this.settings.reducedMotion, this.player.pos, labelBlockers);
     const agents = [{ floor: this.player.floor, pos: this.player.pos }, ...this.npcs.sim.npcs.map((n) => ({ floor: n.floor, pos: n.pos }))];

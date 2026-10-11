@@ -66,6 +66,10 @@ Dinding yang menghalangi pandangan dipotong otomatis, jadi avatar selalu terliha
 - **Status kerja nyata.** Dengan backend, karakter yang agennya sedang bekerja meninggalkan kegiatan santai, duduk di mejanya, dan labelnya berubah menjadi `bekerja` atau `menunggu keputusanmu`.
 - **Bisa disapa.** Menyapa NPC membuka profil, ruang utama, kegiatan saat ini, dan potongan dialog. Pemilik mendapat tombol untuk langsung memberi tugas.
 
+- **Tahu siapa di mana.** Minimap di pojok layar menunjukkan semua orang di lantaimu dan berapa yang ada di lantai lain (`↑ L2: 3`). Tekan **P** untuk peta penuh dua lantai, lalu **Temui** untuk langsung pindah ke sebelah orang itu, walau beda lantai.
+
+<img src="docs/img/peta.jpg" alt="Peta kantor dengan daftar persona per lantai">
+
 Kamu juga bisa ikut bersantai. Mesin kopi, meja biliar, konsol game, dan alat olahraga bisa dipakai. Kalau tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya.
 
 ## Chat dengan agen

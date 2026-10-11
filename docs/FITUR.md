@@ -10,6 +10,7 @@ Daftar isi
 4. [Interaksi dan aktivitas](#4-interaksi-dan-aktivitas)
 5. [Karakter NPC](#5-karakter-npc)
 6. [Direktori](#6-direktori)
+   - [Peta dan minimap](#6a-peta-dan-minimap)
 7. [Avatar Studio](#7-avatar-studio)
 8. [Office Studio: menata ulang perabot](#8-office-studio-menata-ulang-perabot)
 9. [Papan kerja tim](#9-papan-kerja-tim)
@@ -82,6 +83,7 @@ Tekan **H** atau tombol **Kontrol** untuk melihat daftar ini di dalam app.
 | M | Buka atau tutup direktori |
 | C | Chat agen (pemilik) |
 | B | Papan kerja tim |
+| P | Peta kantor: lokasi semua persona |
 | Esc | Tutup dialog atau panel |
 
 **Di HP dan tablet**
@@ -143,6 +145,33 @@ Tekan **M** atau tombol **Direktori**. Isinya:
 - Tautan ke dokumen proyek.
 
 Bila browser tidak mendukung WebGL, direktori menjadi tampilan utama. Tombol **Pergi** berubah menjadi **Info**.
+
+## 6a. Peta dan minimap
+
+![Peta kantor, tab Lantai 2, satu persona ditandai](img/peta.jpg)
+
+Mencari satu orang di gedung dua lantai tidak perlu berkeliling.
+
+**Minimap** selalu ada di pojok kiri bawah (di HP: kanan atas, di bawah HUD, supaya tidak menabrak joystick).
+
+<img src="img/minimap.jpg" alt="Minimap: denah Lantai 1, panah avatar, titik persona, lencana satu orang di Lantai 2" width="260">
+
+- Denah lantai tempatmu berada, diwarnai per jenis ruang.
+- Panah oranye adalah kamu, menunjuk arah hadap. Titik hijau adalah persona; titik bercincin sedang bekerja atau menunggu keputusanmu. Kotak hitam adalah tangga dan lift.
+- Lencana `↑ L2: 3` berarti tiga orang ada di lantai atas. Di Lantai 2 lencananya `↓ L1: n`.
+- Diperbarui empat kali per detik. Klik atau ketuk untuk membuka peta penuh.
+
+**Peta kantor** (tombol **P**, atau klik minimap):
+
+- Tab per lantai dengan jumlah orang di tiap lantai. Peta dibuka di lantaimu.
+- Denah lengkap dengan nama ruang dan nama setiap persona.
+- Daftar dikelompokkan: lantaimu dulu, lalu lantai lain dengan catatan **Beda lantai** dan tag `L2, beda lantai` di tiap orang. Setiap baris memuat peran, ruang, dan kegiatan saat ini.
+- Persona yang sedang berjalan ke tangga atau lift ditulis `<ruang>, menuju Lantai 2`, jadi kamu tahu ia akan pindah.
+- **Lihat** menandai orang itu di peta, berpindah tab lantai bila perlu. Klik titik di denah juga bisa.
+- **Temui** memindahkanmu ke sebelah orang itu, termasuk naik atau turun lantai, lalu membuka profilnya.
+- Dalam mode pengunjung, ruang terbatas diarsir.
+
+Semua tombol bisa dipakai dengan keyboard dan pembaca layar. Label minimap menyebut lantaimu dan jumlah orang di tiap lantai. Peta menunjukkan posisi karakter di dunia simulasi, bukan lokasi fisik orang sungguhan.
 
 ## 7. Avatar Studio
 

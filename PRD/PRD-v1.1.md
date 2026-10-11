@@ -400,6 +400,33 @@ Permintaan Budi: chat agen di RPG harus terasa sama dengan Telegram, termasuk no
 
 - REQ-SHARE-01: Kantor RPG boleh dibagikan gratis ke komunitas Hermes. AC: repo komunitas punya riwayat git baru, berisi kode, aset, dan cara install; tidak memuat nama usaha, nama orang, hostname, IP, path rumah, chat id, token, isi Kanban, atau bukti uji dari mesin kita (pindai pola sebelum push). Roster, origin, dan host backend diatur lewat konfigurasi pemakai, bukan ditanam di kode. Repo kerja internal tetap privat.
 
+## 20. Peta dan minimap: lokasi persona (v1.4, 2026-10-11)
+
+Permintaan pemilik: harus bisa melihat posisi setiap persona tanpa berkeliling gedung, termasuk persona yang sedang berada di lantai lain. Semua posisi diambil dari simulasi yang sama dengan dunia 3D (`IdleSim`); tidak ada posisi yang dikarang.
+
+### 20.1 Minimap
+
+- REQ-MINIMAP-01: Sebagai pemilik, saya ingin denah kecil yang selalu tampil supaya tahu posisi saya dan persona di lantai ini. AC:
+  - Minimap tampil di pojok kiri bawah (desktop) atau di kanan bawah HUD (HP dan tablet, karena pojok kiri bawah dipakai joystick), tidak menutupi tombol HUD, joystick, maupun tombol Aksi.
+  - Isinya denah lantai tempat avatar berada: ruang (diwarnai per kategori), tangga dan lift, avatar sebagai panah sesuai arah hadap, dan setiap persona sebagai titik. Persona yang sedang bekerja atau menunggu keputusan diberi cincin.
+  - Bila ada persona di lantai lain, minimap menampilkan lencana `↑ L2: n` atau `↓ L1: n` (arah dan jumlah).
+  - Diperbarui 4 kali per detik. Mengklik atau mengetuk minimap membuka peta penuh.
+  - Label pembaca layar menyebut lantai saat ini, jumlah orang di lantai ini, dan jumlah orang di lantai lain.
+  - Label 3D yang bertumpuk dengan minimap disembunyikan (sama dengan HUD dan joystick).
+
+### 20.2 Peta penuh
+
+- REQ-MAP-01: Sebagai pemilik, saya ingin peta penuh untuk mencari persona tertentu dan langsung menemuinya, termasuk bila ia di lantai lain. AC:
+  - Tombol P atau klik minimap membuka dialog `Peta kantor`. Esc menutupnya dan fokus kembali ke minimap.
+  - Tab per lantai dengan jumlah persona dan penanda `kamu`; peta dibuka pada lantai avatar.
+  - Denah memuat nama ruang, tangga dan lift, avatar (`Kamu`), dan nama setiap persona. Ruang terbatas diarsir dalam mode visitor.
+  - Daftar persona dikelompokkan: lantai kamu dulu, lalu tiap lantai lain dengan catatan `Beda lantai: naik/turun lewat tangga atau lift, atau tekan Temui`. Tiap baris memuat nama, peran, ruang, kegiatan atau status kerja, dan tag `L2, beda lantai` bila berlainan lantai.
+  - Persona yang sedang menuju tangga atau lift untuk pindah lantai tampil sebagai `<ruang>, menuju Lantai n`.
+  - Tombol `Lihat` menandai persona di peta (berpindah tab bila perlu); klik titik persona di denah juga memilihnya. Tombol `Temui` memakai jalur aksesibel yang sudah ada (avatar dipindah ke dekat persona, termasuk pindah lantai, lalu dialog persona terbuka) dan memberi tahu bila persona ada di lantai lain.
+  - Semua tombol minimal 44 px, bisa dipakai dengan keyboard, dan kontras warna peta diperiksa `tools/contrast.py` di tema terang dan gelap.
+- Failure: modul peta gagal dimuat → dunia tetap berjalan tanpa minimap. Persona tidak terjangkau dalam mode visitor → `Temui` menampilkan alasan, avatar tidak dipindah.
+- Batas: peta menunjukkan posisi simulasi persona di dunia, bukan lokasi fisik orang sungguhan. Kode peta dimuat sebagai chunk terpisah setelah dunia mulai, sehingga anggaran unduhan pertama tidak bertambah.
+
 ## Sumber
 
 [1] https://voffice.holixora.com/ : demo menyatakan simulasi, bukan data pekerjaan nyata.

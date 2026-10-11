@@ -30,6 +30,22 @@ PAIRS = [
     ("focus", "bg", 3.0, "cincin fokus di latar"),
     ("focus", "surface", 3.0, "cincin fokus di panel"),
     ("accent", "surface", 3.0, "garis prompt interaksi"),
+    # Minimap and floor map (app/src/ui/map.ts): markers and walls are UI graphics (3.0),
+    # room names are text drawn on the room fills (4.5).
+    ("map-you", "map-room", 3.0, "peta: penanda kamu di ruang"),
+    ("map-you", "map-work", 3.0, "peta: penanda kamu di ruang kerja"),
+    ("map-you", "map-rec", 3.0, "peta: penanda kamu di ruang rekreasi"),
+    ("map-npc", "map-room", 3.0, "peta: titik persona di ruang"),
+    ("map-npc", "map-rec", 3.0, "peta: titik persona di ruang rekreasi"),
+    ("map-npc", "map-work", 3.0, "peta: titik persona di ruang kerja"),
+    ("map-wall", "map-bg", 3.0, "peta: garis dinding di latar"),
+    ("map-wall", "map-room", 3.0, "peta: garis dinding di ruang"),
+    ("map-muted", "map-room", 4.5, "peta: nama ruang"),
+    ("map-muted", "map-work", 4.5, "peta: nama ruang kerja"),
+    ("map-muted", "map-rec", 4.5, "peta: nama ruang rekreasi"),
+    ("map-muted", "map-circ", 4.5, "peta: nama koridor"),
+    ("map-muted", "map-restricted", 4.5, "peta: nama ruang terbatas"),
+    ("ink", "surface-2", 4.5, "peta: daftar persona"),
 ]
 # Fixed colours used on the 3D overlay labels (not themed): text on label pill.
 FIXED = [("#1d2a23", "#fffaf0", 4.5, "label ruang"), ("#8a3b1c", "#fffaf0", 4.5, "label ruang terkunci"),
