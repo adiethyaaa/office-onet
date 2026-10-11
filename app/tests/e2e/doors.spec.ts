@@ -20,13 +20,22 @@ test.describe('door leaves (R2)', () => {
   });
 
   test('in visitor mode the server door stays shut even with the CEO next to it', async ({ page }) => {
+    // The walk from the lobby is ~25 m. Frame time is clamped at 0.1 s, so on a
+    // software-rendered CI runner (a few fps) the CEO walks far slower than on
+    // a GPU; give the long walk its own budget instead of the 90 s default.
+    test.setTimeout(300_000);
     await boot(page);
     await page.locator('#btn-settings').click();
     await page.getByLabel('Mode visitor (ruang terbatas terkunci)').check();
     await page.getByRole('button', { name: 'Selesai' }).click();
     const server = (await leaves(page)).find((l) => l.door === 'D-L1-19')!;
-    expect(await walkTo(page, 24.0, 20.25)).toBe(true); // Bruno's area, 1 m from the server door
-    await page.waitForTimeout(1000);
-    expect((await leaves(page)).find((l) => l.id === server.id)!.openness).toBe(0);
+    expect(await walkTo(page, 24.0, 20.25, 240_000)).toBe(true); // work area 1 m from the server door
+    const [px, py] = (await state(page)).pos;
+    expect(Math.hypot(px - 25, py - 20.25)).toBeLessThan(1.6); // really next to the door
+    // Hold position for a few door-update frames, then check the leaf never moved.
+    for (let n = 0; n < 5; n++) {
+      await page.waitForTimeout(400);
+      expect((await leaves(page)).find((l) => l.id === server.id)!.openness).toBe(0);
+    }
   });
 });

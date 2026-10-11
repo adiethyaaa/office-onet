@@ -21,8 +21,8 @@ export async function state(page: Page): Promise<KState> {
   return page.evaluate(() => (window.__kantor!.state as () => KState)());
 }
 
-export async function walkTo(page: Page, x: number, y: number): Promise<boolean> {
-  return page.evaluate(([px, py]) => (window.__kantor!.walkTo as (a: number, b: number) => Promise<boolean>)(px, py), [x, y]);
+export async function walkTo(page: Page, x: number, y: number, timeoutMs = 90_000): Promise<boolean> {
+  return page.evaluate(([px, py, t]) => (window.__kantor!.walkTo as (a: number, b: number, t: number) => Promise<boolean>)(px, py, t), [x, y, timeoutMs]);
 }
 
 export async function shot(page: Page, info: TestInfo, name: string) {
