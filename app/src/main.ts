@@ -5,7 +5,7 @@ import { Game } from './game/game';
 import { renderDirectory } from './ui/directory';
 import { $, openDialog, toast } from './ui/dom';
 import { applyTheme, loadSettings, saveSettings, type Settings } from './ui/settings';
-import type { DerivedWalls, Vec2, World } from './world/types';
+import type { DerivedWalls, FloorId, Vec2, World } from './world/types';
 import { showPersonaCard, showRoomCard } from './game/game';
 import type { StudioUI } from './studio/ui';
 import { AvatarStudio, availableHair, loadChoice, paletteColors } from './studio/avatar-studio';
@@ -228,6 +228,18 @@ function boot() {
     reserveForTest: (slot: string, npc: string) => game.npcs.sim.reservations.set(slot, { npc, expires: game.npcs.sim.time + 600 }),
     reservations: () => [...game.npcs.sim.reservations.entries()].map(([k, r]) => [k, r.npc]),
     renderer: game.rendererName,
+    // Test helper: stand the CEO on the nearest cell reachable in the current
+    // mode (never inside a locked room). For tests that check what happens
+    // next to something, not the walk there.
+    placeNear: (floor: FloorId, x: number, y: number) => {
+      const fr = game.floors.get(floor)!;
+      const spot = fr.nav[game.mode].nearestWalkable([x, y], 1.0, fr.reach[game.mode]);
+      if (!spot) return null;
+      game.player.floor = floor;
+      game.player.pos = spot;
+      game.applyFloorVisibility();
+      return spot;
+    },
     // Test helper: is there a walkable route from the CEO to (x, y) right now?
     canReach: (x: number, y: number) => game.nav.findPath(game.player.pos, [x, y]) !== null,
     // Test/benchmark helper: drives the CEO with the normal movement code along
