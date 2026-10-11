@@ -42,7 +42,7 @@ Fitur pemilik membutuhkan backend privat (`server/`). Tanpa backend, app tetap b
 
 ## 2. Dunia 3D
 
-![Lantai 1](img/kantor-l1.jpg)
+![Lantai 1 dari atas](img/hero-l1.jpg)
 
 - Dua lantai: **Lantai 1 (kerja dan kunjungan)** dan **Lantai 2 (rekreasi)**, total 38 ruang, 46 pintu, 39 jendela, dan 201 perabot serta perangkat.
 - Lantai 1 berisi lobby dan resepsi (titik awal), ruang rapat besar, galeri, pantry, ruang diskusi, ruang implementasi, area kerja per peran, lab, ruang server, riser, dan gudang.
@@ -51,6 +51,16 @@ Fitur pemilik membutuhkan backend privat (`server/`). Tanpa backend, app tetap b
 - Dinding yang menghalangi pandangan dipotong otomatis (cutaway), termasuk jendela dan daun pintu, sehingga avatar selalu terlihat.
 - Pintu terbuka sendiri saat avatar atau NPC mendekat. Ruang berakses terbatas terkunci dalam mode visitor (lihat bagian 14).
 - Label ruang dan karakter disembunyikan bila tertutup menu, joystick, atau petunjuk interaksi, agar teks tidak saling tumpuk.
+
+| Lobby | Ruang rapat | Tangga U |
+|---|---|---|
+| ![Lobby](img/lobby.jpg) | ![Ruang rapat](img/meeting.jpg) | ![Tangga U](img/stair.jpg) |
+
+![Lantai 2 dari atas](img/hero-l2.jpg)
+
+| Ruang game | Biliar | Ruang olahraga |
+|---|---|---|
+| ![Ruang game](img/game.jpg) | ![Biliar](img/billiard.jpg) | ![Ruang olahraga](img/gym.jpg) |
 
 Model GLB dibuat di Blender. Permukaan yang menempel diberi jarak beberapa milimeter saat dimuat, sehingga tidak ada kedip (z-fighting). Tes `app/tests/unit/coplanar.test.ts` gagal bila ada permukaan beda warna yang kembali menempel.
 
@@ -106,6 +116,8 @@ Saat avatar dekat dengan sesuatu yang bisa dipakai, muncul petunjuk di bawah lay
 Aktivitas di atas adalah aktivitas virtual. Aktivitas itu tidak mengubah status kerja siapa pun. Bila tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya. Tombol **Selesai** atau E mengakhiri aktivitas.
 
 ## 5. Karakter NPC
+
+![Sembilan karakter](img/cast.jpg)
 
 - Ada sembilan karakter original: satu avatar pemain (CEO) dan delapan persona NPC dengan peran berbeda, misalnya supervisor, desain, spesifikasi ICT, instalasi jaringan, materi visual, review dan QA.
 - NPC memilih kegiatan sendiri: kerja di meja, bikin kopi, ngobrol, membaca, peregangan, main game, biliar, olahraga, atau istirahat. Pilihan diambil dari 118 slot aktivitas di dunia.
@@ -288,6 +300,10 @@ Aksesibilitas:
 
 Semua artefak dibuat dari satu sumber, `design/world.json`. Bila dataset berubah, gambar, model 3D, dan app ikut berubah saat dibangun ulang.
 
+| Tampak bangunan (A-301) | Topologi jaringan (ICT-001) |
+|---|---|
+| ![Tampak](img/sheet-tampak.jpg) | ![Topologi](img/sheet-ict.jpg) |
+
 | Kode | Isi |
 |---|---|
 | A-001 | Cover, indeks, dan catatan umum |
@@ -325,3 +341,7 @@ Semua artefak dibuat dari satu sumber, `design/world.json`. Bila dataset berubah
 - Backend menyimpan pesan 30 hari dan log audit 90 hari, di folder data dengan izin 0700.
 - Ringkasan status kerja yang ditampilkan di NPC disaring dan dipotong maksimal 70 karakter. Profil agen yang ditandai pribadi tidak pernah muncul.
 - Token bot dan rahasia lain hanya ada di server, tidak pernah dikirim ke browser.
+
+---
+
+Kantor RPG dirilis di bawah [lisensi MIT](../LICENSE).
