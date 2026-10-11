@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/brand/icon.svg" alt="" width="120"></p>
+
 # kantor-rpg
 
 Kantor virtual dua lantai yang bisa dijelajahi di browser. Kamu bermain sebagai CEO, berjalan di antara ruang kerja, dan bertemu karakter agen tim. Gedung, perabot, gambar CAD, model Blender, dan rancangan ICT dibangun dari satu dataset (`design/world.json`).
