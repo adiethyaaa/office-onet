@@ -6,6 +6,7 @@
 import { NavGrid } from '../world/navgrid';
 import { withFixtures } from '../world/slots';
 import type { DerivedWalls, Fixture, FloorId, Vec2, World } from '../world/types';
+import { t } from '../i18n';
 
 export interface Issue { code: 'outside' | 'wall' | 'overlap' | 'door' | 'swing' | 'clearance' | 'unreachable' | 'slot' | 'link'; fixture?: string; message: string }
 
@@ -72,10 +73,10 @@ export function geometryIssues(world: World, fixtures: Fixture[], only?: Set<str
   for (const fx of fixtures) {
     if (!want(fx.id)) continue;
     const room = rooms.get(fx.room);
-    if (!room) { issues.push({ code: 'outside', fixture: fx.id, message: `${fx.id}: ruang ${fx.room} tidak ada` }); continue; }
+    if (!room) { issues.push({ code: 'outside', fixture: fx.id, message: t('{id}: ruang {room} tidak ada', { id: fx.id, room: fx.room }) }); continue; }
     const poly = room.polygon;
     for (const [x, y] of corners(fx)) {
-      if (!pointInPoly([x, y], poly)) { issues.push({ code: 'outside', fixture: fx.id, message: `${fx.id} keluar dari ${room.name}` }); break; }
+      if (!pointInPoly([x, y], poly)) { issues.push({ code: 'outside', fixture: fx.id, message: t('{id} keluar dari {room}', { id: fx.id, room: room.name }) }); break; }
       let hit = false;
       for (let i = 0; i < poly.length && !hit; i++) {
         const [x0, y0] = poly[i];
@@ -85,7 +86,7 @@ export function geometryIssues(world: World, fixtures: Fixture[], only?: Set<str
         if (y0 === y1 && Math.min(x0, x1) < x && x < Math.max(x0, x1) && Math.abs(y - y0) < need) hit = true;
         if (x0 === x1 && Math.min(y0, y1) < y && y < Math.max(y0, y1) && Math.abs(x - x0) < need) hit = true;
       }
-      if (hit) { issues.push({ code: 'wall', fixture: fx.id, message: `${fx.id} menembus dinding ${room.name}` }); break; }
+      if (hit) { issues.push({ code: 'wall', fixture: fx.id, message: t('{id} menembus dinding {room}', { id: fx.id, room: room.name }) }); break; }
     }
   }
   const cols = fixtures.filter((f) => f.collider);
@@ -95,7 +96,7 @@ export function geometryIssues(world: World, fixtures: Fixture[], only?: Set<str
     for (let j = i + 1; j < cols.length; j++) {
       const b = cols[j];
       if (a.floor !== b.floor || (!want(a.id) && !want(b.id))) continue;
-      if (overlaps(ca, corners(b))) issues.push({ code: 'overlap', fixture: want(a.id) ? a.id : b.id, message: `${a.id} bertabrakan dengan ${b.id}` });
+      if (overlaps(ca, corners(b))) issues.push({ code: 'overlap', fixture: want(a.id) ? a.id : b.id, message: t('{a} bertabrakan dengan {b}', { a: a.id, b: b.id }) });
     }
   }
   for (const d of world.doors) {
@@ -103,7 +104,7 @@ export function geometryIssues(world: World, fixtures: Fixture[], only?: Set<str
     const [cx, cy] = d.center;
     const h = d.width / 2;
     const zone = d.wallAxis === 'x' ? rectPoly(cx - h, cy - 0.9, cx + h, cy + 0.9) : rectPoly(cx - 0.9, cy - h, cx + 0.9, cy + h);
-    for (const fx of cols) if (fx.floor === d.floor && want(fx.id) && overlaps(zone, corners(fx))) issues.push({ code: 'door', fixture: fx.id, message: `${fx.id} menghalangi pintu ${d.id}` });
+    for (const fx of cols) if (fx.floor === d.floor && want(fx.id) && overlaps(zone, corners(fx))) issues.push({ code: 'door', fixture: fx.id, message: t('{id} menghalangi pintu {door}', { id: fx.id, door: d.id }) });
     // Swing square of each leaf on the 'into' side, as tools/validate_world.py
     // swing_boxes: the open leaf is solid at runtime, so nothing may stand there.
     if (d.swing && d.swing.into !== 'EXT') {
@@ -117,7 +118,7 @@ export function geometryIssues(world: World, fixtures: Fixture[], only?: Set<str
       for (const [u0, u1] of spans) {
         const [v0, v1] = [Math.min(at, at + sign * (u1 - u0)), Math.max(at, at + sign * (u1 - u0))];
         const box = d.wallAxis === 'x' ? rectPoly(u0, v0, u1, v1) : rectPoly(v0, u0, v1, u1);
-        for (const fx of cols) if (fx.floor === d.floor && want(fx.id) && overlaps(box, corners(fx))) issues.push({ code: 'swing', fixture: fx.id, message: `${fx.id} menghalangi ayunan daun pintu ${d.id}` });
+        for (const fx of cols) if (fx.floor === d.floor && want(fx.id) && overlaps(box, corners(fx))) issues.push({ code: 'swing', fixture: fx.id, message: t('{id} menghalangi ayunan daun pintu {door}', { id: fx.id, door: d.id }) });
       }
     }
   }
@@ -135,7 +136,7 @@ export function geometryIssues(world: World, fixtures: Fixture[], only?: Set<str
     }
     for (const z of zones) for (const o of cols) {
       if (o.id === fx.id || o.floor !== fx.floor || (o.ictRack && fx.ictRack)) continue;
-      if ((want(o.id) || want(fx.id)) && overlaps(z, corners(o))) issues.push({ code: 'clearance', fixture: want(o.id) ? o.id : fx.id, message: `${o.id} masuk area bebas ${fx.id}` });
+      if ((want(o.id) || want(fx.id)) && overlaps(z, corners(o))) issues.push({ code: 'clearance', fixture: want(o.id) ? o.id : fx.id, message: t('{a} masuk area bebas {b}', { a: o.id, b: fx.id }) });
     }
   }
   return issues;
@@ -154,7 +155,7 @@ export function navIssues(world: World, walls: DerivedWalls, fixtures: Fixture[]
     const e1 = vl.ends.find((e) => e.floor === 'L1')!;
     const e2 = vl.ends.find((e) => e.floor === 'L2')!;
     if (nav.L1.nearestWalkable(e1.point, 0.6, reach.L1)) seeds.push(nav.L2.cellOf(e2.arrive ?? e2.point));
-    else issues.push({ code: 'link', message: `Titik ${vl.id} di L1 tertutup` });
+    else issues.push({ code: 'link', message: t('Titik {id} di L1 tertutup', { id: vl.id }) });
   }
   reach.L2 = nav.L2.flood(seeds);
   for (const r of world.rooms) {
@@ -166,8 +167,8 @@ export function navIssues(world: World, walls: DerivedWalls, fixtures: Fixture[]
     const [ib, jb] = g.cellOf([Math.max(...xs), Math.max(...ys)]);
     let ok = false;
     for (let j = ja; j <= jb && !ok; j++) for (let i = ia; i <= ib && !ok; i++) if (reach[r.floor][j * g.w + i] && pointInPoly(g.center(i, j), r.polygon)) ok = true;
-    if (!ok) issues.push({ code: 'unreachable', message: `${r.name} tidak dapat dicapai` });
+    if (!ok) issues.push({ code: 'unreachable', message: t('{room} tidak dapat dicapai', { room: r.name }) });
   }
-  for (const s of w2.activitySlots) if (!nav[s.floor].nearestWalkable(s.pos, 0.9, reach[s.floor])) issues.push({ code: 'slot', fixture: s.fixture, message: `Slot ${s.activity} di ${s.fixture} tidak dapat didekati` });
+  for (const s of w2.activitySlots) if (!nav[s.floor].nearestWalkable(s.pos, 0.9, reach[s.floor])) issues.push({ code: 'slot', fixture: s.fixture, message: t('Slot {activity} di {fixture} tidak dapat didekati', { activity: s.activity, fixture: s.fixture }) });
   return { issues, nav };
 }

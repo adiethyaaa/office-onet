@@ -427,6 +427,17 @@ Permintaan pemilik: harus bisa melihat posisi setiap persona tanpa berkeliling g
 - Failure: modul peta gagal dimuat → dunia tetap berjalan tanpa minimap. Persona tidak terjangkau dalam mode visitor → `Temui` menampilkan alasan, avatar tidak dipindah.
 - Batas: peta menunjukkan posisi simulasi persona di dunia, bukan lokasi fisik orang sungguhan. Kode peta dimuat sebagai chunk terpisah setelah dunia mulai, sehingga anggaran unduhan pertama tidak bertambah.
 
+## 21. Bahasa tampilan
+
+- REQ-I18N-01: Sebagai pengunjung luar negeri, saya ingin tampilan dalam bahasa Inggris supaya bisa memakai app tanpa paham Bahasa Indonesia. AC:
+  - Bahasa sumber Bahasa Indonesia. Teks tampilan (HUD, dialog, toast, label 3D, peta, papan kerja, chat, Studio, Avatar Studio, nama ruang, lantai, perabot, dan peran) tersedia dalam English.
+  - Bahasa dipilih berurutan: parameter `?lang=en|id`, pilihan yang tersimpan, lalu bahasa browser (Indonesia atau Melayu mendapat Bahasa Indonesia, selain itu English).
+  - Pengaturan memuat pilihan `Bahasa` (Bahasa Indonesia, English). Mengganti bahasa memuat ulang halaman supaya semua label dibangun ulang. Atribut `lang` pada `<html>` mengikuti bahasa aktif.
+  - Kamus English dimuat sebagai chunk terpisah hanya bila bahasa English aktif, sehingga anggaran entry chunk (R2) tidak bertambah untuk pengunjung berbahasa Indonesia.
+  - Tes unit memastikan setiap teks yang dibungkus `t()` punya terjemahan, placeholder `{...}` sama, dan semua nama ruang, lantai, dan perabot di `world.json` diterjemahkan.
+- Failure: kamus gagal dimuat → app berjalan dalam Bahasa Indonesia.
+- Batas: isi buatan pengguna (pesan chat, judul tugas papan kerja nyata, catatan dari server) tidak diterjemahkan. Beberapa pesan dari server masih berbahasa Indonesia.
+
 ## Sumber
 
 [1] https://voffice.holixora.com/ : demo menyatakan simulasi, bukan data pekerjaan nyata.

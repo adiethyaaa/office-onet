@@ -1,6 +1,7 @@
 // Detail tampilan chat ala Telegram (Tahap 1): pemisah tanggal, centang,
 // "terakhir dilihat", bunyi pesan masuk, dan penghitung di judul tab.
 import type { Receipt } from './api';
+import { lang, locale, t } from '../i18n';
 
 const TZ = 'Asia/Makassar';
 const dayKey = (ms: number) => new Date(ms).toLocaleDateString('en-CA', { timeZone: TZ });
@@ -8,15 +9,16 @@ const dayKey = (ms: number) => new Date(ms).toLocaleDateString('en-CA', { timeZo
 /** "Hari ini" / "Kemarin" / "8 Okt 2026", in WITA like the rest of the panel. */
 export function dayLabel(ms: number, now = Date.now()): string {
   const k = dayKey(ms);
-  if (k === dayKey(now)) return 'Hari ini';
-  if (k === dayKey(now - 86_400_000)) return 'Kemarin';
-  return new Date(ms).toLocaleDateString('id-ID', { timeZone: TZ, day: 'numeric', month: 'short', year: 'numeric' });
+  if (k === dayKey(now)) return t('Hari ini');
+  if (k === dayKey(now - 86_400_000)) return t('Kemarin');
+  return new Date(ms).toLocaleDateString(locale(), { timeZone: TZ, day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export const sameDay = (a: number, b: number) => dayKey(a) === dayKey(b);
 
-export const clock = (ms: number) => new Date(ms).toLocaleTimeString('id-ID', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
+export const clock = (ms: number) => new Date(ms).toLocaleTimeString(locale(), { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
 
+// Labels stay Indonesian (module constant); panel.ts applies t() when shown.
 export const RECEIPT: Record<Receipt, { mark: string; label: string }> = {
   sent: { mark: '✓', label: 'Terkirim ke server, belum diambil agen' },
   delivered: { mark: '✓✓', label: 'Diterima agen' },
@@ -25,13 +27,15 @@ export const RECEIPT: Record<Receipt, { mark: string; label: string }> = {
 
 /** Header status line: typing wins, then a real reply time, else nothing invented. */
 export function statusLine(typing: boolean | undefined, lastSeen: number | null | undefined, now = Date.now()): string {
-  if (typing) return 'sedang mengetik…';
+  if (typing) return t('sedang mengetik…');
   if (!lastSeen) return '';
   const min = Math.round((now - lastSeen) / 60_000);
-  if (min < 2) return 'aktif barusan';
-  if (min < 60) return `aktif ${min} menit lalu`;
-  if (sameDay(lastSeen, now)) return `aktif hari ini ${clock(lastSeen)}`;
-  return `aktif ${dayLabel(lastSeen, now).toLowerCase()} ${clock(lastSeen)}`;
+  if (min < 2) return t('aktif barusan');
+  if (min < 60) return t('aktif {min} menit lalu', { min });
+  if (sameDay(lastSeen, now)) return t('aktif hari ini {time}', { time: clock(lastSeen) });
+  const day = dayLabel(lastSeen, now);
+  // Indonesian lowercases the whole label ("8 okt 2026"); English only the first letter ("yesterday", "8 Oct 2026").
+  return t('aktif {day} {time}', { day: lang === 'id' ? day.toLowerCase() : day.charAt(0).toLowerCase() + day.slice(1), time: clock(lastSeen) });
 }
 
 let audio: AudioContext | null = null;
@@ -56,12 +60,15 @@ export function ping() {
 }
 export function unlockAudio() { try { audio ??= new AudioContext(); void audio.resume(); } catch { /* ignore */ } }
 
-const BASE_TITLE = document.title;
-/** "(3) Kantor RPG" like a messaging tab; plain title when nothing is unread. */
-export function setTitleCount(n: number) { document.title = n > 0 ? `(${n > 99 ? '99+' : n}) ${BASE_TITLE}` : BASE_TITLE; }
+/** "(3) Kantor RPG" like a messaging tab; plain title when nothing is unread.
+ *  The base title is read per call so it follows the language loaded at boot. */
+export function setTitleCount(n: number) {
+  const base = document.title.replace(/^\(\d+\+?\) /, '');
+  document.title = n > 0 ? `(${n > 99 ? '99+' : n}) ${base}` : base;
+}
 
 /** Quote prefix for a reply; plain text so it reads the same in Telegram. */
 export function quoteFor(who: string, text: string): string {
   const one = text.replace(/\s+/g, ' ').trim();
-  return `↩ Membalas ${who}: "${one.length > 120 ? `${one.slice(0, 117)}…` : one}"\n\n`;
+  return `↩ ${t('Membalas')} ${who}: "${one.length > 120 ? `${one.slice(0, 117)}…` : one}"\n\n`;
 }

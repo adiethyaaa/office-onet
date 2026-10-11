@@ -1,5 +1,6 @@
 // Renders IdleSim NPCs with their Blender GLBs and maps activity -> clip.
 // The sim runs on a fixed 0.1 s step; rendering interpolates positions.
+import { t } from '../i18n';
 import * as THREE from 'three';
 import { labelClear, type LabelBlocker } from './label-visibility';
 import { IdleSim, type NpcState } from '../sim/idle';
@@ -99,12 +100,12 @@ export class NpcLayer {
       steps++;
     }
     if (steps === 5) this.acc = 0; // drop backlog after a long stall instead of fast-forwarding
-    const t = this.acc / STEP;
+    const alpha = this.acc / STEP;
     for (const npc of this.sim.npcs) {
       const v = this.views.get(npc.id)!;
       const visible = npc.floor === playerFloor;
       v.avatar.root.visible = visible;
-      v.avatar.root.position.lerpVectors(v.prev, v.next, t);
+      v.avatar.root.position.lerpVectors(v.prev, v.next, alpha);
       v.avatar.setFacing(npc.facing);
       if (playerPos) {
         // Hysteresis band: an NPC walking along the LOD radius used to swap
@@ -122,7 +123,7 @@ export class NpcLayer {
       const screenY = ((1 - s.y) / 2) * h;
       const screenX = ((s.x + 1) / 2) * w;
       const busy = npc.workStatus === 'working' || npc.workStatus === 'waiting';
-      const activityText = `${npc.name} · ${busy ? WORK_LABEL[npc.workStatus] : (ACTIVITY_LABEL[npc.activity] ?? npc.activity)}`;
+      const activityText = `${npc.name} · ${busy ? t(WORK_LABEL[npc.workStatus]) : (ACTIVITY_LABEL[npc.activity] ? t(ACTIVITY_LABEL[npc.activity]) : npc.activity)}`;
       v.label.classList.toggle('busy', busy);
       if (v.label.textContent !== activityText) v.label.textContent = activityText;
       const on = s.z < 1 && Math.abs(s.x) < 1.05 && Math.abs(s.y) < 1.05

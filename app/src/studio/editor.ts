@@ -4,6 +4,7 @@
 import { geometryIssues, navIssues, roomAt, type Issue } from './validate';
 import { deriveOutlets, type OutletDerivation } from '../world/ict';
 import type { DerivedWalls, Fixture, FloorId, Outlet, Vec2, World } from '../world/types';
+import { t } from '../i18n';
 
 export const GRID = 0.25;
 export const LOCKED_FAMILIES = new Set(['shell', 'sanitary']);
@@ -42,11 +43,11 @@ export class Editor {
 
   /** Fixtures whose collider or ICT data other records depend on stay put. */
   lockedReason(fx: Fixture): string | null {
-    if (fx.verticalLink) return 'Tangga/lift adalah bagian struktur.';
-    if (fx.ictRack) return 'Rack terhubung ke port map ICT.';
+    if (fx.verticalLink) return t('Tangga/lift adalah bagian struktur.');
+    if (fx.ictRack) return t('Rack terhubung ke port map ICT.');
     const fam = this.world.catalog[fx.type]?.family;
-    if (fam === 'shell') return 'Elemen bangunan.';
-    if (fam === 'sanitary') return 'Fixture sanitasi terikat shaft basah.';
+    if (fam === 'shell') return t('Elemen bangunan.');
+    if (fam === 'sanitary') return t('Fixture sanitasi terikat shaft basah.');
     return null;
   }
 
@@ -55,20 +56,20 @@ export class Editor {
     let target: Fixture | undefined;
     if (op.kind === 'add') {
       const cat = this.world.catalog[op.type];
-      if (!cat) return { ok: false, issues: [{ code: 'outside', message: `Tipe ${op.type} tidak dikenal` }] };
-      if (LOCKED_FAMILIES.has(cat.family)) return { ok: false, issues: [{ code: 'outside', message: `${cat.label} tidak dapat ditambah di Studio` }] };
+      if (!cat) return { ok: false, issues: [{ code: 'outside', message: t('Tipe {type} tidak dikenal', { type: op.type }) }] };
+      if (LOCKED_FAMILIES.has(cat.family)) return { ok: false, issues: [{ code: 'outside', message: t('{label} tidak dapat ditambah di Studio', { label: cat.label }) }] };
       const pos: Vec2 = [snap(op.pos[0]), snap(op.pos[1])];
       const room = roomAt(this.world, op.floor, pos);
-      if (!room) return { ok: false, issues: [{ code: 'outside', message: 'Posisi di luar ruang' }] };
+      if (!room) return { ok: false, issues: [{ code: 'outside', message: t('Posisi di luar ruang') }] };
       const id = `FX-${op.floor}-D${String(this.addCounter + 1).padStart(3, '0')}`;
       target = { id, floor: op.floor, room, type: op.type, asset: `AST-${op.type.toUpperCase().replace(/_/g, '-')}`, pos, rot: op.rot ?? 0, size: [...cat.size] as [number, number, number], collider: cat.collider };
       next.push(target);
     } else {
       const idx = next.findIndex((f) => f.id === op.id);
-      if (idx < 0) return { ok: false, issues: [{ code: 'outside', message: `${op.id} tidak ditemukan` }] };
+      if (idx < 0) return { ok: false, issues: [{ code: 'outside', message: t('{id} tidak ditemukan', { id: op.id }) }] };
       const cur = next[idx];
       const lock = this.lockedReason(cur);
-      if (lock || !this.editable(cur)) return { ok: false, issues: [{ code: 'outside', fixture: cur.id, message: `${cur.id} terkunci: ${lock ?? 'tidak dapat disunting'}` }] };
+      if (lock || !this.editable(cur)) return { ok: false, issues: [{ code: 'outside', fixture: cur.id, message: t('{id} terkunci: {reason}', { id: cur.id, reason: lock ?? t('tidak dapat disunting') }) }] };
       if (op.kind === 'delete') {
         next.splice(idx, 1);
         // A chair paired with a desk loses its pair link instead of dangling.
@@ -76,7 +77,7 @@ export class Editor {
       } else if (op.kind === 'move') {
         const pos: Vec2 = [snap(op.pos[0]), snap(op.pos[1])];
         const room = roomAt(this.world, cur.floor, pos);
-        if (!room) return { ok: false, issues: [{ code: 'outside', fixture: cur.id, message: 'Posisi di luar ruang' }] };
+        if (!room) return { ok: false, issues: [{ code: 'outside', fixture: cur.id, message: t('Posisi di luar ruang') }] };
         target = next[idx] = { ...cur, pos, room };
       } else {
         target = next[idx] = { ...cur, rot: (((cur.rot + op.delta) % 360) + 360) % 360 };

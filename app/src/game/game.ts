@@ -1,4 +1,5 @@
 // Game orchestrator: renderer, floors, CEO, interactions and HUD wiring.
+import { t } from '../i18n';
 import * as THREE from 'three';
 import { labelClear, type LabelBlocker } from './label-visibility';
 import { buildFixturesInto, buildFloor, MaterialCache, setFurnitureKit, toThree, type FloorBuild } from '../world/build';
@@ -89,12 +90,12 @@ export class Game {
     const map: Record<string, WorkStatus> = { working: 'working', waiting: 'waiting', idle: 'done', unknown: 'unknown' };
     for (const npc of this.npcs.sim.npcs) {
       const p = list?.find((a) => a.actorId === npc.id);
-      if (!p) this.npcs.sim.setWork(npc.id, 'unknown', list ? 'tidak ada profil Hermes' : 'tidak ada adapter (demo offline)');
+      if (!p) this.npcs.sim.setWork(npc.id, 'unknown', list ? t('tidak ada profil Hermes') : t('tidak ada adapter (demo offline)'));
       else this.npcs.sim.setWork(npc.id, map[p.status] ?? 'unknown', p.source, p.summary);
     }
     const badge = $('sim-badge');
-    badge.textContent = list ? 'Status kerja: nyata' : 'SIMULASI: data demo';
-    badge.title = list ? 'Agen yang sedang bekerja duduk dan mengetik di mejanya (Kanban, perintah RPG, agent.log). Aktivitas santai tetap simulasi.' : 'Semua aktivitas dan status adalah fixture demo, bukan data kerja nyata';
+    badge.textContent = list ? t('Status kerja: nyata') : t('SIMULASI: data demo');
+    badge.title = list ? t('Agen yang sedang bekerja duduk dan mengetik di mejanya (Kanban, perintah RPG, agent.log). Aktivitas santai tetap simulasi.') : t('Semua aktivitas dan status adalah fixture demo, bukan data kerja nyata');
     badge.classList.toggle('live', !!list);
   }
   studioFocus: THREE.Vector3 | null = null;
@@ -144,7 +145,7 @@ export class Game {
     this.renderer.domElement.addEventListener('webglcontextlost', (e) => {
       e.preventDefault();
       this.stop();
-      window.dispatchEvent(new CustomEvent('kantor:fallback', { detail: 'Konteks WebGL hilang (context lost). Mode direktori aktif.' }));
+      window.dispatchEvent(new CustomEvent('kantor:fallback', { detail: t('Konteks WebGL hilang (context lost). Mode direktori aktif.') }));
     });
     window.addEventListener('resize', () => this.resize());
   }
@@ -266,10 +267,10 @@ export class Game {
       if (vl.playable === false) continue;
       for (const end of vl.ends) {
         const other = vl.ends.find((e) => e !== end)!;
-        const verb = vl.type === 'lift' ? 'Naik lift' : 'Pakai tangga';
+        const verb = vl.type === 'lift' ? t('Naik lift') : t('Pakai tangga');
         list.push({
           id: `${vl.id}@${end.floor}`, kind: 'link', floor: end.floor, pos: end.point, radius: 1.1,
-          label: `${verb} ke ${this.world.floors.find((f) => f.id === other.floor)!.name}`,
+          label: t('{verb} ke {floor}', { verb, floor: this.world.floors.find((f) => f.id === other.floor)!.name }),
           run: () => this.useLink(vl, other.floor),
         });
       }
@@ -280,7 +281,7 @@ export class Game {
     for (const fx of this.world.fixtures) {
       const board = BOARD_FIXTURES[fx.id];
       if (board) {
-        list.push({ id: fx.id, kind: 'fixture', floor: fx.floor, pos: fx.pos, radius: Math.max(fx.size[0], fx.size[1]) / 2 + 0.9, label: `Buka ${BOARD_LABEL[board]}`, run: () => this.onBoard?.(board) });
+        list.push({ id: fx.id, kind: 'fixture', floor: fx.floor, pos: fx.pos, radius: Math.max(fx.size[0], fx.size[1]) / 2 + 0.9, label: t('Buka {board}', { board: t(BOARD_LABEL[board]) }), run: () => this.onBoard?.(board) });
         continue;
       }
       const inter = this.world.catalog[fx.type]?.interaction;
@@ -292,13 +293,13 @@ export class Game {
 
   private fixtureLabel(fx: Fixture, inter: string): string {
     switch (inter) {
-      case 'blueprint': return 'Baca denah dan ICT';
-      case 'directory': return 'Buka direktori';
-      case 'artwork': return 'Lihat karya';
-      case 'coffee': return 'Bikin kopi (aktivitas virtual)';
-      case 'billiards': return 'Main biliar (aktivitas virtual)';
-      case 'game': return 'Main game (aktivitas virtual)';
-      case 'exercise': return 'Olahraga (aktivitas virtual)';
+      case 'blueprint': return t('Baca denah dan ICT');
+      case 'directory': return t('Buka direktori');
+      case 'artwork': return t('Lihat karya');
+      case 'coffee': return t('Bikin kopi (aktivitas virtual)');
+      case 'billiards': return t('Main biliar (aktivitas virtual)');
+      case 'game': return t('Main game (aktivitas virtual)');
+      case 'exercise': return t('Olahraga (aktivitas virtual)');
       default: return this.world.catalog[fx.type].label;
     }
   }
@@ -330,7 +331,7 @@ export class Game {
   renderDirectory() {
     renderDirectory(this.world, {
       mode3d: true,
-      canGo: (room) => (this.roomTarget(room) ? { ok: true } : { ok: false, reason: room.access === 'restricted' ? 'Akses terbatas (mode visitor)' : 'Tidak terjangkau' }),
+      canGo: (room) => (this.roomTarget(room) ? { ok: true } : { ok: false, reason: room.access === 'restricted' ? t('Akses terbatas (mode visitor)') : t('Tidak terjangkau') }),
       go: (room) => this.goToRoom(room),
       showRoom: (room) => showRoomCard(this.world, room, this.roomTarget(room) !== null),
       showPersona: (id) => showPersonaCard(this.world, id),
@@ -374,14 +375,14 @@ export class Game {
   }
 
   goToRoom(room: Room) {
-    const t = this.roomTarget(room);
-    if (!t) { toast(`${room.name} tidak dapat dicapai pada mode ini.`); return; }
+    const target = this.roomTarget(room);
+    if (!target) { toast(t('{room} tidak dapat dicapai pada mode ini.', { room: room.name })); return; }
     this.toggleDirectory(false);
     this.transition(() => {
       this.player.floor = room.floor;
-      this.player.pos = t;
+      this.player.pos = target;
       this.applyFloorVisibility();
-      toast(`Pindah ke ${room.name}`);
+      toast(t('Pindah ke {room}', { room: room.name }));
     });
   }
 
@@ -406,8 +407,8 @@ export class Game {
     const slots = this.world.activitySlots.filter((sl) => sl.fixture === fx.id);
     const free = slots.find((sl) => !this.slotTakenBy(sl.id));
     if (free) this.startActivity(free);
-    else if (slots.length) toast(`Sedang dipakai ${this.slotTakenBy(slots[0].id)}. Coba lagi nanti.`);
-    else toast(`${this.fixtureLabel(fx, inter)}: aktivitas virtual, tidak mengubah status kerja.`);
+    else if (slots.length) toast(t('Sedang dipakai {name}. Coba lagi nanti.', { name: this.slotTakenBy(slots[0].id) ?? '' }));
+    else toast(t('{label}: aktivitas virtual, tidak mengubah status kerja.', { label: this.fixtureLabel(fx, inter) }));
   }
 
   private activityUntil = 0;
@@ -417,17 +418,17 @@ export class Game {
   private slotTakenBy(slotId: string): string | null {
     const r = this.npcs.sim.reservations.get(slotId);
     if (!r || r.npc === PLAYER_ID || r.expires <= this.npcs.sim.time) return null;
-    return this.npcs.sim.npcs.find((n) => n.id === r.npc)?.name ?? 'persona lain';
+    return this.npcs.sim.npcs.find((n) => n.id === r.npc)?.name ?? t('persona lain');
   }
 
   startActivity(slot: ActivitySlot) {
     if (this.activity?.slot.id === slot.id) { this.activityAction(); return; }
     if (this.activity) this.endActivity(false);
     const taker = this.slotTakenBy(slot.id);
-    if (taker) { toast(`Sedang dipakai ${taker}.`); return; }
+    if (taker) { toast(t('Sedang dipakai {name}.', { name: taker })); return; }
     const fr = this.floors.get(slot.floor)!;
     const spot = fr.nav[this.mode].nearestWalkable(slot.pos, 0.9, fr.reach[this.mode]);
-    if (!spot) { toast('Tempat ini tidak dapat dicapai.'); return; }
+    if (!spot) { toast(t('Tempat ini tidak dapat dicapai.')); return; }
     this.player.pos = spot;
     this.player.facing = slot.facing;
     this.npcs.sim.reservations.set(slot.id, { npc: PLAYER_ID, expires: Number.POSITIVE_INFINITY });
@@ -445,11 +446,11 @@ export class Game {
       // Deterministic pseudo-random outcome per slot and shot; labelled simulation.
       const roll = ((a.seed ^ (a.shots * 2654435761)) >>> 0) % 100;
       if (roll < 38) a.pots++;
-      toast(roll < 38 ? `Masuk! ${a.pots} dari ${a.shots} pukulan (simulasi)` : `Meleset. ${a.pots} dari ${a.shots} pukulan (simulasi)`);
+      toast(roll < 38 ? t('Masuk! {pots} dari {shots} pukulan (simulasi)', { pots: a.pots, shots: a.shots }) : t('Meleset. {pots} dari {shots} pukulan (simulasi)', { pots: a.pots, shots: a.shots }));
       this.renderActivity();
     } else if (a.slot.activity === 'game') {
       a.shots++;
-      toast(`Level ${a.shots + 1} (permainan virtual, tanpa skor tersimpan)`);
+      toast(t('Level {n} (permainan virtual, tanpa skor tersimpan)', { n: a.shots + 1 }));
       this.renderActivity();
     } else this.endActivity(true);
   }
@@ -461,15 +462,15 @@ export class Game {
     if (r?.npc === PLAYER_ID) this.npcs.sim.reservations.delete(a.slot.id);
     this.activity = null;
     $('activity').hidden = true;
-    if (announce) toast('Aktivitas selesai.');
+    if (announce) toast(t('Aktivitas selesai.'));
   }
 
   private renderActivity() {
     const a = this.activity;
     if (!a) return;
     const secs = Math.floor((performance.now() - a.startedAt) / 1000);
-    const extra = a.slot.activity === 'billiards' ? ` · ${a.pots}/${a.shots} masuk` : a.slot.activity === 'game' ? ` · level ${a.shots + 1}` : '';
-    $('activity-text').textContent = `${slotVerb(a.slot)} · ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}${extra} (aktivitas virtual)`;
+    const extra = a.slot.activity === 'billiards' ? ` · ${t('{pots}/{shots} masuk', { pots: a.pots, shots: a.shots })}` : a.slot.activity === 'game' ? ` · ${t('level {n}', { n: a.shots + 1 })}` : '';
+    $('activity-text').textContent = `${slotVerb(a.slot)} · ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}${extra} ${t('(aktivitas virtual)')}`;
   }
 
   private transition(fn: () => void, holdMs = 220) {
@@ -499,7 +500,7 @@ export class Game {
     for (const r of this.world.rooms) {
       if (r.floor !== this.player.floor || r.category === 'shaft' || r.category === 'circulation') continue;
       const locked = this.settings.visitor && r.access === 'restricted';
-      const tag = el('div', { class: `room-label${locked ? ' locked' : ''}` }, locked ? `${r.name} (terkunci)` : r.name);
+      const tag = el('div', { class: `room-label${locked ? ' locked' : ''}` }, locked ? t('{room} (terkunci)', { room: r.name }) : r.name);
       host.append(tag);
       this.labels.set(r.id, tag);
     }
@@ -512,7 +513,7 @@ export class Game {
       // Switching to visitor inside a restricted room: walk the CEO out to safety.
       const safe = this.world.waypoints.find((w) => w.id === this.world.floors.find((f) => f.id === this.player.floor)!.safePoint)!;
       this.player.pos = [...safe.pos] as Vec2;
-      toast('Mode visitor: ruang terbatas dikunci, avatar dipindah ke titik aman.');
+      toast(t('Mode visitor: ruang terbatas dikunci, avatar dipindah ke titik aman.'));
     }
     this.rebuildLabels();
     this.renderDirectory();
@@ -527,7 +528,7 @@ export class Game {
     if (anyDialogOpen() || this.transitioning || this.studioOpen) return;
     if (this.activity) { this.activityAction(); return; }
     if (this.focusTarget) this.focusTarget.run();
-    else toast('Tidak ada yang bisa dipakai di dekat sini.');
+    else toast(t('Tidak ada yang bisa dipakai di dekat sini.'));
   }
 
   private nearestInteractable(): Interactable | null {
@@ -536,7 +537,7 @@ export class Game {
     if (npc) {
       let it = this.npcInteractables.get(npc.id);
       if (!it) {
-        it = { id: npc.id, kind: 'fixture', floor: npc.floor, pos: npc.pos, radius: 1.6, label: `Sapa ${npc.name}`, run: () => this.talkTo(npc.id) };
+        it = { id: npc.id, kind: 'fixture', floor: npc.floor, pos: npc.pos, radius: 1.6, label: t('Sapa {name}', { name: npc.name }), run: () => this.talkTo(npc.id) };
         this.npcInteractables.set(npc.id, it);
       }
       it.pos = npc.pos;
@@ -556,41 +557,41 @@ export class Game {
   /** Open the persona dialog; the NPC pauses (reservation kept) until it closes. */
   talkTo(id: string) {
     const npc = this.npcs.sim.pauseForPlayer(id);
-    if (!npc) { toast('Persona tidak ditemukan.'); return; }
+    if (!npc) { toast(t('Persona tidak ditemukan.')); return; }
     this.talkingTo = id;
     this.npcs.faceTowards(id, this.player.pos);
     this.player.facing = (Math.atan2(npc.pos[1] - this.player.pos[1], npc.pos[0] - this.player.pos[0]) * 180) / Math.PI;
     this.player.avatar.setFacing(this.player.facing);
-    const lines = DIALOGUE.personas[id] ?? ['Halo.'];
+    const lines = DIALOGUE.personas[id] ?? [t('Halo.')];
     const quote = el('p', { class: 'quote', 'aria-live': 'polite' });
     const next = () => {
       const k = this.lineIndex.get(id) ?? 0;
-      quote.textContent = lines[k % lines.length];
+      quote.textContent = t(lines[k % lines.length]);
       this.lineIndex.set(id, k + 1);
     };
     next();
-    const more = el('button', { type: 'button', class: 'btn' }, 'Topik lain');
+    const more = el('button', { type: 'button', class: 'btn' }, t('Topik lain'));
     more.addEventListener('click', next);
     const profile = ACTOR_PROFILE[id];
-    const command = el('button', { type: 'button', class: 'btn primary', 'data-command': profile ?? '' }, 'Bicara & beri tugas');
+    const command = el('button', { type: 'button', class: 'btn primary', 'data-command': profile ?? '' }, t('Bicara & beri tugas'));
     command.addEventListener('click', () => {
       ($('dlg-info') as HTMLDialogElement).close();
       if (profile) this.onAgent?.(profile);
     });
     const room = this.world.rooms.find((r) => r.floor === npc.floor && insidePoly(npc.pos, r.polygon));
     const busy = npc.workStatus === 'working' || npc.workStatus === 'waiting';
-    const work = !this.livePresence || npc.workStatus === 'unknown' ? `tidak diketahui: ${npc.workStatusSource}`
-      : busy ? `${WORK_LABEL[npc.workStatus]}${npc.workSummary ? `: ${npc.workSummary}` : ''} (${npc.workStatusSource})`
-      : `tidak ada tugas berjalan (${npc.workStatusSource})${npc.workSummary ? `, ${npc.workSummary}` : ''}`;
+    const work = !this.livePresence || npc.workStatus === 'unknown' ? t('tidak diketahui: {source}', { source: npc.workStatusSource })
+      : busy ? `${t(WORK_LABEL[npc.workStatus])}${npc.workSummary ? `: ${npc.workSummary}` : ''} (${npc.workStatusSource})`
+      : `${t('tidak ada tugas berjalan ({source})', { source: npc.workStatusSource })}${npc.workSummary ? `, ${npc.workSummary}` : ''}`;
     const body = [
-      el('p', { class: 'sim-note' }, this.livePresence ? 'Status kerja dari Hermes. Dialog dan aktivitas santai tetap fiksi.' : 'SIMULASI: persona virtual, dialog fiksi statis.'),
+      el('p', { class: 'sim-note' }, this.livePresence ? t('Status kerja dari Hermes. Dialog dan aktivitas santai tetap fiksi.') : t('SIMULASI: persona virtual, dialog fiksi statis.')),
       quote,
       dlRows([
-        ['Peran', npc.role],
-        ['Aktivitas tampilan', `${ACTIVITY_LABEL[npc.activity] ?? npc.activity}${busy && this.livePresence ? '' : ' (simulasi)'}`],
-        ['Status kerja', work],
-        ['Lokasi', room ? room.name : '-'],
-        ['Jam simulasi', this.npcs.sim.clockLabel()],
+        [t('Peran'), npc.role],
+        [t('Aktivitas tampilan'), `${ACTIVITY_LABEL[npc.activity] ? t(ACTIVITY_LABEL[npc.activity]) : npc.activity}${busy && this.livePresence ? '' : ` ${t('(simulasi)')}`}`],
+        [t('Status kerja'), work],
+        [t('Lokasi'), room ? room.name : '-'],
+        [t('Jam simulasi'), this.npcs.sim.clockLabel()],
       ]),
       el('div', { class: 'row' }),
     ];
@@ -613,7 +614,7 @@ export class Game {
         const busy = n.workStatus === 'working' || n.workStatus === 'waiting';
         return {
           id: n.id, name: n.name, role: n.role, floor: n.floor, pos: [n.pos[0], n.pos[1]] as Vec2, busy,
-          doing: busy ? WORK_LABEL[n.workStatus] : (ACTIVITY_LABEL[n.activity] ?? n.activity),
+          doing: busy ? t(WORK_LABEL[n.workStatus]) : (ACTIVITY_LABEL[n.activity] ? t(ACTIVITY_LABEL[n.activity]) : n.activity),
           movingTo: n.via?.to ?? null,
         };
       }),
@@ -623,10 +624,10 @@ export class Game {
   /** Accessible path: move next to an NPC and open the dialog without 3D navigation. */
   meet(id: string) {
     const npc = this.npcs.sim.npcs.find((n) => n.id === id);
-    if (!npc) { toast('Persona tidak ditemukan.'); return; }
+    if (!npc) { toast(t('Persona tidak ditemukan.')); return; }
     const fr = this.floors.get(npc.floor)!;
     const spot = fr.nav[this.mode].nearestWalkable(npc.pos, 2.0, fr.reach[this.mode]);
-    if (!spot) { toast(`${npc.name} sedang di area yang tidak dapat dicapai pada mode ini.`); return; }
+    if (!spot) { toast(t('{name} sedang di area yang tidak dapat dicapai pada mode ini.', { name: npc.name })); return; }
     this.toggleDirectory(false);
     this.transition(() => {
       this.player.floor = npc.floor;
@@ -645,7 +646,7 @@ export class Game {
       if (failed.length) console.warn(`furniture GLB missing, procedural fallback for: ${failed.join(', ')}`);
     });
     this.player.avatar.load('assets/characters/ch-ceo.glb').then((ok) => {
-      if (!ok) toast('Model karakter belum tersedia: memakai placeholder berlabel.', 4000);
+      if (!ok) toast(t('Model karakter belum tersedia: memakai placeholder berlabel.'), 4000);
       else this.onAvatarLoaded?.();
     });
     this.rig.update(this.playerVec(), 0, true);
@@ -669,7 +670,7 @@ export class Game {
     if (this.frameTimes.length > 4000) this.frameTimes.splice(0, 1000);
     const nav = this.nav;
     const safe = this.world.waypoints.find((w) => w.id === this.world.floors.find((f) => f.id === this.player.floor)!.safePoint)!;
-    if (this.player.ensureWalkable(nav, safe.pos)) toast('Posisi tidak valid, kembali ke titik aman.');
+    if (this.player.ensureWalkable(nav, safe.pos)) toast(t('Posisi tidak valid, kembali ke titik aman.'));
     let dir: Vec2 = [0, 0];
     let run = false;
     if (!this.transitioning && !this.studioOpen) {
@@ -726,8 +727,8 @@ export class Game {
     if (this.studioOpen) { prompt.hidden = true; this.marker.visible = false; this.focusTarget = null; return; }
     if (this.activity) {
       const act = this.activity.slot.activity;
-      const key = matchMedia('(pointer: coarse)').matches ? 'Aksi' : 'E';
-      prompt.textContent = `${key}: ${act === 'billiards' ? 'Pukul bola' : act === 'game' ? 'Main ronde berikut' : 'Selesai'}`;
+      const key = matchMedia('(pointer: coarse)').matches ? t('Aksi') : 'E';
+      prompt.textContent = `${key}: ${act === 'billiards' ? t('Pukul bola') : act === 'game' ? t('Main ronde berikut') : t('Selesai')}`;
       prompt.hidden = false;
       this.focusTarget = null;
       this.marker.visible = false;
@@ -737,7 +738,7 @@ export class Game {
     if (it !== this.focusTarget || prompt.hidden === !!it) {
       this.focusTarget = it;
       if (it) {
-        prompt.textContent = `${matchMedia('(pointer: coarse)').matches ? 'Aksi' : 'E'}: ${it.label}`;
+        prompt.textContent = `${matchMedia('(pointer: coarse)').matches ? t('Aksi') : 'E'}: ${it.label}`;
         prompt.hidden = false;
       } else prompt.hidden = true;
     }
@@ -757,7 +758,7 @@ export class Game {
     if (id !== this.roomId) {
       this.roomId = id;
       const r = this.world.rooms.find((x) => x.id === id);
-      $('room-name').textContent = r ? r.name : 'Di luar ruang';
+      $('room-name').textContent = r ? r.name : t('Di luar ruang');
     }
   }
 
@@ -817,8 +818,8 @@ const VERB: Record<string, string> = {
 };
 
 export function slotVerb(slot: ActivitySlot): string {
-  if (slot.pose === 'sit' && (slot.activity === 'chat' || slot.activity === 'rest' || slot.activity === 'read')) return 'Duduk';
-  return VERB[slot.activity] ?? 'Pakai';
+  if (slot.pose === 'sit' && (slot.activity === 'chat' || slot.activity === 'rest' || slot.activity === 'read')) return t('Duduk');
+  return VERB[slot.activity] ? t(VERB[slot.activity]) : t('Pakai');
 }
 
 export function slotClip(slot: ActivitySlot): string {
@@ -868,12 +869,12 @@ export function showRoomCard(world: World, room: Room, reachable: boolean) {
   const seats = world.activitySlots.filter((s) => s.room === room.id && s.pose === 'sit').length;
   infoDialog(room.name, [
     dl([
-      ['ID', room.id], ['Lantai', world.floors.find((f) => f.id === room.floor)!.name], ['Fungsi', room.function],
-      ['Luas (as dinding)', `${area.toFixed(2)} m2 (proposal)`], ['Kursi dari fixture', String(seats)],
-      ['Akses', room.access === 'restricted' ? 'terbatas' : room.access], ['Lantai finish', room.finish.floor],
-      ['Status', reachable ? 'dapat dicapai pada mode ini' : 'tidak dapat dicapai pada mode ini'],
+      ['ID', room.id], [t('Lantai'), world.floors.find((f) => f.id === room.floor)!.name], [t('Fungsi'), room.function],
+      [t('Luas (as dinding)'), t('{area} m2 (proposal)', { area: area.toFixed(2) })], [t('Kursi dari fixture'), String(seats)],
+      [t('Akses'), room.access === 'restricted' ? t('terbatas') : room.access], [t('Lantai finish'), t(room.finish.floor)],
+      [t('Status'), reachable ? t('dapat dicapai pada mode ini') : t('tidak dapat dicapai pada mode ini')],
     ]),
-    el('p', { class: 'muted small' }, 'Ukuran adalah proposal konsep (AS-DIM-01, AS-DIM-02), bukan luas yang disahkan.'),
+    el('p', { class: 'muted small' }, t('Ukuran adalah proposal konsep (AS-DIM-01, AS-DIM-02), bukan luas yang disahkan.')),
   ]);
 }
 
@@ -881,31 +882,31 @@ export function showPersonaCard(world: World, id: string) {
   const a = world.actors.find((x) => x.id === id)!;
   const home = world.rooms.find((r) => r.id === a.homeRoom);
   infoDialog(a.displayName, [
-    dl([['Peran', a.role], ['Ruang utama', home ? home.name : '-'], ['Jenis', a.kind === 'player' ? 'avatar pemain (CEO)' : 'persona NPC']]),
-    el('p', {}, 'Representasi virtual original. Bukan likeness orang nyata dan bukan bukti pekerjaan sedang berjalan.'),
-    el('p', { class: 'muted small' }, 'Status kerja nyata (workStatus) tidak tersedia: integrasi private dinonaktifkan sampai ada izin.'),
+    dl([[t('Peran'), a.role], [t('Ruang utama'), home ? home.name : '-'], [t('Jenis'), a.kind === 'player' ? t('avatar pemain (CEO)') : t('persona NPC')]]),
+    el('p', {}, t('Representasi virtual original. Bukan likeness orang nyata dan bukan bukti pekerjaan sedang berjalan.')),
+    el('p', { class: 'muted small' }, t('Status kerja nyata (workStatus) tidak tersedia: integrasi private dinonaktifkan sampai ada izin.')),
   ]);
 }
 
 function showBlueprintCard(world: World) {
-  const link = el('a', { href: 'docs/A-101.pdf', target: '_blank', rel: 'noopener' }, 'Buka A-101 Denah Lantai 1 (PDF)');
-  const status = el('p', { class: 'muted small', role: 'status' }, 'Memeriksa ketersediaan PDF...');
+  const link = el('a', { href: 'docs/A-101.pdf', target: '_blank', rel: 'noopener' }, t('Buka A-101 Denah Lantai 1 (PDF)'));
+  const status = el('p', { class: 'muted small', role: 'status' }, t('Memeriksa ketersediaan PDF...'));
   fetch('docs/manifest.json').then((r) => r.json()).then((m: { docs: { href: string }[] }) => {
     const ok = m.docs.some((d) => d.href === 'docs/A-101.pdf');
-    status.textContent = ok ? 'PDF tersedia pada build ini.' : 'PDF A-101 belum dihasilkan pada build ini.';
+    status.textContent = ok ? t('PDF tersedia pada build ini.') : t('PDF A-101 belum dihasilkan pada build ini.');
     if (!ok) link.remove();
-  }).catch(() => { status.textContent = 'Daftar dokumen gagal dimuat.'; });
-  infoDialog('Meja denah: blueprint dan ICT', [
-    el('p', {}, `Dataset ${world.revision.id}: ${world.rooms.length} ruang, ${world.doors.length} pintu, ${world.fixtures.length} fixture, ${world.ict.outlets.length} outlet ICT.`),
-    el('p', {}, 'Semua gambar berstatus KONSEP, bukan untuk konstruksi. DWG native BLOCKED karena AutoCAD tidak tersedia; DXF dan PDF dihasilkan dari dataset yang sama.'),
+  }).catch(() => { status.textContent = t('Daftar dokumen gagal dimuat.'); });
+  infoDialog(t('Meja denah: blueprint dan ICT'), [
+    el('p', {}, t('Dataset {id}: {rooms} ruang, {doors} pintu, {fixtures} fixture, {outlets} outlet ICT.', { id: world.revision.id, rooms: world.rooms.length, doors: world.doors.length, fixtures: world.fixtures.length, outlets: world.ict.outlets.length })),
+    el('p', {}, t('Semua gambar berstatus KONSEP, bukan untuk konstruksi. DWG native BLOCKED karena AutoCAD tidak tersedia; DXF dan PDF dihasilkan dari dataset yang sama.')),
     link, status,
   ]);
 }
 
 function showArtworkCard(fx: Fixture) {
-  infoDialog('Karya di dinding', [
-    el('p', {}, `Karya ${fx.artwork ?? fx.id}: komposisi geometris original buatan generator proyek (bukan aset pihak ketiga).`),
-    el('p', { class: 'muted small' }, 'Pamflet dan signage final menyusul di M3 (brief Kevin).'),
+  infoDialog(t('Karya di dinding'), [
+    el('p', {}, t('Karya {id}: komposisi geometris original buatan generator proyek (bukan aset pihak ketiga).', { id: fx.artwork ?? fx.id })),
+    el('p', { class: 'muted small' }, t('Pamflet dan signage final menyusul di M3 (brief Kevin).')),
   ]);
 }
 

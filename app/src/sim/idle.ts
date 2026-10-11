@@ -5,6 +5,7 @@
 // no adapter, so workStatus stays 'unknown' no matter what the avatar does.
 // Nothing here performs network or model calls: decisions are a seeded
 // utility function evaluated only when an NPC finishes its current activity.
+import { t } from '../i18n';
 import { AGENT_GAP, stepBlocked } from './agents';
 import type { NavGrid } from '../world/navgrid';
 import type { Actor, ActivitySlot, FloorId, Vec2, VerticalLink, World } from '../world/types';
@@ -195,7 +196,7 @@ export class IdleSim {
       id: a.id, name: a.displayName, role: a.role, floor, pos: [start[0], start[1]], facing: seat?.facing ?? 90,
       phase: 'choose', activity: 'idle', slot: null, path: [], pathIndex: 0, via: null, until: 0,
       lastProgressAt: 0, lastPos: [start[0], start[1]], failures: 0, recentActivities: [], cooldown: {},
-      workStatus: 'unknown', workStatusSource: 'tidak ada adapter (demo offline)', workSummary: '', group: null,
+      workStatus: 'unknown', workStatusSource: t('tidak ada adapter (demo offline)'), workSummary: '', group: null,
       speed: 1.3 + this.rand() * 0.25, yieldTo: null, yieldSince: 0, holdUntil: 0, resumeTo: null, stats: { activities: {}, recoveries: 0, cancelled: 0, distance: 0 },
     };
   }

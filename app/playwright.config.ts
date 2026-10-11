@@ -18,6 +18,9 @@ export default defineConfig({
   use: {
     baseURL: external ?? `http://127.0.0.1:${port}`,
     trace: 'off',
+    // The UI picks its language from the browser; the suite asserts the
+    // Indonesian source text, so pin it. English has its own spec (i18n.spec.ts).
+    locale: 'id-ID',
     launchOptions: { args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] },
   },
   webServer: external ? undefined : {

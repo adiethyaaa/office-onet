@@ -317,6 +317,7 @@ Pesan yang cocok ditahan dengan status `Menunggu persetujuan`. Panel memperlihat
 | Kualitas grafis | Otomatis, ringan (tanpa bayangan), tinggi. Otomatis memilih ringan bila browser memakai renderer software |
 | Kurangi gerak | Mematikan animasi sekunder. Bawaannya mengikuti pengaturan sistem |
 | Mode visitor | Mengunci ruang berakses terbatas (ruang server, riser, shaft). Avatar dipindah ke titik aman bila sedang berada di sana |
+| Bahasa | Bahasa Indonesia atau English. Bawaannya mengikuti bahasa browser: browser berbahasa Indonesia mendapat Bahasa Indonesia, selain itu English. Mengganti bahasa memuat ulang halaman |
 
 Pengaturan disimpan di browser.
 
@@ -364,6 +365,7 @@ Semua artefak dibuat dari satu sumber, `design/world.json`. Bila dataset berubah
 | `?chat=<agen>` | Langsung membuka chat agen tertentu (dipakai notifikasi) |
 | `?perf=route&seconds=60&report=1` | Rute uji performa otomatis lalu tampilkan laporan FPS |
 | `?a11ylog=1` | Catat pengumuman aksesibilitas untuk uji pembaca layar |
+| `?lang=en` atau `?lang=id` | Paksa bahasa tampilan untuk kunjungan itu |
 
 ## 17. Privasi dan data
 

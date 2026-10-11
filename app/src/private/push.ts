@@ -65,6 +65,7 @@ export async function setMutedBots(list: string[]): Promise<void> {
   if (ep) await api.pushMute(ep, list);
 }
 
+// Indonesian source text; panel.ts applies t() when shown.
 export const PUSH_HELP: Record<PushState, string> = {
   unsupported: 'Browser ini tidak mendukung notifikasi push.',
   'ios-install': 'Di iPhone/iPad: ketuk Bagikan → Tambah ke Layar Utama, buka Kantor RPG dari ikon itu, lalu aktifkan notifikasi di sini (iOS 16.4+).',

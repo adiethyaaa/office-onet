@@ -1,56 +1,13 @@
-// Avatar Studio (REQ-AVATAR-01). Options come from design/characters.json
-// avatarVariants and are filtered by what the loaded GLB actually contains,
-// so no choice is offered without an asset. Preferences persist per browser;
-// anything stored that no longer exists falls back to the default.
+// Avatar Studio dialog (REQ-AVATAR-01). Fetched on first open so the first
+// download carries only the world (R2 bundle budget); the choice helpers it
+// shares with boot live in avatar-choice.ts.
 import * as THREE from 'three';
-import charactersJson from '@design/characters.json';
 import { Avatar } from '../game/avatar';
 import { $, el, openDialog, toast } from '../ui/dom';
+import { t } from '../i18n';
+import { DEFAULT_CHOICE, HAIR_LABEL, PREVIEW_CLIPS, SPEC, availableHair, clearChoice, loadChoice, paletteColors, saveChoice, type AvatarChoice } from './avatar-choice';
 
-interface Palette { label: string; [material: string]: string }
-interface VariantSpec { defaultHair: string; hairStyles: string[]; defaultPalette: string; palettes: Record<string, Palette> }
-export interface AvatarChoice { hair: string; palette: string }
-
-const SPEC = (charactersJson as unknown as { avatarVariants: Record<string, VariantSpec>; hairStyles?: Record<string, { label?: string }> }).avatarVariants['CH-CEO'];
-const HAIR_LABEL: Record<string, string> = { short_tuft: 'Pendek berjambul', swept: 'Disisir ke samping', spiky_soft: 'Jabrik lembut' };
-const KEY = 'kantor-rpg.avatar.v1';
-const PREVIEW_CLIPS = ['idle', 'walk', 'wave', 'talk', 'sit', 'type'];
-
-export const DEFAULT_CHOICE: AvatarChoice = { hair: SPEC.defaultHair, palette: SPEC.defaultPalette };
-
-export function paletteColors(name: string): Record<string, string> {
-  const p = SPEC.palettes[name] ?? SPEC.palettes[SPEC.defaultPalette];
-  const out: Record<string, string> = {};
-  for (const [k, v] of Object.entries(p)) if (k !== 'label') out[k] = v;
-  return out;
-}
-
-/** Stored choice, validated against the spec and the hair nodes actually present. */
-export function loadChoice(available: string[] = SPEC.hairStyles): AvatarChoice {
-  try {
-    const raw = JSON.parse(localStorage.getItem(KEY) ?? 'null') as Partial<AvatarChoice> | null;
-    if (raw && typeof raw.hair === 'string' && typeof raw.palette === 'string' && available.includes(raw.hair) && SPEC.palettes[raw.palette]) {
-      return { hair: raw.hair, palette: raw.palette };
-    }
-  } catch { /* storage blocked or corrupt: default below */ }
-  return { ...DEFAULT_CHOICE };
-}
-
-export function saveChoice(c: AvatarChoice): boolean {
-  try { localStorage.setItem(KEY, JSON.stringify(c)); return true; } catch { return false; }
-}
-
-export function clearChoice(): void {
-  try { localStorage.removeItem(KEY); } catch { /* nothing to clear */ }
-}
-
-/** Hair styles present as nodes in a loaded model. */
-export function availableHair(model: THREE.Object3D | null): string[] {
-  if (!model) return [];
-  const found = new Set<string>();
-  model.traverse((o) => { const m = /^hair_([a-z_]+?)(?:[._]\d+)?$/.exec(o.name); if (m) found.add(m[1]); });
-  return SPEC.hairStyles.filter((h) => found.has(h));
-}
+export { availableHair, loadChoice, paletteColors } from './avatar-choice';
 
 export class AvatarStudio {
   private renderer: THREE.WebGLRenderer | null = null;
@@ -93,13 +50,13 @@ export class AvatarStudio {
       this.renderer.setSize(size, Math.round(size * 1.2));
       this.camera.aspect = 1 / 1.2;
       this.camera.updateProjectionMatrix();
-      $('avatar-preview-state').textContent = 'Memuat model...';
+      $('avatar-preview-state').textContent = t('Memuat model...');
       const ok = this.preview.isPlaceholder ? await this.preview.load('assets/characters/ch-ceo.glb') : true;
-      $('avatar-preview-state').textContent = ok ? '' : 'Model karakter tidak tersedia; pratinjau memakai placeholder.';
+      $('avatar-preview-state').textContent = ok ? '' : t('Model karakter tidak tersedia; pratinjau memakai placeholder.');
       this.update();
       this.startPreview();
     } catch {
-      host.replaceChildren(el('p', { class: 'muted small' }, 'Pratinjau 3D tidak tersedia di browser ini; pilihan tetap bisa disimpan.'));
+      host.replaceChildren(el('p', { class: 'muted small' }, t('Pratinjau 3D tidak tersedia di browser ini; pilihan tetap bisa disimpan.')));
     }
   }
 
@@ -108,19 +65,19 @@ export class AvatarStudio {
     form.replaceChildren();
     const hairs = this.hairs.length ? this.hairs : [];
     const fsHair = el('fieldset', {});
-    fsHair.append(el('legend', {}, 'Rambut'));
-    if (!hairs.length) fsHair.append(el('p', { class: 'muted small' }, 'Varian rambut tidak ditemukan di model; memakai default.'));
+    fsHair.append(el('legend', {}, t('Rambut')));
+    if (!hairs.length) fsHair.append(el('p', { class: 'muted small' }, t('Varian rambut tidak ditemukan di model; memakai default.')));
     for (const h of hairs) {
       const id = `hair-${h}`;
       const input = el('input', { type: 'radio', name: 'hair', value: h, id });
       input.checked = h === this.choice.hair;
       input.addEventListener('change', () => { this.choice.hair = h; this.update(); });
       const label = el('label', { for: id });
-      label.append(input, document.createTextNode(` ${HAIR_LABEL[h] ?? h}`));
+      label.append(input, document.createTextNode(` ${HAIR_LABEL[h] ? t(HAIR_LABEL[h]) : h}`));
       fsHair.append(label);
     }
     const fsPal = el('fieldset', {});
-    fsPal.append(el('legend', {}, 'Pakaian'));
+    fsPal.append(el('legend', {}, t('Pakaian')));
     for (const [name, p] of Object.entries(SPEC.palettes)) {
       const id = `pal-${name}`;
       const input = el('input', { type: 'radio', name: 'palette', value: name, id });
@@ -129,12 +86,12 @@ export class AvatarStudio {
       const swatch = el('span', { class: 'swatch', 'aria-hidden': 'true' });
       swatch.style.background = `linear-gradient(90deg, ${p.outfit_main} 0 50%, ${p.outfit_bottom} 50% 100%)`;
       const label = el('label', { for: id });
-      label.append(input, swatch, document.createTextNode(` ${p.label}`));
+      label.append(input, swatch, document.createTextNode(` ${t(p.label)}`));
       fsPal.append(label);
     }
     const fsAnim = el('fieldset', {});
-    fsAnim.append(el('legend', {}, 'Pratinjau animasi'));
-    const sel = el('select', { 'aria-label': 'Animasi pratinjau', id: 'avatar-clip' });
+    fsAnim.append(el('legend', {}, t('Pratinjau animasi')));
+    const sel = el('select', { 'aria-label': t('Animasi pratinjau'), id: 'avatar-clip' });
     for (const c of PREVIEW_CLIPS) sel.append(el('option', { value: c }, c));
     sel.value = this.clip;
     sel.addEventListener('change', () => { this.clip = sel.value; this.preview.play(this.clip); });
@@ -166,7 +123,7 @@ export class AvatarStudio {
   save() {
     const ok = saveChoice(this.choice);
     this.apply(this.choice);
-    toast(ok ? 'Avatar disimpan di browser ini.' : 'Avatar dipakai sekarang, tetapi penyimpanan browser tidak tersedia.');
+    toast(ok ? t('Avatar disimpan di browser ini.') : t('Avatar dipakai sekarang, tetapi penyimpanan browser tidak tersedia.'));
     ($('dlg-avatar') as HTMLDialogElement).close();
   }
 
@@ -176,6 +133,6 @@ export class AvatarStudio {
     this.apply(this.choice);
     this.renderForm();
     this.update();
-    toast('Avatar kembali ke default.');
+    toast(t('Avatar kembali ke default.'));
   }
 }

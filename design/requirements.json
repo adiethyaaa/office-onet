@@ -1210,6 +1210,25 @@
      "status": "belum diuji"
     }
    ]
+  },
+  {
+   "id": "REQ-I18N-01",
+   "milestone": "M8",
+   "story": "Sebagai pengunjung luar negeri, pakai app dalam bahasa Inggris.",
+   "ac": "?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus.",
+   "failure": "kamus gagal dimuat -> Bahasa Indonesia",
+   "boundary": "isi buatan pengguna dan pesan server tidak diterjemahkan",
+   "parts": [
+    {
+     "scope": "?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus.",
+     "tests": [
+      "app/tests/unit/i18n.test.ts",
+      "app/tests/e2e/i18n.spec.ts"
+     ],
+     "evidence": [],
+     "status": "belum diuji"
+    }
+   ]
   }
  ]
 }

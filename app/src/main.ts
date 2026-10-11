@@ -2,13 +2,15 @@ import './styles.css';
 import worldJson from '@design/world.json';
 import wallsJson from '@design/derived/walls.json';
 import { Game } from './game/game';
+import { initLang, lang, setLang, t } from './i18n';
 import { renderDirectory } from './ui/directory';
 import { $, openDialog, toast } from './ui/dom';
 import { applyTheme, loadSettings, saveSettings, type Settings } from './ui/settings';
 import type { DerivedWalls, FloorId, Vec2, World } from './world/types';
 import { showPersonaCard, showRoomCard } from './game/game';
 import type { StudioUI } from './studio/ui';
-import { AvatarStudio, availableHair, loadChoice, paletteColors } from './studio/avatar-studio';
+import { availableHair, loadChoice, paletteColors } from './studio/avatar-choice';
+import type { AvatarStudio } from './studio/avatar-studio';
 import { store } from './studio/layout';
 import type { PrivatePanel } from './private/panel';
 import { ACTOR_PROFILE } from './game/game';
@@ -26,10 +28,10 @@ const loadPanel = () => import('./private/panel').then((m) => {
       const btn = document.getElementById('btn-chat');
       if (!btn) return;
       let badge = btn.querySelector<HTMLElement>('.unread-badge');
-      if (!n) { badge?.remove(); btn.setAttribute('aria-label', 'Chat agen'); return; }
+      if (!n) { badge?.remove(); btn.setAttribute('aria-label', t('Chat agen')); return; }
       if (!badge) { badge = document.createElement('span'); badge.className = 'unread-badge'; badge.setAttribute('aria-hidden', 'true'); btn.append(badge); }
       badge.textContent = n > 9 ? '9+' : String(n);
-      btn.setAttribute('aria-label', `Chat agen, ${n} pesan belum dibaca`);
+      btn.setAttribute('aria-label', t('Chat agen, {n} pesan belum dibaca', { n }));
     };
   }
   return panel;
@@ -40,7 +42,10 @@ const openPicker = () => void loadPanel().then((p) => p.openPicker(document.acti
 // A tapped notification opens that bot's chat (./?chat=<profile>), in this tab or a new one.
 const chatParam = new URLSearchParams(location.search).get('chat');
 if (chatParam && /^[\w-]{1,30}$/.test(chatParam)) {
-  history.replaceState(null, '', location.pathname);
+  const rest = new URLSearchParams(location.search);
+  rest.delete('chat');
+  const q = rest.toString();
+  history.replaceState(null, '', location.pathname + (q ? `?${q}` : ''));
   window.setTimeout(() => openAgent(chatParam), 1500);
 }
 navigator.serviceWorker?.addEventListener('message', (e) => {
@@ -60,13 +65,13 @@ declare global {
 }
 
 function webglAvailable(): string | null {
-  if (params.get('nogl') === '1') return 'WebGL dimatikan lewat parameter ?nogl=1 (uji fallback).';
+  if (params.get('nogl') === '1') return t('WebGL dimatikan lewat parameter ?nogl=1 (uji fallback).');
   try {
     const c = document.createElement('canvas');
     const gl = c.getContext('webgl2') || c.getContext('webgl');
-    return gl ? null : 'Browser ini tidak menyediakan WebGL.';
+    return gl ? null : t('Browser ini tidak menyediakan WebGL.');
   } catch {
-    return 'Pembuatan konteks WebGL gagal.';
+    return t('Pembuatan konteks WebGL gagal.');
   }
 }
 
@@ -88,7 +93,7 @@ function enterFallback(reason: string) {
   $('btn-avatar').hidden = true;
   $('fallback').hidden = false;
   $('fallback-reason').textContent = reason;
-  $('room-name').textContent = 'Mode direktori';
+  $('room-name').textContent = t('Mode direktori');
   const panel = $('directory-panel');
   panel.hidden = false;
   $('fallback').append(panel);
@@ -111,12 +116,15 @@ function wireSettings(game: Game | null, s: Settings) {
   $('btn-settings').addEventListener('click', (e) => {
     (form.elements.namedItem('theme') as RadioNodeList).value = s.theme;
     (form.elements.namedItem('quality') as RadioNodeList).value = s.quality;
+    (form.elements.namedItem('lang') as RadioNodeList).value = lang;
     (form.elements.namedItem('reducedMotion') as HTMLInputElement).checked = s.reducedMotion;
     (form.elements.namedItem('visitor') as HTMLInputElement).checked = s.visitor;
-    $('settings-renderer').textContent = game ? `Renderer: ${game.rendererName}. Kualitas aktif: ${game.lowQuality ? 'ringan' : 'tinggi'}. Perubahan kualitas berlaku setelah muat ulang.` : 'Mode direktori: renderer 3D tidak aktif.';
+    $('settings-renderer').textContent = game ? t('Renderer: {name}. Kualitas aktif: {quality}. Perubahan kualitas berlaku setelah muat ulang.', { name: game.rendererName, quality: game.lowQuality ? t('ringan') : t('tinggi') }) : t('Mode direktori: renderer 3D tidak aktif.');
     openDialog(dlg, e.currentTarget as HTMLElement);
   });
   form.addEventListener('change', () => {
+    const l = (form.elements.namedItem('lang') as RadioNodeList).value;
+    if (l !== lang && (l === 'id' || l === 'en')) return setLang(l);
     s.theme = (form.elements.namedItem('theme') as RadioNodeList).value as Settings['theme'];
     s.quality = (form.elements.namedItem('quality') as RadioNodeList).value as Settings['quality'];
     s.reducedMotion = (form.elements.namedItem('reducedMotion') as HTMLInputElement).checked;
@@ -159,7 +167,7 @@ function boot() {
   try {
     game = new Game($('stage'), world, walls, settings);
   } catch (err) {
-    enterFallback(`Renderer 3D gagal dibuat: ${(err as Error).message}`);
+    enterFallback(t('Renderer 3D gagal dibuat: {error}', { error: (err as Error).message }));
     wireSettings(null, settings);
     return;
   }
@@ -168,18 +176,19 @@ function boot() {
   // this browser only; an unreadable one is ignored and reported.
   const pub = store.loadPublished(world);
   if (pub.doc) game.applyFixtures(pub.doc.fixtures);
-  else if (pub.error) setTimeout(() => toast(`Layout lokal diabaikan: ${pub.error}`, 5000), 500);
+  else if (pub.error) setTimeout(() => toast(t('Layout lokal diabaikan: {error}', { error: pub.error ?? '' }), 5000), 500);
   // Office Studio (editor, validation, plan UI) is fetched on first use so the
   // first download carries only the world (R2 bundle test).
   let studio: StudioUI | null = null;
   const studioLoad = () => import('./studio/ui').then((m) => (studio ??= new m.StudioUI(game)));
   $('btn-studio').addEventListener('click', () => void studioLoad().then((s) => (s.isOpen ? s.close() : s.open())));
   const applyAvatar = (c: { hair: string; palette: string }) => game.player.avatar.applyVariant(c.hair, paletteColors(c.palette));
-  const avatarStudio = new AvatarStudio(applyAvatar, () => game.player.avatar.model);
+  let avatarStudio: AvatarStudio | null = null;
+  const avatarLoad = () => import('./studio/avatar-studio').then((m) => (avatarStudio ??= new m.AvatarStudio(applyAvatar, () => game.player.avatar.model)));
   game.onAvatarLoaded = () => applyAvatar(loadChoice(availableHair(game.player.avatar.model)));
-  $('btn-avatar').addEventListener('click', (e) => void avatarStudio.open(e.currentTarget as HTMLElement));
-  $('avatar-save').addEventListener('click', () => avatarStudio.save());
-  $('avatar-reset').addEventListener('click', () => avatarStudio.reset());
+  $('btn-avatar').addEventListener('click', (e) => { const b = e.currentTarget as HTMLElement; void avatarLoad().then((s) => s.open(b)); });
+  $('avatar-save').addEventListener('click', () => avatarStudio?.save());
+  $('avatar-reset').addEventListener('click', () => avatarStudio?.reset());
   $('avatar-cancel').addEventListener('click', () => ($('dlg-avatar') as HTMLDialogElement).close());
   wireSettings(game, settings);
   // After a mid-session context loss the app is in fallback mode: the directory
@@ -288,16 +297,17 @@ function boot() {
   };
   if (params.get('perf') === 'route') {
     const secs = Number(params.get('seconds') ?? 60);
-    toast(`Benchmark rute tetap ${secs} s berjalan`, 3000);
+    toast(t('Benchmark rute tetap {secs} s berjalan', { secs }), 3000);
     void import('./perf/harness').then(({ runPerfRoute }) => runPerfRoute(game, secs)).then(async (r) => {
       const { deviceInfo, showPerfReport } = await import('./perf/report');
       const full = { ...r, device: deviceInfo(game.renderer.domElement), url: location.search };
       window.__perfResult = full;
-      toast('Benchmark selesai');
+      toast(t('Benchmark selesai'));
       if (params.get('report') === '1') showPerfReport(full);
     });
   }
   if (params.get('a11ylog') === '1') void import('./perf/report').then(({ startA11yLog }) => startA11yLog());
 }
 
-boot();
+// The English dictionary loads before boot so every label is built translated.
+void initLang(undefined, world).then(boot);

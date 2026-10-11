@@ -5,6 +5,7 @@
 // ?a11ylog=1 shows every live-region announcement so a screen-reader tester
 // can compare what the reader said with what the app announced.
 import { el } from '../ui/dom';
+import { t } from '../i18n';
 
 export function deviceInfo(canvas: HTMLCanvasElement | null): Record<string, unknown> {
   let gpu: string | null = null;
@@ -23,19 +24,19 @@ export function deviceInfo(canvas: HTMLCanvasElement | null): Record<string, unk
 
 export function showPerfReport(result: Record<string, unknown>): HTMLElement {
   const json = JSON.stringify(result, null, 1);
-  const panel = el('section', { class: 'perf-report', id: 'perf-report', role: 'region', 'aria-label': 'Hasil benchmark perangkat' });
+  const panel = el('section', { class: 'perf-report', id: 'perf-report', role: 'region', 'aria-label': t('Hasil benchmark perangkat') });
   const pre = el('pre', { id: 'perf-report-json', tabindex: '0' }, json);
-  const copy = el('button', { type: 'button', class: 'btn primary', id: 'perf-report-copy' }, 'Salin hasil');
+  const copy = el('button', { type: 'button', class: 'btn primary', id: 'perf-report-copy' }, t('Salin hasil'));
   const status = el('p', { class: 'small', role: 'status', 'aria-live': 'polite' }, '');
   copy.addEventListener('click', () => {
-    navigator.clipboard?.writeText(json).then(() => { status.textContent = 'Disalin ke clipboard.'; }, () => { status.textContent = 'Clipboard tidak tersedia; pakai Unduh JSON.'; });
+    navigator.clipboard?.writeText(json).then(() => { status.textContent = t('Disalin ke clipboard.'); }, () => { status.textContent = t('Clipboard tidak tersedia; pakai Unduh JSON.'); });
   });
   const blob = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
-  const dl = el('a', { class: 'btn', id: 'perf-report-download', href: blob, download: 'kantor-rpg-perf.json' }, 'Unduh JSON');
-  const close = el('button', { type: 'button', class: 'btn', id: 'perf-report-close' }, 'Tutup');
+  const dl = el('a', { class: 'btn', id: 'perf-report-download', href: blob, download: 'kantor-rpg-perf.json' }, t('Unduh JSON'));
+  const close = el('button', { type: 'button', class: 'btn', id: 'perf-report-close' }, t('Tutup'));
   close.addEventListener('click', () => panel.remove());
-  panel.append(el('h2', {}, 'Hasil benchmark rute tetap'),
-    el('p', { class: 'small' }, 'Angka ini hanya untuk perangkat dan browser ini. Kirim JSON ke Max untuk dicatat di docs/DEVICE-VALIDATION.md.'),
+  panel.append(el('h2', {}, t('Hasil benchmark rute tetap')),
+    el('p', { class: 'small' }, t('Angka ini hanya untuk perangkat dan browser ini. Kirim JSON ke Max untuk dicatat di docs/DEVICE-VALIDATION.md.')),
     pre, (() => { const g = el('div', { class: 'tool-grid' }); g.append(copy, dl, close); return g; })(), status);
   document.body.append(panel);
   copy.focus();
@@ -44,9 +45,9 @@ export function showPerfReport(result: Record<string, unknown>): HTMLElement {
 
 /** Mirror every polite/assertive live-region change into a visible, ordered log. */
 export function startA11yLog(): HTMLElement {
-  const log = el('ol', { class: 'a11y-log', id: 'a11y-log', 'aria-label': 'Log pengumuman live region' });
-  const wrap = el('section', { class: 'perf-report a11y-log-panel', id: 'a11y-log-panel', role: 'region', 'aria-label': 'Log pengumuman untuk uji screen reader' });
-  wrap.append(el('h2', {}, 'Log pengumuman (uji screen reader)'), log);
+  const log = el('ol', { class: 'a11y-log', id: 'a11y-log', 'aria-label': t('Log pengumuman live region') });
+  const wrap = el('section', { class: 'perf-report a11y-log-panel', id: 'a11y-log-panel', role: 'region', 'aria-label': t('Log pengumuman untuk uji screen reader') });
+  wrap.append(el('h2', {}, t('Log pengumuman (uji screen reader)')), log);
   document.body.append(wrap);
   const seen = new WeakMap<Element, string>();
   const record = (node: Element) => {
@@ -57,8 +58,8 @@ export function startA11yLog(): HTMLElement {
   };
   new MutationObserver((muts) => {
     for (const m of muts) {
-      const t = (m.target.nodeType === 1 ? m.target : m.target.parentElement) as Element | null;
-      const live = t?.closest('[aria-live], [role="status"], [role="alert"]');
+      const target = (m.target.nodeType === 1 ? m.target : m.target.parentElement) as Element | null;
+      const live = target?.closest('[aria-live], [role="status"], [role="alert"]');
       if (live && !wrap.contains(live)) record(live);
     }
   }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['hidden'] });

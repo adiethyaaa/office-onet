@@ -317,6 +317,7 @@ Matching messages are held with the status `Menunggu persetujuan` (Awaiting appr
 | Graphics quality | Auto, low (no shadows), high. Auto picks low when the browser uses a software renderer |
 | Reduce motion | Turns off secondary animations. Follows the system setting by default |
 | Visitor mode | Locks restricted rooms (server room, riser, shaft). The avatar is moved to a safe point if it is inside one |
+| Language | Indonesian or English. The default follows the browser language: an Indonesian browser gets Indonesian, everything else gets English. Switching reloads the page |
 
 Settings are stored in the browser.
 
@@ -364,6 +365,7 @@ All artifacts are generated from one source, `design/world.json`. When the datas
 | `?chat=<agen>` | Open a specific agent's chat directly (used by notifications) |
 | `?perf=route&seconds=60&report=1` | Automated performance test route, then show an FPS report |
 | `?a11ylog=1` | Log accessibility announcements for screen reader testing |
+| `?lang=en` or `?lang=id` | Force the display language for that visit |
 
 ## 17. Privacy and data
 

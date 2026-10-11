@@ -21,7 +21,7 @@ You play as the CEO in a two-floor building built from a single data file, `desi
 
 Eight NPC characters live their own day: working at their desks, making coffee, playing billiards, reading in the library. If you install the private backend, each character connects to a real AI agent. The character sits down and types while its agent works, and you can give it tasks through a chat that syncs with Telegram.
 
-The app interface is in Indonesian. These docs give the English meaning of each on-screen label the first time it appears.
+The app runs in English or Indonesian. It follows your browser language, and you can switch in **Settings** or with `?lang=en`. Some docs and screenshots still show the Indonesian labels; the English meaning is given the first time each one appears.
 
 The public demo runs without login. It shows a simulation with a fixed seed, so every visitor sees the same day.
 
@@ -129,6 +129,7 @@ Chat and the work board are only active for the owner, who logs in with a passwo
 
 - **Desktop.** WASD or arrow keys to walk, Shift to run, Q/Z to rotate the camera, R to straighten the camera, +/- to zoom, E to interact, H for help.
 - **Phone and tablet.** Joystick at the bottom left, Run and Action buttons, drag the screen to rotate the camera. The top menu becomes a grid on narrow screens.
+- **Two languages.** The interface is in Indonesian and English and follows the browser language. Switch in Settings or with `?lang=en`.
 - **No WebGL.** The app switches to a directory mode that still shows the rooms and characters.
 - **Accessibility.** Light and dark themes, reduced motion mode, a light graphics quality for older devices, screen reader labels, and every dialog works with the keyboard. Color contrast is checked automatically, and pages are tested with axe.
 

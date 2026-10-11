@@ -1,5 +1,7 @@
 // Klien API backend privat. Same-origin /api/ (nginx employee-rpg meneruskan
 // ke Mac mini). Cookie sesi HttpOnly; CSRF dari /api/me dikirim per POST.
+import { t } from '../i18n';
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); this.name = 'ApiError'; }
 }
@@ -32,10 +34,10 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
   try {
     res = await fetch(`api/${path}`, { method, headers, body: body === undefined ? undefined : JSON.stringify(body), credentials: 'same-origin', cache: 'no-store' });
   } catch {
-    throw new ApiError(0, 'Jaringan putus. Status pesan belum diketahui; kirim ulang memakai kunci yang sama tidak membuat tugas ganda.');
+    throw new ApiError(0, t('Jaringan putus. Status pesan belum diketahui; kirim ulang memakai kunci yang sama tidak membuat tugas ganda.'));
   }
   const type = res.headers.get('content-type') ?? '';
-  if (!type.includes('application/json')) throw new ApiError(res.status || 502, 'Backend privat tidak tersedia.');
+  if (!type.includes('application/json')) throw new ApiError(res.status || 502, t('Backend privat tidak tersedia.'));
   const data = await res.json() as T & { error?: string };
   if (!res.ok) throw new ApiError(res.status, data.error ?? `HTTP ${res.status}`);
   return data;
@@ -60,7 +62,7 @@ export const api = {
         method: 'POST', body: file, credentials: 'same-origin', cache: 'no-store',
         headers: { 'Content-Type': file.type || 'application/octet-stream', 'X-File-Name': encodeURIComponent(name), ...(csrf ? { 'X-CSRF': csrf } : {}) },
       });
-    } catch { throw new ApiError(0, 'Jaringan putus saat mengunggah. Coba lagi.'); }
+    } catch { throw new ApiError(0, t('Jaringan putus saat mengunggah. Coba lagi.')); }
     const data = await res.json().catch(() => ({ error: `HTTP ${res.status}` })) as { upload: Attachment; error?: string };
     if (!res.ok) throw new ApiError(res.status, data.error ?? `HTTP ${res.status}`);
     return data;

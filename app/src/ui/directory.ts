@@ -3,6 +3,7 @@
 // fallback mode they open the room card instead.
 import type { Room, World } from '../world/types';
 import { $, el } from './dom';
+import { t } from '../i18n';
 
 export interface DirectoryHooks {
   canGo: (room: Room) => { ok: boolean; reason?: string };
@@ -31,7 +32,7 @@ export function renderDirectory(world: World, hooks: DirectoryHooks): void {
   const body = $('directory-body');
   body.replaceChildren();
   if (!world.rooms.length) {
-    body.append(el('p', { class: 'muted' }, 'Dataset tidak memuat ruang.'));
+    body.append(el('p', { class: 'muted' }, t('Dataset tidak memuat ruang.')));
     return;
   }
   for (const floor of world.floors) {
@@ -41,14 +42,14 @@ export function renderDirectory(world: World, hooks: DirectoryHooks): void {
       const li = el('li', { class: 'dir-item' });
       const name = el('span', {}, room.name);
       const gate = hooks.canGo(room);
-      if (!gate.ok) name.append(el('span', { class: 'tag locked' }, 'terkunci'));
+      if (!gate.ok) name.append(el('span', { class: 'tag locked' }, t('terkunci')));
       li.append(name, el('span', { class: 'meta' }, `${room.id} · ${room.function}`));
-      const btn = el('button', { type: 'button', class: 'btn', 'data-room': room.id }, hooks.mode3d ? 'Pergi' : 'Info');
+      const btn = el('button', { type: 'button', class: 'btn', 'data-room': room.id }, hooks.mode3d ? t('Pergi') : t('Info'));
       if (hooks.mode3d && !gate.ok) {
         btn.setAttribute('aria-disabled', 'true');
-        btn.title = gate.reason ?? 'Tidak dapat dicapai';
+        btn.title = gate.reason ?? t('Tidak dapat dicapai');
         btn.addEventListener('click', () => hooks.showRoom(room));
-        btn.textContent = 'Info';
+        btn.textContent = t('Info');
       } else {
         btn.addEventListener('click', () => (hooks.mode3d ? hooks.go(room) : hooks.showRoom(room)));
       }
@@ -58,23 +59,23 @@ export function renderDirectory(world: World, hooks: DirectoryHooks): void {
     }
     body.append(list);
   }
-  body.append(el('h3', {}, 'Persona (simulasi)'));
+  body.append(el('h3', {}, t('Persona (simulasi)')));
   const people = el('ul', { class: 'dir-list' });
   for (const a of world.actors) {
     const li = el('li', { class: 'dir-item' });
-    li.append(el('span', {}, a.displayName), el('span', { class: 'meta' }, a.kind === 'player' ? `${a.role} · kamu` : `${a.role} · persona simulasi`));
-    const btn = el('button', { type: 'button', class: 'btn', 'aria-label': `Profil ${a.displayName}` }, 'Profil');
+    li.append(el('span', {}, a.displayName), el('span', { class: 'meta' }, a.kind === 'player' ? t('{role} · kamu', { role: a.role }) : t('{role} · persona simulasi', { role: a.role })));
+    const btn = el('button', { type: 'button', class: 'btn', 'aria-label': t('Profil {name}', { name: a.displayName }) }, t('Profil'));
     btn.addEventListener('click', () => hooks.showPersona(a.id));
     const actions = el('span', { class: 'dir-actions' });
     actions.append(btn);
     if (hooks.mode3d && hooks.meet && a.kind === 'npc') {
-      const meet = el('button', { type: 'button', class: 'btn', 'aria-label': `Temui ${a.displayName}` }, 'Temui');
+      const meet = el('button', { type: 'button', class: 'btn', 'aria-label': t('Temui {name}', { name: a.displayName }) }, t('Temui'));
       meet.addEventListener('click', () => hooks.meet!(a.id));
       actions.append(meet);
     }
     const prof = hooks.profiles?.[a.id];
     if (hooks.command && prof) {
-      const cmd = el('button', { type: 'button', class: 'btn', 'aria-label': `Beri tugas ke ${a.displayName}` }, 'Beri tugas');
+      const cmd = el('button', { type: 'button', class: 'btn', 'aria-label': t('Beri tugas ke {name}', { name: a.displayName }) }, t('Beri tugas'));
       cmd.addEventListener('click', () => hooks.command!(prof));
       actions.append(cmd);
     }
@@ -83,12 +84,12 @@ export function renderDirectory(world: World, hooks: DirectoryHooks): void {
   }
   body.append(people);
   if (hooks.command) {
-    body.append(el('h3', {}, 'Agen tanpa karakter'));
+    body.append(el('h3', {}, t('Agen tanpa karakter')));
     const extra = el('ul', { class: 'dir-list' });
     for (const [name, prof, lane] of [['Atlas', 'perumnet', 'Aplikasi PerumNet'], ['Clara', 'finance', 'Keuangan'], ['Stella', 'legal', 'Legal']]) {
       const li = el('li', { class: 'dir-item' });
-      li.append(el('span', {}, name), el('span', { class: 'meta' }, `${lane} · agen Hermes`));
-      const cmd = el('button', { type: 'button', class: 'btn', 'aria-label': `Beri tugas ke ${name}` }, 'Beri tugas');
+      li.append(el('span', {}, name), el('span', { class: 'meta' }, t('{lane} · agen Hermes', { lane: t(lane) })));
+      const cmd = el('button', { type: 'button', class: 'btn', 'aria-label': t('Beri tugas ke {name}', { name }) }, t('Beri tugas'));
       cmd.addEventListener('click', () => hooks.command!(prof));
       li.append(cmd);
       extra.append(li);
@@ -96,35 +97,35 @@ export function renderDirectory(world: World, hooks: DirectoryHooks): void {
     body.append(extra);
   }
   if (hooks.boards) {
-    body.append(el('h3', {}, 'Papan kerja'));
+    body.append(el('h3', {}, t('Papan kerja')));
     const bl = el('ul', { class: 'dir-list' });
     for (const [tab, label] of [['handoffs', 'Papan Handoff'], ['tasks', 'Daftar Pekerjaan'], ['log', 'Log Aktivitas']] as const) {
       const li = el('li', { class: 'dir-item' });
-      li.append(el('span', {}, label));
-      const b = el('button', { type: 'button', class: 'btn', 'aria-label': `Buka ${label}` }, 'Buka');
+      li.append(el('span', {}, t(label)));
+      const b = el('button', { type: 'button', class: 'btn', 'aria-label': t('Buka {label}', { label: t(label) }) }, t('Buka'));
       b.addEventListener('click', () => hooks.boards!(tab));
       li.append(b);
       bl.append(li);
     }
     body.append(bl);
   }
-  body.append(el('h3', {}, 'Dokumen'));
+  body.append(el('h3', {}, t('Dokumen')));
   const docs = el('ul', { class: 'dir-list doc-list', 'aria-busy': 'true' });
-  const state = el('p', { class: 'muted', role: 'status' }, 'Memuat daftar dokumen...');
+  const state = el('p', { class: 'muted', role: 'status' }, t('Memuat daftar dokumen...'));
   body.append(state, docs);
   loadDocs()
     .then((list) => {
       docs.removeAttribute('aria-busy');
-      if (!list.length) { state.textContent = 'Belum ada dokumen yang dihasilkan pada build ini.'; return; }
+      if (!list.length) { state.textContent = t('Belum ada dokumen yang dihasilkan pada build ini.'); return; }
       state.remove();
       for (const d of list) {
         const li = el('li', {});
-        li.append(el('a', { href: d.href, target: '_blank', rel: 'noopener' }, `${d.label} (${Math.round(d.bytes / 1024)} KB)`));
+        li.append(el('a', { href: d.href, target: '_blank', rel: 'noopener' }, `${t(d.label)} (${Math.round(d.bytes / 1024)} KB)`));
         docs.append(li);
       }
     })
     .catch((err: Error) => {
       docs.removeAttribute('aria-busy');
-      state.textContent = `Daftar dokumen gagal dimuat: ${err.message}.`;
+      state.textContent = t('Daftar dokumen gagal dimuat: {error}.', { error: err.message });
     });
 }

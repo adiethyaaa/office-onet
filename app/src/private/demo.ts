@@ -1,5 +1,6 @@
 // Papan demo untuk pengunjung publik (REQ-BOARD-04): data simulasi berlabel
 // `Demo`. Tidak ada judul tugas, nama berkas, atau peristiwa nyata di bundle.
+// Texts stay Indonesian here; panel.ts translates them at render time in demo mode.
 import type { Boards } from './api';
 
 export function DEMO_BOARDS(now: number): Boards {

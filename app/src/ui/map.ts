@@ -5,6 +5,7 @@
 // Loaded as its own chunk after the world starts (entry chunk budget, R2).
 import type { FloorId, Room, Vec2, World } from '../world/types';
 import { el, openDialog, toast } from './dom';
+import { t } from '../i18n';
 
 export interface MapPerson {
   id: string; name: string; role: string; floor: FloorId; pos: Vec2;
@@ -16,6 +17,11 @@ export interface MapSnapshot { floor: FloorId; pos: Vec2; facing: number; visito
 export interface MapHost { snapshot(): MapSnapshot; meet(id: string): void }
 
 export const FLOOR_NAME: Record<FloorId, string> = { L1: 'Lantai 1', L2: 'Lantai 2' };
+
+/** Display name of a floor in the UI language. */
+export function floorName(id: FloorId): string {
+  return t(FLOOR_NAME[id]);
+}
 
 export function pointInPoly(p: Vec2, poly: Vec2[]): boolean {
   let inside = false;
@@ -49,8 +55,8 @@ export function awayBadge(world: World, snap: MapSnapshot): { text: string; labe
     const n = snap.people.filter((p) => p.floor === f.id).length;
     if (!n) continue;
     const arrow = f.level > here.level ? '↑' : '↓';
-    const dir = f.level > here.level ? 'di atas' : 'di bawah';
-    parts.push({ text: `${arrow} ${f.id}: ${n}`, label: `${n} orang di ${FLOOR_NAME[f.id]} (${dir})` });
+    const dir = f.level > here.level ? t('di atas') : t('di bawah');
+    parts.push({ text: `${arrow} ${f.id}: ${n}`, label: t('{n} orang di {floor} ({dir})', { n, floor: floorName(f.id), dir }) });
   }
   if (!parts.length) return null;
   return { text: parts.map((p) => p.text).join(' · '), label: parts.map((p) => p.label).join(', ') };
@@ -59,8 +65,8 @@ export function awayBadge(world: World, snap: MapSnapshot): { text: string; labe
 /** Where a persona is, in words: room name, or a note that they are changing floor. */
 export function placeText(world: World, p: MapPerson): string {
   const room = roomAt(world, p.floor, p.pos);
-  const where = room ? room.name : 'koridor';
-  return p.movingTo ? `${where}, menuju ${FLOOR_NAME[p.movingTo]}` : where;
+  const where = room ? room.name : t('koridor');
+  return p.movingTo ? t('{where}, menuju {floor}', { where, floor: floorName(p.movingTo) }) : where;
 }
 
 interface Tokens { bg: string; surface: string; ink: string; muted: string; green: string; accent: string; focus: string; wall: string; room: string; work: string; rec: string; restricted: string; circ: string }
@@ -108,12 +114,12 @@ class PlanCanvas {
 
   draw(floor: FloorId, snap: MapSnapshot, selected: string | null) {
     const ctx = this.canvas.getContext('2d')!;
-    const t = tokens();
-    ctx.fillStyle = t.bg;
+    const k = tokens();
+    ctx.fillStyle = k.bg;
     ctx.fillRect(0, 0, this.canvas.clientWidth || this.canvas.width, this.canvas.clientHeight || this.canvas.height);
-    const fill = (r: Room) => (r.access === 'restricted' ? t.restricted
-      : r.category === 'work' ? t.work : r.category === 'recreation' || r.category === 'outdoor' ? t.rec
-        : r.category === 'circulation' ? t.circ : t.room);
+    const fill = (r: Room) => (r.access === 'restricted' ? k.restricted
+      : r.category === 'work' ? k.work : r.category === 'recreation' || r.category === 'outdoor' ? k.rec
+        : r.category === 'circulation' ? k.circ : k.room);
     for (const r of this.world.rooms) {
       if (r.floor !== floor) continue;
       ctx.beginPath();
@@ -122,9 +128,9 @@ class PlanCanvas {
       ctx.fillStyle = fill(r);
       ctx.fill();
       ctx.lineWidth = this.label ? 1.5 : 1;
-      ctx.strokeStyle = t.wall;
+      ctx.strokeStyle = k.wall;
       ctx.stroke();
-      if (snap.visitor && r.access === 'restricted') this.hatch(ctx, r, t.wall);
+      if (snap.visitor && r.access === 'restricted') this.hatch(ctx, r, k.wall);
     }
     // Stairs and lift: the way to the other floor.
     for (const link of this.world.verticalLinks) {
@@ -133,10 +139,10 @@ class PlanCanvas {
         if (end.floor !== floor) continue;
         const [x, y] = this.toPx(end.point);
         const s = this.label ? 7 : 4;
-        ctx.fillStyle = t.ink;
+        ctx.fillStyle = k.ink;
         ctx.fillRect(x - s, y - s, 2 * s, 2 * s);
         if (this.label) {
-          ctx.fillStyle = t.surface;
+          ctx.fillStyle = k.surface;
           ctx.font = `700 ${s + 3}px ${getComputedStyle(document.body).fontFamily}`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -145,16 +151,16 @@ class PlanCanvas {
       }
     }
     this.tagBoxes = snap.people.filter((p) => p.floor === floor).map((p) => { const [x, y] = this.toPx(p.pos); return [x, y - 11] as [number, number]; });
-    if (this.label) this.roomNames(ctx, floor, t);
+    if (this.label) this.roomNames(ctx, floor, k);
     const r = this.label ? 6 : 3.2;
     for (const p of snap.people) {
       if (p.floor !== floor) continue;
       const [x, y] = this.toPx(p.pos);
-      if (p.busy) { ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2); ctx.strokeStyle = t.accent; ctx.lineWidth = 2; ctx.stroke(); }
-      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = t.green; ctx.fill();
-      ctx.lineWidth = 1.5; ctx.strokeStyle = t.surface; ctx.stroke();
-      if (p.id === selected) { ctx.beginPath(); ctx.setLineDash([4, 3]); ctx.arc(x, y, r + 9, 0, Math.PI * 2); ctx.strokeStyle = t.focus; ctx.lineWidth = 2.5; ctx.stroke(); ctx.setLineDash([]); }
-      if (this.label) this.tag(ctx, p.name, x, y - r - 5, t, p.id === selected);
+      if (p.busy) { ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2); ctx.strokeStyle = k.accent; ctx.lineWidth = 2; ctx.stroke(); }
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = k.green; ctx.fill();
+      ctx.lineWidth = 1.5; ctx.strokeStyle = k.surface; ctx.stroke();
+      if (p.id === selected) { ctx.beginPath(); ctx.setLineDash([4, 3]); ctx.arc(x, y, r + 9, 0, Math.PI * 2); ctx.strokeStyle = k.focus; ctx.lineWidth = 2.5; ctx.stroke(); ctx.setLineDash([]); }
+      if (this.label) this.tag(ctx, p.name, x, y - r - 5, k, p.id === selected);
     }
     if (snap.floor === floor) {
       const [x, y] = this.toPx(snap.pos);
@@ -166,10 +172,10 @@ class PlanCanvas {
       ctx.beginPath();
       ctx.moveTo(s, 0); ctx.lineTo(-s * 0.7, s * 0.65); ctx.lineTo(-s * 0.35, 0); ctx.lineTo(-s * 0.7, -s * 0.65);
       ctx.closePath();
-      ctx.fillStyle = t.accent; ctx.fill();
-      ctx.lineWidth = 1.5; ctx.strokeStyle = t.surface; ctx.stroke();
+      ctx.fillStyle = k.accent; ctx.fill();
+      ctx.lineWidth = 1.5; ctx.strokeStyle = k.surface; ctx.stroke();
       ctx.restore();
-      if (this.label) this.tag(ctx, 'Kamu', x, y + s + 13, t, true);
+      if (this.label) this.tag(ctx, t('Kamu'), x, y + s + 13, k, true);
     }
   }
 
@@ -200,11 +206,11 @@ class PlanCanvas {
     ctx.restore();
   }
 
-  private roomNames(ctx: CanvasRenderingContext2D, floor: FloorId, t: Tokens) {
+  private roomNames(ctx: CanvasRenderingContext2D, floor: FloorId, k: Tokens) {
     ctx.font = `600 11px ${getComputedStyle(document.body).fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = t.muted;
+    ctx.fillStyle = k.muted;
     for (const r of this.world.rooms) {
       if (r.floor !== floor || r.category === 'shaft') continue;
       const xs = r.polygon.map((p) => this.toPx(p));
@@ -218,16 +224,16 @@ class PlanCanvas {
     }
   }
 
-  private tag(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, t: Tokens, strong: boolean) {
+  private tag(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, k: Tokens, strong: boolean) {
     ctx.font = `${strong ? 800 : 700} 11px ${getComputedStyle(document.body).fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const w = ctx.measureText(text).width + 8;
-    ctx.fillStyle = t.surface;
+    ctx.fillStyle = k.surface;
     ctx.globalAlpha = 0.9;
     ctx.fillRect(x - w / 2, y - 7, w, 14);
     ctx.globalAlpha = 1;
-    ctx.fillStyle = t.ink;
+    ctx.fillStyle = k.ink;
     ctx.fillText(text, x, y);
   }
 }
@@ -262,8 +268,8 @@ export class MapUI {
 
     this.dlg = el('dialog', { class: 'dialog wide map-dialog', id: 'dlg-map', 'aria-labelledby': 'dlg-map-title' });
     const head = el('div', { class: 'map-head' });
-    head.append(el('h2', { id: 'dlg-map-title' }, 'Peta kantor'));
-    const tabRow = el('div', { class: 'map-tabs', role: 'group', 'aria-label': 'Pilih lantai' });
+    head.append(el('h2', { id: 'dlg-map-title' }, t('Peta kantor')));
+    const tabRow = el('div', { class: 'map-tabs', role: 'group', 'aria-label': t('Pilih lantai') });
     this.tabs = {} as Record<FloorId, HTMLButtonElement>;
     for (const f of world.floors) {
       const b = el('button', { type: 'button', class: 'btn', 'aria-pressed': 'false', 'data-floor': f.id });
@@ -281,10 +287,10 @@ export class MapUI {
     });
     stage.append(this.big.canvas);
     const legend = el('p', { class: 'map-legend muted small' });
-    legend.innerHTML = '<span class="lg you"></span>Kamu <span class="lg npc"></span>Persona <span class="lg busy"></span>Sedang bekerja <span class="lg link"></span>Tangga atau lift';
+    legend.innerHTML = `<span class="lg you"></span>${t('Kamu')} <span class="lg npc"></span>${t('Persona')} <span class="lg busy"></span>${t('Sedang bekerja')} <span class="lg link"></span>${t('Tangga atau lift')}`;
     this.lists = el('div', { class: 'map-lists' });
     const close = el('form', { method: 'dialog' });
-    close.append(el('button', { class: 'btn primary', value: 'close' }, 'Tutup'));
+    close.append(el('button', { class: 'btn primary', value: 'close' }, t('Tutup')));
     const left = el('div', { class: 'map-left' });
     left.append(stage, legend);
     this.stage = stage;
@@ -346,23 +352,23 @@ export class MapUI {
     this.miniBtn.hidden = hidden;
     if (!hidden) {
       this.mini.draw(snap.floor, snap, null);
-      this.miniFloor.textContent = FLOOR_NAME[snap.floor];
+      this.miniFloor.textContent = floorName(snap.floor);
       const away = awayBadge(this.world, snap);
       this.miniAway.textContent = away?.text ?? '';
       this.miniAway.hidden = !away;
       const here = snap.people.filter((p) => p.floor === snap.floor).length;
-      this.miniBtn.setAttribute('aria-label', `Buka peta. Kamu di ${FLOOR_NAME[snap.floor]}, ${here} orang di lantai ini${away ? `, ${away.label}` : ''}.`);
+      this.miniBtn.setAttribute('aria-label', t('Buka peta. Kamu di {floor}, {n} orang di lantai ini{away}.', { floor: floorName(snap.floor), n: here, away: away ? `, ${away.label}` : '' }));
     }
     if (!this.dlg.open) return;
     for (const [f, b] of Object.entries(this.tabs) as [FloorId, HTMLButtonElement][]) {
       const n = snap.people.filter((p) => p.floor === f).length;
-      b.textContent = `${FLOOR_NAME[f]} (${n})${f === snap.floor ? ' · kamu' : ''}`;
+      b.textContent = `${floorName(f)} (${n})${f === snap.floor ? ` · ${t('kamu')}` : ''}`;
       b.setAttribute('aria-pressed', String(f === this.shown));
       b.classList.toggle('primary', f === this.shown);
     }
     this.big.draw(this.shown, snap, this.selected);
     const onShown = snap.people.filter((p) => p.floor === this.shown).map((p) => p.name).join(', ');
-    this.big.canvas.setAttribute('aria-label', `Denah ${FLOOR_NAME[this.shown]}. ${snap.floor === this.shown ? 'Kamu ada di lantai ini. ' : ''}${onShown ? `Persona: ${onShown}.` : 'Tidak ada persona di lantai ini.'}`);
+    this.big.canvas.setAttribute('aria-label', `${t('Denah {floor}.', { floor: floorName(this.shown) })} ${snap.floor === this.shown ? `${t('Kamu ada di lantai ini.')} ` : ''}${onShown ? t('Persona: {names}.', { names: onShown }) : t('Tidak ada persona di lantai ini.')}`);
     this.renderLists(snap, force);
   }
 
@@ -378,19 +384,19 @@ export class MapUI {
       const s = el('section', { class: 'map-group' });
       s.append(el('h3', {}, title));
       if (note) s.append(el('p', { class: 'muted small' }, note));
-      if (!people.length) { s.append(el('p', { class: 'muted small' }, 'Tidak ada persona di sini.')); return s; }
+      if (!people.length) { s.append(el('p', { class: 'muted small' }, t('Tidak ada persona di sini.'))); return s; }
       const ul = el('ul', { class: 'map-people' });
       for (const p of people) ul.append(this.row(snap, p));
       s.append(ul);
       return s;
     };
-    this.lists.append(section(`${FLOOR_NAME[snap.floor]}, lantai kamu (${here.length})`, here, ''));
+    this.lists.append(section(t('{floor}, lantai kamu ({n})', { floor: floorName(snap.floor), n: here.length }), here, ''));
     const others = this.world.floors.filter((f) => f.id !== snap.floor);
     for (const f of others) {
       const list = away.filter((p) => p.floor === f.id);
       const up = f.level > this.world.floors.find((x) => x.id === snap.floor)!.level;
-      this.lists.append(section(`${FLOOR_NAME[f.id]} (${list.length})`, list,
-        list.length ? `Beda lantai: ${up ? 'naik' : 'turun'} lewat tangga atau lift, atau tekan Temui.` : ''));
+      this.lists.append(section(`${floorName(f.id)} (${list.length})`, list,
+        list.length ? t('Beda lantai: {dir} lewat tangga atau lift, atau tekan Temui.', { dir: up ? t('naik') : t('turun') }) : ''));
     }
     if (keep?.id) this.lists.querySelector<HTMLElement>(`[data-id="${keep.id}"][data-act="${keep.act}"]`)?.focus();
   }
@@ -401,20 +407,20 @@ export class MapUI {
     const text = el('div', { class: 'map-person-text' });
     const name = el('strong', {}, p.name);
     const role = el('span', { class: 'muted small' }, ` ${p.role}`);
-    const line = el('div', { class: 'small' }, `${placeText(this.world, p)} · ${p.doing}`);
+    const line = el('div', { class: 'small' }, `${placeText(this.world, p)} · ${t(p.doing)}`);
     text.append(name, role, line);
-    if (p.floor !== snap.floor) text.append(el('span', { class: 'tag floor-tag' }, `${p.floor}, beda lantai`));
+    if (p.floor !== snap.floor) text.append(el('span', { class: 'tag floor-tag' }, t('{floor}, beda lantai', { floor: p.floor })));
     const actions = el('div', { class: 'map-person-actions' });
-    const show = el('button', { type: 'button', class: 'btn', 'data-id': p.id, 'data-act': 'show' }, 'Lihat');
-    show.setAttribute('aria-label', `Tandai ${p.name} di peta ${FLOOR_NAME[p.floor]}`);
+    const show = el('button', { type: 'button', class: 'btn', 'data-id': p.id, 'data-act': 'show' }, t('Lihat'));
+    show.setAttribute('aria-label', t('Tandai {name} di peta {floor}', { name: p.name, floor: floorName(p.floor) }));
     show.addEventListener('click', () => this.select(p.id, false));
-    const meet = el('button', { type: 'button', class: 'btn primary', 'data-id': p.id, 'data-act': 'meet' }, 'Temui');
-    meet.setAttribute('aria-label', `Temui ${p.name}${p.floor !== snap.floor ? ` di ${FLOOR_NAME[p.floor]}` : ''}`);
+    const meet = el('button', { type: 'button', class: 'btn primary', 'data-id': p.id, 'data-act': 'meet' }, t('Temui'));
+    meet.setAttribute('aria-label', `${t('Temui {name}', { name: p.name })}${p.floor !== snap.floor ? ` ${t('di {floor}', { floor: floorName(p.floor) })}` : ''}`);
     meet.addEventListener('click', () => {
       const now = this.host.snapshot();
       const cur = now.people.find((x) => x.id === p.id);
       this.close();
-      if (cur && cur.floor !== now.floor) toast(`${p.name} ada di ${FLOOR_NAME[cur.floor]}. Pindah lantai untuk menemuinya.`, 3200);
+      if (cur && cur.floor !== now.floor) toast(t('{name} ada di {floor}. Pindah lantai untuk menemuinya.', { name: p.name, floor: floorName(cur.floor) }), 3200);
       this.host.meet(p.id);
     });
     actions.append(show, meet);

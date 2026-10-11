@@ -10,6 +10,7 @@ import { Editor, GRID, LOCKED_FAMILIES, snap } from './editor';
 import { LayoutError, makeLayout, MAX_IMPORT_BYTES, parseLayout, serializeLayout, store } from './layout';
 import { corners, pointInPoly } from './validate';
 import type { Issue } from './validate';
+import { t } from '../i18n';
 
 export class StudioUI {
   editor: Editor | null = null;
@@ -62,7 +63,7 @@ export class StudioUI {
     this.render();
     this.showFloor(this.floor);
     window.addEventListener('keydown', this.keyHandler, true);
-    this.status(draft ? 'Draft lokal dimuat.' : pub.error ? `Layout publish lokal tidak valid (${pub.error}); memakai dataset.` : 'Studio dibuka. Pilih fixture dari daftar atau klik di denah.');
+    this.status(draft ? t('Draft lokal dimuat.') : pub.error ? t('Layout publish lokal tidak valid ({error}); memakai dataset.', { error: pub.error }) : t('Studio dibuka. Pilih fixture dari daftar atau klik di denah.'));
     (this.panel.querySelector('select') as HTMLElement | null)?.focus();
   }
 
@@ -83,7 +84,7 @@ export class StudioUI {
     this.panel.hidden = true;
     window.removeEventListener('keydown', this.keyHandler, true);
     $('btn-studio').focus();
-    toast('Studio ditutup. Perubahan yang belum dipublish tersimpan sebagai draft.');
+    toast(t('Studio ditutup. Perubahan yang belum dipublish tersimpan sebagai draft.'));
   }
 
   private showFloor(floor: FloorId) {
@@ -110,7 +111,7 @@ export class StudioUI {
     if (issues.length) {
       const ul = el('ul', { class: 'issues' });
       for (const i of issues.slice(0, 8)) ul.append(el('li', {}, i.message));
-      if (issues.length > 8) ul.append(el('li', {}, `+${issues.length - 8} lainnya`));
+      if (issues.length > 8) ul.append(el('li', {}, t('+{n} lainnya', { n: issues.length - 8 })));
       s.append(ul);
     }
   }
@@ -118,7 +119,7 @@ export class StudioUI {
   private commit(result: { ok: boolean; issues: Issue[]; id?: string }, okMsg: string) {
     if (!this.editor) return;
     if (!result.ok) {
-      this.status('Ditolak: perubahan tidak disimpan.', result.issues);
+      this.status(t('Ditolak: perubahan tidak disimpan.'), result.issues);
       this.render();
       return;
     }
@@ -135,13 +136,13 @@ export class StudioUI {
   nudge(dx: number, dy: number) {
     const fx = this.selectedFixture();
     if (!fx || !this.editor) return;
-    this.commit(this.editor.apply({ kind: 'move', id: fx.id, pos: [fx.pos[0] + dx, fx.pos[1] + dy] }), `${fx.id} dipindah.`);
+    this.commit(this.editor.apply({ kind: 'move', id: fx.id, pos: [fx.pos[0] + dx, fx.pos[1] + dy] }), t('{id} dipindah.', { id: fx.id }));
   }
 
   rotate() {
     const fx = this.selectedFixture();
     if (!fx || !this.editor) return;
-    this.commit(this.editor.apply({ kind: 'rotate', id: fx.id, delta: 90 }), `${fx.id} diputar 90 derajat.`);
+    this.commit(this.editor.apply({ kind: 'rotate', id: fx.id, delta: 90 }), t('{id} diputar 90 derajat.', { id: fx.id }));
   }
 
   remove() {
@@ -149,7 +150,7 @@ export class StudioUI {
     if (!fx || !this.editor) return;
     const r = this.editor.apply({ kind: 'delete', id: fx.id });
     if (r.ok) this.selected = null;
-    this.commit(r, `${fx.id} dihapus.`);
+    this.commit(r, t('{id} dihapus.', { id: fx.id }));
   }
 
   /** Place a new fixture near the view centre, searching outward for a valid spot. */
@@ -162,25 +163,25 @@ export class StudioUI {
         const a = (k / Math.max(1, ring * 8)) * Math.PI * 2;
         const p: Vec2 = [snap(centre[0] + Math.cos(a) * ring * GRID * 2), snap(centre[1] + Math.sin(a) * ring * GRID * 2)];
         const r = this.editor.apply({ kind: 'add', type, floor: this.floor, pos: p });
-        if (r.ok) { this.commit(r, `${r.id} ditambahkan.`); return; }
+        if (r.ok) { this.commit(r, t('{id} ditambahkan.', { id: r.id ?? '' })); return; }
         last = r.issues;
       }
     }
-    this.status('Tidak ada tempat valid di sekitar titik ini.', last);
+    this.status(t('Tidak ada tempat valid di sekitar titik ini.'), last);
   }
 
-  undo() { if (this.editor?.undo()) { this.game.applyFixtures(this.editor.fixtures); this.status('Undo.'); this.render(); } }
-  redo() { if (this.editor?.redo()) { this.game.applyFixtures(this.editor.fixtures); this.status('Redo.'); this.render(); } }
+  undo() { if (this.editor?.undo()) { this.game.applyFixtures(this.editor.fixtures); this.status(t('Undo.')); this.render(); } }
+  redo() { if (this.editor?.redo()) { this.game.applyFixtures(this.editor.fixtures); this.status(t('Redo.')); this.render(); } }
 
   validate() {
     if (!this.editor) return;
     const issues = this.editor.validateAll();
-    this.status(issues.length ? `${issues.length} masalah ditemukan.` : 'Valid: tidak ada overlap, pintu bebas, semua ruang dan slot terjangkau.', issues);
+    this.status(issues.length ? t('{n} masalah ditemukan.', { n: issues.length }) : t('Valid: tidak ada overlap, pintu bebas, semua ruang dan slot terjangkau.'), issues);
   }
 
   saveDraft() {
     if (!this.editor) return;
-    this.status(store.saveDraft(makeLayout(this.game.world, this.editor.fixtures, 'draft')) ? 'Draft tersimpan di browser ini.' : 'Penyimpanan browser tidak tersedia; gunakan Export JSON.');
+    this.status(store.saveDraft(makeLayout(this.game.world, this.editor.fixtures, 'draft')) ? t('Draft tersimpan di browser ini.') : t('Penyimpanan browser tidak tersedia; gunakan Export JSON.'));
   }
 
   exportJson() {
@@ -191,36 +192,36 @@ export class StudioUI {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    this.status('Layout diekspor sebagai JSON.');
+    this.status(t('Layout diekspor sebagai JSON.'));
   }
 
   async importJson(file: File) {
     if (!this.editor) return;
-    if (file.size > MAX_IMPORT_BYTES) { this.status(`Import ditolak: file lebih dari ${MAX_IMPORT_BYTES / 1024} KB. Layout sekarang tidak berubah.`); return; }
+    if (file.size > MAX_IMPORT_BYTES) { this.status(t('Import ditolak: file lebih dari {kb} KB. Layout sekarang tidak berubah.', { kb: MAX_IMPORT_BYTES / 1024 })); return; }
     try {
       const doc = parseLayout(await file.text(), this.game.world);
       const ed = new Editor(this.game.world, this.game.walls, doc.fixtures);
       const issues = ed.validateAll();
-      if (issues.length) { this.status('Import ditolak: layout tidak valid. Layout sekarang tidak berubah.', issues); return; }
+      if (issues.length) { this.status(t('Import ditolak: layout tidak valid. Layout sekarang tidak berubah.'), issues); return; }
       this.editor = ed;
       this.editor.dirty = true;
       this.selected = null;
       this.game.applyFixtures(ed.fixtures);
-      this.status(`Layout diimpor (${doc.fixtures.length} fixture). Belum dipublish.`);
+      this.status(t('Layout diimpor ({n} fixture). Belum dipublish.', { n: doc.fixtures.length }));
       this.render();
     } catch (e) {
-      this.status(`Import ditolak: ${e instanceof LayoutError ? e.message : 'file tidak terbaca'}. Layout sekarang tidak berubah.`);
+      this.status(t('Import ditolak: {reason}. Layout sekarang tidak berubah.', { reason: e instanceof LayoutError ? e.message : t('file tidak terbaca') }));
     }
   }
 
   publish() {
     if (!this.editor) return;
     const issues = this.editor.validateAll();
-    if (issues.length) { this.status('Publish ditolak: perbaiki masalah dulu.', issues); return; }
+    if (issues.length) { this.status(t('Publish ditolak: perbaiki masalah dulu.'), issues); return; }
     const ok = store.publish(makeLayout(this.game.world, this.editor.fixtures, 'publish lokal'));
     store.clearDraft();
     this.editor.dirty = false;
-    this.status(ok ? 'Dipublish lokal di browser ini (bukan repo, bukan server).' : 'Penyimpanan browser tidak tersedia: publish lokal gagal.');
+    this.status(ok ? t('Dipublish lokal di browser ini (bukan repo, bukan server).') : t('Penyimpanan browser tidak tersedia: publish lokal gagal.'));
     this.render();
   }
 
@@ -231,14 +232,14 @@ export class StudioUI {
     this.editor = new Editor(this.game.world, this.game.walls, fixtures);
     this.selected = null;
     this.game.applyFixtures(fixtures);
-    this.status(doc ? 'Kembali ke publish sebelumnya.' : 'Kembali ke dataset asli (world.json).');
+    this.status(doc ? t('Kembali ke publish sebelumnya.') : t('Kembali ke dataset asli (world.json).'));
     this.render();
   }
 
   private onKey(e: KeyboardEvent) {
     if (!this.editor || document.querySelector('dialog[open]')) return;
-    const t = e.target as HTMLElement;
-    if (t instanceof HTMLInputElement || t instanceof HTMLSelectElement || t instanceof HTMLTextAreaElement) return;
+    const tgt = e.target as HTMLElement;
+    if (tgt instanceof HTMLInputElement || tgt instanceof HTMLSelectElement || tgt instanceof HTMLTextAreaElement) return;
     const k = e.key.toLowerCase();
     const ctrl = e.ctrlKey || e.metaKey;
     let handled = true;
@@ -336,20 +337,20 @@ export class StudioUI {
     if (fx) this.placeBox(this.highlight, fx);
     else this.highlight.visible = false;
     body.replaceChildren();
-    const floors = el('div', { class: 'seg', role: 'group', 'aria-label': 'Lantai' });
+    const floors = el('div', { class: 'seg', role: 'group', 'aria-label': t('Lantai') });
     for (const f of this.game.world.floors) {
       const b = el('button', { type: 'button', class: 'btn', 'aria-pressed': String(f.id === this.floor) }, f.id);
       b.addEventListener('click', () => this.showFloor(f.id));
       floors.append(b);
     }
-    const pick = el('select', { id: 'studio-pick', 'aria-label': 'Pilih fixture' });
-    pick.append(el('option', { value: '' }, 'Pilih fixture...'));
+    const pick = el('select', { id: 'studio-pick', 'aria-label': t('Pilih fixture') });
+    pick.append(el('option', { value: '' }, t('Pilih fixture...')));
     for (const room of this.game.world.rooms.filter((r) => r.floor === this.floor)) {
       const items = ed.fixtures.filter((f) => f.room === room.id);
       if (!items.length) continue;
       const g = el('optgroup', { label: room.name });
       for (const f of items) {
-        const o = el('option', { value: f.id }, `${f.id} · ${this.game.world.catalog[f.type].label}${ed.editable(f) ? '' : ' (terkunci)'}`);
+        const o = el('option', { value: f.id }, `${f.id} · ${this.game.world.catalog[f.type].label}${ed.editable(f) ? '' : ` ${t('(terkunci)')}`}`);
         if (f.id === this.selected) o.selected = true;
         g.append(o);
       }
@@ -358,13 +359,15 @@ export class StudioUI {
     pick.addEventListener('change', () => { this.selected = pick.value || null; this.render(); (document.getElementById('studio-pick') as HTMLElement)?.focus(); });
     const info = el('p', { class: 'muted small', id: 'studio-selected' });
     const lock = fx ? ed.lockedReason(fx) : null;
-    info.textContent = fx ? `${fx.id} di ${this.game.world.rooms.find((r) => r.id === fx.room)?.name}; posisi ${fx.pos[0].toFixed(2)}, ${fx.pos[1].toFixed(2)} m; rotasi ${fx.rot} derajat.${lock ? ` Terkunci: ${lock}` : ''}` : 'Belum ada fixture terpilih.';
+    info.textContent = fx
+      ? t('{id} di {room}; posisi {x}, {y} m; rotasi {rot} derajat.', { id: fx.id, room: String(this.game.world.rooms.find((r) => r.id === fx.room)?.name), x: fx.pos[0].toFixed(2), y: fx.pos[1].toFixed(2), rot: fx.rot }) + (lock ? ` ${t('Terkunci: {reason}', { reason: lock })}` : '')
+      : t('Belum ada fixture terpilih.');
     const ict = ed.outletDerivation();
     const own = fx ? ict.outlets.find((o) => o.serves === fx.id) : undefined;
     const outletInfo = el('p', { class: 'muted small', id: 'studio-outlet' },
-      own ? `Outlet ICT ${own.id} (${own.ports} port, ${own.domain}) ikut di ${own.pos[0].toFixed(2)}, ${own.pos[1].toFixed(2)} m.` : fx ? 'Fixture ini tidak punya outlet ICT.' : '');
+      own ? t('Outlet ICT {id} ({ports} port, {domain}) ikut di {x}, {y} m.', { id: own.id, ports: own.ports, domain: own.domain, x: own.pos[0].toFixed(2), y: own.pos[1].toFixed(2) }) : fx ? t('Fixture ini tidak punya outlet ICT.') : '');
     const ictSummary = el('p', { class: 'muted small', id: 'studio-ict' },
-      `ICT: ${ict.outlets.length} outlet; ${ict.moved.length} ikut pindah, ${ict.removed.length} dihapus, ${ict.added.length} baru. Port map dihitung ulang dari export dengan tools/ict_derive.py --layout.`);
+      t('ICT: {n} outlet; {moved} ikut pindah, {removed} dihapus, {added} baru. Port map dihitung ulang dari export dengan tools/ict_derive.py --layout.', { n: ict.outlets.length, moved: ict.moved.length, removed: ict.removed.length, added: ict.added.length }));
     const canEdit = !!fx && !lock && ed.editable(fx);
     const tools = el('div', { class: 'tool-grid' });
     const btn = (label: string, aria: string, fn: () => void, enabled: boolean) => {
@@ -374,21 +377,21 @@ export class StudioUI {
       tools.append(b);
       return b;
     };
-    btn('Barat', 'Geser ke barat 0,25 m', () => this.nudge(-GRID, 0), canEdit);
-    btn('Utara', 'Geser ke utara 0,25 m', () => this.nudge(0, GRID), canEdit);
-    btn('Selatan', 'Geser ke selatan 0,25 m', () => this.nudge(0, -GRID), canEdit);
-    btn('Timur', 'Geser ke timur 0,25 m', () => this.nudge(GRID, 0), canEdit);
-    btn('Putar', 'Putar 90 derajat', () => this.rotate(), canEdit);
-    btn('Hapus', 'Hapus fixture terpilih', () => this.remove(), canEdit);
-    btn('Undo', 'Undo', () => this.undo(), ed.canUndo());
-    btn('Redo', 'Redo', () => this.redo(), ed.canRedo());
+    btn(t('Barat'), t('Geser ke barat 0,25 m'), () => this.nudge(-GRID, 0), canEdit);
+    btn(t('Utara'), t('Geser ke utara 0,25 m'), () => this.nudge(0, GRID), canEdit);
+    btn(t('Selatan'), t('Geser ke selatan 0,25 m'), () => this.nudge(0, -GRID), canEdit);
+    btn(t('Timur'), t('Geser ke timur 0,25 m'), () => this.nudge(GRID, 0), canEdit);
+    btn(t('Putar'), t('Putar 90 derajat'), () => this.rotate(), canEdit);
+    btn(t('Hapus'), t('Hapus fixture terpilih'), () => this.remove(), canEdit);
+    btn(t('Undo'), t('Undo'), () => this.undo(), ed.canUndo());
+    btn(t('Redo'), t('Redo'), () => this.redo(), ed.canRedo());
     const addRow = el('div', { class: 'add-row' });
-    const typeSel = el('select', { 'aria-label': 'Tipe fixture baru' });
+    const typeSel = el('select', { 'aria-label': t('Tipe fixture baru') });
     for (const [type, c] of Object.entries(this.game.world.catalog)) {
       if (LOCKED_FAMILIES.has(c.family) || type === 'rack_42u') continue;
       typeSel.append(el('option', { value: type }, c.label));
     }
-    const addBtn = el('button', { type: 'button', class: 'btn' }, 'Tambah');
+    const addBtn = el('button', { type: 'button', class: 'btn' }, t('Tambah'));
     addBtn.addEventListener('click', () => this.add(typeSel.value));
     addRow.append(typeSel, addBtn);
     const files = el('div', { class: 'tool-grid' });
@@ -397,19 +400,19 @@ export class StudioUI {
       b.addEventListener('click', fn);
       files.append(b);
     };
-    fbtn('Validasi', () => this.validate());
-    fbtn('Simpan draft', () => this.saveDraft());
-    fbtn('Export JSON', () => this.exportJson());
+    fbtn(t('Validasi'), () => this.validate());
+    fbtn(t('Simpan draft'), () => this.saveDraft());
+    fbtn(t('Export JSON'), () => this.exportJson());
     const imp = el('input', { type: 'file', accept: 'application/json,.json', id: 'studio-import', class: 'visually-hidden' });
     imp.addEventListener('change', () => { const f = imp.files?.[0]; if (f) void this.importJson(f); imp.value = ''; });
-    const impLabel = el('label', { for: 'studio-import', class: 'btn', role: 'button', tabindex: '0' }, 'Import JSON');
+    const impLabel = el('label', { for: 'studio-import', class: 'btn', role: 'button', tabindex: '0' }, t('Import JSON'));
     impLabel.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); imp.click(); } });
     files.append(impLabel, imp);
-    fbtn('Publish lokal', () => this.publish(), true);
-    fbtn(`Rollback (${store.historyCount()})`, () => this.rollback());
-    const exit = el('button', { type: 'button', class: 'btn', id: 'studio-exit' }, 'Keluar Studio');
+    fbtn(t('Publish lokal'), () => this.publish(), true);
+    fbtn(t('Rollback ({n})', { n: store.historyCount() }), () => this.rollback());
+    const exit = el('button', { type: 'button', class: 'btn', id: 'studio-exit' }, t('Keluar Studio'));
     exit.addEventListener('click', () => this.close());
-    body.append(floors, pick, info, outletInfo, tools, addRow, files, el('p', { class: 'muted small' }, `Grid ${GRID} m. Panah geser, R putar, Delete hapus, Ctrl+Z/Ctrl+Y, Esc batal pilih. Publish hanya di browser ini; dataset repo tidak berubah.`), ictSummary, exit);
+    body.append(floors, pick, info, outletInfo, tools, addRow, files, el('p', { class: 'muted small' }, t('Grid {grid} m. Panah geser, R putar, Delete hapus, Ctrl+Z/Ctrl+Y, Esc batal pilih. Publish hanya di browser ini; dataset repo tidak berubah.', { grid: GRID })), ictSummary, exit);
   }
 }
 

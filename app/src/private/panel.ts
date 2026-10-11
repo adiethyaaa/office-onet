@@ -6,6 +6,7 @@ import { $, el, openDialog, toast } from '../ui/dom';
 import { DEMO_BOARDS } from './demo';
 import { disablePush, enablePush, mutedBots, PUSH_HELP, pushState, setMutedBots, type PushState } from './push';
 import { clock, dayLabel, ping, quoteFor, RECEIPT, sameDay, setTitleCount, statusLine, unlockAudio } from './chat-ui';
+import { t, t as tr, locale } from '../i18n';
 import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type Presence, type HandoffItem, type TaskItem, type LogItem, type Turn, type Attachment } from './api';
 
 type Tab = 'handoffs' | 'tasks' | 'log';
@@ -16,7 +17,7 @@ const STATUS_LABEL: Record<string, string> = {
 const TASK_STATUS: Record<string, string> = { todo: 'Antre', ready: 'Antre', triage: 'Antre', scheduled: 'Terjadwal', running: 'Sedang jalan', claimed: 'Diambil', blocked: 'Diblokir', done: 'Selesai' };
 
 const fmtTime = (ms: number) =>
-  new Date(ms).toLocaleString('id-ID', { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+  new Date(ms).toLocaleString(locale(), { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
 
 // Read position per agent, kept in this browser only (no server state, no content).
 const READ_KEY = 'kantor-rpg:read:';
@@ -27,7 +28,7 @@ function setReadMark(profile: string, at: number) {
   try { localStorage.setItem(READ_KEY + profile, String(at)); } catch { /* private mode: unread state just isn't kept */ }
 }
 const fmtSize = (n: number) => (n < 1024 * 1024 ? `${Math.max(1, Math.round(n / 1024))} KB` : `${(n / 1048576).toFixed(1)} MB`);
-const fmtAge = (h: number) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} mnt` : h < 48 ? `${Math.round(h)} jam` : `${Math.round(h / 24)} hari`);
+const fmtAge = (h: number) => (h < 1 ? t('{n} mnt', { n: Math.max(1, Math.round(h * 60)) }) : h < 48 ? t('{n} jam', { n: Math.round(h) }) : t('{n} hari', { n: Math.round(h / 24) }));
 const newIdem = () => `idem-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
 export class PrivatePanel {
@@ -101,11 +102,11 @@ export class PrivatePanel {
   async openPicker(opener?: HTMLElement | null) {
     await this.refreshMe();
     const dlg = $('dlg-agent') as HTMLDialogElement;
-    $('agent-title').textContent = 'Chat agen';
+    $('agent-title').textContent = t('Chat agen');
     const body = $('agent-body');
     body.replaceChildren();
     if (!this.authenticated) {
-      body.append(el('p', {}, 'Chat dengan agen nyata hanya untuk owner yang login.'));
+      body.append(el('p', {}, t('Chat dengan agen nyata hanya untuk owner yang login.')));
       body.append(this.loginForm(() => void this.openPicker(opener)));
       if (!dlg.open) openDialog(dlg, opener);
       return;
@@ -116,24 +117,24 @@ export class PrivatePanel {
       presence = (await api.presence()).agents;
       this.presenceList = presence;
     } catch (e) {
-      body.append(el('p', { class: 'warn', role: 'alert' }, `Daftar agen tidak dapat dibuka: ${(e as Error).message}`));
+      body.append(el('p', { class: 'warn', role: 'alert' }, t('Daftar agen tidak dapat dibuka: {msg}', { msg: (e as Error).message })));
       if (!dlg.open) openDialog(dlg, opener);
       return;
     }
-    const list = el('ul', { class: 'agent-pick', 'aria-label': 'Pilih agen' });
+    const list = el('ul', { class: 'agent-pick', 'aria-label': t('Pilih agen') });
     for (const a of this.agents) {
       const p = presence.find((x) => x.profile === a.profile);
-      const state = p?.typing ? 'mengetik…' : p?.status === 'working' ? 'Bekerja' : p?.status === 'waiting' ? 'Menunggu kamu' : p?.status === 'unknown' ? 'Tidak diketahui' : 'Siap';
+      const state = t(p?.typing ? 'mengetik…' : p?.status === 'working' ? 'Bekerja' : p?.status === 'waiting' ? 'Menunggu kamu' : p?.status === 'unknown' ? 'Tidak diketahui' : 'Siap');
       const btn = el('button', { type: 'button', class: 'btn agent-pick-btn', 'data-agent': a.profile });
-      btn.append(el('span', { class: 'agent-pick-name' }, a.name), el('span', { class: 'muted small' }, p?.typing ? 'sedang mengetik…' : statusLine(false, p?.lastSeen) || a.lane),
+      btn.append(el('span', { class: 'agent-pick-name' }, a.name), el('span', { class: 'muted small' }, p?.typing ? t('sedang mengetik…') : statusLine(false, p?.lastSeen) || a.lane),
         el('span', { class: `tag ${p?.status === 'working' ? 'live' : p?.status === 'waiting' ? 'warn' : 'demo'}` }, state));
       const unread = this.unreadFor(a.profile);
-      if (unread) btn.append(el('span', { class: 'unread-badge', 'aria-label': `${unread} pesan belum dibaca` }, unread > 9 ? '9+' : String(unread)));
+      if (unread) btn.append(el('span', { class: 'unread-badge', 'aria-label': t('{n} pesan belum dibaca', { n: unread }) }, unread > 9 ? '9+' : String(unread)));
       if (p?.summary) btn.title = p.summary;
       btn.addEventListener('click', () => void this.openAgent(a.profile, opener));
       const li = el('li'); li.append(btn); list.append(li);
     }
-    body.append(el('p', { class: 'muted small' }, 'Pilih agen untuk chat atau memberi tugas. Tombol C membuka daftar ini dari mana saja.'), list);
+    body.append(el('p', { class: 'muted small' }, t('Pilih agen untuk chat atau memberi tugas. Tombol C membuka daftar ini dari mana saja.')), list);
     // Settings fill in afterwards: a slow push service must not hold up the agent list.
     const slot = el('div', { id: 'notify-slot' });
     body.append(slot);
@@ -187,23 +188,23 @@ export class PrivatePanel {
     const active = keepFocus ? document.activeElement?.id : null;
     body.replaceChildren();
     const head = el('div', { class: 'board-head' });
-    head.append(el('span', { class: demo ? 'tag demo' : 'tag live' }, demo ? 'Demo' : 'Data nyata'));
+    head.append(el('span', { class: demo ? 'tag demo' : 'tag live' }, demo ? t('Demo') : t('Data nyata')));
     head.append(el('span', { class: 'muted small' }, demo
-      ? 'Data simulasi. Login owner untuk melihat papan tim yang sebenarnya.'
-      : `Diamati ${fmtTime(Date.parse(b.observedAt))} WITA. Baca-saja; ubah tugas tetap lewat bot.`));
+      ? t('Data simulasi. Login owner untuk melihat papan tim yang sebenarnya.')
+      : t('Diamati {time} WITA. Baca-saja; ubah tugas tetap lewat bot.', { time: fmtTime(Date.parse(b.observedAt)) })));
     if (!demo) {
-      const out = el('button', { type: 'button', class: 'btn link', id: 'btn-logout' }, 'Keluar');
-      out.addEventListener('click', async () => { try { await api.logout(); } catch { /* session already gone */ } this.me = null; this.loggedOut(); toast('Sudah keluar.'); void this.openBoards(this.tab); });
+      const out = el('button', { type: 'button', class: 'btn link', id: 'btn-logout' }, t('Keluar'));
+      out.addEventListener('click', async () => { try { await api.logout(); } catch { /* session already gone */ } this.me = null; this.loggedOut(); toast(t('Sudah keluar.')); void this.openBoards(this.tab); });
       head.append(out);
     }
     body.append(head);
-    if (this.stale && !demo) body.append(el('p', { class: 'warn', role: 'status' }, `Basi: pembaruan gagal (${this.stale}). Data di bawah dari ${fmtTime(Date.parse(b.observedAt))} WITA.`));
-    const tabs = el('div', { class: 'tabs', role: 'tablist', 'aria-label': 'Papan kerja' });
+    if (this.stale && !demo) body.append(el('p', { class: 'warn', role: 'status' }, t('Basi: pembaruan gagal ({err}). Data di bawah dari {time} WITA.', { err: this.stale, time: fmtTime(Date.parse(b.observedAt)) })));
+    const tabs = el('div', { class: 'tabs', role: 'tablist', 'aria-label': t('Papan kerja') });
     const names: [Tab, string][] = [['handoffs', 'Papan Handoff'], ['tasks', 'Daftar Pekerjaan'], ['log', 'Log Aktivitas']];
     for (const [id, label] of names) {
-      const t = el('button', { type: 'button', role: 'tab', class: 'tab', id: `tab-${id}`, 'aria-selected': String(this.tab === id), 'aria-controls': 'board-panel' }, label);
-      t.addEventListener('click', () => { this.tab = id; this.renderBoards(); $(`tab-${id}`).focus(); });
-      t.addEventListener('keydown', (e) => {
+      const tabBtn = el('button', { type: 'button', role: 'tab', class: 'tab', id: `tab-${id}`, 'aria-selected': String(this.tab === id), 'aria-controls': 'board-panel' }, t(label));
+      tabBtn.addEventListener('click', () => { this.tab = id; this.renderBoards(); $(`tab-${id}`).focus(); });
+      tabBtn.addEventListener('keydown', (e) => {
         const i = names.findIndex(([n]) => n === this.tab);
         if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
           e.preventDefault();
@@ -211,49 +212,52 @@ export class PrivatePanel {
           this.renderBoards(); $(`tab-${this.tab}`).focus();
         }
       });
-      tabs.append(t);
+      tabs.append(tabBtn);
     }
     body.append(tabs);
     const panel = el('div', { role: 'tabpanel', id: 'board-panel', 'aria-labelledby': `tab-${this.tab}`, class: 'board-panel' });
     body.append(panel);
     const board = b[this.tab];
     if (!board.ok) {
-      panel.append(el('p', { class: 'warn', role: 'status' }, `Tidak diketahui: sumber ${board.source} tidak terbaca (${board.error ?? 'galat'}). Terakhir diamati ${fmtTime(Date.parse(b.observedAt))}.`));
-    } else if (this.tab === 'handoffs') this.renderHandoffs(panel, board.items as HandoffItem[]);
-    else if (this.tab === 'tasks') this.renderTasks(panel, board.items as TaskItem[]);
-    else this.renderLog(panel, board.items as LogItem[]);
+      panel.append(el('p', { class: 'warn', role: 'status' }, t('Tidak diketahui: sumber {source} tidak terbaca ({err}). Terakhir diamati {time}.', { source: board.source, err: board.error ?? t('galat'), time: fmtTime(Date.parse(b.observedAt)) })));
+    } else if (this.tab === 'handoffs') this.renderHandoffs(panel, board.items as HandoffItem[], demo);
+    else if (this.tab === 'tasks') this.renderTasks(panel, board.items as TaskItem[], demo);
+    else this.renderLog(panel, board.items as LogItem[], demo);
     if (!this.authenticated) body.append(this.loginForm(() => void this.openBoards(this.tab)));
     if (active && document.getElementById(active)) document.getElementById(active)!.focus();
   }
 
-  private renderHandoffs(panel: HTMLElement, items: HandoffItem[]) {
+  private renderHandoffs(panel: HTMLElement, items: HandoffItem[], demo = false) {
+    // Demo text is ours and gets translated; real board text is user content and is shown as is.
+    const dt = (s: string) => (demo ? t(s) : s);
     const attention = items.filter((h) => h.attention).length;
-    panel.append(el('p', { class: 'muted small' }, `${items.length} handoff, ${attention} perlu perhatian (diblokir atau >24 jam belum diterima).`));
+    panel.append(el('p', { class: 'muted small' }, t('{n} handoff, {attention} perlu perhatian (diblokir atau >24 jam belum diterima).', { n: items.length, attention })));
     const order = ['Diblokir', 'Dikirim', 'Diterima', 'Dikerjakan', 'Selesai', 'Dibatalkan', 'Belum tercatat'];
     const list = el('ul', { class: 'cards' });
     for (const h of [...items].sort((a, b) => Number(b.attention) - Number(a.attention) || order.indexOf(a.status) - order.indexOf(b.status) || b.createdAt - a.createdAt)) {
       const li = el('li', { class: `card${h.attention ? ' attention' : ''}` });
       const top = el('div', { class: 'card-top' });
-      top.append(el('strong', {}, `${h.from} → ${h.to}`), el('span', { class: `tag st-${h.status.toLowerCase().replace(/\s/g, '-')}` }, h.status));
-      if (h.attention) top.append(el('span', { class: 'tag warn' }, 'Perlu perhatian'));
-      li.append(top, el('p', {}, h.summary));
+      top.append(el('strong', {}, `${h.from} → ${h.to}`), el('span', { class: `tag st-${h.status.toLowerCase().replace(/\s/g, '-')}` }, t(h.status)));
+      if (h.attention) top.append(el('span', { class: 'tag warn' }, t('Perlu perhatian')));
+      li.append(top, el('p', {}, dt(h.summary)));
       if (h.chain && h.chain.length > 2) {
-        const ch = el('p', { class: 'chain', 'aria-label': `Rantai kerja: ${h.chain.join(', lalu ')}` });
+        const ch = el('p', { class: 'chain', 'aria-label': t('Rantai kerja: {chain}', { chain: h.chain.join(t(', lalu ')) }) });
         h.chain.forEach((n, i) => {
           if (i) ch.append(el('span', { 'aria-hidden': 'true' }, ' → '));
           ch.append(el('span', { class: i === h.chainActive ? 'step active' : 'step' }, n));
         });
         li.append(ch);
       }
-      if (h.diminta) li.append(el('p', { class: 'muted small' }, `Yang diminta: ${h.diminta}`));
-      li.append(el('p', { class: 'meta' }, `${h.project} · ${h.badan} · umur ${fmtAge(h.ageHours)}${h.hasFile ? '' : ' · berkas belum tercatat'}`));
+      if (h.diminta) li.append(el('p', { class: 'muted small' }, t('Yang diminta: {text}', { text: dt(h.diminta) })));
+      li.append(el('p', { class: 'meta' }, `${dt(h.project)} · ${t(h.badan)} · ${t('umur {age}', { age: fmtAge(h.ageHours) })}${h.hasFile ? '' : ` · ${t('berkas belum tercatat')}`}`));
       list.append(li);
     }
-    if (!items.length) panel.append(el('p', {}, 'Tidak ada handoff dalam 7 hari terakhir.'));
+    if (!items.length) panel.append(el('p', {}, t('Tidak ada handoff dalam 7 hari terakhir.')));
     panel.append(list);
   }
 
-  private renderTasks(panel: HTMLElement, items: TaskItem[]) {
+  private renderTasks(panel: HTMLElement, items: TaskItem[], demo = false) {
+    const dt = (s: string) => (demo ? t(s) : s);
     const lanes = [...new Set(items.map((t) => t.owner))].sort();
     const statuses = [...new Set(items.map((t) => t.status))];
     const badans = [...new Set(items.map((t) => t.badan ?? 'Belum tercatat'))].sort();
@@ -261,26 +265,26 @@ export class PrivatePanel {
     const sel = (key: 'lane' | 'status' | 'badan', label: string, values: string[], text: (v: string) => string) => {
       const id = `filter-${key}`;
       const s = el('select', { id });
-      s.append(el('option', { value: '' }, 'Semua'));
+      s.append(el('option', { value: '' }, t('Semua')));
       for (const v of values) { const o = el('option', { value: v }, text(v)); if (this.filters[key] === v) o.selected = true; s.append(o); }
       s.addEventListener('change', () => { this.filters[key] = s.value; this.renderBoards(); $(id).focus(); });
-      const l = el('label', { for: id }, label);
+      const l = el('label', { for: id }, t(label));
       bar.append(l, s);
     };
     sel('lane', 'Bot', lanes, (v) => v);
-    sel('badan', 'Badan', badans, (v) => v);
-    sel('status', 'Status', statuses, (v) => TASK_STATUS[v] ?? v);
+    sel('badan', 'Badan', badans, (v) => t(v));
+    sel('status', 'Status', statuses, (v) => (TASK_STATUS[v] ? t(TASK_STATUS[v]) : v));
     panel.append(bar);
     const shown = items.filter((t) => (!this.filters.lane || t.owner === this.filters.lane) && (!this.filters.status || t.status === this.filters.status) && (!this.filters.badan || (t.badan ?? 'Belum tercatat') === this.filters.badan));
-    panel.append(el('p', { class: 'muted small', role: 'status', id: 'task-count' }, `${shown.length} dari ${items.length} tugas.`));
+    panel.append(el('p', { class: 'muted small', role: 'status', id: 'task-count' }, t('{shown} dari {total} tugas.', { shown: shown.length, total: items.length })));
     const table = el('table', { class: 'board-table' });
     const thead = el('thead'); const hr = el('tr');
-    for (const h of ['Tugas', 'Bot', 'Peminta', 'Status', 'Umur']) hr.append(el('th', { scope: 'col' }, h));
+    for (const h of ['Tugas', 'Bot', 'Peminta', 'Status', 'Umur']) hr.append(el('th', { scope: 'col' }, t(h)));
     thead.append(hr); table.append(thead);
     const tb = el('tbody');
-    for (const t of shown) {
-      const tr = el('tr', { 'data-task': t.id, id: `row-${t.id}`, class: this.focusTask === t.id ? 'focus-row' : '' });
-      tr.append(el('td', {}, t.title), el('td', {}, t.owner), el('td', {}, t.requester), el('td', {}, TASK_STATUS[t.status] ?? t.status), el('td', {}, fmtAge(t.ageHours)));
+    for (const task of shown) {
+      const tr = el('tr', { 'data-task': task.id, id: `row-${task.id}`, class: this.focusTask === task.id ? 'focus-row' : '' });
+      tr.append(el('td', {}, dt(task.title)), el('td', {}, task.owner), el('td', {}, task.requester), el('td', {}, TASK_STATUS[task.status] ? t(TASK_STATUS[task.status]) : task.status), el('td', {}, fmtAge(task.ageHours)));
       tb.append(tr);
     }
     table.append(tb);
@@ -288,13 +292,15 @@ export class PrivatePanel {
     (panel.lastChild as HTMLElement).append(table);
   }
 
-  private renderLog(panel: HTMLElement, items: LogItem[]) {
-    panel.append(el('p', { class: 'muted small' }, `${items.length} peristiwa dalam 24 jam terakhir (maks. 50 tugas + 110 aksi alat). Isi perintah dan obrolan tidak ditampilkan.`));
+  private renderLog(panel: HTMLElement, items: LogItem[], demo = false) {
+    // Verbs and the fixed objects ('gagal', 'Tugas pribadi') are a closed server vocabulary; task titles are user content.
+    const obj = (s: string) => (demo || s === 'gagal' || s === 'Tugas pribadi' ? t(s) : s);
+    panel.append(el('p', { class: 'muted small' }, t('{n} peristiwa dalam 24 jam terakhir (maks. 50 tugas + 110 aksi alat). Isi perintah dan obrolan tidak ditampilkan.', { n: items.length })));
     const ol = el('ol', { class: 'log' });
     for (const r of items) {
       const li = el('li', { class: r.kind === 'task' ? 'log-task' : 'log-tool' });
       li.append(el('time', { datetime: new Date(r.at).toISOString() }, fmtTime(r.at)), el('strong', {}, r.bot));
-      const text = `${r.verb}${r.object ? `: ${r.object}` : ''}`;
+      const text = `${t(r.verb)}${r.object ? `: ${obj(r.object)}` : ''}`;
       if (r.taskId) {
         const go = el('button', { type: 'button', class: 'btn link log-link' }, text);
         go.addEventListener('click', () => {
@@ -313,18 +319,18 @@ export class PrivatePanel {
 
   private loginForm(after: () => void): HTMLElement {
     const wrap = el('section', { class: 'login', 'aria-labelledby': 'login-title' });
-    wrap.append(el('h3', { id: 'login-title' }, 'Login owner'));
+    wrap.append(el('h3', { id: 'login-title' }, t('Login owner')));
     if (this.backend === 'none') {
-      wrap.append(el('p', { class: 'muted small' }, 'Backend privat tidak terjangkau dari halaman ini. Papan dan perintah agen hanya tersedia di employee-rpg.air-buddy.site.'));
+      wrap.append(el('p', { class: 'muted small' }, t('Backend privat tidak terjangkau dari halaman ini. Papan dan perintah agen hanya tersedia di employee-rpg.air-buddy.site.')));
       return wrap;
     }
     if (!this.me?.configured) {
-      wrap.append(el('p', { class: 'muted small' }, 'Akun owner belum dibuat. Buka tautan setup sekali pakai yang dikirim Max ke Telegram.'));
+      wrap.append(el('p', { class: 'muted small' }, t('Akun owner belum dibuat. Buka tautan setup sekali pakai yang dikirim Max ke Telegram.')));
       return wrap;
     }
     const form = el('form', { class: 'settings', autocomplete: 'on' });
     const field = (id: string, label: string, attrs: Record<string, string>) => {
-      form.append(el('label', { for: id }, label));
+      form.append(el('label', { for: id }, t(label)));
       form.append(el('input', { id, ...attrs }));
     };
     field('login-user', 'Nama', { name: 'username', autocomplete: 'username', required: '' });
@@ -332,7 +338,7 @@ export class PrivatePanel {
     field('login-code', 'Kode 2FA (6 digit)', { name: 'code', inputmode: 'numeric', pattern: '[0-9]{6}', autocomplete: 'one-time-code', required: '' });
     const err = el('p', { class: 'warn', role: 'alert' });
     err.hidden = true;
-    const btn = el('button', { type: 'submit', class: 'btn primary' }, 'Masuk');
+    const btn = el('button', { type: 'submit', class: 'btn primary' }, t('Masuk'));
     form.append(err, btn);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -342,7 +348,7 @@ export class PrivatePanel {
         await api.login(String(fd.get('username')), String(fd.get('password')), String(fd.get('code')));
         this.loggedIn();
         await this.refreshMe();
-        toast('Login owner berhasil.');
+        toast(t('Login owner berhasil.'));
         after();
       } catch (x) { err.textContent = (x as Error).message; err.hidden = false; btn.disabled = false; }
     });
@@ -355,11 +361,11 @@ export class PrivatePanel {
   async openAgent(profile: string, opener?: HTMLElement | null) {
     await this.refreshMe();
     const dlg = $('dlg-agent') as HTMLDialogElement;
-    $('agent-title').textContent = 'Bicara & beri tugas';
+    $('agent-title').textContent = t('Bicara & beri tugas');
     const body = $('agent-body');
     body.replaceChildren();
     if (!this.authenticated) {
-      body.append(el('p', {}, 'Memberi tugas ke agen nyata hanya untuk owner yang login. Pengunjung tidak dapat mengirim apa pun ke agen.'));
+      body.append(el('p', {}, t('Memberi tugas ke agen nyata hanya untuk owner yang login. Pengunjung tidak dapat mengirim apa pun ke agen.')));
       body.append(this.loginForm(() => void this.openAgent(profile, opener)));
       if (!dlg.open) openDialog(dlg, opener);
       return;
@@ -370,7 +376,7 @@ export class PrivatePanel {
       if (next.id !== this.conv?.id) { this.staged = []; this.searchTerm = ''; }
       this.conv = next;
     } catch (e) {
-      body.append(el('p', { class: 'warn', role: 'alert' }, `Agen tidak dapat dibuka: ${(e as Error).message}`));
+      body.append(el('p', { class: 'warn', role: 'alert' }, t('Agen tidak dapat dibuka: {msg}', { msg: (e as Error).message })));
       if (!dlg.open) openDialog(dlg, opener);
       return;
     }
@@ -414,19 +420,19 @@ export class PrivatePanel {
     const manualOpen = keepInput && lastAgentId === this.shownAgentTurn && !!document.getElementById('agent-manual-text') && !$('agent-manual').hidden;
     this.shownAgentTurn = lastAgentId;
     const hadFocus = document.activeElement?.id;
-    $('agent-title').textContent = `${c.agent} · bicara & beri tugas`;
+    $('agent-title').textContent = `${c.agent} · ${t('bicara & beri tugas')}`;
     const body = $('agent-body');
     body.replaceChildren();
     body.append(el('p', { class: `chat-status${c.typing ? ' typing' : ''}`, id: 'agent-status', role: 'status', 'aria-live': 'polite' }, statusLine(c.typing, c.lastSeen)));
     const info = el('dl', { class: 'info-grid' });
-    const mode = c.channel === 'telegram' ? 'Sama dengan chat Telegram' : c.channel === 'telegram-unavailable' ? 'Telegram tidak terbaca' : 'Khusus RPG';
-    for (const [k, v] of [['Profil', c.profile], ['Lane', c.lane ?? '-'], ['Percakapan', mode]]) info.append(el('dt', {}, k), el('dd', {}, v));
+    const mode = t(c.channel === 'telegram' ? 'Sama dengan chat Telegram' : c.channel === 'telegram-unavailable' ? 'Telegram tidak terbaca' : 'Khusus RPG');
+    for (const [k, v] of [['Profil', c.profile], ['Lane', c.lane ?? '-'], ['Percakapan', mode]]) info.append(el('dt', {}, t(k)), el('dd', {}, v));
     body.append(info);
-    if (c.channel === 'telegram') body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, `Ini percakapan Telegram-mu dengan ${c.agent}. Pesan dari sini masuk ke sesi yang sama, dan balasannya juga dikirim bot ke Telegram. Jangan ketik sandi, OTP, atau token.`));
-    else if (c.channel === 'telegram-unavailable') body.append(el('p', { class: 'warn', role: 'status' }, 'Riwayat Telegram bot ini tidak bisa dibaca sekarang. Pesan yang kamu kirim tetap masuk ke sesi Telegram-nya bila sesinya ada.'));
-    else body.append(el('p', { class: 'muted small' }, 'Bot ini belum punya chat Telegram denganmu, jadi percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.'));
+    if (c.channel === 'telegram') body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, t('Ini percakapan Telegram-mu dengan {agent}. Pesan dari sini masuk ke sesi yang sama, dan balasannya juga dikirim bot ke Telegram. Jangan ketik sandi, OTP, atau token.', { agent: c.agent ?? '' })));
+    else if (c.channel === 'telegram-unavailable') body.append(el('p', { class: 'warn', role: 'status' }, t('Riwayat Telegram bot ini tidak bisa dibaca sekarang. Pesan yang kamu kirim tetap masuk ke sesi Telegram-nya bila sesinya ada.')));
+    else body.append(el('p', { class: 'muted small' }, t('Bot ini belum punya chat Telegram denganmu, jadi percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.')));
     body.append(this.searchBox());
-    const log = el('ol', { class: 'chat', 'aria-live': 'polite', 'aria-label': `Percakapan dengan ${c.agent}` });
+    const log = el('ol', { class: 'chat', 'aria-live': 'polite', 'aria-label': t('Percakapan dengan {agent}', { agent: c.agent ?? '' }) });
     // Unread = agent/system messages newer than what Budi last saw (per profile, this browser).
     if (opening) this.readMarkAtOpen = readMark(c.profile);
     const mark = this.readMarkAtOpen;
@@ -436,26 +442,26 @@ export class PrivatePanel {
       if (prevAt === null || !sameDay(prevAt, t.at)) log.append(el('li', { class: 'day-divider', role: 'separator' }, dayLabel(t.at)));
       prevAt = t.at;
       if (!divider && mark !== null && t.role !== 'owner' && t.at > mark) {
-        divider = el('li', { class: 'unread-divider', role: 'separator' }, 'Belum dibaca');
+        divider = el('li', { class: 'unread-divider', role: 'separator' }, tr('Belum dibaca'));
         log.append(divider);
       }
       log.append(this.turnView(t));
     }
     if (c.typing) {
-      const bubble = el('li', { class: 'turn agent typing-bubble', 'aria-label': `${c.agent} sedang mengetik` });
+      const bubble = el('li', { class: 'turn agent typing-bubble', 'aria-label': t('{agent} sedang mengetik', { agent: c.agent ?? '' }) });
       bubble.append(el('span', { class: 'dots', 'aria-hidden': 'true' }, '•••'));
       log.append(bubble);
     }
-    if (!c.turns.length) log.append(el('li', { class: 'muted' }, `Belum ada pesan. Tulis tugas pertama untuk ${c.agent}.`));
+    if (!c.turns.length) log.append(el('li', { class: 'muted' }, t('Belum ada pesan. Tulis tugas pertama untuk {agent}.', { agent: c.agent ?? '' })));
     body.append(log);
     for (const t of c.tasks.filter((x) => !x.terminal || x.status === 'blocked' || x.status === 'waiting_owner')) {
       const last = [...c.events].reverse().find((e) => e.task_id === t.id);
       const row = el('div', { class: 'task-status', role: 'status', 'data-task': t.id, 'data-status': t.status });
-      row.append(el('span', { class: `tag st-${t.status}` }, STATUS_LABEL[t.status] ?? t.status), el('span', { class: 'muted small' }, `${last?.note ?? ''} Sumber ${t.source}, ${fmtTime(t.observed_at)}.`));
+      row.append(el('span', { class: `tag st-${t.status}` }, STATUS_LABEL[t.status] ? tr(STATUS_LABEL[t.status]) : t.status), el('span', { class: 'muted small' }, `${last?.note ?? ''} ${tr('Sumber {source}, {time}.', { source: t.source, time: fmtTime(t.observed_at) })}`));
       const appr = c.approvals.find((a) => a.task_id === t.id && a.status === 'pending');
       if (appr && t.status === 'blocked') row.append(this.approvalView(appr.id, t.id, appr.action, appr.impact, appr.rollback, appr.expires_at));
       if (t.status === 'queued' || t.status === 'working' || t.status === 'blocked') {
-        const stop = el('button', { type: 'button', class: 'btn' }, t.status === 'working' ? 'Hentikan' : 'Batalkan');
+        const stop = el('button', { type: 'button', class: 'btn' }, tr(t.status === 'working' ? 'Hentikan' : 'Batalkan'));
         stop.addEventListener('click', async () => {
           try { await api.cancel(t.id); this.conv = await api.conversationById(c.id); this.renderConversation(); } catch (e) { toast((e as Error).message, 4000); }
         });
@@ -464,37 +470,37 @@ export class PrivatePanel {
       body.append(row);
     }
     for (const t of c.tasks.filter((x) => x.status === 'failed' || x.status === 'unknown').slice(-1)) {
-      if (c.tasks.at(-1)?.id === t.id) body.append(el('p', { class: 'warn', role: 'alert' }, `${STATUS_LABEL[t.status]}: ${t.error ?? 'tanpa keterangan'}. Tidak dicoba ulang otomatis.`));
+      if (c.tasks.at(-1)?.id === t.id) body.append(el('p', { class: 'warn', role: 'alert' }, tr('{status}: {err}. Tidak dicoba ulang otomatis.', { status: tr(STATUS_LABEL[t.status]), err: t.error ?? tr('tanpa keterangan') })));
     }
     const lastAgent = [...c.turns].reverse().find((t) => t.role === 'agent');
-    const choices = el('div', { class: 'choices', role: 'group', 'aria-label': 'Pilihan balasan' });
+    const choices = el('div', { class: 'choices', role: 'group', 'aria-label': tr('Pilihan balasan') });
     if (lastAgent?.options) {
       lastAgent.options.forEach((o, i) => {
-        const b = el('button', { type: 'button', class: `btn choice${i === 0 ? ' recommended' : ''}`, 'data-option': o.id }, `${i + 1}. ${o.label}${o.requiresApproval ? ' (perlu persetujuan)' : ''}`);
+        const b = el('button', { type: 'button', class: `btn choice${i === 0 ? ' recommended' : ''}`, 'data-option': o.id }, `${i + 1}. ${o.label}${o.requiresApproval ? ` (${tr('perlu persetujuan')})` : ''}`);
         b.title = o.message;
         b.addEventListener('click', () => void this.send({ decision: { turnId: lastAgent.id, optionId: o.id } }, b));
         choices.append(b);
       });
     }
-    const manualBtn = el('button', { type: 'button', class: 'btn choice', id: 'agent-manual-toggle', 'aria-expanded': 'false', 'aria-controls': 'agent-manual' }, lastAgent?.options ? '4. Ketik manual' : 'Ketik pesan');
+    const manualBtn = el('button', { type: 'button', class: 'btn choice', id: 'agent-manual-toggle', 'aria-expanded': 'false', 'aria-controls': 'agent-manual' }, lastAgent?.options ? `4. ${tr('Ketik manual')}` : tr('Ketik pesan'));
     choices.append(manualBtn);
     body.append(choices);
     const manual = el('form', { id: 'agent-manual', class: 'manual' });
     manual.hidden = !(manualOpen || !lastAgent?.options);
-    const ta = el('textarea', { id: 'agent-manual-text', rows: '3', maxlength: '4000', 'aria-label': `Pesan untuk ${c.agent}` });
+    const ta = el('textarea', { id: 'agent-manual-text', rows: '3', maxlength: '4000', 'aria-label': tr('Pesan untuk {agent}', { agent: c.agent ?? '' }) });
     if (draft) ta.value = draft;
     ta.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); manual.hidden = true; manualBtn.setAttribute('aria-expanded', 'false'); manualBtn.focus(); }
       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); manual.requestSubmit(); }
     });
-    const sendBtn = el('button', { type: 'submit', class: 'btn primary', id: 'agent-send' }, 'Kirim');
-    const chips = el('ul', { class: 'staged', id: 'agent-staged', 'aria-label': 'Lampiran siap dikirim' });
+    const sendBtn = el('button', { type: 'submit', class: 'btn primary', id: 'agent-send' }, tr('Kirim'));
+    const chips = el('ul', { class: 'staged', id: 'agent-staged', 'aria-label': tr('Lampiran siap dikirim') });
     this.renderStaged(chips);
     const file = el('input', { type: 'file', id: 'agent-file', multiple: '', class: 'visually-hidden', accept: 'image/*,application/pdf,.docx,.xlsx,.txt,.csv,.zip,audio/*' });
     file.addEventListener('change', () => { void this.attachFiles([...(file.files ?? [])], chips); file.value = ''; });
-    const attach = el('button', { type: 'button', class: 'btn', id: 'agent-attach', 'aria-label': 'Lampirkan foto atau berkas' }, '📎 Lampiran');
+    const attach = el('button', { type: 'button', class: 'btn', id: 'agent-attach', 'aria-label': tr('Lampirkan foto atau berkas') }, `📎 ${tr('Lampiran')}`);
     attach.addEventListener('click', () => file.click());
-    const mic = el('button', { type: 'button', class: 'btn', id: 'agent-mic', 'aria-pressed': String(!!this.recorder) }, this.recorder ? '■ Selesai rekam' : '🎤 Suara');
+    const mic = el('button', { type: 'button', class: 'btn', id: 'agent-mic', 'aria-pressed': String(!!this.recorder) }, this.recorder ? `■ ${tr('Selesai rekam')}` : `🎤 ${tr('Suara')}`);
     mic.addEventListener('click', () => void this.toggleRecord(mic, chips));
     if (!('MediaRecorder' in window) || !navigator.mediaDevices?.getUserMedia) mic.hidden = true;
     ta.addEventListener('paste', (e) => {
@@ -507,12 +513,12 @@ export class PrivatePanel {
     const tools = el('div', { class: 'row composer-tools' });
     tools.append(attach, mic, file);
     manual.append(chips, ta, tools, el('div', { class: 'row' }));
-    (manual.lastChild as HTMLElement).append(el('span', { class: 'muted small' }, 'Ctrl/⌘+Enter untuk kirim. Esc menutup tanpa mengirim. Foto bisa ditempel atau diseret ke sini.'), sendBtn);
+    (manual.lastChild as HTMLElement).append(el('span', { class: 'muted small' }, tr('Ctrl/⌘+Enter untuk kirim. Esc menutup tanpa mengirim. Foto bisa ditempel atau diseret ke sini.')), sendBtn);
     manual.addEventListener('submit', (e) => { e.preventDefault(); void this.send({ text: ta.value }, sendBtn); });
     manualBtn.setAttribute('aria-expanded', String(!manual.hidden));
     manualBtn.addEventListener('click', () => { manual.hidden = !manual.hidden; manualBtn.setAttribute('aria-expanded', String(!manual.hidden)); if (!manual.hidden) ta.focus(); });
     body.append(manual);
-    const fresh = el('button', { type: 'button', class: 'btn link' }, 'Mulai percakapan baru');
+    const fresh = el('button', { type: 'button', class: 'btn link' }, tr('Mulai percakapan baru'));
     fresh.addEventListener('click', async () => { this.conv = await api.conversation(c.profile, true); this.renderConversation(); });
     // A Telegram-bound chat has one history (Telegram's); /new is done in Telegram.
     if (c.channel !== 'telegram') body.append(fresh);
@@ -539,8 +545,8 @@ export class PrivatePanel {
 
   private turnView(t: Turn): HTMLElement {
     const li = el('li', { class: `turn ${t.role}${t.pending ? ' pending' : ''}`, 'data-turn': t.id });
-    const who = t.role === 'owner' ? 'Kamu' : t.role === 'system' ? 'Sistem' : this.conv!.agent ?? 'Agen';
-    const where = t.pending ? ' · dari RPG, menunggu' : t.via === 'rpg' ? ' · dari RPG' : t.via === 'telegram' ? ' · Telegram' : '';
+    const who = t.role === 'owner' ? tr('Kamu') : t.role === 'system' ? tr('Sistem') : this.conv!.agent ?? tr('Agen');
+    const where = t.pending ? ` · ${tr('dari RPG, menunggu')}` : t.via === 'rpg' ? ` · ${tr('dari RPG')}` : t.via === 'telegram' ? ' · Telegram' : '';
     li.append(el('span', { class: 'who' }, `${who}${where}`));
     const p = el('div', { class: 'text' });
     p.textContent = t.text; // agent output is untrusted: rendered as text, never HTML
@@ -554,35 +560,35 @@ export class PrivatePanel {
     meta.append(el('time', { datetime: new Date(t.at).toISOString(), title: fmtTime(t.at) }, clock(t.at)));
     if (t.receipt) {
       const r = RECEIPT[t.receipt];
-      meta.append(el('span', { class: `receipt ${t.receipt}`, title: r.label, 'aria-label': r.label, 'data-receipt': t.receipt }, r.mark));
+      meta.append(el('span', { class: `receipt ${t.receipt}`, title: tr(r.label), 'aria-label': tr(r.label), 'data-receipt': t.receipt }, r.mark));
     }
     li.append(meta);
     if (t.role !== 'system') {
       const acts = el('span', { class: 'turn-actions' });
-      const reply = el('button', { type: 'button', class: 'btn link small', 'aria-label': `Balas pesan ${who}` }, 'Balas');
+      const reply = el('button', { type: 'button', class: 'btn link small', 'aria-label': tr('Balas pesan {who}', { who }) }, tr('Balas'));
       reply.addEventListener('click', () => this.replyTo(who, t.text));
-      const copy = el('button', { type: 'button', class: 'btn link small', 'aria-label': `Salin pesan ${who}` }, 'Salin');
-      copy.addEventListener('click', () => { void navigator.clipboard?.writeText(t.text).then(() => toast('Pesan disalin.'), () => toast('Tidak bisa menyalin di browser ini.')); });
+      const copy = el('button', { type: 'button', class: 'btn link small', 'aria-label': tr('Salin pesan {who}', { who }) }, tr('Salin'));
+      copy.addEventListener('click', () => { void navigator.clipboard?.writeText(t.text).then(() => toast(tr('Pesan disalin.')), () => toast(tr('Tidak bisa menyalin di browser ini.'))); });
       acts.append(reply, copy);
       li.append(acts);
     }
-    if (t.optionsExpired) li.append(el('span', { class: 'muted small' }, 'Pilihan di giliran ini sudah tidak berlaku.'));
+    if (t.optionsExpired) li.append(el('span', { class: 'muted small' }, tr('Pilihan di giliran ini sudah tidak berlaku.')));
     return li;
   }
 
   /** Photo inline (tap = full size), voice as player + transcript, other files as a download chip. */
   private attachmentView(a: Attachment): HTMLElement {
-    if (!a.url) return el('span', { class: 'att-chip gone' }, `${a.name} (sudah dihapus)`);
+    if (!a.url) return el('span', { class: 'att-chip gone' }, `${a.name} (${t('sudah dihapus')})`);
     if (a.kind === 'image') {
       const link = el('a', { href: a.url, target: '_blank', rel: 'noopener', class: 'att-image' });
-      link.append(el('img', { src: a.url, alt: `Foto ${a.name}`, loading: 'lazy', decoding: 'async' }));
+      link.append(el('img', { src: a.url, alt: t('Foto {name}', { name: a.name }), loading: 'lazy', decoding: 'async' }));
       return link;
     }
     if (a.kind === 'voice' || a.kind === 'video') {
       const wrap = el('div', { class: 'att-voice' });
       const player = el(a.kind === 'voice' ? 'audio' : 'video', { controls: '', preload: 'none', src: a.url });
       wrap.append(player);
-      if (a.kind === 'voice') wrap.append(el('p', { class: 'muted small transcript' }, a.transcript ? `“${a.transcript}”` : a.transcribing ? 'Mengubah suara jadi teks…' : ''));
+      if (a.kind === 'voice') wrap.append(el('p', { class: 'muted small transcript' }, a.transcript ? `“${a.transcript}”` : a.transcribing ? t('Mengubah suara jadi teks…') : ''));
       return wrap;
     }
     const chip = el('a', { href: a.url, class: 'att-chip', target: '_blank', rel: 'noopener' }, `📄 ${a.name}`);
@@ -596,8 +602,8 @@ export class PrivatePanel {
     for (const a of this.staged) {
       const li = el('li', { class: 'staged-item' });
       li.append(el('span', {}, `${a.kind === 'image' ? '🖼' : a.kind === 'voice' ? '🎤' : '📄'} ${a.name}`));
-      if (a.kind === 'voice') li.append(el('span', { class: 'muted small', 'data-transcript': a.id }, a.transcript ? `“${a.transcript}”` : 'mengubah jadi teks…'));
-      const rm = el('button', { type: 'button', class: 'btn link small', 'aria-label': `Batalkan lampiran ${a.name}` }, '✕');
+      if (a.kind === 'voice') li.append(el('span', { class: 'muted small', 'data-transcript': a.id }, a.transcript ? `“${a.transcript}”` : t('mengubah jadi teks…')));
+      const rm = el('button', { type: 'button', class: 'btn link small', 'aria-label': t('Batalkan lampiran {name}', { name: a.name }) }, '✕');
       rm.addEventListener('click', () => { this.staged = this.staged.filter((x) => x.id !== a.id); this.renderStaged(list); });
       li.append(rm);
       list.append(li);
@@ -607,15 +613,15 @@ export class PrivatePanel {
   private async attachFiles(files: File[], list: HTMLElement) {
     if (!this.conv || !files.length) return;
     for (const f of files.slice(0, 5 - this.staged.length)) {
-      if (f.size > 10 * 1024 * 1024) { toast(`${f.name} lebih dari 10 MB.`, 4000); continue; }
+      if (f.size > 10 * 1024 * 1024) { toast(t('{name} lebih dari 10 MB.', { name: f.name }), 4000); continue; }
       try {
-        toast(`Mengunggah ${f.name}…`, 1500);
+        toast(t('Mengunggah {name}…', { name: f.name }), 1500);
         const { upload } = await api.upload(this.conv.id, f, f.name);
         this.staged.push(upload);
         this.renderStaged(document.getElementById('agent-staged') ?? list);
       } catch (e) { toast((e as Error).message, 5000); }
     }
-    if (files.length + this.staged.length > 5) toast('Maksimal 5 lampiran per pesan.', 3000);
+    if (files.length + this.staged.length > 5) toast(t('Maksimal 5 lampiran per pesan.'), 3000);
     (document.getElementById('agent-manual-text') as HTMLTextAreaElement | null)?.focus();
   }
 
@@ -624,7 +630,7 @@ export class PrivatePanel {
     let list = initialList;
     if (this.recorder) { this.recorder.stop(); return; }
     let stream: MediaStream;
-    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { toast('Mikrofon tidak diizinkan.', 4000); return; }
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { toast(t('Mikrofon tidak diizinkan.'), 4000); return; }
     const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find((t) => MediaRecorder.isTypeSupported(t)) ?? '';
     const rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
     const parts: Blob[] = [];
@@ -635,7 +641,7 @@ export class PrivatePanel {
       this.recorder = null;
       // The chat may have re-rendered while recording: update the live controls, not the captured ones.
       const live = (document.getElementById('agent-mic') as HTMLButtonElement | null) ?? btn;
-      live.textContent = '🎤 Suara'; live.setAttribute('aria-pressed', 'false');
+      live.textContent = `🎤 ${t('Suara')}`; live.setAttribute('aria-pressed', 'false');
       list = document.getElementById('agent-staged') ?? list;
       if (Date.now() - started < 700 || !this.conv) return;
       const mime = (rec.mimeType || 'audio/webm').split(';')[0];
@@ -648,7 +654,7 @@ export class PrivatePanel {
     };
     rec.start();
     this.recorder = rec;
-    btn.textContent = '■ Selesai rekam'; btn.setAttribute('aria-pressed', 'true');
+    btn.textContent = `■ ${t('Selesai rekam')}`; btn.setAttribute('aria-pressed', 'true');
     // Telegram caps voice notes too; 3 minutes keeps upload and transcription quick.
     window.setTimeout(() => { if (this.recorder === rec) rec.stop(); }, 180_000);
   }
@@ -669,9 +675,9 @@ export class PrivatePanel {
     const c = this.conv!;
     const wrap = el('details', { class: 'chat-search' });
     if (this.searchTerm) wrap.setAttribute('open', '');
-    wrap.append(el('summary', {}, '🔍 Cari pesan'));
+    wrap.append(el('summary', {}, `🔍 ${t('Cari pesan')}`));
     const form = el('form', { class: 'row', role: 'search' });
-    const input = el('input', { type: 'search', id: 'agent-search', 'aria-label': `Cari di chat ${c.agent}`, placeholder: 'Kata yang dicari', maxlength: '60' });
+    const input = el('input', { type: 'search', id: 'agent-search', 'aria-label': t('Cari di chat {agent}', { agent: c.agent ?? '' }), placeholder: t('Kata yang dicari'), maxlength: '60' });
     input.value = this.searchTerm;
     const out = el('ol', { class: 'search-results', 'aria-live': 'polite' });
     const run = async () => {
@@ -680,10 +686,10 @@ export class PrivatePanel {
       if (this.searchTerm.length < 2) return;
       try {
         const { results } = await api.search(c.id, this.searchTerm);
-        if (!results.length) { out.append(el('li', { class: 'muted small' }, 'Tidak ada pesan yang cocok.')); return; }
+        if (!results.length) { out.append(el('li', { class: 'muted small' }, t('Tidak ada pesan yang cocok.'))); return; }
         for (const r of results) {
           const li = el('li', { class: `hit ${r.role}` });
-          li.append(el('span', { class: 'who' }, `${r.role === 'owner' ? 'Kamu' : r.role === 'agent' ? c.agent ?? 'Agen' : 'Sistem'} · ${fmtTime(r.at)}`));
+          li.append(el('span', { class: 'who' }, `${r.role === 'owner' ? t('Kamu') : r.role === 'agent' ? c.agent ?? t('Agen') : t('Sistem')} · ${fmtTime(r.at)}`));
           const txt = el('span', { class: 'text' });
           const i = r.text.toLowerCase().indexOf(this.searchTerm.toLowerCase());
           const from = Math.max(0, i - 60);
@@ -697,7 +703,7 @@ export class PrivatePanel {
       } catch (e) { out.append(el('li', { class: 'warn' }, (e as Error).message)); }
     };
     form.addEventListener('submit', (e) => { e.preventDefault(); void run(); });
-    const go = el('button', { type: 'submit', class: 'btn' }, 'Cari');
+    const go = el('button', { type: 'submit', class: 'btn' }, t('Cari'));
     form.append(input, go);
     wrap.append(form, out);
     if (this.searchTerm) void run();
@@ -707,19 +713,19 @@ export class PrivatePanel {
   /** Per-device notification switch and per-bot mute, like Telegram's notification settings. */
   private async notifySettings(): Promise<HTMLElement> {
     const box = el('details', { class: 'notify-settings' });
-    box.append(el('summary', {}, '🔔 Notifikasi'));
+    box.append(el('summary', {}, `🔔 ${t('Notifikasi')}`));
     const state = await pushState().catch(() => 'unsupported' as PushState);
-    const help = el('p', { class: 'muted small', id: 'push-help' }, PUSH_HELP[state]);
+    const help = el('p', { class: 'muted small', id: 'push-help' }, t(PUSH_HELP[state]));
     box.append(help);
     if (state === 'off' || state === 'on') {
-      const toggle = el('button', { type: 'button', class: 'btn primary', id: 'push-toggle' }, state === 'on' ? 'Matikan notifikasi' : 'Aktifkan notifikasi');
+      const toggle = el('button', { type: 'button', class: 'btn primary', id: 'push-toggle' }, t(state === 'on' ? 'Matikan notifikasi' : 'Aktifkan notifikasi'));
       toggle.addEventListener('click', async () => {
         toggle.disabled = true;
         try {
           const next = (await pushState()) === 'on' ? await disablePush() : await enablePush();
-          help.textContent = PUSH_HELP[next];
-          toggle.textContent = next === 'on' ? 'Matikan notifikasi' : 'Aktifkan notifikasi';
-          if (next === 'on') { await api.pushTest().catch(() => null); toast('Notifikasi uji dikirim.', 3000); }
+          help.textContent = t(PUSH_HELP[next]);
+          toggle.textContent = t(next === 'on' ? 'Matikan notifikasi' : 'Aktifkan notifikasi');
+          if (next === 'on') { await api.pushTest().catch(() => null); toast(t('Notifikasi uji dikirim.'), 3000); }
           box.querySelector('.mute-list')?.toggleAttribute('hidden', next !== 'on');
         } catch (e) { toast((e as Error).message, 5000); }
         toggle.disabled = false;
@@ -727,14 +733,14 @@ export class PrivatePanel {
       box.append(toggle);
       const muted = new Set(state === 'on' ? await mutedBots().catch(() => []) : []);
       const list = el('fieldset', { class: 'mute-list' });
-      list.append(el('legend', {}, 'Bunyikan notifikasi dari'));
+      list.append(el('legend', {}, t('Bunyikan notifikasi dari')));
       if (state !== 'on') list.hidden = true;
       for (const a of this.agents) {
         const id = `mute-${a.profile}`;
         const lab = el('label', { for: id });
         const cb = el('input', { type: 'checkbox', id });
         cb.checked = !muted.has(a.profile);
-        cb.addEventListener('change', () => { if (cb.checked) muted.delete(a.profile); else muted.add(a.profile); void setMutedBots([...muted]).catch(() => toast('Gagal menyimpan.', 3000)); });
+        cb.addEventListener('change', () => { if (cb.checked) muted.delete(a.profile); else muted.add(a.profile); void setMutedBots([...muted]).catch(() => toast(t('Gagal menyimpan.'), 3000)); });
         lab.append(cb, document.createTextNode(` ${a.name}`));
         list.append(lab);
       }
@@ -744,7 +750,7 @@ export class PrivatePanel {
     const sc = el('input', { type: 'checkbox', id: 'sound-toggle' });
     sc.checked = localStorage.getItem('kantor-rpg:sound') !== 'off';
     sc.addEventListener('change', () => localStorage.setItem('kantor-rpg:sound', sc.checked ? 'on' : 'off'));
-    sound.append(sc, document.createTextNode(' Bunyi pesan masuk saat halaman terbuka'));
+    sound.append(sc, document.createTextNode(` ${t('Bunyi pesan masuk saat halaman terbuka')}`));
     box.append(sound);
     return box;
   }
@@ -756,7 +762,7 @@ export class PrivatePanel {
     if (!manual || !ta) return;
     manual.hidden = false;
     document.getElementById('agent-manual-toggle')?.setAttribute('aria-expanded', 'true');
-    ta.value = quoteFor(who, text) + ta.value.replace(/^↩ Membalas[^\n]*\n\n/, '');
+    ta.value = quoteFor(who, text) + ta.value.replace(/^↩ (?:Membalas|Replying to)[^\n]*\n\n/, '');
     ta.focus();
     ta.setSelectionRange(ta.value.length, ta.value.length);
   }
@@ -773,13 +779,13 @@ export class PrivatePanel {
   }
 
   private approvalView(id: string, taskId: string, action: string, impact: string, rollback: string, expiresAt: number): HTMLElement {
-    const box = el('div', { class: 'approval', role: 'group', 'aria-label': 'Persetujuan aksi berisiko' });
-    box.append(el('strong', {}, 'Butuh persetujuanmu'));
+    const box = el('div', { class: 'approval', role: 'group', 'aria-label': t('Persetujuan aksi berisiko') });
+    box.append(el('strong', {}, t('Butuh persetujuanmu')));
     const d = el('dl', { class: 'info-grid' });
-    for (const [k, v] of [['Aksi', action], ['Dampak', impact], ['Jalan mundur', rollback], ['Berlaku sampai', `${fmtTime(expiresAt)} WITA`]]) d.append(el('dt', {}, k), el('dd', {}, v));
+    for (const [k, v] of [['Aksi', action], ['Dampak', impact], ['Jalan mundur', rollback], ['Berlaku sampai', `${fmtTime(expiresAt)} WITA`]]) d.append(el('dt', {}, t(k)), el('dd', {}, v));
     box.append(d);
-    const yes = el('button', { type: 'button', class: 'btn primary' }, 'Setujui untuk tugas ini');
-    const no = el('button', { type: 'button', class: 'btn' }, 'Tolak');
+    const yes = el('button', { type: 'button', class: 'btn primary' }, t('Setujui untuk tugas ini'));
+    const no = el('button', { type: 'button', class: 'btn' }, t('Tolak'));
     const go = async (decision: 'approve' | 'reject') => {
       yes.disabled = no.disabled = true;
       try { this.conv = (await api.approve(id, taskId, decision)).conversation; this.renderConversation(); this.schedulePoll(); } catch (e) { toast((e as Error).message, 5000); yes.disabled = no.disabled = false; }
@@ -794,8 +800,8 @@ export class PrivatePanel {
   /** One idempotency key per intended send: double clicks and retries reuse it. */
   private async send(payload: { text?: string; decision?: { turnId: string; optionId: string } }, btn: HTMLButtonElement) {
     if (this.sending || !this.conv) return;
-    if (payload.text !== undefined && !payload.text.trim() && !this.staged.length) { toast('Pesan kosong.'); return; }
-    if (this.recorder) { toast('Selesaikan rekaman dulu.'); return; }
+    if (payload.text !== undefined && !payload.text.trim() && !this.staged.length) { toast(t('Pesan kosong.')); return; }
+    if (this.recorder) { toast(t('Selesaikan rekaman dulu.')); return; }
     this.sending = true;
     btn.disabled = true;
     unlockAudio();
@@ -807,8 +813,8 @@ export class PrivatePanel {
       if (attachments.length) this.staged = [];
       if (payload.text !== undefined) { const t = document.getElementById('agent-manual-text') as HTMLTextAreaElement | null; if (t) t.value = ''; }
       this.conv = r.conversation;
-      if (r.approval) toast('Pesan ditahan: butuh persetujuanmu dulu.', 4000);
-      else toast(r.duplicate ? 'Sudah terkirim sebelumnya (tidak dikirim dua kali).' : 'Diterima server. Belum berarti selesai.', 3000);
+      if (r.approval) toast(t('Pesan ditahan: butuh persetujuanmu dulu.'), 4000);
+      else toast(t(r.duplicate ? 'Sudah terkirim sebelumnya (tidak dikirim dua kali).' : 'Diterima server. Belum berarti selesai.'), 3000);
       this.renderConversation();
       this.schedulePoll();
       void this.startPresence(); // the NPC heads for its desk now, not on the next tick

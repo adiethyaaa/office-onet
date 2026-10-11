@@ -5,6 +5,7 @@
 // dropped and a bad file leaves the current layout untouched.
 import { deriveOutlets } from '../world/ict';
 import type { Fixture, FloorId, Outlet, World } from '../world/types';
+import { t } from '../i18n';
 
 export const LAYOUT_FORMAT = 'kantor-rpg-layout';
 // v2 adds derived ICT outlets; v1 files (no outlets) still import.
@@ -48,46 +49,46 @@ function depth(v: unknown, d = 0): number {
 }
 
 function finite(n: unknown, lo: number, hi: number, what: string): number {
-  if (typeof n !== 'number' || !Number.isFinite(n) || n < lo || n > hi) throw new LayoutError(`${what} di luar rentang`);
+  if (typeof n !== 'number' || !Number.isFinite(n) || n < lo || n > hi) throw new LayoutError(t('{what} di luar rentang', { what }));
   return n;
 }
 
 function str(v: unknown, re: RegExp, what: string, max = 40): string {
-  if (typeof v !== 'string' || v.length > max || !re.test(v)) throw new LayoutError(`${what} tidak valid`);
+  if (typeof v !== 'string' || v.length > max || !re.test(v)) throw new LayoutError(t('{what} tidak valid', { what }));
   return v;
 }
 
 /** Parse untrusted layout text. Throws LayoutError with a user-facing reason. */
 export function parseLayout(text: string, world: World): LayoutDoc {
-  if (typeof text !== 'string') throw new LayoutError('Isi file bukan teks');
-  if (new Blob([text]).size > MAX_IMPORT_BYTES) throw new LayoutError(`File lebih dari ${MAX_IMPORT_BYTES / 1024} KB`);
+  if (typeof text !== 'string') throw new LayoutError(t('Isi file bukan teks'));
+  if (new Blob([text]).size > MAX_IMPORT_BYTES) throw new LayoutError(t('File lebih dari {kb} KB', { kb: MAX_IMPORT_BYTES / 1024 }));
   let raw: unknown;
-  try { raw = JSON.parse(text); } catch { throw new LayoutError('JSON rusak'); }
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new LayoutError('Struktur layout tidak dikenal');
-  if (depth(raw) > MAX_DEPTH) throw new LayoutError('Struktur terlalu dalam');
+  try { raw = JSON.parse(text); } catch { throw new LayoutError(t('JSON rusak')); }
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new LayoutError(t('Struktur layout tidak dikenal'));
+  if (depth(raw) > MAX_DEPTH) throw new LayoutError(t('Struktur terlalu dalam'));
   const r = raw as Record<string, unknown>;
-  if (r.format !== LAYOUT_FORMAT) throw new LayoutError('Bukan file layout kantor-rpg');
-  if (r.version !== 1 && r.version !== LAYOUT_VERSION) throw new LayoutError(`Versi layout ${String(r.version)} tidak didukung`);
-  if (r.worldRevision !== world.revision.id) throw new LayoutError(`Layout untuk revisi ${String(r.worldRevision)}, dataset sekarang ${world.revision.id}`);
-  if (!Array.isArray(r.fixtures) || r.fixtures.length > MAX_FIXTURES) throw new LayoutError('Daftar fixture tidak valid');
+  if (r.format !== LAYOUT_FORMAT) throw new LayoutError(t('Bukan file layout kantor-rpg'));
+  if (r.version !== 1 && r.version !== LAYOUT_VERSION) throw new LayoutError(t('Versi layout {v} tidak didukung', { v: String(r.version) }));
+  if (r.worldRevision !== world.revision.id) throw new LayoutError(t('Layout untuk revisi {file}, dataset sekarang {current}', { file: String(r.worldRevision), current: world.revision.id }));
+  if (!Array.isArray(r.fixtures) || r.fixtures.length > MAX_FIXTURES) throw new LayoutError(t('Daftar fixture tidak valid'));
   const rooms = new Map(world.rooms.map((x) => [x.id, x]));
   const seen = new Set<string>();
   const fixtures: Fixture[] = r.fixtures.map((f, i) => {
-    if (!f || typeof f !== 'object' || Array.isArray(f)) throw new LayoutError(`Fixture #${i + 1} bukan objek`);
+    if (!f || typeof f !== 'object' || Array.isArray(f)) throw new LayoutError(t('Fixture #{n} bukan objek', { n: i + 1 }));
     const x = f as Record<string, unknown>;
-    const id = str(x.id, ID, `ID fixture #${i + 1}`);
-    if (seen.has(id)) throw new LayoutError(`ID ganda ${id}`);
+    const id = str(x.id, ID, t('ID fixture #{n}', { n: i + 1 }));
+    if (seen.has(id)) throw new LayoutError(t('ID ganda {id}', { id }));
     seen.add(id);
-    const type = str(x.type, TYPE, `Tipe ${id}`);
+    const type = str(x.type, TYPE, t('Tipe {id}', { id }));
     const cat = world.catalog[type];
-    if (!cat) throw new LayoutError(`Tipe ${type} tidak ada di catalog`);
-    const floor = x.floor === 'L1' || x.floor === 'L2' ? (x.floor as FloorId) : (() => { throw new LayoutError(`Lantai ${id} tidak valid`); })();
-    const room = str(x.room, ID, `Ruang ${id}`);
-    if (rooms.get(room)?.floor !== floor) throw new LayoutError(`Ruang ${room} tidak ada di ${floor}`);
-    if (!Array.isArray(x.pos) || x.pos.length !== 2) throw new LayoutError(`Posisi ${id} tidak valid`);
+    if (!cat) throw new LayoutError(t('Tipe {type} tidak ada di catalog', { type }));
+    const floor = x.floor === 'L1' || x.floor === 'L2' ? (x.floor as FloorId) : (() => { throw new LayoutError(t('Lantai {id} tidak valid', { id })); })();
+    const room = str(x.room, ID, t('Ruang {id}', { id }));
+    if (rooms.get(room)?.floor !== floor) throw new LayoutError(t('Ruang {room} tidak ada di {floor}', { room, floor }));
+    if (!Array.isArray(x.pos) || x.pos.length !== 2) throw new LayoutError(t('Posisi {id} tidak valid', { id }));
     const pos: [number, number] = [finite(x.pos[0], 0, 32, `X ${id}`), finite(x.pos[1], 0, 24, `Y ${id}`)];
-    const rot = finite(x.rot, 0, 270, `Rotasi ${id}`);
-    if (rot % 90 !== 0) throw new LayoutError(`Rotasi ${id} harus kelipatan 90`);
+    const rot = finite(x.rot, 0, 270, t('Rotasi {id}', { id }));
+    if (rot % 90 !== 0) throw new LayoutError(t('Rotasi {id} harus kelipatan 90', { id }));
     // Size, collider and asset always come from the catalog, never from the file:
     // an imported layout cannot point the runtime at another asset path.
     const out: Fixture = { id, floor, room, type, asset: `AST-${type.toUpperCase().replace(/_/g, '-')}`, pos, rot, size: [...cat.size] as [number, number, number], collider: cat.collider };
@@ -100,7 +101,7 @@ export function parseLayout(text: string, world: World): LayoutDoc {
   // Outlets are never taken from the file; a file whose outlets disagree with
   // the derivation was edited by hand or made by another revision of the rule.
   if (r.outlets !== undefined && JSON.stringify(r.outlets) !== JSON.stringify(outlets)) {
-    throw new LayoutError('Outlet ICT di file tidak cocok dengan posisi furniture');
+    throw new LayoutError(t('Outlet ICT di file tidak cocok dengan posisi furniture'));
   }
   return { format: LAYOUT_FORMAT, version: LAYOUT_VERSION, worldRevision: world.revision.id, savedAt, note, fixtures, outlets };
 }
@@ -122,13 +123,13 @@ function write(key: string, v: string | null): boolean {
 }
 
 export const store = {
-  loadDraft(world: World): LayoutDoc | null { const t = read(KEY_DRAFT); if (!t) return null; try { return parseLayout(t, world); } catch { return null; } },
+  loadDraft(world: World): LayoutDoc | null { const txt = read(KEY_DRAFT); if (!txt) return null; try { return parseLayout(txt, world); } catch { return null; } },
   saveDraft(doc: LayoutDoc): boolean { return write(KEY_DRAFT, serializeLayout(doc)); },
   clearDraft(): void { write(KEY_DRAFT, null); },
   loadPublished(world: World): { doc: LayoutDoc | null; error: string | null } {
-    const t = read(KEY_PUBLISHED);
-    if (!t) return { doc: null, error: null };
-    try { return { doc: parseLayout(t, world), error: null }; } catch (e) { return { doc: null, error: (e as Error).message }; }
+    const txt = read(KEY_PUBLISHED);
+    if (!txt) return { doc: null, error: null };
+    try { return { doc: parseLayout(txt, world), error: null }; } catch (e) { return { doc: null, error: (e as Error).message }; }
   },
   publish(doc: LayoutDoc): boolean {
     const prev = read(KEY_PUBLISHED);

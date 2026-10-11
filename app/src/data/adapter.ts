@@ -2,6 +2,7 @@
 // adapter: fixture actors with workStatus 'unknown'. The private adapter is
 // M4-gated and deliberately not implemented; asking for it throws, so no code
 // path in this build can reach a private source or endpoint.
+import { t } from '../i18n';
 import type { World } from '../world/types';
 
 export type WorkStatus = 'working' | 'waiting' | 'blocked' | 'done' | 'unknown';
@@ -25,7 +26,7 @@ export interface Snapshot {
 
 export class AdapterDisabledError extends Error {
   constructor() {
-    super('Integrasi private (M4) dinonaktifkan sampai ada izin sumber, hosting, auth dan privasi.');
+    super(t('Integrasi private (M4) dinonaktifkan sampai ada izin sumber, hosting, auth dan privasi.'));
     this.name = 'AdapterDisabledError';
   }
 }
@@ -41,7 +42,7 @@ export function demoSnapshot(world: World, now = new Date()): Snapshot {
     observedAt: now.toISOString(),
     freshnessTTL: 0,
     actors: world.actors.filter((a) => a.kind === 'npc').map((a) => ({
-      actorId: a.id, workStatus: 'unknown', observedAt: null, source: 'fixture demo (tanpa adapter)',
+      actorId: a.id, workStatus: 'unknown', observedAt: null, source: t('fixture demo (tanpa adapter)'),
     })),
   };
 }
@@ -58,8 +59,8 @@ export function sanitizeActor(raw: unknown, knownActors: Set<string>): ActorSumm
   if (typeof r.actorId !== 'string' || !knownActors.has(r.actorId)) return null;
   const status = STATUSES.includes(r.workStatus as WorkStatus) ? (r.workStatus as WorkStatus) : 'unknown';
   const observedAt = typeof r.observedAt === 'string' && !Number.isNaN(Date.parse(r.observedAt)) ? r.observedAt : null;
-  const out: ActorSummary = { actorId: r.actorId, workStatus: observedAt ? status : 'unknown', observedAt, source: typeof r.source === 'string' ? r.source.slice(0, 60) : 'tidak diketahui' };
-  if (typeof r.taskSummary === 'string') out.taskSummary = r.taskSummary.replace(/https?:\/\/\S+/g, '[tautan dihapus]').slice(0, MAX_SUMMARY);
+  const out: ActorSummary = { actorId: r.actorId, workStatus: observedAt ? status : 'unknown', observedAt, source: typeof r.source === 'string' ? r.source.slice(0, 60) : t('tidak diketahui') };
+  if (typeof r.taskSummary === 'string') out.taskSummary = r.taskSummary.replace(/https?:\/\/\S+/g, t('[tautan dihapus]')).slice(0, MAX_SUMMARY);
   return out;
 }
 

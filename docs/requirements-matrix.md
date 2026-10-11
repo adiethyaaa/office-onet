@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit 9bcfc20; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit 98acbcd; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -77,8 +77,9 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-CHATMEDIA-01 | M7 | Lampiran <=10 MB, <=5/pesan, daftar putih + magic bytes; agen menerima path lokal format gateway Telegram; suara -> mlx-whisper lokal; URL bertanda tangan HMAC; lampiran Telegram tampil; cari seluruh riwayat sesi; retensi 30 hari. | server/test/media-push.test.mjs<br>server/test/api.test.mjs<br>app/tests/e2e/private.spec.ts | docs/evidence/M7/server-test.txt<br>docs/evidence/M7/desktop-agent-media-search.jpg | terverifikasi |
 | REQ-MINIMAP-01 | M8 | Minimap selalu tampil tanpa menutupi HUD/joystick/Aksi; ruang, tangga/lift, avatar berarah, titik persona, cincin saat bekerja; lencana arah+jumlah persona di lantai lain; 4 Hz; klik membuka peta penuh; label pembaca layar. | app/tests/unit/map.test.ts<br>app/tests/e2e/map.spec.ts | - | belum diuji |
 | REQ-MAP-01 | M8 | P/klik minimap membuka Peta kantor; tab per lantai + jumlah; nama ruang dan persona; daftar dikelompokkan lantai kamu/lantai lain dengan tag beda lantai dan status menuju lantai lain; Lihat/klik titik menandai; Temui memakai jalur meet; tombol >=44 px; kontras dicek. | app/tests/unit/map.test.ts<br>app/tests/e2e/map.spec.ts | - | belum diuji |
+| REQ-I18N-01 | M8 | ?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus. | app/tests/unit/i18n.test.ts<br>app/tests/e2e/i18n.spec.ts | - | belum diuji |
 
-Ringkasan status bagian: belum diuji 2, target 1, terverifikasi 69.
+Ringkasan status bagian: belum diuji 3, target 1, terverifikasi 69.
 
 ## Story, AC, failure dan boundary
 
@@ -353,3 +354,11 @@ Sebagai pemilik, cari persona di peta penuh dan temui, termasuk di lantai lain.
 P/klik minimap membuka Peta kantor; tab per lantai + jumlah; nama ruang dan persona; daftar dikelompokkan lantai kamu/lantai lain dengan tag beda lantai dan status menuju lantai lain; Lihat/klik titik menandai; Temui memakai jalur meet; tombol >=44 px; kontras dicek.
 
 Failure: persona tak terjangkau di mode visitor -> alasan, avatar tidak dipindah. Boundary: posisi simulasi, bukan lokasi fisik orang.
+
+### REQ-I18N-01 (M8)
+
+Sebagai pengunjung luar negeri, pakai app dalam bahasa Inggris.
+
+?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus.
+
+Failure: kamus gagal dimuat -> Bahasa Indonesia. Boundary: isi buatan pengguna dan pesan server tidak diterjemahkan.
