@@ -23,38 +23,50 @@ const RISK = [
 ];
 
 // Hapus/reset: a bare keyword match parked chat like "sudah di reset?" behind an
-// approval card. The gate now looks for an instruction: an active verb aimed at
-// something that holds data, or a bare imperative ("hapus aja"). Questions,
-// passive/past reports ("sudah dihapus?") and UI things (chat, filter, kamera)
-// pass. Unknown objects in an instruction still count as risky (fail-closed).
+// approval card. The gate now reads each clause for an instruction: an active
+// verb aimed at something that holds data, a bare imperative ("hapus aja"), or a
+// polite passive order ("tolong datanya direset"). Negated verbs ("jangan
+// hapus"), past reports ("sudah dihapus?") and UI things (chat, filter, kamera)
+// pass. A question that names data still counts ("bisa hapus database?" is
+// usually a request), and anything unclear in an order fails closed.
 const DESTROY_ALWAYS = /\b(drop\s+(?:table|database|schema)|rm\s+-[a-z]*r[a-z]*f?|truncate|wipe|format\s+ulang|factory\s+reset|kosongkan\s+(?:data|database|db|tabel|table|disk|drive|folder|server))\b/i;
 const DESTROY_VERB = /^(hapus|hapuskan|menghapus|delete|remove|reset|mereset|erase|purge)$/;
 const PASSIVE_VERB = /^(dihapus|dihapuskan|terhapus|direset|deleted|removed|erased)$/;
-const DATA_OBJECT = /^(data|datanya|berkas|file|files|folder|direktori|directory|database|databasenya|db|tabel|table|tables|server|port|repo|repository|backup|snapshot|vm|disk|drive|akun|account|user|users|pengguna|pelanggan|log|logs|branch|semua|semuanya|all|everything|isi|isinya|gateway|bot|profil|memori|memory|kanban)$/;
+const DATA_OBJECT = /^(pathx|data|datanya|berkas|file|files|folder|direktori|directory|database|databasenya|db|tabel|table|tables|server|servernya|port|repo|repository|backup|snapshot|vm|disk|drive|akun|account|user|users|pengguna|pelanggan|log|logs|branch|semua|semuanya|all|everything|isi|isinya|gateway|bot|profil|memori|memory|kanban)$/;
 const HARMLESS_OBJECT = /^(chat|chatnya|sesi|session|percakapan|obrolan|filter|tampilan|kamera|pencarian|pesan|teks|draf|draft|zoom|view|layout)$/;
-const FILLER = /^(aja|saja|sekarang|ya|dong|deh|lagi|juga|segera|now|please|it|this|that|yang|itu|ini|the|tolong)$/;
-const PAST = /^(sudah|udah|sdh|telah|tadi|sempat|pernah|belum|blm|already)$/;
-const QUESTION = /\?\s*$|^(apa|apakah|kenapa|mengapa|gimana|bagaimana|kapan|siapa|why|how|did|was|is|has)\b/;
+const FILLER = /^(aja|saja|sekarang|ya|dong|deh|lagi|juga|segera|now|please|it|this|that|yang|itu|ini|the|tolong|old|lama)$/;
+const PAST = /^(sudah|udah|sdh|telah|tadi|sempat|pernah|already)$/;
+const NEGATION = /^(tidak|tak|jangan|nggak|ngga|gak|ga|enggak|bukan|usah|never|don't|dont|not|no)$/;
+const POLITE = /^(tolong|mohon|minta|segera|sekarang|please|dong|langsung)$/;
+const QUESTION_START = /^(apa|apakah|kenapa|mengapa|gimana|bagaimana|kapan|siapa|why|how|did|was|is|has)$/;
 
 export function destroyIntent(raw) {
   const text = String(raw).toLowerCase();
   if (DESTROY_ALWAYS.test(text)) return true;
-  const question = QUESTION.test(text.trim());
-  // "di reset" / "di-reset" is the passive form, same as "direset".
-  const words = text.replace(/\bdi[\s-]+(reset|hapus)\b/g, 'di$1').split(/[^\p{L}\p{N}-]+/u).filter(Boolean);
-  for (let i = 0; i < words.length; i++) {
-    const w = words[i];
-    const passive = PASSIVE_VERB.test(w);
-    if (!passive && !DESTROY_VERB.test(w)) continue;
-    if (!passive && PAST.test(words[i - 1] ?? '')) continue; // "tadi sudah hapus ..." reports, not orders
-    const after = words.slice(i + 1, i + 5).filter((x) => !FILLER.test(x));
-    if (after.some((x) => DATA_OBJECT.test(x))) {
-      if (passive && question) continue; // "datanya sudah dihapus?"
-      return true;
+  // A path is always data; it also must not be cut by the "." clause split.
+  const flat = text.replace(/(^|\s)~?\/[^\s?,;!]*/g, ' pathx ').replace(/\bdi[\s-]+(reset|hapus)\b/g, 'di$1');
+  for (const m of flat.matchAll(/[^.,;!?\n]+[.,;!?\n]*/g)) {
+    const words = m[0].split(/[^\p{L}\p{N}'-]+/u).filter(Boolean);
+    const question = m[0].includes('?') || QUESTION_START.test(words[0] ?? '');
+    for (let i = 0; i < words.length; i++) {
+      const w = words[i];
+      const passive = PASSIVE_VERB.test(w);
+      if (!passive && !DESTROY_VERB.test(w)) continue;
+      const before = words.slice(Math.max(0, i - 3), i);
+      if (before.some((x) => NEGATION.test(x))) continue; // "jangan hapus", "tidak mau hapus"
+      const past = words.slice(Math.max(0, i - 2), i).some((x) => PAST.test(x));
+      if (past) continue; // "sudah dihapus?", "tadi aku sudah hapus"
+      const after = words.slice(i + 1, i + 5).filter((x) => !FILLER.test(x));
+      if (passive) {
+        // Passive orders are polite Indonesian: "tolong database lama di reset sekarang".
+        if (words.some((x) => POLITE.test(x))) return true;
+        continue;
+      }
+      if (after.some((x) => DATA_OBJECT.test(x))) return true;
+      if (question) continue; // "apakah perlu reset?"
+      if (after.length && HARMLESS_OBJECT.test(after[0])) continue;
+      return true; // imperative with no object or an unknown one: fail closed
     }
-    if (passive || question) continue;
-    if (after.length && HARMLESS_OBJECT.test(after[0])) continue;
-    return true; // imperative with no object or an unknown one: fail closed
   }
   return false;
 }

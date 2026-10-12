@@ -269,10 +269,14 @@ export function createServer(cfg) {
     send(res, 200, presenceMemo.value);
   });
 
+  // Which chat opens for a bot is Budi's choice (/new, /telegram, "start new"), kept
+  // apart from updated_at: a late reply in an older chat must not pull it back to front.
+  const setFront = (profile, id) => q('insert into chat_front(profile,conversation_id,at) values(?,?,?) on conflict(profile) do update set conversation_id=excluded.conversation_id, at=excluded.at').run(profile, id, now());
   function createConversation(profile, channel, detached = 0) {
     const id = `conv_${token(9)}`;
     q('insert into conversations(id,profile,hermes_session,created_at,updated_at,channel,detached) values(?,?,?,?,?,?,?)').run(id, profile, null, now(), now(), channel, detached);
     store.audit('owner', 'conversation.create', profile, id, detached ? 'rpg-detached' : channel);
+    setFront(profile, id);
     return id;
   }
 
@@ -283,9 +287,11 @@ export function createServer(cfg) {
     // A bot with a Telegram DM session gets the Telegram-bound conversation (ADR-017),
     // unless Budi started an RPG-only one with /new more recently (until /telegram).
     const channel = tgSession(r.profile) ? 'telegram' : 'rpg';
-    let conv = b.fresh ? null : channel === 'telegram'
-      ? q("select * from conversations where profile=? and (channel='telegram' or detached=1) order by updated_at desc, rowid desc limit 1").get(r.profile)
-      : q("select * from conversations where profile=? and channel='rpg' order by updated_at desc, rowid desc limit 1").get(r.profile);
+    // A detached chat only stays in front while the bot still has its Telegram session.
+    const allowed = channel === 'telegram' ? "(c.channel='telegram' or c.detached=1)" : "c.channel='rpg' and c.detached=0";
+    let conv = b.fresh ? null
+      : q(`select c.* from chat_front f join conversations c on c.id=f.conversation_id where f.profile=? and ${allowed}`).get(r.profile)
+      ?? q(`select * from conversations c where c.profile=? and c.channel=? and c.detached=0 order by updated_at desc, rowid desc limit 1`).get(r.profile, channel);
     if (!conv) conv = { id: createConversation(r.profile, channel) };
     send(res, 200, conversationView(conv.id));
   });
@@ -302,6 +308,13 @@ export function createServer(cfg) {
     const conv = q('select * from conversations where id=?').get(m[1]);
     if (!conv) return fail(res, 404, 'Percakapan tidak ditemukan.');
     if (typeof b.idem !== 'string' || !/^[\w-]{8,64}$/.test(b.idem)) return fail(res, 400, 'Idempotency key wajib.');
+    const ran = q('select * from command_runs where idem=?').get(b.idem);
+    if (ran) {
+      // A retried command returns the first result; it does not open a second chat or stop new tasks.
+      if (ran.conversation_id !== conv.id) return fail(res, 409, 'Idempotency key dipakai percakapan lain.');
+      const command = JSON.parse(ran.result);
+      return send(res, 200, { command, duplicate: true, conversation: conversationView(command.conversation) });
+    }
     const dup = q('select id,conversation_id from tasks where idem=?').get(b.idem);
     if (dup) {
       if (dup.conversation_id !== conv.id) return fail(res, 409, 'Idempotency key dipakai percakapan lain.');
@@ -321,7 +334,8 @@ export function createServer(cfg) {
     // Staged attachments stay unclaimed: they are for the next real message.
     const cmd = decisionId ? null : parseCommand(text);
     if (cmd) {
-      const out = runCommand(cmd, conv, { q, dispatcher, tgSession, createConversation, home, now, terminal: TERMINAL });
+      const out = runCommand(cmd, conv, { q, dispatcher, tgSession, createConversation, setFront, home, now, terminal: TERMINAL });
+      q('insert into command_runs(idem,conversation_id,result,at) values(?,?,?,?)').run(b.idem, conv.id, JSON.stringify(out), now());
       store.audit('owner', 'command', conv.profile, conv.id, `/${cmd.name}${out.kind === 'unknown' ? ' (tidak dikenal)' : ''}`);
       return send(res, 200, { command: out, conversation: conversationView(out.conversation) });
     }

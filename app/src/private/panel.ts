@@ -81,6 +81,9 @@ export class PrivatePanel {
   private staged: Attachment[] = [];
   private recorder: (MediaRecorder & { discard?: boolean }) | null = null;
   private micState: MicState = 'idle';
+  /** Bumped when the chat closes or switches: a late mic grant or upload from before is dropped. */
+  private micGen = 0;
+  private micCloseHooked = false;
   private recStarted = 0;
   private recTimer = 0;
   /** Result of the last slash command, shown as a local system note until the next send. */
@@ -130,8 +133,11 @@ export class PrivatePanel {
 
   /** Shortcut (C / HUD): pick any agent and chat, no walking to the NPC. */
   async openPicker(opener?: HTMLElement | null) {
+    this.cancelMic(); // back to the agent list: a running recording belongs to the chat being left
     await this.refreshMe();
     const dlg = $('dlg-agent') as HTMLDialogElement;
+    // However the dialog was opened (login, picker, NPC), closing it releases the microphone.
+    if (!this.micCloseHooked) { this.micCloseHooked = true; dlg.addEventListener('close', () => this.cancelMic()); }
     $('agent-title').textContent = t('Chat agen');
     const body = $('agent-body');
     body.replaceChildren();
@@ -399,6 +405,7 @@ export class PrivatePanel {
   async openAgent(profile: string, opener?: HTMLElement | null) {
     await this.refreshMe();
     const dlg = $('dlg-agent') as HTMLDialogElement;
+    if (!this.micCloseHooked) { this.micCloseHooked = true; dlg.addEventListener('close', () => this.cancelMic()); }
     $('agent-title').textContent = t('Bicara & beri tugas');
     const body = $('agent-body');
     body.replaceChildren();
@@ -411,7 +418,7 @@ export class PrivatePanel {
     try {
       this.agents = (await api.agents()).agents;
       const next = await api.conversation(profile);
-      if (next.id !== this.conv?.id) { this.staged = []; this.searchTerm = ''; this.commandNote = null; }
+      if (next.id !== this.conv?.id) { this.cancelMic(); this.staged = []; this.searchTerm = ''; this.commandNote = null; }
       this.conv = next;
     } catch (e) {
       body.append(el('p', { class: 'warn', role: 'alert' }, t('Agen tidak dapat dibuka: {msg}', { msg: (e as Error).message })));
@@ -423,7 +430,7 @@ export class PrivatePanel {
       openDialog(dlg, opener);
       this.onOpenChange?.(true);
       // Closing the chat must release the microphone; the clip is dropped, not sent.
-      dlg.addEventListener('close', () => { window.clearTimeout(this.pollTimer); this.stopRecording(true); this.onOpenChange?.(false); }, { once: true });
+      dlg.addEventListener('close', () => { window.clearTimeout(this.pollTimer); this.onOpenChange?.(false); }, { once: true });
     }
     this.schedulePoll();
   }
@@ -492,7 +499,7 @@ export class PrivatePanel {
       bubble.append(el('span', { class: 'dots', 'aria-hidden': 'true' }, '•••'));
       log.append(bubble);
     }
-    if (!c.turns.length && !this.commandNote) log.append(el('li', { class: 'muted' }, t('Belum ada pesan. Tulis tugas pertama untuk {agent}.', { agent: c.agent ?? '' })));
+    if (!c.turns.length) log.append(el('li', { class: 'muted' }, t('Belum ada pesan. Tulis tugas pertama untuk {agent}.', { agent: c.agent ?? '' })));
     if (this.commandNote) {
       const note = el('li', { class: 'turn system command-note', 'data-turn': 'command-note' });
       note.append(el('span', { class: 'who' }, t('Sistem')));
@@ -537,6 +544,8 @@ export class PrivatePanel {
     const ta = el('textarea', { id: 'agent-manual-text', rows: '3', maxlength: '4000', 'aria-label': tr('Pesan untuk {agent}', { agent: c.agent ?? '' }), 'aria-describedby': 'agent-slash-hint', placeholder: tr('Tulis pesan, atau ketik / untuk perintah') });
     if (draft) ta.value = draft;
     const slash = el('div', { class: 'slash-menu', id: 'agent-slash', role: 'listbox', 'aria-label': tr('Perintah') });
+    ta.setAttribute('aria-controls', 'agent-slash');
+    ta.setAttribute('aria-autocomplete', 'list');
     const slashHint = el('span', { class: 'visually-hidden', id: 'agent-slash-hint', 'aria-live': 'polite' });
     const slashMatches = () => {
       const m = /^\/([a-z]*)$/i.exec(ta.value.trim());
@@ -546,7 +555,8 @@ export class PrivatePanel {
       const list = slashMatches();
       slash.replaceChildren();
       slash.hidden = !list.length;
-      if (!list.length) { slashHint.textContent = ''; return; }
+      ta.setAttribute('aria-expanded', String(!!list.length));
+      if (!list.length) { slashHint.textContent = ''; ta.removeAttribute('aria-activedescendant'); return; }
       this.slashIndex = Math.min(this.slashIndex, list.length - 1);
       list.forEach((x, i) => {
         const b = el('button', { type: 'button', role: 'option', class: `slash-item${i === this.slashIndex ? ' active' : ''}`, id: `slash-${x.name}`, 'aria-selected': String(i === this.slashIndex), 'data-command': x.name });
@@ -554,7 +564,9 @@ export class PrivatePanel {
         b.addEventListener('click', () => void this.runSlash(x.name, sendBtn));
         slash.append(b);
       });
-      slashHint.textContent = tr('{n} perintah. Panah atas/bawah untuk memilih, Enter untuk menjalankan.', { n: list.length });
+      const cur = list[this.slashIndex];
+      ta.setAttribute('aria-activedescendant', `slash-${cur.name}`);
+      slashHint.textContent = `${tr('{n} perintah. Panah atas/bawah untuk memilih, Enter untuk menjalankan.', { n: list.length })} /${cur.name}: ${tr(cur.help)}`;
     };
     ta.addEventListener('input', () => { this.slashIndex = 0; drawSlash(); });
     ta.addEventListener('keydown', (e) => {
@@ -565,7 +577,14 @@ export class PrivatePanel {
         drawSlash();
         return;
       }
-      if (list.length && (e.key === 'Tab' || (e.key === 'Enter' && !e.shiftKey))) {
+      // Tab only completes the name (Telegram does the same); Enter runs it.
+      if (list.length && e.key === 'Tab' && !e.shiftKey && ta.value.trim() !== `/${list[this.slashIndex].name}`) {
+        e.preventDefault();
+        ta.value = `/${list[this.slashIndex].name}`;
+        drawSlash();
+        return;
+      }
+      if (list.length && e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         void this.runSlash(list[this.slashIndex].name, sendBtn);
         return;
@@ -739,6 +758,13 @@ export class PrivatePanel {
     this.paintMic();
   }
 
+  /** Drops whatever the mic is doing: pending permission, recording, or an upload's result. */
+  private cancelMic() {
+    this.micGen += 1;
+    this.stopRecording(true);
+    if (this.micState === 'asking') this.setMic('idle');
+  }
+
   private stopRecording(discard = false) {
     const rec = this.recorder;
     if (!rec) return;
@@ -756,19 +782,27 @@ export class PrivatePanel {
       return;
     }
     this.setMic('asking');
+    const gen = ++this.micGen;
+    const convId = this.conv?.id;
     let stream: MediaStream;
     let timer = 0;
+    const ask = navigator.mediaDevices.getUserMedia({ audio: true });
     try {
       // A permission prompt that never shows (closed popup, blocked by the OS) must not leave the button silent.
       stream = await Promise.race([
-        navigator.mediaDevices.getUserMedia({ audio: true }),
+        ask,
         new Promise<never>((_, no) => { timer = window.setTimeout(() => no(new DOMException('timeout', 'Timeout')), 20_000); }),
       ]);
     } catch (e) {
+      // A grant that arrives after the timeout must not leave the mic open.
+      ask.then((late) => late.getTracks().forEach((x) => x.stop()), () => {});
+      if (gen !== this.micGen) return; // chat closed meanwhile: no toast for a chat that is gone
+      this.micGen += 1;
       this.setMic('idle');
       toast(micError((e as DOMException)?.name), 7000);
       return;
     } finally { window.clearTimeout(timer); }
+    if (gen !== this.micGen || this.conv?.id !== convId) { stream.getTracks().forEach((x) => x.stop()); return; }
     const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find((m) => MediaRecorder.isTypeSupported(m)) ?? '';
     let rec: MediaRecorder & { discard?: boolean };
     try { rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined); } catch (e) {
@@ -784,12 +818,14 @@ export class PrivatePanel {
       stream.getTracks().forEach((x) => x.stop());
       this.recorder = null;
       const took = Date.now() - this.recStarted;
-      if (rec.discard || !this.conv) { this.setMic('idle'); return; }
+      if (rec.discard || !this.conv || gen !== this.micGen || !convId) { this.setMic('idle'); return; }
       if (took < 700 || !parts.length) { this.setMic('idle'); toast(t('Rekaman terlalu pendek. Tekan Suara, bicara, lalu tekan Selesai rekam.'), 4000); return; }
       this.setMic('uploading');
       const mime = (rec.mimeType || type || 'audio/webm').split(';')[0];
       try {
-        const { upload } = await api.upload(this.conv.id, new Blob(parts, { type: mime }), 'pesan-suara');
+        const { upload } = await api.upload(convId, new Blob(parts, { type: mime }), 'pesan-suara');
+        // The chat may have changed during the upload; the clip belongs to the one it was recorded in.
+        if (gen !== this.micGen || this.conv?.id !== convId) { this.setMic('idle'); return; }
         this.staged.push(upload);
         const list = document.getElementById('agent-staged') ?? initialList;
         this.renderStaged(list);
@@ -985,7 +1021,7 @@ export class PrivatePanel {
   private async send(payload: { text?: string; decision?: { turnId: string; optionId: string } }, btn: HTMLButtonElement) {
     if (this.sending || !this.conv) return;
     if (payload.text !== undefined && !payload.text.trim() && !this.staged.length) { toast(t('Pesan kosong.')); return; }
-    if (this.micState !== 'idle' && !payload.text?.trim().startsWith('/')) { toast(t(this.micState === 'uploading' ? 'Tunggu, pesan suara masih diunggah.' : 'Selesaikan rekaman dulu.')); return; }
+    if (this.micState !== 'idle' && !/^\/(stop|status|help)\b/i.test(payload.text?.trim() ?? '')) { toast(t(this.micState === 'uploading' ? 'Tunggu, pesan suara masih diunggah.' : 'Selesaikan rekaman dulu.')); return; }
     this.sending = true;
     btn.disabled = true;
     unlockAudio();

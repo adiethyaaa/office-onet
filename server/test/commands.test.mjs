@@ -13,6 +13,7 @@ const SECRET = base32Encode(Buffer.from('slash-commands-secret-1'));
 const PROXY = 'proxy-secret-for-slash-0123456789';
 const ORIGIN = 'https://employee-rpg.air-buddy.site';
 const PW = ['sandi', 'slash', 'panjang', '7'].join('-');
+let slowStt = false; let releaseStt = () => {};
 let tmp; let srv; let base; let calls; let gate; let s;
 
 async function api(method, p, body) {
@@ -45,7 +46,7 @@ before(async () => {
   fs.writeFileSync(path.join(dataDir, 'owner.json'), JSON.stringify({ username: 'budi', passwordHash: hashPassword(PW), totpSecret: SECRET }), { mode: 0o600 });
   calls = [];
   const runner = async (job) => { calls.push(job); if (gate) await gate; return { ok: true, text: 'Oke.\n```json\n{"pilihan":[]}\n```', session: job.hermesSession ?? 'hs_rpg_1' }; };
-  ({ server: srv } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, cookieSecure: false, boardTtlMs: 0, transcriber: async () => '', pushFetch: async () => ({ ok: true, status: 201 }), telegram: { post: () => ({ ok: true }) } }));
+  ({ server: srv } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, cookieSecure: false, boardTtlMs: 0, transcriber: async () => { if (slowStt) await new Promise((r) => { releaseStt = () => { slowStt = false; r(); }; }); return 'halo'; }, pushFetch: async () => ({ ok: true, status: 201 }), telegram: { post: () => ({ ok: true }) } }));
   await new Promise((r) => srv.listen(0, '127.0.0.1', r));
   base = `http://127.0.0.1:${srv.address().port}`;
   const r = await fetch(`${base}/api/login`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-kantor-proxy': PROXY, origin: ORIGIN }, body: JSON.stringify({ username: 'budi', password: PW, code: totp(SECRET) }) });
@@ -100,6 +101,30 @@ test('/stop menghentikan tugas yang sedang jalan dan yang antre', async () => {
   assert.equal((await say(conv.id, '/stop')).json.command.stopped, 0);
 });
 
+test('perintah idempoten: kunci yang sama tidak membuka chat kedua', async () => {
+  const conv = (await api('POST', '/api/conversations', { profile: 'infra', fresh: true })).json;
+  const body = { text: '/new', idem: 'idem-slash-retry-0001' };
+  const a = await api('POST', `/api/conversations/${conv.id}/messages`, body);
+  const b = await api('POST', `/api/conversations/${conv.id}/messages`, body);
+  assert.equal(b.json.duplicate, true);
+  assert.equal(b.json.conversation.id, a.json.conversation.id);
+  assert.equal((await api('POST', `/api/conversations/${a.json.conversation.id}/messages`, body)).status, 409);
+});
+
+test('/stop saat prepare() (transkripsi) berjalan: agen tidak dipanggil sesudahnya', async () => {
+  const conv = (await api('POST', '/api/conversations', { profile: 'legal', fresh: true })).json;
+  slowStt = true; // transcription starts at upload time and is awaited in prepare()
+  const up = await fetch(`${base}/api/conversations/${conv.id}/uploads`, { method: 'POST', headers: { 'content-type': 'audio/webm', 'x-file-name': 'v.webm', 'x-kantor-proxy': PROXY, origin: ORIGIN, cookie: s.cookie, 'x-csrf': s.csrf }, body: Buffer.from('1a45dfa3', 'hex') }).then((r) => r.json());
+  assert.ok(up.upload?.id, JSON.stringify(up));
+  const c0 = calls.filter((c) => c.profile === 'legal').length;
+  await api('POST', `/api/conversations/${conv.id}/messages`, { text: '', attachments: [up.upload.id], idem: 'idem-slash-prep-0001' });
+  await new Promise((r) => setTimeout(r, 100));
+  assert.equal((await say(conv.id, '/stop')).json.command.stopped, 1);
+  releaseStt();
+  await new Promise((r) => setTimeout(r, 300));
+  assert.equal(calls.filter((c) => c.profile === 'legal').length, c0, 'runner tidak boleh jalan untuk tugas yang dihentikan');
+});
+
 test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khusus RPG lalu /telegram kembali', async () => {
   const rpg = (await api('POST', '/api/conversations', { profile: 'sales', fresh: true })).json;
   const nw = await say(rpg.id, '/new');
@@ -129,7 +154,13 @@ test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khus
   await waitFor(() => calls.length > c0);
   assert.equal(calls.at(-1).profile, 'leo');
   assert.equal(calls.at(-1).hermesSession, null);
+  // A late reply in the detached chat must not pull it back in front after /telegram.
+  let rel; gate = new Promise((r) => { rel = r; });
+  await say(again.id, 'satu lagi');
+  await waitFor(() => calls.at(-1)?.message.startsWith('satu lagi'));
   const back = await say(again.id, '/telegram');
+  rel(); gate = null;
+  await waitFor(async () => (await api('GET', `/api/conversations/${again.id}`)).json.tasks.every((t) => t.terminal));
   assert.equal(back.json.command.ok, true);
   assert.equal(back.json.conversation.channel, 'telegram');
   assert.equal((await api('POST', '/api/conversations', { profile: 'leo' })).json.channel, 'telegram');

@@ -148,6 +148,42 @@ test('Suara: izin mikrofon ditolak memberi pesan jelas yang terlihat di atas dia
   await expect(dlg.locator('#agent-mic')).toBeDisabled();
 });
 
+test('Suara: menutup chat saat merekam atau saat izin belum dijawab melepas mikrofon dan tidak mengunggah', async ({ page }) => {
+  const dlg = await openChat(page, 'infra');
+  await page.evaluate(() => {
+    const w = window as unknown as { streams: MediaStream[] };
+    w.streams = [];
+    const orig = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia = async (c) => { const st = await orig(c); w.streams.push(st); return st; };
+  });
+  let uploads = 0;
+  page.on('request', (r) => { if (r.method() === 'POST' && r.url().includes('/uploads')) uploads += 1; });
+  await dlg.locator('#agent-mic').click();
+  await expect(dlg.locator('#agent-mic-status')).toContainText('Merekam');
+  await page.waitForTimeout(1200);
+  await dlg.getByRole('button', { name: 'Tutup' }).click();
+  await expect(dlg).toBeHidden();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { streams: MediaStream[] }).streams.every((st) => st.getTracks().every((x) => x.readyState === 'ended')))).toBe(true);
+  // A permission that is granted only after the chat closed must not start recording.
+  await page.keyboard.press('c');
+  await dlg.locator('.agent-pick-btn[data-agent="infra"]').click();
+  await expect(dlg.locator('#agent-manual-toggle')).toBeVisible();
+  if (await dlg.locator('#agent-manual').isHidden()) await dlg.locator('#agent-manual-toggle').click();
+  await expect(dlg.locator('#agent-mic')).toBeVisible();
+  await page.evaluate(() => {
+    const w = window as unknown as { streams: MediaStream[]; grant: () => void };
+    const orig = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia = (c) => new Promise((ok) => { w.grant = () => void orig(c).then(ok); /* orig is the wrapper above: it records the stream */ });
+  });
+  await dlg.locator('#agent-mic').click();
+  await expect(dlg.locator('#agent-mic-status')).toHaveText('Meminta izin mikrofon…');
+  await dlg.getByRole('button', { name: 'Tutup' }).click();
+  await page.evaluate(() => (window as unknown as { grant: () => void }).grant());
+  await expect.poll(() => page.evaluate(() => { const l = (window as unknown as { streams: MediaStream[] }).streams; return l.length === 2 && l.every((st) => st.getTracks().every((x) => x.readyState === 'ended')); })).toBe(true);
+  await page.waitForTimeout(1200);
+  expect(uploads).toBe(0);
+});
+
 test('gerbang: "sudah di reset?" langsung ke agen; perintah hapus data tetap minta persetujuan', async ({ page }) => {
   const dlg = await openChat(page, 'enterprise');
   const ta = dlg.locator('#agent-manual-text');
@@ -197,6 +233,12 @@ test('perintah slash: ketik / memunculkan menu, dipilih keyboard/klik, dijalanka
   // Click /help.
   await ta.fill('');
   await ta.pressSequentially('/he');
+  // Tab completes the name only; nothing runs until Enter or a click.
+  await page.keyboard.press('Tab');
+  await expect(ta).toHaveValue('/help');
+  await expect(ta).toBeFocused();
+  await expect(ta).toHaveAttribute('aria-activedescendant', 'slash-help');
+  await expect(note).toContainText('Sesi Hermes');
   await menu.getByRole('option', { name: /\/help/ }).click();
   await expect(note).toContainText('Perintah yang bisa dipakai');
   // Unknown command typed in full and sent: help, not forwarded.

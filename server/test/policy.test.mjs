@@ -29,6 +29,14 @@ test('gerbang hapus/reset: perintah merusak nyata tetap butuh persetujuan', () =
     'bisa hapus database produksi?',
     'sudah, sekarang hapus repo itu',
     'factory reset router lantai 2',
+    // Review kedua (Codex): bentuk yang dulu lolos.
+    'Bisa hapus /srv/arsip?',
+    'Kalau belum hapus database lama, lakukan sekarang.',
+    'Tolong database lama di reset sekarang.',
+    'hapus ~/Documents/lama',
+    'tidak usah backup, hapus database',
+    // Pertanyaan yang menyebut data tetap ditahan (fail-closed): "boleh?" sering berarti "lakukan".
+    'Apakah aman hapus database lama?',
   ]) assert.ok(destroy(t), `harus ditahan: ${t}`);
   // Reset sandi tetap tertangkap gerbang kredensial.
   assert.ok(checkMessage('reset password akun admin').risks.some((r) => r.id === 'cred'));
@@ -48,6 +56,10 @@ test('gerbang hapus/reset: pertanyaan dan obrolan tidak memicu persetujuan', () 
     'apakah perlu reset?',
     'tadi aku sudah hapus fotonya sendiri, makasih',
     'Buat poster promo',
+    'Saya tidak mau hapus database ini.',
+    'jangan hapus data apa pun',
+    'Sudah dihapus semua datanya.',
+    'tadi servernya sudah direset sama vendor',
   ]) assert.equal(risky(t), false, `tidak boleh ditahan: ${t} -> ${JSON.stringify(checkMessage(t).risks)}`);
 });
 

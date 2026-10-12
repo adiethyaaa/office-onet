@@ -50,7 +50,7 @@ export function modelFor(home, profile, sessionId) {
  * Runs one command for conversation `conv`. Returns a structured result the
  * browser renders in its own language; `conversation` is the id to show next.
  */
-export function runCommand(cmd, conv, { q, dispatcher, tgSession, createConversation, home, now, terminal }) {
+export function runCommand(cmd, conv, { q, dispatcher, tgSession, createConversation, setFront, home, now, terminal }) {
   const known = COMMANDS.some((c) => c.name === cmd.name);
   if (!known) return { kind: 'unknown', name: cmd.name, commands: COMMANDS, conversation: conv.id };
   if (cmd.name === 'help') return { kind: 'help', commands: COMMANDS, conversation: conv.id };
@@ -81,7 +81,7 @@ export function runCommand(cmd, conv, { q, dispatcher, tgSession, createConversa
     if (!tgSid) return { kind: 'telegram', ok: false, conversation: conv.id };
     let tg = q("select id from conversations where profile=? and channel='telegram' order by updated_at desc limit 1").get(conv.profile);
     if (!tg) tg = { id: createConversation(conv.profile, 'telegram', 0) };
-    q('update conversations set updated_at=? where id=?').run(now(), tg.id);
+    setFront(conv.profile, tg.id);
     return { kind: 'telegram', ok: true, conversation: tg.id };
   }
 
