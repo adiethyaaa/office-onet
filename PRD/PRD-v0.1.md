@@ -64,7 +64,7 @@ Budget awal target: karakter utama <=25k triangles, NPC LOD0 <=15k dan LOD1 <=5k
 
 ## 7. Gameplay, kamera dan UX
 
-Desktop: WASD/arrows bergerak relatif kamera, Shift berlari, E berinteraksi, R recenter, Escape menutup dialog, drag kamera hanya di area dunia. Kamera 3/4 top-down adjustable, cutaway bangunan per lantai, zoom bounded, obstacle occlusion fade. CEO punya spawn jelas di lobby. Floor switch hanya di titik tangga/lift/portal yang ditandai; tidak teleport tak sengaja. Modal/input fokus harus menonaktifkan locomotion agar mengetik tidak menggerakkan avatar.
+Desktop: WASD/arrows bergerak relatif kamera, Shift berlari, E berinteraksi, R recenter, Escape menutup dialog, drag kamera hanya di area dunia. Kamera 3/4 top-down adjustable, cutaway bangunan per lantai, zoom bounded, obstacle occlusion fade (dihapus atas perintah Budi 2026-10-12, lihat PRD v1.1 bagian 7). CEO punya spawn jelas di lobby. Floor switch hanya di titik tangga/lift/portal yang ditandai; tidak teleport tak sengaja. Modal/input fokus harus menonaktifkan locomotion agar mengetik tidak menggerakkan avatar.
 
 Mobile: joystick kiri dan tombol interaksi kanan >=44 px, camera gesture yang tidak bentrok dengan joystick, panel bottom sheet dengan safe area; landscape nyaman tetapi portrait tetap bisa dipakai. Tablet punya layout sendiri. HUD hanya room name, mode data, interaksi kontekstual dan menu; bukan dashboard template yang menutupi dunia.
 

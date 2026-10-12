@@ -102,6 +102,8 @@ Budget target: karakter utama 25k triangle, NPC LOD0 15k dan LOD1 5k, prop kecil
 
 Desktop: WASD/panah bergerak relatif kamera, Shift lari, E interaksi, R recenter, Escape menutup dialog, drag kamera hanya di area dunia. Kamera 3/4 top-down, cutaway per lantai, zoom terbatas. CEO spawn di lobby (WP-L1-SPAWN). Pindah lantai hanya di titik tangga dan lift yang ditandai dalam `verticalLinks`; tidak ada teleport tak sengaja. Modal atau input fokus menonaktifkan locomotion.
 
+Occlusion fade (dinding tembus pandang di kapsul kamera ke avatar, shader cutaway) **dihapus atas perintah Budi 2026-10-12**: dinding, kaca jendela, dan daun pintu selalu digambar utuh. Keterbacaan ruang tetap dijaga dinding dalam rendah 1,25 m (eksterior 1,55 m) untuk kamera 3/4; itu bukan efek tembus.
+
 Mobile: joystick kiri dan tombol interaksi kanan minimal 44 px, gesture kamera tidak bentrok joystick, panel bottom sheet dengan safe area. Tablet punya layout sendiri. HUD hanya nama ruang, mode data, interaksi kontekstual dan menu.
 
 Interaksi: menyapa NPC, melihat peran/aktivitas demo, duduk, memakai workstation, melihat artwork/signage, membaca denah/ICT di meja denah, kegiatan lounge/game/biliar/olahraga sebagai aktivitas virtual berlabel. Office Studio: draft dengan grid snapping, rotate/place/delete, validasi overlap/pintu/navigasi memakai aturan yang sama dengan validator, undo/redo, save/load JSON terversi, publish/rollback lokal; import menolak field executable dan path. Avatar Studio: varian original yang memang punya asset, preview animasi, reset/save.
