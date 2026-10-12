@@ -84,6 +84,20 @@ async function login(page: Page) {
   await page.getByRole('button', { name: 'Masuk' }).click();
 }
 
+test('isian login tidak terhapus oleh pembaruan papan tiap 10 detik', async ({ page }) => {
+  await boot(page);
+  await wireApi(page);
+  await page.getByRole('button', { name: /Papan kerja/ }).click();
+  const user = page.getByLabel('Nama');
+  await user.fill('budi');
+  await page.getByLabel('Sandi').fill('rahasia');
+  await page.getByLabel('Sandi').focus();
+  await page.waitForTimeout(11_500); // one board refresh tick
+  await expect(user).toHaveValue('budi');
+  await expect(page.getByLabel('Sandi')).toHaveValue('rahasia');
+  await expect(page.getByLabel('Sandi')).toBeFocused();
+});
+
 test('pengunjung: papan Demo dan tidak bisa memerintah agen (REQ-BOARD-04, AC-CMD-04)', async ({ page }, info) => {
   const errors = await boot(page);
   await page.getByRole('button', { name: /Papan kerja/ }).click();

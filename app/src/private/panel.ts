@@ -186,6 +186,10 @@ export class PrivatePanel {
     const demo = b.mode === 'demo';
     const body = $('boards-body');
     const active = keepFocus ? document.activeElement?.id : null;
+    // The 10 s auto refresh must not rebuild the login form: that would wipe
+    // what the owner is typing. Keep the same node (values, listeners) instead.
+    const keptLogin = keepFocus ? body.querySelector<HTMLElement>(':scope > section.login') : null;
+    const caret = active && document.activeElement instanceof HTMLInputElement ? document.activeElement.selectionStart : null;
     body.replaceChildren();
     const head = el('div', { class: 'board-head' });
     head.append(el('span', { class: demo ? 'tag demo' : 'tag live' }, demo ? t('Demo') : t('Data nyata')));
@@ -223,8 +227,12 @@ export class PrivatePanel {
     } else if (this.tab === 'handoffs') this.renderHandoffs(panel, board.items as HandoffItem[], demo);
     else if (this.tab === 'tasks') this.renderTasks(panel, board.items as TaskItem[], demo);
     else this.renderLog(panel, board.items as LogItem[], demo);
-    if (!this.authenticated) body.append(this.loginForm(() => void this.openBoards(this.tab)));
-    if (active && document.getElementById(active)) document.getElementById(active)!.focus();
+    if (!this.authenticated) body.append(keptLogin ?? this.loginForm(() => void this.openBoards(this.tab)));
+    const back = active ? document.getElementById(active) : null;
+    if (back) {
+      back.focus({ preventScroll: true });
+      if (back instanceof HTMLInputElement && caret !== null && back.type !== 'password') back.setSelectionRange(caret, caret);
+    }
   }
 
   private renderHandoffs(panel: HTMLElement, items: HandoffItem[], demo = false) {
