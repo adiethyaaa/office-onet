@@ -51,6 +51,12 @@ jobs:
       # renderer on the runner measures the mobile budget faithfully.
       - name: Render budget gate (desktop, tablet, mobile) and touch greeting
         run: npx playwright test tests/e2e/budget.spec.ts tests/e2e/npc.spec.ts tests/e2e/controls.spec.ts tests/e2e/failures.spec.ts --project=tablet --project=mobile && npx playwright test tests/e2e/budget.spec.ts --project=desktop
+      # Chat agen: real private backend in-process (fake runner, fake microphone).
+      - name: Server tests + E2E chat agen (desktop)
+        run: |
+          sudo apt-get install -y --no-install-recommends sqlite3
+          (cd ../server && npm ci && npm test)
+          npx playwright test tests/e2e/private.spec.ts tests/e2e/chat-voice-slash.spec.ts --project=desktop
       - name: Licence audit
         working-directory: .
         run: python3 tools/license_audit.py --out /tmp/license-audit.json
