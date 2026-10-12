@@ -428,6 +428,9 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .login { margin-top: 14px; border-top: 1px solid var(--control-border); padding-top: 10px; }
 .login input, .manual textarea { font: inherit; width: 100%; box-sizing: border-box; min-height: 44px; padding: 8px 10px; border: 1px solid var(--control-border); border-radius: 8px; background: var(--surface); color: var(--ink); }
 .login .btn.primary { margin-top: 10px; }
+/* Dialog footer: Close sits apart from the form above it, on the right, so it is
+   never mistaken for the form's own submit button. */
+.dialog-foot { display: flex; justify-content: flex-end; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--control-border); }
 .chat { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 8px; max-height: min(40vh, 380px); overflow: auto; }
 .turn { padding: 8px 12px; border-radius: 10px; max-width: 92%; }
 .turn.owner { background: var(--green); color: var(--on-green); justify-self: end; }
