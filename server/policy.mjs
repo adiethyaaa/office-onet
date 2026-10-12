@@ -15,19 +15,56 @@ const SECRET = [
 const RISK = [
   { id: 'isp', re: /\b(mikrotik|routeros|olt|onu|ont|switch antar|core router|router core|pop\b|sistem lama|alus|radius|pppoe|bras|produksi isp)\b/i, label: 'Perangkat/sistem produksi ISP PerumNet' },
   { id: 'homelab', re: /\b(proxmox|pve|vm\s?\d+|lxc|docker-01|restart|reboot|matikan|shutdown|upgrade firmware)\b/i, label: 'Homelab/server: restart, VM, atau upgrade' },
-  { id: 'destroy', re: /\b(hapus|delete|drop table|rm -rf|truncate|reset|wipe|format ulang)\b/i, label: 'Menghapus atau mereset data' },
+  { id: 'destroy', test: destroyIntent, label: 'Menghapus atau mereset data' },
   { id: 'deploy', re: /\b(deploy|publish|rilis ke produksi|merge|push ke main|go live)\b/i, label: 'Deploy/merge ke produksi' },
   { id: 'money', re: /\b(bayar|transfer|top.?up|beli|langganan berbayar|checkout|invoice ke klien)\b/i, label: 'Biaya atau pembayaran' },
   { id: 'client', re: /\b(kirim (?:ke )?(?:klien|customer|pelanggan)|email (?:ke )?klien|wa (?:ke )?klien|kirim penawaran)\b/i, label: 'Mengirim sesuatu ke klien' },
   { id: 'cred', re: /\b(ganti (?:sandi|password)|reset (?:sandi|password)|kredensial|credential|ssh key|hak akses)\b/i, label: 'Kredensial atau hak akses' },
 ];
 
+// Hapus/reset: a bare keyword match parked chat like "sudah di reset?" behind an
+// approval card. The gate now looks for an instruction: an active verb aimed at
+// something that holds data, or a bare imperative ("hapus aja"). Questions,
+// passive/past reports ("sudah dihapus?") and UI things (chat, filter, kamera)
+// pass. Unknown objects in an instruction still count as risky (fail-closed).
+const DESTROY_ALWAYS = /\b(drop\s+(?:table|database|schema)|rm\s+-[a-z]*r[a-z]*f?|truncate|wipe|format\s+ulang|factory\s+reset|kosongkan\s+(?:data|database|db|tabel|table|disk|drive|folder|server))\b/i;
+const DESTROY_VERB = /^(hapus|hapuskan|menghapus|delete|remove|reset|mereset|erase|purge)$/;
+const PASSIVE_VERB = /^(dihapus|dihapuskan|terhapus|direset|deleted|removed|erased)$/;
+const DATA_OBJECT = /^(data|datanya|berkas|file|files|folder|direktori|directory|database|databasenya|db|tabel|table|tables|server|port|repo|repository|backup|snapshot|vm|disk|drive|akun|account|user|users|pengguna|pelanggan|log|logs|branch|semua|semuanya|all|everything|isi|isinya|gateway|bot|profil|memori|memory|kanban)$/;
+const HARMLESS_OBJECT = /^(chat|chatnya|sesi|session|percakapan|obrolan|filter|tampilan|kamera|pencarian|pesan|teks|draf|draft|zoom|view|layout)$/;
+const FILLER = /^(aja|saja|sekarang|ya|dong|deh|lagi|juga|segera|now|please|it|this|that|yang|itu|ini|the|tolong)$/;
+const PAST = /^(sudah|udah|sdh|telah|tadi|sempat|pernah|belum|blm|already)$/;
+const QUESTION = /\?\s*$|^(apa|apakah|kenapa|mengapa|gimana|bagaimana|kapan|siapa|why|how|did|was|is|has)\b/;
+
+export function destroyIntent(raw) {
+  const text = String(raw).toLowerCase();
+  if (DESTROY_ALWAYS.test(text)) return true;
+  const question = QUESTION.test(text.trim());
+  // "di reset" / "di-reset" is the passive form, same as "direset".
+  const words = text.replace(/\bdi[\s-]+(reset|hapus)\b/g, 'di$1').split(/[^\p{L}\p{N}-]+/u).filter(Boolean);
+  for (let i = 0; i < words.length; i++) {
+    const w = words[i];
+    const passive = PASSIVE_VERB.test(w);
+    if (!passive && !DESTROY_VERB.test(w)) continue;
+    if (!passive && PAST.test(words[i - 1] ?? '')) continue; // "tadi sudah hapus ..." reports, not orders
+    const after = words.slice(i + 1, i + 5).filter((x) => !FILLER.test(x));
+    if (after.some((x) => DATA_OBJECT.test(x))) {
+      if (passive && question) continue; // "datanya sudah dihapus?"
+      return true;
+    }
+    if (passive || question) continue;
+    if (after.length && HARMLESS_OBJECT.test(after[0])) continue;
+    return true; // imperative with no object or an unknown one: fail closed
+  }
+  return false;
+}
+
 export function checkMessage(text) {
   const t = String(text ?? '');
   if (!t.trim()) return { ok: false, reason: 'Pesan kosong.' };
   if (t.length > LIMITS.messageChars) return { ok: false, reason: `Pesan lebih dari ${LIMITS.messageChars} karakter.` };
   if (SECRET.some((re) => re.test(t))) return { ok: false, reason: 'Pesan tampak berisi sandi, OTP, token atau nomor kartu. Jangan ketik rahasia di chat RPG; pakai vault atau alur login resmi.' };
-  const risks = RISK.filter((r) => r.re.test(t)).map((r) => ({ id: r.id, label: r.label }));
+  const risks = RISK.filter((r) => (r.test ? r.test(t) : r.re.test(t))).map((r) => ({ id: r.id, label: r.label }));
   return { ok: true, risks };
 }
 

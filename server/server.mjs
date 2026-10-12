@@ -20,6 +20,7 @@ import { chatState, TYPING_WINDOW_MS } from './chat-state.mjs';
 import { createMedia, MEDIA_LIMITS } from './media.mjs';
 import { createPush, validSubscription } from './push.mjs';
 import { searchTelegram } from './telegram.mjs';
+import { parseCommand, runCommand } from './commands.mjs';
 
 const MAX_BODY = 16 * 1024;
 const LOGIN_MAX = 5;
@@ -193,6 +194,7 @@ export function createServer(cfg) {
     return {
       id: conv.id, profile: conv.profile, agent: r?.name, lane: r?.lane,
       channel: conv.channel === 'telegram' ? (tgView ? 'telegram' : 'telegram-unavailable') : 'rpg',
+      detached: !!conv.detached,
       turns: chat.turns, typing: chat.typing, lastSeen: chat.lastSeen,
       tasks: tasks.map((t) => ({ ...t, terminal: TERMINAL.has(t.status) })),
       events, approvals, cursor: events.length ? events[events.length - 1].seq : after,
@@ -267,19 +269,24 @@ export function createServer(cfg) {
     send(res, 200, presenceMemo.value);
   });
 
+  function createConversation(profile, channel, detached = 0) {
+    const id = `conv_${token(9)}`;
+    q('insert into conversations(id,profile,hermes_session,created_at,updated_at,channel,detached) values(?,?,?,?,?,?,?)').run(id, profile, null, now(), now(), channel, detached);
+    store.audit('owner', 'conversation.create', profile, id, detached ? 'rpg-detached' : channel);
+    return id;
+  }
+
   route('POST', /^\/api\/conversations$/, {}, async (req, res) => {
     const b = await readJson(req);
     const r = byProfile(b.profile);
     if (!r) return fail(res, 404, 'Profil tidak ada di roster RPG.');
-    // A bot with a Telegram DM session gets the Telegram-bound conversation (ADR-017).
+    // A bot with a Telegram DM session gets the Telegram-bound conversation (ADR-017),
+    // unless Budi started an RPG-only one with /new more recently (until /telegram).
     const channel = tgSession(r.profile) ? 'telegram' : 'rpg';
-    let conv = b.fresh ? null : q('select * from conversations where profile=? and channel=? order by updated_at desc limit 1').get(r.profile, channel);
-    if (!conv) {
-      const id = `conv_${token(9)}`;
-      q('insert into conversations(id,profile,hermes_session,created_at,updated_at,channel) values(?,?,?,?,?,?)').run(id, r.profile, null, now(), now(), channel);
-      store.audit('owner', 'conversation.create', r.profile, id, channel);
-      conv = { id };
-    }
+    let conv = b.fresh ? null : channel === 'telegram'
+      ? q("select * from conversations where profile=? and (channel='telegram' or detached=1) order by updated_at desc, rowid desc limit 1").get(r.profile)
+      : q("select * from conversations where profile=? and channel='rpg' order by updated_at desc, rowid desc limit 1").get(r.profile);
+    if (!conv) conv = { id: createConversation(r.profile, channel) };
     send(res, 200, conversationView(conv.id));
   });
 
@@ -310,6 +317,14 @@ export function createServer(cfg) {
       if (!opt) return fail(res, 400, 'Pilihan tidak dikenal.');
       text = opt.message; decisionId = `${turn.id}:${opt.id}`;
     } else text = typeof b.text === 'string' ? b.text : '';
+    // Telegram-style commands run here and never reach the agent (an unknown one gets help, not forwarded).
+    // Staged attachments stay unclaimed: they are for the next real message.
+    const cmd = decisionId ? null : parseCommand(text);
+    if (cmd) {
+      const out = runCommand(cmd, conv, { q, dispatcher, tgSession, createConversation, home, now, terminal: TERMINAL });
+      store.audit('owner', 'command', conv.profile, conv.id, `/${cmd.name}${out.kind === 'unknown' ? ' (tidak dikenal)' : ''}`);
+      return send(res, 200, { command: out, conversation: conversationView(out.conversation) });
+    }
     const claimed = media.claim(conv.id, b.attachments ?? []);
     if (claimed.error) return fail(res, 400, claimed.error);
     if (!text.trim() && claimed.rows.length) text = claimed.rows.some((r) => r.kind === 'voice') ? '🎤 Pesan suara' : `📎 ${claimed.rows.length} lampiran`;

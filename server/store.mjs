@@ -43,6 +43,8 @@ export function openStore(dir) {
   // Telegram sync (ADR-017): a conversation can be bound to the bot's Telegram DM session.
   const cols = db.prepare('pragma table_info(conversations)').all().map((c) => c.name);
   if (!cols.includes('channel')) db.exec("alter table conversations add column channel text not null default 'rpg'");
+  // /new from a Telegram-bound chat opens an RPG-only one that stays in front until /telegram.
+  if (!cols.includes('detached')) db.exec('alter table conversations add column detached integer not null default 0');
   try { fs.chmodSync(file, 0o600); } catch { /* best effort */ }
   const q = (sql) => db.prepare(sql);
   return {

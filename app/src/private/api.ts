@@ -22,7 +22,13 @@ export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 't
 export interface TaskView { id: string; status: string; source: string; observed_at: number; created_at: number; error: string | null; terminal: boolean }
 export interface EventView { seq: number; task_id: string; status: string; note: string | null; at: number }
 export interface ApprovalView { id: string; task_id: string; action: string; impact: string; rollback: string; status: string; expires_at: number }
-export interface Conversation { id: string; profile: string; agent?: string; lane?: string; channel?: 'telegram' | 'telegram-unavailable' | 'rpg'; turns: Turn[]; typing?: boolean; lastSeen?: number | null; tasks: TaskView[]; events: EventView[]; approvals: ApprovalView[]; cursor: number }
+export interface CommandInfo { name: string; help: string }
+export interface CommandResult {
+  kind: 'help' | 'unknown' | 'stop' | 'status' | 'new' | 'telegram'; conversation: string; name?: string; commands?: CommandInfo[];
+  stopped?: number; telegram?: boolean; ok?: boolean; fromTelegram?: boolean; telegramAvailable?: boolean; stillRunning?: number;
+  channel?: 'telegram' | 'rpg' | 'rpg-detached'; session?: string | null; model?: string | null; tasks?: { status: string; n: number }[]; running?: boolean;
+}
+export interface Conversation { id: string; profile: string; agent?: string; lane?: string; channel?: 'telegram' | 'telegram-unavailable' | 'rpg'; detached?: boolean; turns: Turn[]; typing?: boolean; lastSeen?: number | null; tasks: TaskView[]; events: EventView[]; approvals: ApprovalView[]; cursor: number }
 
 let csrf: string | null = null;
 
@@ -53,7 +59,7 @@ export const api = {
   conversation: (profile: string, fresh = false) => call<Conversation>('POST', 'conversations', { profile, fresh }),
   conversationById: (id: string) => call<Conversation>('GET', `conversations/${encodeURIComponent(id)}`),
   send: (id: string, body: { text?: string; decision?: { turnId: string; optionId: string }; idem: string; attachments?: string[] }) =>
-    call<{ taskId: string; duplicate: boolean; approval: { id: string } | null; conversation: Conversation }>('POST', `conversations/${encodeURIComponent(id)}/messages`, body),
+    call<{ taskId?: string; duplicate?: boolean; approval?: { id: string } | null; command?: CommandResult; conversation: Conversation }>('POST', `conversations/${encodeURIComponent(id)}/messages`, body),
   approve: (id: string, taskId: string, decision: 'approve' | 'reject') => call<{ conversation: Conversation }>('POST', `approvals/${encodeURIComponent(id)}`, { decision, taskId }),
   async upload(convId: string, file: Blob, name: string): Promise<{ upload: Attachment }> {
     let res: Response;

@@ -7,7 +7,7 @@ import { DEMO_BOARDS } from './demo';
 import { disablePush, enablePush, mutedBots, PUSH_HELP, pushState, setMutedBots, type PushState } from './push';
 import { clock, dayLabel, ping, quoteFor, RECEIPT, sameDay, setTitleCount, statusLine, unlockAudio } from './chat-ui';
 import { t, t as tr, locale } from '../i18n';
-import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type Presence, type HandoffItem, type TaskItem, type LogItem, type Turn, type Attachment } from './api';
+import { api, ApiError, type Boards, type Conversation, type Me, type Agent, type Presence, type HandoffItem, type TaskItem, type LogItem, type Turn, type Attachment, type CommandResult } from './api';
 
 type Tab = 'handoffs' | 'tasks' | 'log';
 const STATUS_LABEL: Record<string, string> = {
@@ -29,6 +29,30 @@ function setReadMark(profile: string, at: number) {
 }
 const fmtSize = (n: number) => (n < 1024 * 1024 ? `${Math.max(1, Math.round(n / 1024))} KB` : `${(n / 1048576).toFixed(1)} MB`);
 const fmtAge = (h: number) => (h < 1 ? t('{n} mnt', { n: Math.max(1, Math.round(h * 60)) }) : h < 48 ? t('{n} jam', { n: Math.round(h) }) : t('{n} hari', { n: Math.round(h / 24) }));
+// Same list the server runs (server/commands.mjs); the server stays the authority.
+const SLASH: { name: string; help: string }[] = [
+  { name: 'new', help: 'Mulai percakapan baru' },
+  { name: 'stop', help: 'Hentikan tugas yang sedang berjalan' },
+  { name: 'status', help: 'Sesi, model, dan tugas berjalan' },
+  { name: 'telegram', help: 'Kembali ke chat Telegram bot ini' },
+  { name: 'help', help: 'Daftar perintah' },
+];
+type MicState = 'idle' | 'asking' | 'recording' | 'uploading';
+const fmtDur = (ms: number) => { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+
+/** Plain-language reason for a failed getUserMedia, by DOMException name. */
+export function micError(name: string | undefined, secure = true): string {
+  if (!secure) return t('Mikrofon hanya bisa dipakai di halaman HTTPS. Buka situs ini lewat alamat https.');
+  switch (name) {
+    case 'NotAllowedError': case 'PermissionDeniedError': return t('Izin mikrofon ditolak. Klik ikon gembok di bilah alamat, izinkan Mikrofon untuk situs ini, lalu coba lagi.');
+    case 'NotFoundError': case 'DevicesNotFoundError': case 'OverconstrainedError': return t('Tidak ada mikrofon yang terdeteksi. Sambungkan mikrofon atau periksa Pengaturan Sistem → Suara → Input.');
+    case 'NotReadableError': case 'TrackStartError': case 'AbortError': return t('Mikrofon sedang dipakai aplikasi lain atau diblokir macOS. Tutup aplikasi itu, atau izinkan browser di Pengaturan Sistem → Privasi → Mikrofon.');
+    case 'SecurityError': return t('Browser memblokir mikrofon di halaman ini (kebijakan keamanan).');
+    case 'Timeout': return t('Browser belum menjawab permintaan izin mikrofon. Cek apakah ada jendela izin yang tertutup, lalu coba lagi.');
+    default: return t('Mikrofon tidak bisa dibuka ({err}).', { err: name ?? t('galat') });
+  }
+}
+
 const newIdem = () => `idem-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
 export class PrivatePanel {
@@ -55,7 +79,13 @@ export class PrivatePanel {
   private presenceList: Presence[] = [];
   /** Uploaded but not yet sent with a message (this chat only). */
   private staged: Attachment[] = [];
-  private recorder: MediaRecorder | null = null;
+  private recorder: (MediaRecorder & { discard?: boolean }) | null = null;
+  private micState: MicState = 'idle';
+  private recStarted = 0;
+  private recTimer = 0;
+  /** Result of the last slash command, shown as a local system note until the next send. */
+  private commandNote: { text: string; at: number } | null = null;
+  private slashIndex = 0;
   private searchTerm = '';
 
   /**
@@ -381,7 +411,7 @@ export class PrivatePanel {
     try {
       this.agents = (await api.agents()).agents;
       const next = await api.conversation(profile);
-      if (next.id !== this.conv?.id) { this.staged = []; this.searchTerm = ''; }
+      if (next.id !== this.conv?.id) { this.staged = []; this.searchTerm = ''; this.commandNote = null; }
       this.conv = next;
     } catch (e) {
       body.append(el('p', { class: 'warn', role: 'alert' }, t('Agen tidak dapat dibuka: {msg}', { msg: (e as Error).message })));
@@ -392,7 +422,8 @@ export class PrivatePanel {
     if (!dlg.open) {
       openDialog(dlg, opener);
       this.onOpenChange?.(true);
-      dlg.addEventListener('close', () => { window.clearTimeout(this.pollTimer); this.onOpenChange?.(false); }, { once: true });
+      // Closing the chat must release the microphone; the clip is dropped, not sent.
+      dlg.addEventListener('close', () => { window.clearTimeout(this.pollTimer); this.stopRecording(true); this.onOpenChange?.(false); }, { once: true });
     }
     this.schedulePoll();
   }
@@ -437,6 +468,7 @@ export class PrivatePanel {
     for (const [k, v] of [['Profil', c.profile], ['Lane', c.lane ?? '-'], ['Percakapan', mode]]) info.append(el('dt', {}, t(k)), el('dd', {}, v));
     body.append(info);
     if (c.channel === 'telegram') body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, t('Ini percakapan Telegram-mu dengan {agent}. Pesan dari sini masuk ke sesi yang sama, dan balasannya juga dikirim bot ke Telegram. Jangan ketik sandi, OTP, atau token.', { agent: c.agent ?? '' })));
+    else if (c.detached) body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, t('Percakapan khusus RPG yang kamu mulai dengan /new. Sesi Telegram {agent} tidak berubah; ketik /telegram untuk kembali ke sana.', { agent: c.agent ?? '' })));
     else if (c.channel === 'telegram-unavailable') body.append(el('p', { class: 'warn', role: 'status' }, t('Riwayat Telegram bot ini tidak bisa dibaca sekarang. Pesan yang kamu kirim tetap masuk ke sesi Telegram-nya bila sesinya ada.')));
     else body.append(el('p', { class: 'muted small' }, t('Bot ini belum punya chat Telegram denganmu, jadi percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.')));
     body.append(this.searchBox());
@@ -460,7 +492,14 @@ export class PrivatePanel {
       bubble.append(el('span', { class: 'dots', 'aria-hidden': 'true' }, '•••'));
       log.append(bubble);
     }
-    if (!c.turns.length) log.append(el('li', { class: 'muted' }, t('Belum ada pesan. Tulis tugas pertama untuk {agent}.', { agent: c.agent ?? '' })));
+    if (!c.turns.length && !this.commandNote) log.append(el('li', { class: 'muted' }, t('Belum ada pesan. Tulis tugas pertama untuk {agent}.', { agent: c.agent ?? '' })));
+    if (this.commandNote) {
+      const note = el('li', { class: 'turn system command-note', 'data-turn': 'command-note' });
+      note.append(el('span', { class: 'who' }, t('Sistem')));
+      const p = el('div', { class: 'text' }); p.textContent = this.commandNote.text; note.append(p);
+      note.append(el('span', { class: 'meta' }, clock(this.commandNote.at)));
+      log.append(note);
+    }
     body.append(log);
     for (const t of c.tasks.filter((x) => !x.terminal || x.status === 'blocked' || x.status === 'waiting_owner')) {
       const last = [...c.events].reverse().find((e) => e.task_id === t.id);
@@ -495,10 +534,47 @@ export class PrivatePanel {
     body.append(choices);
     const manual = el('form', { id: 'agent-manual', class: 'manual' });
     manual.hidden = !(manualOpen || !lastAgent?.options);
-    const ta = el('textarea', { id: 'agent-manual-text', rows: '3', maxlength: '4000', 'aria-label': tr('Pesan untuk {agent}', { agent: c.agent ?? '' }) });
+    const ta = el('textarea', { id: 'agent-manual-text', rows: '3', maxlength: '4000', 'aria-label': tr('Pesan untuk {agent}', { agent: c.agent ?? '' }), 'aria-describedby': 'agent-slash-hint', placeholder: tr('Tulis pesan, atau ketik / untuk perintah') });
     if (draft) ta.value = draft;
+    const slash = el('div', { class: 'slash-menu', id: 'agent-slash', role: 'listbox', 'aria-label': tr('Perintah') });
+    const slashHint = el('span', { class: 'visually-hidden', id: 'agent-slash-hint', 'aria-live': 'polite' });
+    const slashMatches = () => {
+      const m = /^\/([a-z]*)$/i.exec(ta.value.trim());
+      return m ? SLASH.filter((x) => x.name.startsWith(m[1].toLowerCase())) : [];
+    };
+    const drawSlash = () => {
+      const list = slashMatches();
+      slash.replaceChildren();
+      slash.hidden = !list.length;
+      if (!list.length) { slashHint.textContent = ''; return; }
+      this.slashIndex = Math.min(this.slashIndex, list.length - 1);
+      list.forEach((x, i) => {
+        const b = el('button', { type: 'button', role: 'option', class: `slash-item${i === this.slashIndex ? ' active' : ''}`, id: `slash-${x.name}`, 'aria-selected': String(i === this.slashIndex), 'data-command': x.name });
+        b.append(el('strong', {}, `/${x.name}`), el('span', { class: 'muted small' }, tr(x.help)));
+        b.addEventListener('click', () => void this.runSlash(x.name, sendBtn));
+        slash.append(b);
+      });
+      slashHint.textContent = tr('{n} perintah. Panah atas/bawah untuk memilih, Enter untuk menjalankan.', { n: list.length });
+    };
+    ta.addEventListener('input', () => { this.slashIndex = 0; drawSlash(); });
     ta.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); manual.hidden = true; manualBtn.setAttribute('aria-expanded', 'false'); manualBtn.focus(); }
+      const list = slash.hidden ? [] : slashMatches();
+      if (list.length && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+        e.preventDefault();
+        this.slashIndex = (this.slashIndex + (e.key === 'ArrowDown' ? 1 : list.length - 1)) % list.length;
+        drawSlash();
+        return;
+      }
+      if (list.length && (e.key === 'Tab' || (e.key === 'Enter' && !e.shiftKey))) {
+        e.preventDefault();
+        void this.runSlash(list[this.slashIndex].name, sendBtn);
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault(); e.stopPropagation();
+        if (list.length) { slash.hidden = true; return; } // first Esc closes only the menu
+        manual.hidden = true; manualBtn.setAttribute('aria-expanded', 'false'); manualBtn.focus();
+      }
       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); manual.requestSubmit(); }
     });
     const sendBtn = el('button', { type: 'submit', class: 'btn primary', id: 'agent-send' }, tr('Kirim'));
@@ -508,9 +584,9 @@ export class PrivatePanel {
     file.addEventListener('change', () => { void this.attachFiles([...(file.files ?? [])], chips); file.value = ''; });
     const attach = el('button', { type: 'button', class: 'btn', id: 'agent-attach', 'aria-label': tr('Lampirkan foto atau berkas') }, `📎 ${tr('Lampiran')}`);
     attach.addEventListener('click', () => file.click());
-    const mic = el('button', { type: 'button', class: 'btn', id: 'agent-mic', 'aria-pressed': String(!!this.recorder) }, this.recorder ? `■ ${tr('Selesai rekam')}` : `🎤 ${tr('Suara')}`);
-    mic.addEventListener('click', () => void this.toggleRecord(mic, chips));
-    if (!('MediaRecorder' in window) || !navigator.mediaDevices?.getUserMedia) mic.hidden = true;
+    const mic = el('button', { type: 'button', class: 'btn', id: 'agent-mic' });
+    const micStatus = el('span', { class: 'mic-status small', id: 'agent-mic-status', role: 'status', 'aria-live': 'polite' });
+    mic.addEventListener('click', () => void this.toggleRecord(chips));
     ta.addEventListener('paste', (e) => {
       const files = [...(e.clipboardData?.files ?? [])];
       if (files.length) { e.preventDefault(); void this.attachFiles(files, chips); }
@@ -519,17 +595,18 @@ export class PrivatePanel {
     manual.addEventListener('dragleave', () => manual.classList.remove('drop'));
     manual.addEventListener('drop', (e) => { e.preventDefault(); manual.classList.remove('drop'); void this.attachFiles([...(e.dataTransfer?.files ?? [])], chips); });
     const tools = el('div', { class: 'row composer-tools' });
-    tools.append(attach, mic, file);
-    manual.append(chips, ta, tools, el('div', { class: 'row' }));
+    tools.append(attach, mic, micStatus, file);
+    manual.append(chips, ta, slash, slashHint, tools, el('div', { class: 'row' }));
     (manual.lastChild as HTMLElement).append(el('span', { class: 'muted small' }, tr('Ctrl/⌘+Enter untuk kirim. Esc menutup tanpa mengirim. Foto bisa ditempel atau diseret ke sini.')), sendBtn);
     manual.addEventListener('submit', (e) => { e.preventDefault(); void this.send({ text: ta.value }, sendBtn); });
+    drawSlash();
     manualBtn.setAttribute('aria-expanded', String(!manual.hidden));
     manualBtn.addEventListener('click', () => { manual.hidden = !manual.hidden; manualBtn.setAttribute('aria-expanded', String(!manual.hidden)); if (!manual.hidden) ta.focus(); });
     body.append(manual);
-    const fresh = el('button', { type: 'button', class: 'btn link' }, tr('Mulai percakapan baru'));
-    fresh.addEventListener('click', async () => { this.conv = await api.conversation(c.profile, true); this.renderConversation(); });
-    // A Telegram-bound chat has one history (Telegram's); /new is done in Telegram.
-    if (c.channel !== 'telegram') body.append(fresh);
+    // Same as typing /new, so the button and the command never disagree.
+    const fresh = el('button', { type: 'button', class: 'btn link', id: 'agent-new' }, tr('Mulai percakapan baru'));
+    fresh.addEventListener('click', () => void this.runSlash('new', fresh));
+    body.append(fresh);
     log.addEventListener('scroll', () => { if (log.scrollHeight - log.scrollTop - log.clientHeight < 40) this.markRead(); }, { passive: true });
     // Open at the first unread message, else at the latest one; on refresh keep
     // the reader's place unless they were already at the bottom.
@@ -541,6 +618,7 @@ export class PrivatePanel {
       if (log.scrollHeight - log.scrollTop - log.clientHeight < 40) this.markRead();
     });
     if (hadFocus && document.getElementById(hadFocus)) document.getElementById(hadFocus)!.focus({ preventScroll: true });
+    this.paintMic();
   }
 
   /** Everything up to the newest agent/system message counts as read. */
@@ -633,42 +711,103 @@ export class PrivatePanel {
     (document.getElementById('agent-manual-text') as HTMLTextAreaElement | null)?.focus();
   }
 
-  /** Hold-free voice note: tap to start, tap again to stop; uploaded as one file, transcribed on the server. */
-  private async toggleRecord(btn: HTMLButtonElement, initialList: HTMLElement) {
-    let list = initialList;
-    if (this.recorder) { this.recorder.stop(); return; }
+  /**
+   * Mic button and status line follow `micState`, read from the live DOM by
+   * id: the chat re-renders on every poll, so a captured button would be stale.
+   */
+  private paintMic() {
+    const mic = document.getElementById('agent-mic') as HTMLButtonElement | null;
+    const status = document.getElementById('agent-mic-status');
+    if (!mic) return;
+    const st = this.micState;
+    mic.disabled = st === 'asking' || st === 'uploading';
+    mic.setAttribute('aria-pressed', String(st === 'recording'));
+    mic.classList.toggle('recording', st === 'recording');
+    mic.textContent = st === 'recording' ? `■ ${t('Selesai rekam')}` : `🎤 ${t('Suara')}`;
+    if (!status) return;
+    status.classList.toggle('live', st === 'recording');
+    status.textContent = st === 'asking' ? t('Meminta izin mikrofon…')
+      : st === 'recording' ? `● ${t('Merekam')} ${fmtDur(Date.now() - this.recStarted)}`
+      : st === 'uploading' ? t('Mengunggah pesan suara…') : '';
+  }
+
+  private setMic(st: MicState) {
+    this.micState = st;
+    window.clearInterval(this.recTimer);
+    // The running time is the visible proof that recording works (Telegram shows it too).
+    if (st === 'recording') this.recTimer = window.setInterval(() => this.paintMic(), 500);
+    this.paintMic();
+  }
+
+  private stopRecording(discard = false) {
+    const rec = this.recorder;
+    if (!rec) return;
+    if (discard) rec.discard = true;
+    if (rec.state !== 'inactive') rec.stop();
+  }
+
+  /** Tap to start, tap again to stop; one file is uploaded and transcribed on the server. */
+  private async toggleRecord(initialList: HTMLElement) {
+    if (this.micState === 'recording') { this.stopRecording(); return; }
+    if (this.micState !== 'idle') return;
+    if (!window.isSecureContext) { toast(micError(undefined, false), 6000); return; }
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      toast(t('Browser ini tidak bisa merekam suara. Pakai Chrome, Edge, Firefox, atau Safari versi terbaru.'), 6000);
+      return;
+    }
+    this.setMic('asking');
     let stream: MediaStream;
-    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { toast(t('Mikrofon tidak diizinkan.'), 4000); return; }
-    const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find((t) => MediaRecorder.isTypeSupported(t)) ?? '';
-    const rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+    let timer = 0;
+    try {
+      // A permission prompt that never shows (closed popup, blocked by the OS) must not leave the button silent.
+      stream = await Promise.race([
+        navigator.mediaDevices.getUserMedia({ audio: true }),
+        new Promise<never>((_, no) => { timer = window.setTimeout(() => no(new DOMException('timeout', 'Timeout')), 20_000); }),
+      ]);
+    } catch (e) {
+      this.setMic('idle');
+      toast(micError((e as DOMException)?.name), 7000);
+      return;
+    } finally { window.clearTimeout(timer); }
+    const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find((m) => MediaRecorder.isTypeSupported(m)) ?? '';
+    let rec: MediaRecorder & { discard?: boolean };
+    try { rec = new MediaRecorder(stream, type ? { mimeType: type } : undefined); } catch (e) {
+      stream.getTracks().forEach((x) => x.stop());
+      this.setMic('idle');
+      toast(micError((e as DOMException)?.name), 7000);
+      return;
+    }
     const parts: Blob[] = [];
-    const started = Date.now();
     rec.ondataavailable = (e) => { if (e.data.size) parts.push(e.data); };
+    rec.onerror = () => { toast(t('Rekaman terhenti karena galat browser.'), 5000); };
     rec.onstop = async () => {
-      stream.getTracks().forEach((t) => t.stop());
+      stream.getTracks().forEach((x) => x.stop());
       this.recorder = null;
-      // The chat may have re-rendered while recording: update the live controls, not the captured ones.
-      const live = (document.getElementById('agent-mic') as HTMLButtonElement | null) ?? btn;
-      live.textContent = `🎤 ${t('Suara')}`; live.setAttribute('aria-pressed', 'false');
-      list = document.getElementById('agent-staged') ?? list;
-      if (Date.now() - started < 700 || !this.conv) return;
-      const mime = (rec.mimeType || 'audio/webm').split(';')[0];
+      const took = Date.now() - this.recStarted;
+      if (rec.discard || !this.conv) { this.setMic('idle'); return; }
+      if (took < 700 || !parts.length) { this.setMic('idle'); toast(t('Rekaman terlalu pendek. Tekan Suara, bicara, lalu tekan Selesai rekam.'), 4000); return; }
+      this.setMic('uploading');
+      const mime = (rec.mimeType || type || 'audio/webm').split(';')[0];
       try {
         const { upload } = await api.upload(this.conv.id, new Blob(parts, { type: mime }), 'pesan-suara');
         this.staged.push(upload);
+        const list = document.getElementById('agent-staged') ?? initialList;
         this.renderStaged(list);
+        toast(t('Pesan suara {dur} siap. Transkrip menyusul; tekan Kirim kapan saja.', { dur: fmtDur(took) }), 4000);
         void this.followTranscript(upload.id, list);
-      } catch (e) { toast((e as Error).message, 5000); }
+      } catch (e) { toast((e as Error).message, 6000); }
+      this.setMic('idle');
     };
-    rec.start();
+    rec.start(1000);
     this.recorder = rec;
-    btn.textContent = `■ ${t('Selesai rekam')}`; btn.setAttribute('aria-pressed', 'true');
+    this.recStarted = Date.now();
+    this.setMic('recording');
     // Telegram caps voice notes too; 3 minutes keeps upload and transcription quick.
-    window.setTimeout(() => { if (this.recorder === rec) rec.stop(); }, 180_000);
+    window.setTimeout(() => { if (this.recorder === rec) this.stopRecording(); }, 180_000);
   }
 
   private async followTranscript(id: string, list: HTMLElement) {
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 150; i++) { // ~5 min: the first run after a restart can take minutes
       await new Promise((r) => setTimeout(r, 2000));
       const s = await api.uploadStatus(id).catch(() => null);
       const a = this.staged.find((x) => x.id === id);
@@ -805,11 +944,48 @@ export class PrivatePanel {
     return box;
   }
 
+  /** Runs a slash command picked from the menu (or the "new conversation" button). */
+  private async runSlash(name: string, btn: HTMLButtonElement) {
+    const box = document.getElementById('agent-manual-text') as HTMLTextAreaElement | null;
+    if (box) box.value = `/${name}`;
+    await this.send({ text: `/${name}` }, btn);
+  }
+
+  /** Server answer to a slash command, in the reader's language. */
+  private commandText(r: CommandResult): string {
+    const agent = this.conv?.agent ?? t('Agen');
+    const list = (r.commands ?? SLASH).map((x) => `/${x.name}: ${t(x.help)}`).join('\n');
+    switch (r.kind) {
+      case 'help': return `${t('Perintah yang bisa dipakai di chat ini:')}\n${list}`;
+      case 'unknown': return `${t('Perintah /{name} tidak dikenal, jadi tidak dikirim ke agen.', { name: r.name ?? '' })}\n${list}`;
+      case 'stop': return r.stopped ? t('{n} tugas dihentikan. Efek yang sudah terjadi tidak dibatalkan.', { n: r.stopped }) : t('Tidak ada tugas yang sedang berjalan di percakapan ini.');
+      case 'telegram': return r.ok ? t('Kembali ke chat Telegram {agent}.', { agent }) : t('{agent} belum punya chat Telegram denganmu.', { agent });
+      case 'new': {
+        const lines = [r.fromTelegram
+          ? t('Percakapan baru khusus RPG dimulai. Sesi Telegram {agent} tidak ikut diganti: Hermes belum punya cara resmi untuk mengganti sesi bot Telegram dari luar. Ketik /new di Telegram untuk mengganti sesi di sana, atau /telegram untuk kembali ke chat Telegram.', { agent })
+          : t('Percakapan baru dimulai. Pesan berikutnya membuka sesi Hermes baru.')];
+        if (r.stillRunning) lines.push(t('{n} tugas di percakapan lama tetap berjalan sampai selesai.', { n: r.stillRunning }));
+        return lines.join('\n');
+      }
+      case 'status': {
+        const where = r.channel === 'telegram' ? t('chat Telegram') : r.channel === 'rpg-detached' ? t('khusus RPG (dari /new)') : t('khusus RPG');
+        const tasks = (r.tasks ?? []).map((x) => `${x.n} ${(STATUS_LABEL[x.status] ? t(STATUS_LABEL[x.status]) : x.status).toLowerCase()}`).join(', ') || t('tidak ada');
+        return [
+          `${t('Percakapan')}: ${where}`,
+          `${t('Sesi Hermes')}: ${r.session ?? t('belum ada (dibuat saat pesan pertama)')}`,
+          `${t('Model')}: ${r.model ?? t('tidak diketahui')}`,
+          `${t('Tugas')}: ${tasks}`,
+          `${agent}: ${r.running ? t('sedang mengerjakan tugas') : t('siap')}`,
+        ].join('\n');
+      }
+    }
+  }
+
   /** One idempotency key per intended send: double clicks and retries reuse it. */
   private async send(payload: { text?: string; decision?: { turnId: string; optionId: string } }, btn: HTMLButtonElement) {
     if (this.sending || !this.conv) return;
     if (payload.text !== undefined && !payload.text.trim() && !this.staged.length) { toast(t('Pesan kosong.')); return; }
-    if (this.recorder) { toast(t('Selesaikan rekaman dulu.')); return; }
+    if (this.micState !== 'idle' && !payload.text?.trim().startsWith('/')) { toast(t(this.micState === 'uploading' ? 'Tunggu, pesan suara masih diunggah.' : 'Selesaikan rekaman dulu.')); return; }
     this.sending = true;
     btn.disabled = true;
     unlockAudio();
@@ -818,6 +994,21 @@ export class PrivatePanel {
       const attachments = payload.text !== undefined ? this.staged.map((a) => a.id) : [];
       const r = await api.send(this.conv.id, { ...payload, idem: this.pendingIdem, ...(attachments.length ? { attachments } : {}) });
       this.pendingIdem = null;
+      if (r.command) {
+        // Commands run on the server and never reach the agent; staged files stay for the next message.
+        const box = document.getElementById('agent-manual-text') as HTMLTextAreaElement | null;
+        if (box) box.value = '';
+        if (r.conversation.id !== this.conv.id) { this.staged = []; this.searchTerm = ''; this.readMarkAtOpen = null; }
+        this.conv = r.conversation;
+        this.commandNote = { text: this.commandText(r.command), at: Date.now() };
+        this.renderConversation(false, r.command.kind === 'new' || r.command.kind === 'telegram');
+        this.schedulePoll();
+        if (r.command.kind === 'stop') void this.startPresence();
+        btn.disabled = false;
+        document.getElementById('agent-manual-text')?.focus();
+        return;
+      }
+      this.commandNote = null;
       if (attachments.length) this.staged = [];
       if (payload.text !== undefined) { const t = document.getElementById('agent-manual-text') as HTMLTextAreaElement | null; if (t) t.value = ''; }
       this.conv = r.conversation;
