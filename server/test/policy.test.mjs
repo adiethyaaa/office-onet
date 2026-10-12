@@ -37,6 +37,10 @@ test('gerbang hapus/reset: perintah merusak nyata tetap butuh persetujuan', () =
     'tidak usah backup, hapus database',
     // Pertanyaan yang menyebut data tetap ditahan (fail-closed): "boleh?" sering berarti "lakukan".
     'Apakah aman hapus database lama?',
+    // Review putaran 2.
+    'jangan lupa hapus database lama',
+    'database lama dihapus ya',
+    'file log di server direset aja',
   ]) assert.ok(destroy(t), `harus ditahan: ${t}`);
   // Reset sandi tetap tertangkap gerbang kredensial.
   assert.ok(checkMessage('reset password akun admin').risks.some((r) => r.id === 'cred'));

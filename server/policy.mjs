@@ -53,13 +53,16 @@ export function destroyIntent(raw) {
       const passive = PASSIVE_VERB.test(w);
       if (!passive && !DESTROY_VERB.test(w)) continue;
       const before = words.slice(Math.max(0, i - 3), i);
-      if (before.some((x) => NEGATION.test(x))) continue; // "jangan hapus", "tidak mau hapus"
+      // "jangan hapus", "tidak mau hapus"; but "jangan lupa hapus" is an order.
+      if (before.some((x) => NEGATION.test(x)) && !before.includes('lupa')) continue;
       const past = words.slice(Math.max(0, i - 2), i).some((x) => PAST.test(x));
       if (past) continue; // "sudah dihapus?", "tadi aku sudah hapus"
       const after = words.slice(i + 1, i + 5).filter((x) => !FILLER.test(x));
       if (passive) {
-        // Passive orders are polite Indonesian: "tolong database lama di reset sekarang".
+        // Passive orders are common Indonesian: "tolong database lama di reset", "database lama dihapus ya".
         if (words.some((x) => POLITE.test(x))) return true;
+        const near = [...words.slice(Math.max(0, i - 4), i), ...after];
+        if (!question && near.some((x) => DATA_OBJECT.test(x))) return true;
         continue;
       }
       if (after.some((x) => DATA_OBJECT.test(x))) return true;

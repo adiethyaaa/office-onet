@@ -291,7 +291,8 @@ export function createServer(cfg) {
     const allowed = channel === 'telegram' ? "(c.channel='telegram' or c.detached=1)" : "c.channel='rpg' and c.detached=0";
     let conv = b.fresh ? null
       : q(`select c.* from chat_front f join conversations c on c.id=f.conversation_id where f.profile=? and ${allowed}`).get(r.profile)
-      ?? q(`select * from conversations c where c.profile=? and c.channel=? and c.detached=0 order by updated_at desc, rowid desc limit 1`).get(r.profile, channel);
+      // No stored choice yet (first run after upgrade): the most recent allowed chat.
+      ?? q(`select * from conversations c where c.profile=? and ${allowed} order by updated_at desc, rowid desc limit 1`).get(r.profile);
     if (!conv) conv = { id: createConversation(r.profile, channel) };
     send(res, 200, conversationView(conv.id));
   });

@@ -66,6 +66,8 @@ export class PrivatePanel {
   private pollTimer = 0;
   private boardTimer = 0;
   private pendingIdem: string | null = null;
+  /** What the pending key was made for: a different message (e.g. /stop after a failed send) gets its own key. */
+  private pendingFor = '';
   private sending = false;
   private shownAgentTurn: string | null = null;
   private focusTask: string | null = null;
@@ -444,7 +446,10 @@ export class PrivatePanel {
     this.pollTimer = window.setTimeout(async () => {
       if (!($('dlg-agent') as HTMLDialogElement).open || !this.conv) return;
       try {
-        const next = await api.conversationById(this.conv.id);
+        const asked = this.conv.id;
+        const next = await api.conversationById(asked);
+        // /new or /telegram switched chats while this request was in flight: drop the stale answer.
+        if (this.conv?.id !== asked) return;
         const sig = (c: Conversation) => JSON.stringify([c.turns.map((t) => [t.id, t.pending, !!t.options]), c.tasks.map((t) => t.status), c.cursor]);
         const changed = sig(next) !== sig(this.conv) || next.typing !== this.conv.typing;
         const lastAgent = (c: Conversation) => [...c.turns].reverse().find((t) => t.role === 'agent')?.id;
@@ -1025,9 +1030,11 @@ export class PrivatePanel {
     this.sending = true;
     btn.disabled = true;
     unlockAudio();
+    const attachments = payload.text !== undefined ? this.staged.map((a) => a.id) : [];
+    const what = JSON.stringify([this.conv.id, payload, attachments]);
+    if (what !== this.pendingFor) { this.pendingIdem = null; this.pendingFor = what; }
     this.pendingIdem ??= newIdem();
     try {
-      const attachments = payload.text !== undefined ? this.staged.map((a) => a.id) : [];
       const r = await api.send(this.conv.id, { ...payload, idem: this.pendingIdem, ...(attachments.length ? { attachments } : {}) });
       this.pendingIdem = null;
       if (r.command) {
