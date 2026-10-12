@@ -84,7 +84,10 @@ function track() {
     if (i >= 0) stack.splice(i, 1);
     if (d.open) stack.push(d);
   };
-  document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach(sync);
+  // Already open when the pad connects: the modal holding focus is the top one.
+  const open = [...document.querySelectorAll<HTMLDialogElement>('dialog[open]')];
+  const focused = open.find((d) => d.contains(document.activeElement));
+  open.filter((d) => d !== focused).concat(focused ? [focused] : []).forEach(sync);
   new MutationObserver((rs) => rs.forEach((r) => { if (r.target instanceof HTMLDialogElement) sync(r.target); }))
     .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
 }
@@ -193,6 +196,7 @@ export class GamepadControl {
 
     if (hit(BTN.A)) {
       if (ui) this.activate();
+      else if (studio) this.direction('down', false); // focus was lost by a Studio rebuild: put it back
       else world?.interact();
     }
     if (hit(BTN.B)) {
@@ -258,7 +262,17 @@ export class GamepadControl {
     if (!a || a === document.body) return;
     if (a instanceof HTMLInputElement && !['checkbox', 'radio', 'button', 'submit', 'reset', 'file', 'color'].includes(a.type)) { a.select(); return; }
     if (a instanceof HTMLTextAreaElement || a instanceof HTMLSelectElement) return;
+    // Panels such as the Studio re-render after a click and drop the focused node.
+    // Keep the pad's place by moving to the control at the same position.
+    const scope: ParentNode = topDialog() ?? a.closest('#studio-panel, #directory-panel') ?? document;
+    const before = focusables(scope);
+    const index = before.indexOf(a);
     a.click();
+    requestAnimationFrame(() => {
+      if (document.activeElement && document.activeElement !== document.body) return;
+      const after = focusables(topDialog() ?? scope);
+      after[Math.min(Math.max(index, 0), after.length - 1)]?.focus({ preventScroll: true });
+    });
   }
 
   private closeDialog(d: HTMLDialogElement) {

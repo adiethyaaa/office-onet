@@ -123,5 +123,10 @@ test.describe('gamepad', () => {
     await expect.poll(() => page.evaluate(() => !!document.activeElement?.closest('#studio-panel'))).toBe(true);
     for (let i = 0; i < 6; i++) await press(page, B.DOWN);
     await expect.poll(() => page.evaluate(() => document.activeElement?.closest('#studio-panel') ? document.activeElement.tagName : '')).not.toBe('');
+    // A on a Studio button keeps focus in the panel even when the panel re-renders.
+    const btn = page.locator('#studio-panel button:visible').first();
+    await btn.focus();
+    await press(page, B.A);
+    await expect.poll(() => page.evaluate(() => !!document.activeElement?.closest('#studio-panel'))).toBe(true);
   });
 });
