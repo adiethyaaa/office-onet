@@ -3,6 +3,7 @@ import worldJson from '@design/world.json';
 import wallsJson from '@design/derived/walls.json';
 import { Game } from './game/game';
 import { initLang, lang, setLang, t } from './i18n';
+import { initHudMenu } from './ui/hud-prefs';
 import { renderDirectory } from './ui/directory';
 import { $, openDialog, toast } from './ui/dom';
 import { applyTheme, loadSettings, saveSettings, type Settings } from './ui/settings';
@@ -155,6 +156,7 @@ function wireCommon() {
 
 function boot() {
   wireCommon();
+  initHudMenu();
   const reason = webglAvailable();
   if (reason) {
     enterFallback(reason);

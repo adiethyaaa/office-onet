@@ -9,6 +9,7 @@ export const EN_HTML: Record<string, string> = {
   "Semua aktivitas dan status adalah fixture demo, bukan data kerja nyata": "All activity and status is demo fixture data, not real work data",
   "SIMULASI: data demo": "SIMULATION: demo data",
   "Menu": "Menu",
+  "Sembunyikan menu": "Hide menu",
   "Direktori": "Directory",
   "Chat agen": "Agent chat",
   "Papan kerja": "Work board",

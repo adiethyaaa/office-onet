@@ -156,6 +156,8 @@ Finding one person in a two-floor building does not require walking around.
 
 The **minimap** is always in the bottom left corner (on phones: top right, below the HUD, so it does not collide with the joystick).
 
+On a phone, the top menu is a single row of icons. The ☰ button next to the room name folds the menu, and the ✕ button on the minimap corner folds the minimap into a map icon. The fold choice survives a page reload.
+
 <img src="img/minimap.jpg" alt="Minimap: Floor 1 plan, avatar arrow, persona dots, badge showing one person on Floor 2" width="260">
 
 - The plan of your current floor, colored by room type.

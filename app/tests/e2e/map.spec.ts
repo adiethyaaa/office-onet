@@ -78,3 +78,32 @@ test.describe('minimap and floor map', () => {
     await expect(page.locator('#minimap')).toBeFocused();
   });
 });
+
+test.describe('phone HUD folds', () => {
+  test('menu and minimap fold away, stay folded after reload, and unfold again', async ({ page }, info) => {
+    test.skip(info.project.name !== 'mobile', 'the fold controls are for phone widths');
+    await boot(page);
+    const toggle = page.locator('#btn-hud-toggle');
+    const fold = page.locator('#minimap-fold');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expectTapTargets(page, '.hud-actions .btn, #btn-hud-toggle, #minimap-fold, .touch-btn');
+    // Seven menu buttons fit one row of icon buttons.
+    const tops = await page.locator('.hud-actions .btn').evaluateAll((els) => [...new Set(els.map((e) => Math.round(e.getBoundingClientRect().top)))]);
+    expect(tops).toHaveLength(1);
+    await toggle.click();
+    await fold.click();
+    await expect(page.locator('#btn-chat')).toBeHidden();
+    await expect(page.locator('#minimap')).toBeHidden();
+    await expect(fold).toHaveAttribute('aria-expanded', 'false');
+    await shot(page, info, 'hud-folded');
+    await page.reload();
+    await expect(page.locator('#minimap-fold')).toHaveAttribute('aria-expanded', 'false', { timeout: 60_000 });
+    await expect(page.locator('#btn-chat')).toBeHidden();
+    await page.locator('#btn-hud-toggle').click();
+    await page.locator('#minimap-fold').click();
+    await expect(page.locator('#btn-chat')).toBeVisible();
+    await expect(page.locator('#minimap')).toBeVisible();
+    await page.locator('#btn-settings').click();
+    await expect(page.locator('#dlg-settings')).toBeVisible();
+  });
+});

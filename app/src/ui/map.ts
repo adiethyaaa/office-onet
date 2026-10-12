@@ -6,6 +6,7 @@
 import type { FloorId, Room, Vec2, World } from '../world/types';
 import { el, openDialog, toast } from './dom';
 import { t } from '../i18n';
+import { loadHudPrefs, saveHudPrefs } from './hud-prefs';
 
 export interface MapPerson {
   id: string; name: string; role: string; floor: FloorId; pos: Vec2;
@@ -242,6 +243,8 @@ export class MapUI {
   private mini: PlanCanvas;
   private big: PlanCanvas;
   private miniBtn: HTMLButtonElement;
+  private miniWrap: HTMLDivElement;
+  private miniFold: HTMLButtonElement;
   private miniFloor: HTMLElement;
   private miniAway: HTMLElement;
   private dlg: HTMLDialogElement;
@@ -264,7 +267,20 @@ export class MapUI {
     meta.append(this.miniFloor, this.miniAway);
     this.miniBtn.append(this.mini.canvas, meta);
     this.miniBtn.addEventListener('click', () => this.open());
-    document.getElementById('app')!.append(this.miniBtn);
+    this.miniWrap = el('div', { class: 'minimap-wrap', id: 'minimap-wrap' });
+    this.miniFold = el('button', { type: 'button', class: 'minimap-fold', id: 'minimap-fold', 'aria-controls': 'minimap' });
+    const knob = el('span');
+    knob.innerHTML = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path class="ico-open" d="M18 6L6 18M6 6l12 12"/><path class="ico-closed" d="m3 7l6-3l6 3l6-3v13l-6 3l-6-3l-6 3zm6-3v13m6-10v13"/></svg>';
+    this.miniFold.append(knob);
+    this.miniFold.addEventListener('click', () => {
+      const folded = this.miniWrap.dataset.folded !== 'true';
+      this.setFolded(folded);
+      saveHudPrefs({ map: folded ? 'closed' : 'open' });
+      if (!folded) this.render(true);
+    });
+    this.miniWrap.append(this.miniBtn, this.miniFold);
+    this.setFolded(loadHudPrefs().map === 'closed');
+    document.getElementById('app')!.append(this.miniWrap);
 
     this.dlg = el('dialog', { class: 'dialog wide map-dialog', id: 'dlg-map', 'aria-labelledby': 'dlg-map-title' });
     const head = el('div', { class: 'map-head' });
@@ -311,6 +327,12 @@ export class MapUI {
 
   get isOpen() { return this.dlg.open; }
 
+  private setFolded(folded: boolean) {
+    this.miniWrap.dataset.folded = String(folded);
+    this.miniFold.setAttribute('aria-expanded', String(!folded));
+    this.miniFold.setAttribute('aria-label', folded ? t('Tampilkan minimap') : t('Sembunyikan minimap'));
+  }
+
   open(focusId?: string) {
     const snap = this.host.snapshot();
     this.shown = snap.floor;
@@ -349,8 +371,8 @@ export class MapUI {
   private render(force: boolean) {
     const snap = this.host.snapshot();
     const hidden = document.getElementById('app')?.dataset.mode !== 'world';
-    this.miniBtn.hidden = hidden;
-    if (!hidden) {
+    this.miniWrap.hidden = hidden;
+    if (!hidden && this.miniWrap.dataset.folded !== 'true') {
       this.mini.draw(snap.floor, snap, null);
       this.miniFloor.textContent = floorName(snap.floor);
       const away = awayBadge(this.world, snap);

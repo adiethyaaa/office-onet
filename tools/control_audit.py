@@ -56,6 +56,8 @@ INVENTORY = [
     ("Kualitas tinggi", "html:quality=high", ["quality-high", "Tinggi"]),
     ("Kurangi gerak", "html:reducedMotion", ["reducedMotion", "Kurangi gerak"]),
     ("Mode visitor", "html:visitor", ["Mode visitor"]),
+    ("Lipat menu HUD (HP)", "html:btn-hud-toggle", ["#btn-hud-toggle"]),
+    ("Lipat minimap", "src:minimap-fold", ["#minimap-fold"]),
     ("Bahasa Indonesia", "html:lang=id", ["Bahasa Indonesia"]),
     ("Bahasa English", "html:lang=en", ["?lang=en", "locale: 'en-US'"]),
     ("Avatar reset", "html:avatar-reset", ["#avatar-reset", "Reset ke default"]),

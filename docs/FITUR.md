@@ -156,6 +156,8 @@ Mencari satu orang di gedung dua lantai tidak perlu berkeliling.
 
 **Minimap** selalu ada di pojok kiri bawah (di HP: kanan atas, di bawah HUD, supaya tidak menabrak joystick).
 
+Di HP, menu atas tampil sebagai satu baris ikon. Tombol ☰ di samping nama ruangan melipat menu, dan tombol ✕ di pojok minimap melipat minimap menjadi ikon peta. Pilihan lipat tersimpan setelah halaman dimuat ulang.
+
 <img src="img/minimap.jpg" alt="Minimap: denah Lantai 1, panah avatar, titik persona, lencana satu orang di Lantai 2" width="260">
 
 - Denah lantai tempatmu berada, diwarnai per jenis ruang.

@@ -160,6 +160,12 @@ kbd {
 .room-name { font-weight: 500; }
 .sim-badge { background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 0.88rem; }
 .hud-actions { margin-left: auto; display: flex; gap: 8px; }
+/* Menu icons: 18 px glyph beside the label; on a phone the label is kept for
+   screen readers and the glyph alone carries the button (see max-width 599px). */
+.ico { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hud-toggle { display: none; padding: 0; justify-content: center; }
+.hud-toggle .ico-closed, .hud-top[data-menu='closed'] .hud-toggle .ico-open { display: none; }
+.hud-top[data-menu='closed'] .hud-toggle .ico-closed { display: inline; }
 
 .btn {
   font: inherit; font-weight: 500;
@@ -282,8 +288,20 @@ kbd {
 /* Phone: compact top bar, joystick visible, directory becomes a bottom sheet. */
 /* Minimap: bottom-left on desktop; under the HUD on the right on touch
    devices, where the joystick owns the bottom-left corner. */
+.minimap-wrap { position: absolute; left: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 5; }
+/* Fold handle on the minimap corner; folded, only a 44 px map button stays. */
+.minimap-fold { position: absolute; top: -10px; right: -10px; width: 44px; height: 44px; padding: 0; border: 0; background: none; display: grid; place-items: center; cursor: pointer; color: var(--ink); }
+.minimap-fold > span { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--control-border); box-shadow: var(--shadow); }
+.minimap-fold .ico { width: 14px; height: 14px; }
+.minimap-fold:focus-visible > span { outline: 3px solid var(--focus); outline-offset: 1px; }
+.minimap-fold .ico-closed, .minimap-wrap[data-folded='true'] .minimap-fold .ico-open { display: none; }
+.minimap-wrap[data-folded='true'] .minimap-fold .ico-closed { display: inline; }
+.minimap-wrap[data-folded='true'] .minimap { display: none; }
+.minimap-wrap[data-folded='true'] .minimap-fold { position: static; width: 44px; height: 44px; }
+.minimap-wrap[data-folded='true'] .minimap-fold > span { width: 44px; height: 44px; border-radius: 12px; border-width: 2px; }
+.minimap-wrap[data-folded='true'] .minimap-fold .ico { width: 20px; height: 20px; }
 .minimap {
-  position: absolute; left: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 5;
+  position: relative;
   display: flex; flex-direction: column; gap: 4px; padding: 6px; margin: 0;
   background: var(--surface); color: var(--ink); border: 1px solid var(--control-border);
   border-radius: 12px; box-shadow: var(--shadow); cursor: pointer; font: inherit; text-align: left;
@@ -324,7 +342,8 @@ kbd {
 
 @media (pointer: coarse), (max-width: 599px) {
   .touch { display: block; }
-  .minimap { left: auto; right: max(10px, env(safe-area-inset-right)); top: calc(var(--hud-h, 120px) + 8px); bottom: auto; padding: 4px; }
+  .minimap-wrap { left: auto; right: max(10px, env(safe-area-inset-right)); top: calc(var(--hud-h, 120px) + 8px); bottom: auto; }
+  .minimap { padding: 4px; }
   .minimap-meta { font-size: 0.75rem; flex-direction: column; gap: 2px; }
   .prompt { bottom: 170px; }
 }
@@ -335,10 +354,17 @@ kbd {
   .hud-actions .btn kbd { display: none; }
   /* Seven buttons do not fit one row on a phone: a grid of equal cells, as
      many columns as fit (4 on a 390 px iPhone, 3 on 360 px), labels on one line. */
-  .hud-actions { margin-left: 0; width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 6px; }
-  .hud-actions .btn { justify-content: center; padding: 4px 6px; min-width: 0; font-size: 0.8rem; white-space: nowrap; }
-  .hud-actions .btn span { overflow: hidden; text-overflow: ellipsis; }
-  /* Daily use first: chat, boards, directory; tools after. */
+  /* One row of 44 px icon buttons (7 x 44 + gaps = 344 px, fits 360 px).
+     The menu folds away behind the toggle; the choice is remembered. */
+  .hud-place { flex: 1 1 auto; min-width: 0; }
+  .room-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .hud-toggle { display: inline-flex; order: 1; }
+  .sim-badge { order: 2; padding: 2px 10px; }
+  .hud-actions { order: 3; margin-left: 0; width: 100%; display: flex; justify-content: space-between; gap: 4px; }
+  .hud-top[data-menu='closed'] .hud-actions { display: none; }
+  .hud-actions .btn { width: 44px; padding: 0; justify-content: center; border-radius: 12px; }
+  .hud-actions .btn .ico { width: 20px; height: 20px; }
+  .hud-actions .btn .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   #btn-chat { order: -3; } #btn-boards { order: -2; } #btn-directory { order: -1; }
   .sim-badge { font-size: 0.8rem; }
   .toast { top: auto; bottom: 180px; }
