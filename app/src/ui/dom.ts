@@ -12,12 +12,26 @@ export function el<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<
 }
 
 let toastTimer = 0;
+/**
+ * A modal <dialog> sits in the browser's top layer, above any z-index, so a
+ * plain toast under an open chat was never seen (mic errors looked like
+ * "nothing happens"). As a manual popover the toast joins the top layer and,
+ * shown after the dialog, lands above it.
+ */
 export function toast(message: string, ms = 2600): void {
   const t = $('toast');
   t.textContent = message;
   t.hidden = false;
+  const pop = typeof t.showPopover === 'function';
+  if (pop) {
+    if (!t.hasAttribute('popover')) t.setAttribute('popover', 'manual');
+    try { if (t.matches(':popover-open')) t.hidePopover(); t.showPopover(); } catch { /* not connected */ }
+  }
   window.clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => { t.hidden = true; }, ms);
+  toastTimer = window.setTimeout(() => {
+    t.hidden = true;
+    if (pop) try { t.hidePopover(); } catch { /* already hidden */ }
+  }, ms);
 }
 
 /** Open a native modal dialog and give focus back to the opener on close. */

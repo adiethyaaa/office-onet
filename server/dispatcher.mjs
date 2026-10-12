@@ -85,8 +85,15 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
       return;
     }
     try {
+      const message = prepare ? await prepare(t) : t.message;
+      // /stop while prepare() waited (e.g. transcription): the task is cancelled, the agent must not run.
+      if (q('select status from tasks where id=?').get(t.id)?.status === 'cancelled') {
+        running.delete(profile);
+        void runNext(profile);
+        return;
+      }
       out = await runner({
-        profile, hermesSession: wanted, message: (prepare ? await prepare(t) : t.message) + OPTION_INSTRUCTION,
+        profile, hermesSession: wanted, message: message + OPTION_INSTRUCTION,
         onStart: (child) => { const r = running.get(profile); if (r) r.child = child; },
       });
     } catch (e) {

@@ -25,6 +25,8 @@ create table if not exists approvals (
 );
 create table if not exists audit (seq integer primary key autoincrement, at integer not null, actor text not null, kind text not null, profile text, ref text, detail text);
 create table if not exists uploads (id text primary key, conversation_id text not null, task_id text, kind text not null, name text not null, path text not null, size integer not null, mime text not null, transcript text, created_at integer not null);
+create table if not exists command_runs (idem text primary key, conversation_id text not null, result text not null, at integer not null);
+create table if not exists chat_front (profile text primary key, conversation_id text not null, at integer not null);
 create table if not exists push_subs (id text primary key, sub text not null, ua text, muted text not null default '[]', created_at integer not null);
 create table if not exists notified (profile text primary key, at integer not null);
 create index if not exists ix_uploads_task on uploads(task_id);
@@ -43,6 +45,8 @@ export function openStore(dir) {
   // Telegram sync (ADR-017): a conversation can be bound to the bot's Telegram DM session.
   const cols = db.prepare('pragma table_info(conversations)').all().map((c) => c.name);
   if (!cols.includes('channel')) db.exec("alter table conversations add column channel text not null default 'rpg'");
+  // /new from a Telegram-bound chat opens an RPG-only one that stays in front until /telegram.
+  if (!cols.includes('detached')) db.exec('alter table conversations add column detached integer not null default 0');
   try { fs.chmodSync(file, 0o600); } catch { /* best effort */ }
   const q = (sql) => db.prepare(sql);
   return {
@@ -62,6 +66,7 @@ export function openStore(dir) {
       q("delete from tasks where created_at < ? and status in ('completed','failed','cancelled','unknown')").run(msgCut);
       q('delete from approvals where created_at < ?').run(msgCut);
       q('delete from conversations where updated_at < ?').run(msgCut);
+      q('delete from command_runs where at < ?').run(msgCut);
       q('delete from audit where at < ?').run(auditCut);
     },
     close() { db.close(); },

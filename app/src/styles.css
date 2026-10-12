@@ -187,7 +187,9 @@ html[data-input='pad'] :focus { outline: 3px solid var(--focus); outline-offset:
   border-radius: 999px; padding: 8px 18px; font-weight: 700; box-shadow: var(--shadow);
 }
 .toast {
-  position: absolute; left: 50%; top: 84px; transform: translateX(-50%);
+  /* inset/margin/border reset the UA popover box (toast is a manual popover, see ui/dom.ts). */
+  inset: auto; margin: 0; border: none; overflow: visible; z-index: 50;
+  position: fixed; left: 50%; top: 84px; transform: translateX(-50%);
   background: var(--green); color: var(--on-green); padding: 8px 16px; border-radius: 12px; box-shadow: var(--shadow); max-width: min(90vw, 520px);
 }
 .activity-chip {
@@ -504,6 +506,16 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .staged-item { display: flex; gap: 8px; align-items: center; padding: 4px 8px; border-radius: 8px; background: var(--surface-2); font-size: 0.85rem; }
 .staged-item > span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .composer-tools { gap: 8px; justify-content: flex-start; margin: 6px 0; }
+.composer-tools { align-items: center; flex-wrap: wrap; }
+.mic-status { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.mic-status.live { color: var(--accent-ink); font-weight: 700; }
+#agent-mic.recording { border-color: var(--accent-ink); color: var(--accent-ink); }
+.slash-menu { display: grid; gap: 2px; margin: 4px 0; padding: 4px; border: 1px solid var(--control-border); border-radius: 10px; background: var(--surface); }
+.slash-menu[hidden] { display: none; }
+.slash-item { display: flex; gap: 10px; align-items: baseline; min-height: 44px; padding: 6px 10px; border: none; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.slash-item strong { min-width: 6.5em; font-family: ui-monospace, Menlo, monospace; }
+.slash-item.active, .slash-item:hover, .slash-item:focus-visible { background: var(--surface-2); outline: 2px solid var(--accent-ink); outline-offset: -2px; }
+.turn.command-note .text { white-space: pre-line; text-align: left; }
 #agent-mic[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
 .manual.drop { outline: 2px dashed var(--accent-ink); outline-offset: 4px; }
 .chat-search summary, .notify-settings summary { cursor: pointer; font-weight: 700; min-height: 32px; display: flex; align-items: center; }
