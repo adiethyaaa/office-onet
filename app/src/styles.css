@@ -163,7 +163,7 @@ kbd {
 /* Menu icons: 18 px glyph beside the label; on a phone the label is kept for
    screen readers and the glyph alone carries the button (see max-width 599px). */
 .ico { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.hud-toggle { display: none; padding: 0; justify-content: center; }
+.btn.hud-toggle { display: none; padding: 0; justify-content: center; }
 .hud-toggle .ico-closed, .hud-top[data-menu='closed'] .hud-toggle .ico-open { display: none; }
 .hud-top[data-menu='closed'] .hud-toggle .ico-closed { display: inline; }
 
@@ -358,9 +358,9 @@ kbd {
      The menu folds away behind the toggle; the choice is remembered. */
   .hud-place { flex: 1 1 auto; min-width: 0; }
   .room-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-  .hud-toggle { display: inline-flex; order: 1; }
+  .btn.hud-toggle { display: inline-flex; order: 1; }
   .sim-badge { order: 2; padding: 2px 10px; }
-  .hud-actions { order: 3; margin-left: 0; width: 100%; display: flex; justify-content: space-between; gap: 4px; }
+  .hud-actions { order: 3; margin-left: 0; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; }
   .hud-top[data-menu='closed'] .hud-actions { display: none; }
   .hud-actions .btn { width: 44px; padding: 0; justify-content: center; border-radius: 12px; }
   .hud-actions .btn .ico { width: 20px; height: 20px; }
@@ -374,6 +374,8 @@ kbd {
   .avatar-layout { grid-template-columns: 1fr; }
   .avatar-preview { width: 100%; }
 }
+/* Below 356 px seven icons no longer fit one row: wrap, packed to the left. */
+@media (max-width: 355px) { .hud-actions { justify-content: flex-start; } }
 /* Tablet: side sheet on the left so the right-hand thumb keeps the action button. */
 @media (min-width: 600px) and (max-width: 1024px) {
   .directory { left: 12px; right: auto; width: min(380px, 46vw); }
