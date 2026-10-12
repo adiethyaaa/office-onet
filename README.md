@@ -32,8 +32,23 @@ Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap
 | Karakter | 9 karakter original (1 avatar pemain, 8 NPC), dimodelkan di Blender |
 | Gambar kerja | 15 sheet arsitektur, interior, dan ICT dalam DWG, DXF, dan PDF |
 | Unduhan JavaScript | three.js 169 kB + app 65 kB (gzip) |
-| Tes | 127 tes unit, 198 skenario E2E (desktop, tablet, HP), 423 tes Python, 23 tes server |
+| Tes | 139 tes unit, 228 skenario E2E (desktop, tablet, HP), 423 tes Python, 23 tes server |
 | Keputusan tercatat | 17 ADR di [docs/decisions.md](docs/decisions.md) |
+
+## Fitur utama
+
+| Fitur | Ringkasnya |
+|---|---|
+| [Dunia 3D dua lantai](docs/FITUR.md#2-dunia-3d) | 38 ruang, pintu yang membuka sendiri, tangga dan lift antarlantai |
+| [Karakter NPC](docs/FITUR.md#5-karakter-npc) | 8 karakter dengan jadwal harian, bisa diajak bicara |
+| [Chat agen dan papan kerja](docs/FITUR.md#10-chat-agen) | Beri tugas ke agen AI, sinkron dengan Telegram (butuh backend privat) |
+| [Peta dan minimap](docs/FITUR.md#6a-peta-dan-minimap) | Lokasi semua orang per lantai, **Temui** untuk pindah ke sebelahnya |
+| [Office Studio](docs/FITUR.md#8-office-studio-menata-ulang-perabot) | Tata ulang perabot, simpan draft, publish, rollback |
+| [Avatar Studio](docs/FITUR.md#7-avatar-studio) | Pilih rambut, warna, dan pakaian avatar |
+| [Kontrol](docs/FITUR.md#3-bergerak-dan-kamera) | Keyboard, layar sentuh, dan **stik game** (Xbox, PlayStation, Bluetooth) |
+| [HUD HP](docs/FITUR.md#3-bergerak-dan-kamera) | Menu ikon satu baris, menu dan minimap bisa dilipat |
+| [Dua bahasa](docs/FITUR.md#14-pengaturan-dan-aksesibilitas) | Bahasa Indonesia dan English, ganti di Pengaturan |
+| [Gambar kerja](docs/FITUR.md#15-gambar-kerja-dan-dataset) | 15 sheet CAD dan model Blender dari dataset yang sama dengan game |
 
 ## Jelajahi gedungnya
 
@@ -125,10 +140,10 @@ Chat dan papan kerja hanya aktif untuk pemilik yang login dengan sandi dan kode 
 
 <img src="docs/img/hp.jpg" alt="Tampilan HP: menu ikon satu baris, minimap di kanan atas, joystick dan tombol aksi" width="180" align="right"> <img src="docs/img/hp-lipat.jpg" alt="Tampilan HP dengan menu dan minimap dilipat" width="180" align="right">
 
-- **Desktop.** WASD atau panah untuk berjalan, Shift lari, Q/Z putar kamera, R luruskan kamera, +/- zoom, E interaksi, H bantuan.
+- **Desktop.** WASD atau panah untuk berjalan, Shift lari, Q/Z putar kamera, R luruskan kamera, +/- zoom, E interaksi, P peta, C chat agen, H daftar kontrol.
 - **HP dan tablet.** Joystick di kiri bawah, tombol Lari dan Aksi, seret layar untuk memutar kamera. Di HP, menu atas berupa satu baris ikon. Menu bisa dilipat lewat tombol ☰, minimap lewat tombol ✕ di pojoknya, dan pilihan itu tersimpan.
 - **Dua bahasa.** Tampilan tersedia dalam Bahasa Indonesia dan English, mengikuti bahasa browser. Bisa diganti di Pengaturan atau lewat `?lang=en`.
-- **Stik game.** Stik Xbox, PlayStation, atau stik Bluetooth langsung terbaca di browser: stik kiri berjalan, stik kanan kamera, A interaksi, B kembali, Start Pengaturan, dan D-pad untuk berpindah tombol di semua menu.
+- **Stik game.** Stik Xbox, PlayStation, atau stik Bluetooth langsung terbaca di browser, tanpa instal apa pun. Stik kiri berjalan (dorong penuh untuk lari), stik kanan kamera, A interaksi, B kembali, X lari, Y luruskan kamera, LB/RB zoom, Select peta, Start Pengaturan. D-pad berpindah tombol di semua menu dan dialog, termasuk Studio. Kode stik baru diunduh saat stik tersambung.
 - **Tanpa WebGL.** App berpindah ke mode direktori yang tetap menampilkan ruang dan karakter.
 - **Aksesibilitas.** Tema terang dan gelap, mode kurangi gerak, kualitas grafis ringan untuk perangkat lama, label pembaca layar, dan semua dialog bisa dipakai dengan keyboard. Kontras warna diperiksa otomatis, dan halaman diuji dengan axe.
 

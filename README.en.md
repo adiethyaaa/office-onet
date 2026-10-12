@@ -34,8 +34,23 @@ The public demo runs without login. It shows a simulation with a fixed seed, so 
 | Characters | 9 original characters (1 player avatar, 8 NPCs), modeled in Blender |
 | Working drawings | 15 architecture, interior, and ICT sheets in DWG, DXF, and PDF |
 | JavaScript download | three.js 169 kB + app 65 kB (gzip) |
-| Tests | 127 unit tests, 198 E2E scenarios (desktop, tablet, phone), 423 Python tests, 23 server tests |
+| Tests | 139 unit tests, 228 E2E scenarios (desktop, tablet, phone), 423 Python tests, 23 server tests |
 | Recorded decisions | 17 ADRs in [docs/decisions.md](docs/decisions.md) |
+
+## Main features
+
+| Feature | In short |
+|---|---|
+| [Two-floor 3D world](docs/FEATURES.md#2-3d-world) | 38 rooms, doors that open by themselves, stairs and a lift between floors |
+| [NPC characters](docs/FEATURES.md#5-npc-characters) | 8 characters with daily schedules, ready to talk |
+| [Agent chat and work board](docs/FEATURES.md#10-agent-chat) | Give tasks to AI agents, synced with Telegram (needs the private backend) |
+| [Map and minimap](docs/FEATURES.md#6a-map-and-minimap) | Where everyone is on each floor, **Temui** (Meet) to jump next to them |
+| [Office Studio](docs/FEATURES.md#8-office-studio-rearranging-furniture) | Rearrange furniture, save drafts, publish, roll back |
+| [Avatar Studio](docs/FEATURES.md#7-avatar-studio) | Pick the avatar's hair, colors, and outfit |
+| [Controls](docs/FEATURES.md#3-movement-and-camera) | Keyboard, touch screen, and **gamepad** (Xbox, PlayStation, Bluetooth) |
+| [Phone HUD](docs/FEATURES.md#3-movement-and-camera) | One row of menu icons; the menu and minimap fold away |
+| [Two languages](docs/FEATURES.md#14-settings-and-accessibility) | Indonesian and English, switch in Settings |
+| [Working drawings](docs/FEATURES.md#15-working-drawings-and-dataset) | 15 CAD sheets and Blender models from the same dataset as the game |
 
 ## Explore the building
 
@@ -127,10 +142,10 @@ Chat and the work board are only active for the owner, who logs in with a passwo
 
 <img src="docs/img/hp.jpg" alt="Phone view: one row of menu icons, minimap at the top right, joystick and action buttons" width="180" align="right"> <img src="docs/img/hp-lipat.jpg" alt="Phone view with the menu and minimap folded" width="180" align="right">
 
-- **Desktop.** WASD or arrow keys to walk, Shift to run, Q/Z to rotate the camera, R to straighten the camera, +/- to zoom, E to interact, H for help.
+- **Desktop.** WASD or arrow keys to walk, Shift to run, Q/Z to rotate the camera, R to straighten the camera, +/- to zoom, E to interact, P for the map, C for agent chat, H for the control list.
 - **Phone and tablet.** Joystick at the bottom left, Run and Action buttons, drag the screen to rotate the camera. On a phone the top menu is one row of icons. The ☰ button folds the menu, the ✕ button on its corner folds the minimap, and the choice is remembered.
 - **Two languages.** The interface is in Indonesian and English and follows the browser language. Switch in Settings or with `?lang=en`.
-- **Gamepad.** Xbox, PlayStation, and Bluetooth gamepads work in the browser: left stick walks, right stick moves the camera, A interacts, B goes back, Start opens Settings, and the D-pad moves between buttons in every menu.
+- **Gamepad.** Xbox, PlayStation, and Bluetooth gamepads work in the browser with nothing to install. Left stick walks (full tilt to run), right stick moves the camera, A interacts, B goes back, X runs, Y straightens the camera, LB/RB zoom, Select opens the map, Start opens Settings. The D-pad moves between buttons in every menu and dialog, including the Studio. The gamepad code downloads only once a pad connects.
 - **No WebGL.** The app switches to a directory mode that still shows the rooms and characters.
 - **Accessibility.** Light and dark themes, reduced motion mode, a light graphics quality for older devices, screen reader labels, and every dialog works with the keyboard. Color contrast is checked automatically, and pages are tested with axe.
 
