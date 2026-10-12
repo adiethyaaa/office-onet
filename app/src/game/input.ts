@@ -1,4 +1,4 @@
-// Keyboard + touch input. Locomotion is suppressed whenever a dialog is open
+// Keyboard, touch and gamepad input. Locomotion is suppressed whenever a dialog is open
 // or focus sits in a form control, so typing never moves the avatar.
 import { anyDialogOpen } from '../ui/dom';
 
@@ -6,6 +6,8 @@ export class Input {
   private keys = new Set<string>();
   private joy = { x: 0, y: 0, active: false, id: -1 };
   runToggle = false;
+  /** Left stick of a gamepad, set each frame by input/gamepad.ts. */
+  pad: { x: number; y: number; run: boolean } | null = null;
   onInteract: () => void = () => {};
   onKey: (key: string) => void = () => {};
 
@@ -71,9 +73,10 @@ export class Input {
     if (this.keys.has('d') || this.keys.has('arrowright')) x += 1;
     if (this.keys.has('a') || this.keys.has('arrowleft')) x -= 1;
     if (this.joy.active) { x += this.joy.x; y -= this.joy.y; }
+    if (this.pad) { x += this.pad.x; y += this.pad.y; }
     const m = Math.hypot(x, y);
     if (m > 1) { x /= m; y /= m; }
-    return { x, y, run: this.keys.has('shift') || this.runToggle || (this.joy.active && Math.hypot(this.joy.x, this.joy.y) > 0.95) };
+    return { x, y, run: this.keys.has('shift') || this.runToggle || (this.joy.active && Math.hypot(this.joy.x, this.joy.y) > 0.95) || !!this.pad?.run };
   }
 
   held(key: string): boolean { return this.enabled() && this.keys.has(key); }

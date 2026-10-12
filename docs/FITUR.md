@@ -99,6 +99,25 @@ Tekan **H** atau tombol **Kontrol** untuk melihat daftar ini di dalam app.
 - Menu atas berupa satu baris ikon (dua baris di layar di bawah 356 px). Nama tombol tetap dibacakan pembaca layar.
 - Tombol **☰** di samping nama ruangan melipat atau membuka menu. Tombol **✕** di pojok minimap melipatnya menjadi ikon peta. Pilihan lipat tersimpan setelah halaman dimuat ulang.
 
+**Dengan stik game**
+
+Stik Xbox, PlayStation, dan stik Bluetooth dengan pemetaan standar langsung terbaca di browser. Sambungkan stik, lalu tekan tombol apa saja. Muncul pemberitahuan "Stik terhubung".
+
+| Tombol | Fungsi |
+|---|---|
+| Stik kiri | Berjalan. Didorong penuh untuk lari |
+| Stik kanan | Memutar dan memiringkan kamera |
+| A (✕ di PlayStation) | Interaksi, sama dengan E. Di menu: pilih |
+| B (○) | Kembali atau tutup dialog, sama dengan Esc |
+| X (□) | Lari nyala/mati |
+| Y (△) | Luruskan kamera ke belakang avatar |
+| LB / RB | Zoom keluar / masuk |
+| Select | Peta kantor |
+| Start | Pengaturan |
+| D-pad | Pindah ke tombol terdekat di arah itu, di HUD maupun di dalam dialog |
+
+Selama dialog terbuka, avatar tidak bergerak dan stik kiri ikut memindah fokus. Kiri/kanan mengubah nilai dropdown. Di Studio, D-pad menggeser perabot yang dipilih. Untuk mengetik teks tetap perlu keyboard atau keyboard layar.
+
 Avatar tidak bisa menembus dinding, perabot, atau NPC. Bila posisi avatar tidak valid (misalnya setelah perabot dipindah), avatar dikembalikan ke titik aman terdekat.
 
 ## 4. Interaksi dan aktivitas

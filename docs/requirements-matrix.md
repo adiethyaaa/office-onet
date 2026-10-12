@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit 98acbcd; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit 7b59e12; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -78,8 +78,9 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-MINIMAP-01 | M8 | Minimap selalu tampil tanpa menutupi HUD/joystick/Aksi; ruang, tangga/lift, avatar berarah, titik persona, cincin saat bekerja; lencana arah+jumlah persona di lantai lain; 4 Hz; klik membuka peta penuh; label pembaca layar. | app/tests/unit/map.test.ts<br>app/tests/e2e/map.spec.ts | - | belum diuji |
 | REQ-MAP-01 | M8 | P/klik minimap membuka Peta kantor; tab per lantai + jumlah; nama ruang dan persona; daftar dikelompokkan lantai kamu/lantai lain dengan tag beda lantai dan status menuju lantai lain; Lihat/klik titik menandai; Temui memakai jalur meet; tombol >=44 px; kontras dicek. | app/tests/unit/map.test.ts<br>app/tests/e2e/map.spec.ts | - | belum diuji |
 | REQ-I18N-01 | M8 | ?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus. | app/tests/unit/i18n.test.ts<br>app/tests/e2e/i18n.spec.ts | - | belum diuji |
+| REQ-PAD-01 | M8 | Gamepad API pemetaan standar, chunk lazy; stik kiri jalan/lari, stik kanan kamera, A/B/X/Y/LB/RB/Select/Start; D-pad navigasi fokus spasial di menu dan dialog, A pilih, B tutup; gerak berhenti saat dialog terbuka. | app/tests/unit/gamepad.test.ts<br>app/tests/e2e/gamepad.spec.ts | - | belum diuji |
 
-Ringkasan status bagian: belum diuji 3, target 1, terverifikasi 69.
+Ringkasan status bagian: belum diuji 4, target 1, terverifikasi 69.
 
 ## Story, AC, failure dan boundary
 
@@ -362,3 +363,11 @@ Sebagai pengunjung luar negeri, pakai app dalam bahasa Inggris.
 ?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus.
 
 Failure: kamus gagal dimuat -> Bahasa Indonesia. Boundary: isi buatan pengguna dan pesan server tidak diterjemahkan.
+
+### REQ-PAD-01 (M8)
+
+Sebagai pemain dengan stik game, jelajahi dunia dan pakai semua menu tanpa keyboard.
+
+Gamepad API pemetaan standar, chunk lazy; stik kiri jalan/lari, stik kanan kamera, A/B/X/Y/LB/RB/Select/Start; D-pad navigasi fokus spasial di menu dan dialog, A pilih, B tutup; gerak berhenti saat dialog terbuka.
+
+Failure: stik terputus -> gerak dari stik berhenti. Boundary: mengetik tetap lewat keyboard; pemetaan non-standar tidak dipetakan ulang.

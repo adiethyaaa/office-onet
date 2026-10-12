@@ -1,5 +1,10 @@
 // Indonesian -> English for the 3D game: HUD, prompts, toasts, info cards, boot.
 export const EN_GAME: Record<string, string> = {
+  // Gamepad (src/input/gamepad.ts) and run toggle
+  'Stik terputus.': 'Gamepad disconnected.',
+  'Stik terhubung. D-pad untuk menu, Start untuk Pengaturan, tombol Kontrol untuk daftar tombol.': 'Gamepad connected. D-pad for menus, Start for Settings, Controls for the button list.',
+  'Lari: nyala': 'Run: on',
+  'Lari: mati': 'Run: off',
   // Constant maps (translated where displayed)
   'Papan Handoff': 'Handoff board',
   'Daftar Pekerjaan': 'Task list',

@@ -128,6 +128,7 @@ Chat dan papan kerja hanya aktif untuk pemilik yang login dengan sandi dan kode 
 - **Desktop.** WASD atau panah untuk berjalan, Shift lari, Q/Z putar kamera, R luruskan kamera, +/- zoom, E interaksi, H bantuan.
 - **HP dan tablet.** Joystick di kiri bawah, tombol Lari dan Aksi, seret layar untuk memutar kamera. Di HP, menu atas berupa satu baris ikon. Menu bisa dilipat lewat tombol ☰, minimap lewat tombol ✕ di pojoknya, dan pilihan itu tersimpan.
 - **Dua bahasa.** Tampilan tersedia dalam Bahasa Indonesia dan English, mengikuti bahasa browser. Bisa diganti di Pengaturan atau lewat `?lang=en`.
+- **Stik game.** Stik Xbox, PlayStation, atau stik Bluetooth langsung terbaca di browser: stik kiri berjalan, stik kanan kamera, A interaksi, B kembali, Start Pengaturan, dan D-pad untuk berpindah tombol di semua menu.
 - **Tanpa WebGL.** App berpindah ke mode direktori yang tetap menampilkan ruang dan karakter.
 - **Aksesibilitas.** Tema terang dan gelap, mode kurangi gerak, kualitas grafis ringan untuk perangkat lama, label pembaca layar, dan semua dialog bisa dipakai dengan keyboard. Kontras warna diperiksa otomatis, dan halaman diuji dengan axe.
 

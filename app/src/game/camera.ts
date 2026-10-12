@@ -41,6 +41,7 @@ export class CameraRig {
 
   zoom(f: number) { this.distance = THREE.MathUtils.clamp(this.distance * f, this.minDistance, this.maxDistance); }
   rotate(d: number) { this.yaw += d; }
+  tilt(d: number) { this.pitch = THREE.MathUtils.clamp(this.pitch + d, 0.55, 1.45); }
   recenter(facingRad: number) { this.yaw = facingRad; this.pitch = 1.0; }
 
   /** Camera-space intent -> plan-space direction (x east, y north). */

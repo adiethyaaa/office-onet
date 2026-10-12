@@ -99,6 +99,25 @@ Press **H** or the **Kontrol** (Controls) button to see this list inside the app
 - The top menu is one row of icons (two rows on screens narrower than 356 px). Screen readers still read each button name.
 - The **☰** button next to the room name folds or opens the menu. The **✕** button on the minimap corner folds it into a map icon. The fold choice survives a page reload.
 
+**With a gamepad**
+
+Xbox, PlayStation, and Bluetooth gamepads with the standard mapping work in the browser. Connect the pad and press any button. A "Gamepad connected" notice appears.
+
+| Button | Action |
+|---|---|
+| Left stick | Walk. Full tilt to run |
+| Right stick | Turn and tilt the camera |
+| A (✕ on PlayStation) | Interact, same as E. In menus: select |
+| B (○) | Back or close the dialog, same as Esc |
+| X (□) | Run on/off |
+| Y (△) | Straighten the camera behind the avatar |
+| LB / RB | Zoom out / in |
+| Select | Office map |
+| Start | Settings |
+| D-pad | Move to the nearest button in that direction, in the HUD and inside dialogs |
+
+While a dialog is open, the avatar stays still and the left stick also moves focus. Left/right change dropdown values. In the Studio, the D-pad moves the selected fixture. Typing text still needs a keyboard or the on-screen keyboard.
+
 The avatar cannot pass through walls, furniture, or NPCs. If the avatar's position becomes invalid (for example after furniture is moved), the avatar is returned to the nearest safe point.
 
 ## 4. Interaction and activities

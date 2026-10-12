@@ -124,6 +124,8 @@ kbd {
   color: var(--ink);
 }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+/* Gamepad navigation moves focus by script; show the ring as if by keyboard. */
+html[data-input='pad'] :focus { outline: 3px solid var(--focus); outline-offset: 2px; }
 .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 50; background: var(--surface); color: var(--ink); padding: 10px 14px; border-radius: 10px; min-height: 44px; display: inline-flex; align-items: center; }
 .skip-link:focus { left: 8px; }
 

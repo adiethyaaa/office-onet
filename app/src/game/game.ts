@@ -321,10 +321,7 @@ export class Game {
     };
     $('touch-interact').addEventListener('click', () => this.interact());
     $('activity-end').addEventListener('click', () => this.endActivity(true));
-    $('touch-run').addEventListener('click', (e) => {
-      this.input.runToggle = !this.input.runToggle;
-      (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(this.input.runToggle));
-    });
+    $('touch-run').addEventListener('click', () => this.toggleRun());
     this.renderDirectory();
   }
 
@@ -523,6 +520,15 @@ export class Game {
     const el = this.world.floors.find((f) => f.id === this.player.floor)!.elevation;
     return toThree(this.player.pos[0], this.player.pos[1], el);
   }
+
+  toggleRun() {
+    this.input.runToggle = !this.input.runToggle;
+    $('touch-run').setAttribute('aria-pressed', String(this.input.runToggle));
+    toast(this.input.runToggle ? t('Lari: nyala') : t('Lari: mati'), 1200);
+  }
+
+  /** Gamepad A: same as E. */
+  interactNow() { this.interact(); }
 
   private interact() {
     if (anyDialogOpen() || this.transitioning || this.studioOpen) return;

@@ -109,6 +109,23 @@ function enterFallback(reason: string) {
     boards: openBoards,
   });
   window.__kantor = { mode: 'fallback', reason, openBoards, openAgent };
+  wireGamepad(null);
+}
+
+/** One pad controller per page. The world target is swapped, never duplicated:
+ *  a WebGL fallback after boot points it at null instead of starting a second loop. */
+let padWorld: import('./input/gamepad').PadWorld | null = null;
+let padStarted = false;
+function wireGamepad(world: import('./input/gamepad').PadWorld | null) {
+  padWorld = world;
+  if (padStarted) return;
+  const start = () => {
+    if (padStarted) return;
+    padStarted = true;
+    void import('./input/gamepad').then((m) => m.startGamepad(() => padWorld)).catch(() => { padStarted = false; });
+  };
+  window.addEventListener('gamepadconnected', start, { once: true });
+  if ([...(navigator.getGamepads?.() ?? [])].some((p) => p && p.connected)) start();
 }
 
 function wireSettings(game: Game | null, s: Settings) {
@@ -184,6 +201,14 @@ function boot() {
   let studio: StudioUI | null = null;
   const studioLoad = () => import('./studio/ui').then((m) => (studio ??= new m.StudioUI(game)));
   $('btn-studio').addEventListener('click', () => void studioLoad().then((s) => (s.isOpen ? s.close() : s.open())));
+  wireGamepad({
+    setMove: (m) => { game.input.pad = m; },
+    look: (yaw, pitch) => { game.rig.rotate(yaw); game.rig.tilt(pitch); },
+    zoom: (f) => game.rig.zoom(f),
+    interact: () => game.interactNow(),
+    toggleRun: () => game.toggleRun(),
+    studioOpen: () => studio?.isOpen ?? false,
+  });
   const applyAvatar = (c: { hair: string; palette: string }) => game.player.avatar.applyVariant(c.hair, paletteColors(c.palette));
   let avatarStudio: AvatarStudio | null = null;
   const avatarLoad = () => import('./studio/avatar-studio').then((m) => (avatarStudio ??= new m.AvatarStudio(applyAvatar, () => game.player.avatar.model)));

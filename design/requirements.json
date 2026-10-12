@@ -1229,6 +1229,25 @@
      "status": "belum diuji"
     }
    ]
+  },
+  {
+   "id": "REQ-PAD-01",
+   "milestone": "M8",
+   "story": "Sebagai pemain dengan stik game, jelajahi dunia dan pakai semua menu tanpa keyboard.",
+   "ac": "Gamepad API pemetaan standar, chunk lazy; stik kiri jalan/lari, stik kanan kamera, A/B/X/Y/LB/RB/Select/Start; D-pad navigasi fokus spasial di menu dan dialog, A pilih, B tutup; gerak berhenti saat dialog terbuka.",
+   "failure": "stik terputus -> gerak dari stik berhenti",
+   "boundary": "mengetik tetap lewat keyboard; pemetaan non-standar tidak dipetakan ulang",
+   "parts": [
+    {
+     "scope": "Gamepad API pemetaan standar, chunk lazy; stik kiri jalan/lari, stik kanan kamera, A/B/X/Y/LB/RB/Select/Start; D-pad navigasi fokus spasial di menu dan dialog, A pilih, B tutup; gerak berhenti saat dialog terbuka.",
+     "tests": [
+      "app/tests/unit/gamepad.test.ts",
+      "app/tests/e2e/gamepad.spec.ts"
+     ],
+     "evidence": [],
+     "status": "belum diuji"
+    }
+   ]
   }
  ]
 }

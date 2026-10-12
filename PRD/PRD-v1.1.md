@@ -438,6 +438,16 @@ Permintaan pemilik: harus bisa melihat posisi setiap persona tanpa berkeliling g
 - Failure: kamus gagal dimuat → app berjalan dalam Bahasa Indonesia.
 - Batas: isi buatan pengguna (pesan chat, judul tugas papan kerja nyata, catatan dari server) tidak diterjemahkan. Beberapa pesan dari server masih berbahasa Indonesia.
 
+## 22. Stik game (gamepad)
+
+- REQ-PAD-01: Sebagai pemain yang memakai stik Xbox, PlayStation, atau stik Bluetooth, saya ingin menjelajah dan memakai semua menu tanpa keyboard atau layar sentuh. AC:
+  - Memakai Gamepad API browser dengan pemetaan standar. Modul stik adalah chunk terpisah yang dimuat saat stik pertama terhubung, sehingga entry chunk tidak bertambah untuk pemain tanpa stik.
+  - Dunia: stik kiri berjalan relatif kamera (dorong penuh untuk lari), stik kanan memutar dan memiringkan kamera, A interaksi (sama dengan E), B kembali (Esc), X lari, Y luruskan kamera, LB/RB zoom, Select peta, Start Pengaturan. Dead zone radial agar stik yang sedikit miring tidak menggerakkan avatar.
+  - Menu dan dialog: D-pad (atau stik kiri di dalam dialog) memindah fokus ke kontrol terdekat di arah itu, A memilih, B menutup dialog. Penanda fokus terlihat selama navigasi stik. Kiri/kanan mengubah nilai dropdown dan slider. Di Studio, D-pad menggeser perabot terpilih.
+  - Gerak avatar berhenti selama dialog terbuka. Toast memberi tahu saat stik terhubung dan terputus. Daftar tombol stik ada di dialog Kontrol.
+- Failure: stik terputus → gerak dari stik langsung berhenti; keyboard dan sentuh tetap jalan.
+- Batas: mengetik teks tetap memakai keyboard atau keyboard layar. Tombol dengan pemetaan non-standar tidak dipetakan ulang.
+
 ## Sumber
 
 [1] https://voffice.holixora.com/ : demo menyatakan simulasi, bukan data pekerjaan nyata.
