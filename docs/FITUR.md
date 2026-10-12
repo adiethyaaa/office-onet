@@ -51,7 +51,7 @@ Fitur pemilik membutuhkan backend privat (`server/`). Tanpa backend, app tetap b
 - Lantai 1 berisi lobby dan resepsi (titik awal), ruang rapat besar, galeri, pantry, ruang diskusi, ruang implementasi, area kerja per peran, lab, ruang server, riser, dan gudang.
 - Lantai 2 berisi perpustakaan, lounge dan coffee bar, ruang makan, shower, ruang game, ruang biliar, ruang olahraga, taman dalam, dan balkon.
 - Pindah lantai lewat **tangga U** atau **lift** di inti bangunan. Tangga darurat luar hanya penanda konsep dan tidak bisa dipakai.
-- Dinding yang menghalangi pandangan dipotong otomatis (cutaway), termasuk jendela dan daun pintu, sehingga avatar selalu terlihat.
+- Dinding dalam dibuat rendah (1,25 m) agar kamera 3/4 melihat ke dalam ruang. Efek dinding tembus pandang di sekitar avatar sudah dihapus atas perintah Budi (2026-10-12); dinding, jendela, dan daun pintu kini selalu utuh.
 - Pintu terbuka sendiri saat avatar atau NPC mendekat. Ruang berakses terbatas terkunci dalam mode visitor (lihat bagian 14).
 - Label ruang dan karakter disembunyikan bila tertutup menu, joystick, atau petunjuk interaksi, agar teks tidak saling tumpuk.
 

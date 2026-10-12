@@ -709,8 +709,6 @@ export class Game {
       this.player.avatar.root.position.copy(toThree(this.activity.slot.pos[0], this.activity.slot.pos[1], el));
     }
     this.rig.update(this.studioOpen && this.studioFocus ? this.studioFocus : pv, dt);
-    this.materials.cutaway.uPlayer.value.set(pv.x, pv.y + 0.9, pv.z);
-    this.materials.cutaway.uCamera.value.copy(this.rig.camera.position);
     this.followSun(pv);
     // Seated CEO (activity) is not in the way; standing or walking CEO is.
     this.npcs.sim.setPlayer(this.activity ? null : this.player.floor, this.player.pos);

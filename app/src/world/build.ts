@@ -8,7 +8,7 @@ import { kitParts, type FurnitureKit } from './furniture-kit';
 import { CATEGORY_TINT, ENV, FINISH_COLOR } from './palette';
 import type { DerivedWalls, Fixture, FloorId, World } from './types';
 
-export const WALL_HEIGHT_INTERIOR = 1.25; // cutaway height so the 3/4 camera sees into rooms
+export const WALL_HEIGHT_INTERIOR = 1.25; // low wall height so the 3/4 camera sees into rooms
 export const WALL_HEIGHT_EXTERIOR = 1.55;
 
 /** world plan (x, y, z-up) -> three (x, y-up, z) */
@@ -17,16 +17,16 @@ export function toThree(x: number, y: number, z = 0): THREE.Vector3 {
 }
 
 class Batcher {
-  private buckets = new Map<string, { color: number; emissive: boolean; glass: boolean; occluder: boolean; geos: THREE.BufferGeometry[] }>();
+  private buckets = new Map<string, { color: number; emissive: boolean; glass: boolean; geos: THREE.BufferGeometry[] }>();
 
-  add(geo: THREE.BufferGeometry, color: number, matrix: THREE.Matrix4, opts: { emissive?: boolean; glass?: boolean; occluder?: boolean } = {}) {
+  add(geo: THREE.BufferGeometry, color: number, matrix: THREE.Matrix4, opts: { emissive?: boolean; glass?: boolean } = {}) {
     const g = geo.index ? geo.toNonIndexed() : geo;
     g.applyMatrix4(matrix);
     for (const name of Object.keys(g.attributes)) if (name !== 'position' && name !== 'normal') g.deleteAttribute(name);
     if (!g.attributes.normal) g.computeVertexNormals();
-    const key = `${color}|${opts.emissive ? 1 : 0}|${opts.glass ? 1 : 0}|${opts.occluder ? 1 : 0}`;
+    const key = `${color}|${opts.emissive ? 1 : 0}|${opts.glass ? 1 : 0}`;
     let b = this.buckets.get(key);
-    if (!b) this.buckets.set(key, (b = { color, emissive: !!opts.emissive, glass: !!opts.glass, occluder: !!opts.occluder, geos: [] }));
+    if (!b) this.buckets.set(key, (b = { color, emissive: !!opts.emissive, glass: !!opts.glass, geos: [] }));
     b.geos.push(g);
     if (g !== geo) geo.dispose();
   }
@@ -36,7 +36,7 @@ class Batcher {
       const merged = mergeGeometries(b.geos, false);
       b.geos.forEach((g) => g.dispose());
       if (!merged) continue;
-      const mesh = new THREE.Mesh(merged, b.occluder ? materials.occluder(b.color, b.glass) : materials.get(b.color, b.emissive, b.glass));
+      const mesh = new THREE.Mesh(merged, materials.get(b.color, b.emissive, b.glass));
       mesh.castShadow = castShadow && !b.glass;
       mesh.receiveShadow = true;
       mesh.matrixAutoUpdate = false;
@@ -65,44 +65,6 @@ export class MaterialCache {
     }
     return m;
   }
-  /** Uniforms shared by every occluder material; the game updates them per frame. */
-  readonly cutaway = { uPlayer: { value: new THREE.Vector3() }, uCamera: { value: new THREE.Vector3() }, uRadius: { value: 1.6 } };
-
-  /** Wall material that discards fragments inside a capsule between camera
-   * and avatar, so walls never hide the CEO (PRD 7 occlusion fade). */
-  occluder(color: number, glass = false): THREE.Material {
-    const key = `occ|${color}|${glass}`;
-    let m = this.cache.get(key);
-    if (!m) {
-      // Window glass and sills use the same cut as the wall around them;
-      // otherwise they stay drawn while the wall is cut and blink as the CEO walks.
-      const look = { color, transparent: glass, opacity: glass ? 0.35 : 1, depthWrite: !glass };
-      const mat = this.lowQuality ? new THREE.MeshLambertMaterial(look) : new THREE.MeshStandardMaterial({ ...look, roughness: 0.9, metalness: 0 });
-      mat.onBeforeCompile = (shader) => {
-        Object.assign(shader.uniforms, this.cutaway);
-        shader.vertexShader = shader.vertexShader
-          .replace('#include <common>', '#include <common>\nvarying vec3 vCutWorld;')
-          .replace('#include <worldpos_vertex>', `#include <worldpos_vertex>
-#ifdef USE_INSTANCING
-vCutWorld = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;
-#else
-vCutWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
-#endif`);
-        shader.fragmentShader = shader.fragmentShader
-          .replace('#include <common>', '#include <common>\nvarying vec3 vCutWorld;\nuniform vec3 uPlayer;\nuniform vec3 uCamera;\nuniform float uRadius;')
-          .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
-  vec3 seg = uPlayer - uCamera;
-  float t = clamp(dot(vCutWorld - uCamera, seg) / dot(seg, seg), 0.0, 1.0);
-  float d = length(vCutWorld - (uCamera + seg * t));
-  if (t < 0.97 && d < uRadius * t) discard;`);
-      };
-      mat.customProgramCacheKey = () => `occ-${this.lowQuality}-${glass}`;
-      m = mat;
-      this.cache.set(key, m);
-    }
-    return m;
-  }
-
   dispose() { this.cache.forEach((m) => m.dispose()); this.cache.clear(); }
 }
 
@@ -223,7 +185,7 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
     geo.translate(0, elev + 0.004 + (plate++ % 8) * 0.002, 0);
     const color = CATEGORY_TINT[room.category] ?? FINISH_COLOR[room.finish.floor] ?? 0xd8c8ab;
     batch.add(geo, color, id);
-    // A shaft is a closed riser, not a room: fill it to the cutaway height so
+    // A shaft is a closed riser, not a room: fill it to the low wall height so
     // it reads as solid casework instead of an empty pocket in the plan.
     if (room.category === 'shaft') {
       const xs = room.polygon.map((p) => p[0]);
@@ -231,10 +193,10 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
       const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
       const fill = new THREE.BoxGeometry(x1 - x0, WALL_HEIGHT_INTERIOR, y1 - y0);
       fill.translate((x0 + x1) / 2, elev + WALL_HEIGHT_INTERIOR / 2, -(y0 + y1) / 2);
-      batch.add(fill, ENV.wallInterior, id, { occluder: true });
+      batch.add(fill, ENV.wallInterior, id);
       const cap = new THREE.BoxGeometry(x1 - x0, 0.05, y1 - y0);
       cap.translate((x0 + x1) / 2, elev + WALL_HEIGHT_INTERIOR + 0.025, -(y0 + y1) / 2);
-      batch.add(cap, ENV.wallCap, id, { occluder: true });
+      batch.add(cap, ENV.wallCap, id);
     }
   }
   const ops = walls.floors[floor].openings;
@@ -249,7 +211,7 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
     const capB = meetsOpening(wall.axis, wall.at, wall.to) ? 0 : t / 2;
     const hgt = wall.exterior ? WALL_HEIGHT_EXTERIOR : WALL_HEIGHT_INTERIOR;
     const color = wall.exterior ? ENV.wallExterior : ENV.wallInterior;
-    const box = (a: number, b: number, z0: number, z1: number, c: number, opts: { occluder?: boolean; glass?: boolean } = {}, depth = t) => {
+    const box = (a: number, b: number, z0: number, z1: number, c: number, opts: { glass?: boolean } = {}, depth = t) => {
       const len = b - a;
       if (len <= 1e-6 || z1 - z0 <= 1e-6) return;
       const mid = (a + b) / 2;
@@ -258,7 +220,7 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
       geo.translate(cx, elev + (z0 + z1) / 2, -cy);
       batch.add(geo, c, id, opts);
     };
-    // Concept windows (world.windows, P03) cut the cutaway wall between sill
+    // Concept windows (world.windows, P03) cut the low wall between sill
     // and wall top; a window whose sill is above the cut height (wet rooms,
     // stores) shows as a frosted band on the cap so its position still reads.
     const along = (w: { center: [number, number] }) => (wall.axis === 'x' ? w.center[0] : w.center[1]);
@@ -269,20 +231,20 @@ export function buildFloor(world: World, walls: DerivedWalls, floor: FloorId, ma
       const a = along(w) - w.width / 2;
       const b = along(w) + w.width / 2;
       if (w.sill < hgt) {
-        box(cursor, a, 0, hgt, color, { occluder: true });
+        box(cursor, a, 0, hgt, color);
         // Wall stops under the sill board so their top faces never share a plane.
-        box(a, b, 0, w.sill - 0.04, color, { occluder: true });
-        box(a, b, w.sill - 0.04, w.sill, ENV.wallCap, { occluder: true }, t + 0.08);
-        box(a, b, w.sill + 0.001, hgt - 0.001, w.glazing === 'obscured' ? ENV.wallCap : ENV.glass, { glass: true, occluder: true }, 0.04);
+        box(a, b, 0, w.sill - 0.04, color);
+        box(a, b, w.sill - 0.04, w.sill, ENV.wallCap, {}, t + 0.08);
+        box(a, b, w.sill + 0.001, hgt - 0.001, w.glazing === 'obscured' ? ENV.wallCap : ENV.glass, { glass: true }, 0.04);
         cursor = b;
         winCount.full++;
       } else {
-        box(a, b, hgt + 0.051, hgt + 0.09, ENV.glass, { glass: true, occluder: true }, t + 0.03);
+        box(a, b, hgt + 0.051, hgt + 0.09, ENV.glass, { glass: true }, t + 0.03);
         winCount.high++;
       }
     }
-    box(cursor, wall.to + capB, 0, hgt, color, { occluder: true });
-    box(wall.from - capA, wall.to + capB, hgt, hgt + 0.05, ENV.wallCap, { occluder: true }, t + 0.02);
+    box(cursor, wall.to + capB, 0, hgt, color);
+    box(wall.from - capA, wall.to + capB, hgt, hgt + 0.05, ENV.wallCap, {}, t + 0.02);
   }
   group.userData.windows = winCount;
   for (const op of walls.floors[floor].openings) {
