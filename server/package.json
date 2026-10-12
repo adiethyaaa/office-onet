@@ -6,7 +6,7 @@
   "engines": { "node": ">=24" },
   "scripts": {
     "start": "node main.mjs",
-    "test": "node --test --test-concurrency=1 test/"
+    "test": "node --test --test-concurrency=1 test/*.test.mjs"
   },
   "dependencies": {
     "qrcode": "1.5.4"
