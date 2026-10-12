@@ -90,13 +90,14 @@ Tekan **H** atau tombol **Kontrol** untuk melihat daftar ini di dalam app.
 
 **Di HP dan tablet**
 
-<img src="img/hp.jpg" alt="Tampilan HP" width="260">
+<img src="img/hp.jpg" alt="Tampilan HP dengan menu dan minimap terbuka" width="220"> <img src="img/hp-lipat.jpg" alt="Tampilan HP dengan menu dan minimap dilipat" width="220">
 
 - Joystick di kiri bawah untuk berjalan. Mendorong joystick sampai tepi membuat avatar berlari.
 - Tombol **Lari** menyalakan atau mematikan lari.
 - Tombol **Aksi** sama dengan E.
 - Seret sisi kanan layar untuk memutar kamera.
-- Menu atas tersusun dalam grid agar semua tombol muat di layar sempit.
+- Menu atas berupa satu baris ikon (dua baris di layar di bawah 356 px). Nama tombol tetap dibacakan pembaca layar.
+- Tombol **☰** di samping nama ruangan melipat atau membuka menu. Tombol **✕** di pojok minimap melipatnya menjadi ikon peta. Pilihan lipat tersimpan setelah halaman dimuat ulang.
 
 Avatar tidak bisa menembus dinding, perabot, atau NPC. Bila posisi avatar tidak valid (misalnya setelah perabot dipindah), avatar dikembalikan ke titik aman terdekat.
 
@@ -154,9 +155,9 @@ Bila browser tidak mendukung WebGL, direktori menjadi tampilan utama. Tombol **P
 
 Mencari satu orang di gedung dua lantai tidak perlu berkeliling.
 
-**Minimap** selalu ada di pojok kiri bawah (di HP: kanan atas, di bawah HUD, supaya tidak menabrak joystick).
+**Minimap** ada di pojok kiri bawah (di HP: kanan atas, di bawah HUD, supaya tidak menabrak joystick).
 
-Di HP, menu atas tampil sebagai satu baris ikon. Tombol ☰ di samping nama ruangan melipat menu, dan tombol ✕ di pojok minimap melipat minimap menjadi ikon peta. Pilihan lipat tersimpan setelah halaman dimuat ulang.
+Tombol ✕ di pojok minimap melipat minimap menjadi ikon peta. Pilihan lipat tersimpan setelah halaman dimuat ulang.
 
 <img src="img/minimap.jpg" alt="Minimap: denah Lantai 1, panah avatar, titik persona, lencana satu orang di Lantai 2" width="260">
 

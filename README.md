@@ -123,10 +123,10 @@ Chat dan papan kerja hanya aktif untuk pemilik yang login dengan sandi dan kode 
 
 ## Main di mana saja
 
-<img src="docs/img/hp.jpg" alt="Tampilan HP dengan joystick dan tombol aksi" width="240" align="right">
+<img src="docs/img/hp.jpg" alt="Tampilan HP: menu ikon satu baris, minimap di kanan atas, joystick dan tombol aksi" width="180" align="right"> <img src="docs/img/hp-lipat.jpg" alt="Tampilan HP dengan menu dan minimap dilipat" width="180" align="right">
 
 - **Desktop.** WASD atau panah untuk berjalan, Shift lari, Q/Z putar kamera, R luruskan kamera, +/- zoom, E interaksi, H bantuan.
-- **HP dan tablet.** Joystick di kiri bawah, tombol Lari dan Aksi, seret layar untuk memutar kamera. Menu atas tersusun dalam grid di layar sempit.
+- **HP dan tablet.** Joystick di kiri bawah, tombol Lari dan Aksi, seret layar untuk memutar kamera. Di HP, menu atas berupa satu baris ikon. Menu bisa dilipat lewat tombol ☰, minimap lewat tombol ✕ di pojoknya, dan pilihan itu tersimpan.
 - **Dua bahasa.** Tampilan tersedia dalam Bahasa Indonesia dan English, mengikuti bahasa browser. Bisa diganti di Pengaturan atau lewat `?lang=en`.
 - **Tanpa WebGL.** App berpindah ke mode direktori yang tetap menampilkan ruang dan karakter.
 - **Aksesibilitas.** Tema terang dan gelap, mode kurangi gerak, kualitas grafis ringan untuk perangkat lama, label pembaca layar, dan semua dialog bisa dipakai dengan keyboard. Kontras warna diperiksa otomatis, dan halaman diuji dengan axe.

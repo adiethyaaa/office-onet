@@ -90,13 +90,14 @@ Press **H** or the **Kontrol** (Controls) button to see this list inside the app
 
 **On phones and tablets**
 
-<img src="img/hp.jpg" alt="Phone view" width="260">
+<img src="img/hp.jpg" alt="Phone view with the menu and minimap open" width="220"> <img src="img/hp-lipat.jpg" alt="Phone view with the menu and minimap folded" width="220">
 
 - The joystick at the bottom left is for walking. Pushing the joystick to the edge makes the avatar run.
 - The **Lari** (Run) button turns running on or off.
 - The **Aksi** (Action) button is the same as E.
 - Drag the right side of the screen to rotate the camera.
-- The top menu is laid out in a grid so all buttons fit on narrow screens.
+- The top menu is one row of icons (two rows on screens narrower than 356 px). Screen readers still read each button name.
+- The **☰** button next to the room name folds or opens the menu. The **✕** button on the minimap corner folds it into a map icon. The fold choice survives a page reload.
 
 The avatar cannot pass through walls, furniture, or NPCs. If the avatar's position becomes invalid (for example after furniture is moved), the avatar is returned to the nearest safe point.
 
@@ -154,9 +155,9 @@ If the browser does not support WebGL, the directory becomes the main view. The 
 
 Finding one person in a two-floor building does not require walking around.
 
-The **minimap** is always in the bottom left corner (on phones: top right, below the HUD, so it does not collide with the joystick).
+The **minimap** sits in the bottom left corner (on phones: top right, below the HUD, so it does not collide with the joystick).
 
-On a phone, the top menu is a single row of icons. The ☰ button next to the room name folds the menu, and the ✕ button on the minimap corner folds the minimap into a map icon. The fold choice survives a page reload.
+The ✕ button on the minimap corner folds the minimap into a map icon. The fold choice survives a page reload.
 
 <img src="img/minimap.jpg" alt="Minimap: Floor 1 plan, avatar arrow, persona dots, badge showing one person on Floor 2" width="260">
 
