@@ -59,4 +59,9 @@ export const EN_HTML: Record<string, string> = {
   "Batal": "Cancel",
   "Simpan": "Save",
   "Bicara & beri tugas": "Talk & assign task",
+  "Kontroler": "Controller",
+  "Standar": "Standard",
+  "Kidal (stik ditukar)": "Left-handed (sticks swapped)",
+  "Santai (kamera pelan)": "Relaxed (slow camera)",
+  "Tombol terbalik (gaya Jepang)": "Reversed buttons (Japanese style)",
 };

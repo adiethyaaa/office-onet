@@ -90,6 +90,81 @@ test.describe('gamepad', () => {
     // Stick motion is ignored while a dialog is open, so nothing moved meanwhile.
   });
 
+  test('Settings: four controller profiles, DualSense picture lights the pressed button, Left-handed swaps the sticks', async ({ page }, info) => {
+    await boot(page);
+    await connect(page);
+    await page.locator('#btn-settings').click();
+    const dlg = page.locator('#dlg-settings');
+    await expect(dlg.locator('input[name="padProfile"]')).toHaveCount(4);
+    await expect(dlg.locator('input[name="padProfile"][value="standar"]')).toBeChecked();
+    await expect(dlg.locator('.pad-svg')).toBeVisible();
+    await expect(dlg.locator('.pad-status')).toContainText('Test pad');
+    // A held Cross lights up in the drawing.
+    await hold(page, B.A, true);
+    await expect(dlg.locator('.pad-svg [data-part="cross"]')).toHaveClass(/pad-on/);
+    await hold(page, B.A, false);
+    await expect(dlg.locator('.pad-svg [data-part="cross"]')).not.toHaveClass(/pad-on/);
+    await dlg.locator('label', { hasText: 'Kidal' }).click();
+    await expect(dlg.locator('.pad-about')).toContainText('Stik ditukar');
+    await expect(dlg.locator('.pad-map li[data-part="rs"]')).toContainText('Berjalan');
+    await shot(page, info, 'gamepad-profile-kidal');
+    await dlg.locator('label', { hasText: 'Santai' }).click();
+    await expect(dlg.locator('.pad-about')).toContainText('Kamera lebih pelan');
+    await dlg.locator('label', { hasText: 'Kidal' }).click();
+    await dlg.locator('button[value="close"]').click();
+    await expect(dlg).toBeHidden();
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem('kantor-rpg.settings.v1') ?? '{}').padProfile)).toBe('kidal');
+    // Left-handed: the right stick walks, the left stick turns the camera.
+    const start = (await state(page)).pos;
+    const c0 = await cam(page);
+    await axes(page, [0, 0, 0, -1]);
+    await expect.poll(async () => { const p = (await state(page)).pos; return Math.hypot(p[0] - start[0], p[1] - start[1]); }, { timeout: 15_000 }).toBeGreaterThan(0.8);
+    await axes(page, [1, 0, 0, 0]);
+    await expect.poll(async () => Math.abs((await cam(page)).yaw - c0.yaw), { timeout: 15_000 }).toBeGreaterThan(0.3);
+    await axes(page, [0, 0, 0, 0]);
+  });
+
+  test('Reversed buttons: physical Circle selects and physical Cross closes', async ({ page }) => {
+    await boot(page);
+    await connect(page);
+    await page.locator('#btn-settings').click();
+    const dlg = page.locator('#dlg-settings');
+    // Cross held while switching must not fire the Back it now maps to.
+    await hold(page, B.A, true);
+    await frames(page);
+    await dlg.locator('label', { hasText: 'Tombol terbalik' }).click();
+    await frames(page);
+    await page.waitForTimeout(100);
+    await expect(dlg).toBeVisible();
+    await hold(page, B.A, false);
+    await expect(dlg.locator('.pad-map li[data-part="circle"]')).toContainText('Interaksi');
+    await expect(dlg.locator('.pad-map li[data-part="cross"]')).toContainText('Kembali');
+    await dlg.locator('button[value="close"]').click();
+    await expect(dlg).toBeHidden();
+    // Physical Cross is Back now: Start opens Settings, Cross closes it.
+    await press(page, B.START);
+    await expect(dlg).toBeVisible();
+    await press(page, B.A);
+    await expect(dlg).toBeHidden();
+    // Physical Circle is select: focus the reduced-motion box and toggle it.
+    await press(page, B.START);
+    await expect(dlg).toBeVisible();
+    const target = dlg.locator('input[name="reducedMotion"]');
+    const before = await target.isChecked();
+    for (let i = 0; i < 14 && !(await target.evaluate((x) => x === document.activeElement)); i++) await press(page, B.DOWN);
+    await expect(target).toBeFocused();
+    await press(page, B.B);
+    await expect(target).toBeChecked({ checked: !before });
+    await expect(dlg).toBeVisible();
+    // Physical Square straightens the camera in this profile, Triangle toggles run.
+    await press(page, B.START);
+    await expect(dlg).toBeHidden();
+    await press(page, B.Y);
+    await expect(page.locator('#touch-run')).toHaveAttribute('aria-pressed', 'true');
+    await press(page, B.Y);
+    await expect(page.locator('#touch-run')).toHaveAttribute('aria-pressed', 'false');
+  });
+
   test('D-pad reaches the HUD menu and A opens the map with Select', async ({ page }) => {
     await boot(page);
     await connect(page);

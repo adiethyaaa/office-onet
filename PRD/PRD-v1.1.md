@@ -455,6 +455,12 @@ Permintaan pemilik: harus bisa melihat posisi setiap persona tanpa berkeliling g
   - Menu dan dialog: D-pad (atau stik kiri di dalam dialog) memindah fokus ke kontrol terdekat di arah itu, A memilih, B menutup dialog. Penanda fokus terlihat selama navigasi stik. Kiri/kanan mengubah nilai dropdown dan slider. Di Studio, D-pad menggeser perabot terpilih.
   - Gerak avatar berhenti selama dialog terbuka. Toast memberi tahu saat stik terhubung dan terputus. Daftar tombol stik ada di dialog Kontrol.
 - Failure: stik terputus → gerak dari stik langsung berhenti; keyboard dan sentuh tetap jalan.
+- REQ-PAD-02 (perintah Budi 2026-10-13): Sebagai pemain stik, saya ingin memilih profil kontroler di Pengaturan dan melihat tombol mana melakukan apa. AC:
+  - Pengaturan punya bagian Kontroler dengan empat profil: Standar (bawaan), Kidal (stik kiri dan kanan ditukar), Santai (kamera 58% kecepatan, zona mati 32%, dorong penuh tidak lari) dan Tombol terbalik gaya Jepang/Nintendo (Silang ↔ Lingkaran, Kotak ↔ Segitiga; stik dan tombol lain tetap). Pilihan tersimpan di `kantor-rpg.settings.v1` dan langsung berlaku tanpa muat ulang.
+  - Setiap profil punya keterangan: untuk siapa, nilai berjalan/zona mati/kecepatan kamera/lari, dan daftar fungsi tombol.
+  - Gambar kontroler gaya DualSense (SVG dari kode, siluet dari gambar Leo di mockup39, tanpa logo/merek). Saat stik terhubung, tombol yang ditekan menyala dan stik di gambar ikut bergerak; menyorot baris daftar tombol menyorot tombol di gambar.
+  - Gambar dan teks profil adalah chunk terpisah yang dimuat saat Pengaturan dibuka, sehingga entry chunk tidak bertambah berarti.
+- Failure: nilai profil di storage rusak/tidak dikenal → kembali ke Standar.
 - Batas: mengetik teks tetap memakai keyboard atau keyboard layar. Tombol dengan pemetaan non-standar tidak dipetakan ulang.
 
 ## Sumber
