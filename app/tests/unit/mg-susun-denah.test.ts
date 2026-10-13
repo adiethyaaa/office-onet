@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { run, type Run } from './mg-harness';
+import { mulberry, run, type Run } from './mg-harness';
+import type { Btn, InputState } from '../../src/minigames/types';
+import { BTNS } from '../../src/minigames/types';
 import susunDenah, { CELL_M, roomCells } from '../../src/minigames/games/susun-denah';
 import worldJson from '@design/world.json';
 
-type P = { id: string; name: string; floor: string; x: number; y: number; w: number; h: number; placed: boolean };
-type Snap = { plan: number; floor: string; sel: number; holding: boolean; pos: { x: number; y: number }; placedTotal: number; plansDone: number; wrong: number; score: number; timeBonus: number; pieces: P[]; openIds: string[] };
+type P = { id: string; name: string; floor: string; x: number; y: number; w: number; h: number; placed: boolean; tx: number; ty: number };
+type Snap = { plan: number; floor: string; sel: number; holding: boolean; pos: { x: number; y: number }; dragging: boolean; tscale: number; placedTotal: number; plansDone: number; wrong: number; score: number; timeBonus: number; pieces: P[]; openIds: string[] };
 const S = (r: Run) => r.snap() as unknown as Snap;
 
 /** Place the currently selected open piece at (x, y) with the keyboard. */
@@ -104,4 +106,77 @@ describe('mini game: susun-denah', () => {
     expect(a.snap()).toEqual(b.snap());
     expect(run(susunDenah, 1).snap()).not.toEqual(run(susunDenah, 5).snap());
   });
+
+  it('drag with the pointer: press a tray piece, move over its outline, release places it', () => {
+    const L = live(8);
+    const s = L.snap();
+    const p = s.pieces.find((k) => k.id === s.openIds[0])!;
+    const FX = 14, FY = 70, CP = 14;
+    const gx = p.tx + 4, gy = p.ty + 4;
+    const ox = 4 / s.tscale, oy = 4 / s.tscale;
+    // press on the piece (tap + ptr down on the same frame, as the host sends them)
+    L.feed({ tap: { x: gx, y: gy }, ptr: { x: gx, y: gy, down: true } });
+    expect(L.snap().dragging).toBe(true);
+    const tx = FX + p.x * CP + ox, ty = FY + p.y * CP + oy;
+    for (let k = 1; k <= 5; k++) L.feed({ ptr: { x: gx + ((tx - gx) * k) / 5, y: gy + ((ty - gy) * k) / 5, down: true } });
+    expect(L.snap().pos).toEqual({ x: p.x, y: p.y });
+    expect(L.snap().placedTotal).toBe(0);
+    L.feed({ ptr: { x: tx, y: ty, down: false } });
+    expect(L.snap().dragging).toBe(false);
+    expect(L.snap().placedTotal).toBe(1);
+    expect(L.snap().pieces.find((k) => k.id === p.id)!.placed).toBe(true);
+  });
+
+  it('dragging a piece back over the tray returns it without a miss', () => {
+    const L = live(8);
+    const s = L.snap();
+    const p = s.pieces.find((k) => k.id === s.openIds[0])!;
+    L.feed({ tap: { x: p.tx + 3, y: p.ty + 3 }, ptr: { x: p.tx + 3, y: p.ty + 3, down: true } });
+    L.feed({ ptr: { x: 120, y: 150, down: true } });
+    L.feed({ ptr: { x: 600, y: 350, down: true } });
+    L.feed({ ptr: { x: 600, y: 350, down: false } });
+    expect(L.snap().holding).toBe(false);
+    expect(L.snap().wrong).toBe(0);
+  });
+
+  it('tap a tray piece, then tap its outline, places it (no pointer data needed)', () => {
+    const r = run(susunDenah, 8);
+    const s = S(r);
+    const p = s.pieces.find((k) => k.id === s.openIds[2])!;
+    r.step(1, [], [], undefined, { x: p.tx + 2, y: p.ty + 2 });
+    expect(S(r).holding).toBe(true);
+    expect(S(r).openIds[S(r).sel]).toBe(p.id);
+    r.step(1, [], [], undefined, { x: 14 + (p.x + p.w / 2) * 14, y: 70 + (p.y + p.h / 2) * 14 });
+    expect(S(r).placedTotal).toBe(1);
+  });
+
+  it('a held arrow auto-repeats so a piece crosses the plan without many presses', () => {
+    const r = run(susunDenah, 8);
+    r.step(1, [], ['a']);
+    const x0 = S(r).pos.x;
+    r.step(1, [], ['left']);
+    r.step(30, ['left']);
+    expect(S(r).pos.x).toBeLessThan(x0 - 3);
+  });
+
+  it('the tray stays in reading order so arrows walk it left to right, top to bottom', () => {
+    const s = S(run(susunDenah, 4));
+    const open = s.openIds.map((id) => s.pieces.find((k) => k.id === id)!);
+    for (let i = 1; i < open.length; i++) expect(open[i].ty > open[i - 1].ty || (open[i].ty === open[i - 1].ty && open[i].tx > open[i - 1].tx)).toBe(true);
+    // tray leaves room for the status lines at the bottom
+    for (const p of open) expect(p.ty + p.h * 14 * s.tscale).toBeLessThanOrEqual(44 + 344 - 100);
+  });
 });
+
+/** A game instance fed frame by frame with pointer data (the shared harness has no ptr). */
+function live(seed: number) {
+  const ctx = { ...run(susunDenah, seed).ctx, rand: mulberry(seed) };
+  const inst = susunDenah.create(ctx);
+  const none = Object.fromEntries(BTNS.map((b) => [b, false])) as Record<Btn, boolean>;
+  return {
+    snap: () => inst.snapshot!() as unknown as Snap,
+    feed(o: { tap?: { x: number; y: number }; ptr?: InputState['ptr'] }) {
+      inst.update(1 / 60, { down: none, hit: none, ax: 0, ay: 0, tap: o.tap ?? null, ptr: o.ptr ?? null });
+    },
+  };
+}

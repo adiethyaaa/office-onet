@@ -208,4 +208,10 @@ export const EN_KUIS_PERPUSTAKAAN: Record<string, string> = {
   'Memperbesar jangkauan WiFi': 'Extends WiFi coverage',
   'Mengatur suhu ruang server': 'Controls server room temperature',
   'NVR (Network Video Recorder) menyimpan rekaman dari kamera IP.': 'An NVR (Network Video Recorder) stores footage from IP cameras.',
+  'Pilih jawaban': 'Pick an answer',
+  'Kunci jawaban / soal berikutnya': 'Lock in the answer / next question',
+  'Ketuk jawaban untuk menguncinya, ketuk lagi untuk soal berikutnya': 'Tap an answer to lock it in, tap again for the next question',
+  '+{p} poin': '+{p} points',
+  'A atau ketuk: lanjut': 'A or tap: continue',
+  'A atau ketuk: lihat hasil': 'A or tap: see results',
 };

@@ -13,11 +13,13 @@ import { EN_SERVER_DOWN } from './server-down';
 import { EN_SUSUN_DENAH } from './susun-denah';
 import { EN_DESAIN_POSTER } from './desain-poster';
 import { EN_KUIS_PERPUSTAKAAN } from './kuis-perpustakaan';
+import { EN_CATUR } from './catur';
 import { EN_MG_HOST } from './host';
 import { EN_MG_OFFICE } from './office';
 
 export const EN_MG: Record<string, string> = {
   ...EN_MG_HOST,
+  ...EN_CATUR,
   ...EN_MG_OFFICE,
   ...EN_BALAP_DRONE,
   ...EN_TARUNG_KANTOR,

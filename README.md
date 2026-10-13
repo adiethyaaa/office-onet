@@ -41,7 +41,7 @@ Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap
 |---|---|
 | [Dunia 3D dua lantai](docs/FITUR.md#2-dunia-3d) | 36 ruang, pintu yang membuka sendiri, tangga dan lift antarlantai |
 | [Karakter NPC](docs/FITUR.md#5-karakter-npc) | 8 karakter dengan jadwal harian, bisa diajak bicara dan ditegur (animasi saja) |
-| [Mini game](docs/FITUR.md#4a-mini-game-v20) | 9 game di fasilitas kantor dan Game Station 5 game: balap, tarung, platformer, puzzle kabel, arena bom |
+| [Mini game](docs/FITUR.md#4a-mini-game-v20) | 10 game di fasilitas kantor (termasuk catur di meja board game) dan Game Station 5 game: balap, tarung, platformer, puzzle kabel, arena bom |
 | [Suara](docs/FITUR.md#4b-suara) | Langkah, pintu, musik per area; dibuat di browser tanpa berkas audio |
 | [Chat agen dan papan kerja](docs/FITUR.md#10-chat-agen) | Beri tugas ke agen AI, sinkron dengan Telegram (butuh backend privat) |
 | [Peta dan minimap](docs/FITUR.md#6a-peta-dan-minimap) | Lokasi semua orang per lantai, **Temui** untuk pindah ke sebelahnya |

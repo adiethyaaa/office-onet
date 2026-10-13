@@ -43,6 +43,8 @@ const meta: GameModule['meta'] = {
   blurb: 'Tiket insiden masuk bergiliran. Pindahkan kabel patch ke port switch yang benar sebelum SLA habis.',
   controls: ['Kiri/kanan: pilih port, atas/bawah: patch panel atau switch', 'A: ambil kabel, A lagi: tancapkan', 'B: lepas kabel yang dipegang'],
   view: { w: 640, h: 400 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'right', 'up', 'down', 'a', 'b'],
+  actions: { left: 'Port sebelumnya', right: 'Port berikutnya', up: 'Ke patch panel', down: 'Ke switch', a: 'Ambil / tancapkan kabel', b: 'Lepas kabel' },
+  pointerHint: 'Ketuk tiket atau port patch panel untuk ambil kabel, lalu ketuk port switch untuk menancapkan',
 };
 
 interface Ticket { n: number; idx: number; kind: 'unplug' | 'wrong'; left: number }
@@ -63,6 +65,10 @@ function create(ctx: GameCtx): GameInstance {
   let msgT = 3;
   let ended = false;
   let anim = 0;
+  // visual only: cursor box and cord tip ease toward the target, flashes fade
+  const vis = { cx: 0, cy: 0, tx: 0, ty: 0, init: false };
+  let flash: { x: number; y: number; t: number; ok: boolean } | null = null;
+  let lastPtr: { x: number; y: number } | null = null;
   const bruno = ctx.cast.find((c) => c.id === 'CH-NETINSTALL') ?? ctx.cast[0];
 
   const score = () => Math.max(0, closed * 100 + bonus - violations * 50);
@@ -80,7 +86,8 @@ function create(ctx: GameCtx): GameInstance {
     const free = pp.map((_, i) => i).filter((i) => !ticketOf(i) && held !== i);
     if (!free.length) return;
     const idx = free[Math.floor(ctx.rand() * free.length)];
-    const decoys = swPorts.filter((p) => !plug.includes(p));
+    // a decoy must never be another cord's home port, or that cord's ticket could not be closed
+    const decoys = swPorts.filter((p) => !plug.includes(p) && !pp.some((c) => c.switchPort === p));
     let kind: Ticket['kind'] = ctx.rand() < 0.5 ? 'unplug' : 'wrong';
     if (kind === 'wrong' && decoys.length) plug[idx] = decoys[Math.floor(ctx.rand() * decoys.length)];
     else { kind = 'unplug'; plug[idx] = null; }
@@ -102,6 +109,7 @@ function create(ctx: GameCtx): GameInstance {
       held = cur.col;
       plug[cur.col] = null;
       ctx.sfx('click');
+      flash = { x: ppX(cur.col), y: PPY, t: 0.2, ok: true };
       cur.row = 1;
       cur.col = Math.min(swPorts.length - 1, Math.max(0, Math.round(((cur.col + 0.5) / PP_N) * swPorts.length - 0.5)));
       say(ctx.t('Pilih port switch untuk {o}', { o: pp[held].outletPort }));
@@ -114,6 +122,7 @@ function create(ctx: GameCtx): GameInstance {
       wrong++;
       say(ctx.t('Port {p} salah! Cek label tiket', { p: port }), true);
       ctx.sfx('wrong');
+      flash = { x: swX(cur.col), y: SWY, t: 0.3, ok: false };
       return;
     }
     plug[held] = port;
@@ -123,10 +132,31 @@ function create(ctx: GameCtx): GameInstance {
     bonus += Math.round(t.left * 4);
     say(ctx.t('Tiket #{n} selesai, layanan pulih', { n: t.n }));
     ctx.sfx('connect');
+    flash = { x: swX(cur.col), y: SWY, t: 0.35, ok: true };
     cur.row = 0;
     cur.col = held;
     held = null;
     hud();
+  }
+
+  /** Hit test in game units: patch panel port, switch port, or ticket card. */
+  function hitAt(x: number, y: number): { row: number; col: number } | { ticket: number } | null {
+    const ppStep = (RW - 68) / PP_N, swStep = (RW - 68) / swPorts.length;
+    if (y >= PPY - 38 && y <= PPY + 32 && x >= RX + 30 && x <= RX + RW - 30) {
+      const i = Math.floor((x - RX - 34) / ppStep);
+      if (i >= 0 && i < PP_N) return { row: 0, col: i };
+    }
+    if (y >= SWY - 26 && y <= SWY + 30 && x >= RX + 30 && x <= RX + RW - 30) {
+      const i = Math.floor((x - RX - 34) / swStep);
+      if (i >= 0 && i < swPorts.length) return { row: 1, col: i };
+      if (x < RX + 34) return { row: 1, col: 0 };
+      return { row: 1, col: swPorts.length - 1 };
+    }
+    if (x >= 10 && x <= 216) {
+      const k = Math.floor((y - 40) / 76);
+      if (k >= 0 && k < tickets.length && y - 40 - k * 76 <= 68) return { ticket: k };
+    }
+    return null;
   }
 
   hud();
@@ -169,13 +199,33 @@ function create(ctx: GameCtx): GameInstance {
         }
       }
       if (inp.hit.b && held !== null) { held = null; say(ctx.t('Kabel dilepas')); ctx.sfx('back'); }
-      if (inp.tap) {
-        const { x, y } = inp.tap;
-        if (Math.abs(y - PPY) < 34) { for (let i = 0; i < PP_N; i++) if (Math.abs(x - ppX(i)) < 20) { cur.row = 0; cur.col = i; press(); break; } }
-        else if (Math.abs(y - SWY) < 26) { for (let i = 0; i < swPorts.length; i++) if (Math.abs(x - swX(i)) < 13) { cur.row = 1; cur.col = i; press(); break; } }
-      } else if (inp.hit.a) press();
+      // hovering mouse moves the cursor, only while it moves so arrows still work
+      if (inp.ptr && !inp.ptr.down) {
+        if (!lastPtr || Math.abs(inp.ptr.x - lastPtr.x) + Math.abs(inp.ptr.y - lastPtr.y) > 2) {
+          const hh = hitAt(inp.ptr.x, inp.ptr.y);
+          if (hh && 'row' in hh) { cur.row = hh.row; cur.col = hh.col; }
+          lastPtr = { x: inp.ptr.x, y: inp.ptr.y };
+        }
+      } else if (!inp.ptr) lastPtr = null;
+      const hit = inp.tap ? hitAt(inp.tap.x, inp.tap.y) : null;
+      if (hit && 'ticket' in hit) {
+        // tapping a ticket grabs its cord straight away
+        const idx = tickets[hit.ticket].idx;
+        cur.row = 0; cur.col = idx;
+        if (held !== idx) press();
+      } else if (hit) { cur.row = hit.row; cur.col = hit.col; press(); }
+      else if (inp.hit.a) press();
+      if (flash) { flash.t -= dt; if (flash.t <= 0) flash = null; }
     },
     render() {
+      // ease the cursor box and the held cord tip; snaps in about 80 ms
+      const wantCx = cur.row === 0 ? ppX(cur.col) : swX(cur.col);
+      const wantCy = cur.row === 0 ? PPY - 9 : SWY + 4;
+      const wantTy = cur.row === 0 ? PPY + 46 : SWY - 30;
+      if (!vis.init || ctx.reducedMotion) { vis.cx = wantCx; vis.cy = wantCy; vis.tx = wantCx; vis.ty = wantTy; vis.init = true; }
+      const k = 0.45;
+      vis.cx += (wantCx - vis.cx) * k; vis.cy += (wantCy - vis.cy) * k;
+      vis.tx += (wantCx - vis.tx) * k; vis.ty += (wantTy - vis.ty) * k;
       g.fillStyle = PAL.bg;
       g.fillRect(0, 0, w, h);
       g.fillStyle = '#e4d6bb';
@@ -230,8 +280,12 @@ function create(ctx: GameCtx): GameInstance {
       for (let i = 0; i < PP_N; i++) {
         const x = ppX(i);
         const down = !!ticketOf(i);
-        text(g, String(pp[i].ppPort).padStart(2, '0'), x, PPY - 27, 10, PAL.ink);
-        text(g, pp[i].outletPort.replace(/^TO-/, ''), x, PPY - 15, 9, PAL.ink);
+        // outlet label split in two rows so neighbours never overlap: "02 L1" / "025-A"
+        const parts = pp[i].outletPort.replace(/^TO-/, '').split('-');
+        const fl = parts.length > 2 ? parts[0] : '';
+        const rest = parts.length > 2 ? parts.slice(1).join('-') : parts.join('-');
+        text(g, `${String(pp[i].ppPort).padStart(2, '0')}${fl ? ' ' + fl : ''}`, x, PPY - 28, 9, PAL.ink2);
+        text(g, rest, x, PPY - 16, 10, down ? PAL.red : PAL.ink);
         g.fillStyle = '#1c1c1c';
         g.fillRect(x - 10, PPY - 6, 20, 16);
         g.fillStyle = down ? (Math.floor(anim * 3) % 2 && !ctx.reducedMotion ? '#ff6a4d' : PAL.red) : '#3fae4f';
@@ -252,8 +306,7 @@ function create(ctx: GameCtx): GameInstance {
         g.beginPath();
         g.moveTo(x0, y0);
         if (held === i) {
-          const tx = cur.row === 0 ? ppX(cur.col) : swX(cur.col);
-          const ty = cur.row === 0 ? PPY + 46 : SWY - 30;
+          const tx = vis.tx, ty = vis.ty;
           g.bezierCurveTo(x0, y0 + 60, tx, ty - 40, tx, ty);
         } else if (plug[i] === null) {
           const sway = ctx.reducedMotion ? 0 : Math.sin(anim * 2 + i) * 3;
@@ -271,8 +324,14 @@ function create(ctx: GameCtx): GameInstance {
       for (let i = 0; i < swPorts.length; i++) text(g, String(swPorts[i]), swX(i), SWY + 19, 10, '#e9e2d0');
       g.strokeStyle = PAL.gold;
       g.lineWidth = 3;
-      if (cur.row === 0) g.strokeRect(ppX(cur.col) - 19, PPY - 34, 38, 50);
-      else g.strokeRect(swX(cur.col) - 12, SWY - 20, 24, 48);
+      const bw = cur.row === 0 ? 38 : 24, bh = cur.row === 0 ? 50 : 48;
+      g.strokeRect(vis.cx - bw / 2, vis.cy - bh / 2, bw, bh);
+      if (flash && !ctx.reducedMotion) {
+        const u = flash.t / 0.35;
+        g.strokeStyle = flash.ok ? '#7ee08f' : '#ff6a4d';
+        g.lineWidth = 3;
+        g.beginPath(); g.arc(flash.x, flash.y, 10 + (1 - u) * 16, 0, Math.PI * 2); g.stroke();
+      }
 
       g.fillStyle = msgBad ? '#f6d9cf' : '#e6efe0';
       roundRect(g, RX + 30, 320, RW - 60, 32, 6);

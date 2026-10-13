@@ -22,6 +22,37 @@ const STEP = 0.1;
 export const LOD1_DISTANCE = 8;
 export const LOD_HYSTERESIS = 1;
 
+
+interface Hit { age: number; reducedMotion: boolean; stars: THREE.Group; mats: THREE.Material[]; tex: THREE.Texture | null; bubble: HTMLElement | null }
+
+const easeOutBackSmall = (x: number) => 1 + 2.7 * (x - 1) ** 3 + 1.7 * (x - 1) ** 2;
+
+/** Five-point cartoon star on a canvas (reprimand reaction). */
+function makeStarTexture(): THREE.CanvasTexture | null {
+  if (typeof document === 'undefined') return null;
+  const c = document.createElement('canvas');
+  c.width = 64;
+  c.height = 64;
+  const g = c.getContext('2d');
+  if (!g) return null;
+  g.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 ? 12 : 28;
+    const a = -Math.PI / 2 + (i / 10) * Math.PI * 2;
+    g.lineTo(32 + Math.cos(a) * r, 33 + Math.sin(a) * r);
+  }
+  g.closePath();
+  g.fillStyle = '#ffd23f';
+  g.strokeStyle = '#7a4a10';
+  g.lineWidth = 4;
+  g.lineJoin = 'round';
+  g.fill();
+  g.stroke();
+  const tex = new THREE.CanvasTexture(g.canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 interface View { avatar: Avatar; prev: THREE.Vector3; next: THREE.Vector3; label: HTMLElement; floor: FloorId }
 
 export class NpcLayer {
@@ -38,6 +69,7 @@ export class NpcLayer {
     host.className = 'labels npc-labels';
     host.setAttribute('aria-hidden', 'true');
     labelHost.after(host);
+    this.labelHost = host;
     for (const npc of this.sim.npcs) {
       const actor = world.actors.find((a) => a.id === npc.id)!;
       const avatar = new Avatar(npc.name, 0x6f8fa6);
@@ -66,14 +98,32 @@ export class NpcLayer {
 
   /** Reaction overlays after a reprimand: clip name until sim time. */
   private reactions = new Map<string, { clip: string; until: number }[]>();
-  private stars = new Map<string, THREE.Group>();
+  /** Per-persona slapstick overlay: squash, hop, orbiting stars, speech bubble. */
+  private hits = new Map<string, Hit>();
+  private labelHost: HTMLElement | null = null;
+
+  /** Head height above the feet (m) for the reprimand effect. */
+  static readonly HEAD_Y = 1.72;
+
+  /** Persona head in world space (reprimand target). */
+  headOf(id: string): THREE.Vector3 | null {
+    const v = this.views.get(id);
+    if (!v) return null;
+    const p = v.avatar.root.position.clone();
+    const head = v.avatar.model?.getObjectByName('head');
+    if (head) { v.avatar.root.updateWorldMatrix(true, true); return head.getWorldPosition(p).add(new THREE.Vector3(0, 0.12, 0)); }
+    return p.add(new THREE.Vector3(0, NpcLayer.HEAD_Y, 0));
+  }
 
   /**
-   * Cartoon reaction (REQ-TEGUR-02): surprised hop, spinning stars over the
-   * head, a rub of the head, then the hurried walk back to the desk. Clips
-   * missing from older GLBs fall back to talk/walk, so the sequence still reads.
+   * Cartoon reaction (REQ-TEGUR-02): squash on contact, a surprised hop,
+   * stars orbiting the head and fading, a rub of the head and one line in a
+   * speech bubble; the caller then sends the persona running to its desk.
+   * Clips missing from older GLBs fall back to wave/talk, so it still reads.
+   * Reduced motion: no squash, hop or orbit; the bubble and a still star ring
+   * remain. No blood, bruises or fainting: cartoon only.
    */
-  react(id: string, reducedMotion: boolean): void {
+  react(id: string, reducedMotion: boolean, line = ''): void {
     const now = this.sim.time;
     const v = this.views.get(id);
     if (!v) return;
@@ -82,19 +132,96 @@ export class NpcLayer {
       { clip: has('surprised') ? 'surprised' : 'wave', until: now + 0.7 },
       { clip: has('rub_head') ? 'rub_head' : 'talk', until: now + 2.0 },
     ]);
-    if (reducedMotion) return;
-    let g = this.stars.get(id);
-    if (!g) {
-      g = new THREE.Group();
-      const mat = new THREE.MeshBasicMaterial({ color: 0xf2c14e });
-      const geo = new THREE.OctahedronGeometry(0.07, 0);
-      for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(geo, mat); m.position.set(Math.cos((i / 4) * Math.PI * 2) * 0.32, 0, Math.sin((i / 4) * Math.PI * 2) * 0.32); g.add(m); }
-      g.position.y = 1.95;
-      v.avatar.root.add(g);
-      this.stars.set(id, g);
+    this.clearHit(id);
+    const stars = new THREE.Group();
+    stars.name = 'scold-stars';
+    const tex = makeStarTexture();
+    const mats: THREE.Material[] = [];
+    for (let i = 0; i < 5; i++) {
+      const mat = tex ? new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }) : new THREE.SpriteMaterial({ color: 0xffd23f, transparent: true, depthWrite: false });
+      mats.push(mat);
+      const s = new THREE.Sprite(mat);
+      s.scale.setScalar(0.17);
+      stars.add(s);
     }
-    g.visible = true;
-    g.userData.until = now + 2.2;
+    stars.position.y = NpcLayer.HEAD_Y + 0.28;
+    v.avatar.root.add(stars);
+    let bubble: HTMLElement | null = null;
+    if (line && this.labelHost) {
+      bubble = document.createElement('div');
+      bubble.className = 'npc-bubble';
+      bubble.textContent = line;
+      Object.assign(bubble.style, {
+        position: 'absolute', left: '0', top: '0', pointerEvents: 'none', maxWidth: '15rem', zIndex: '3',
+        background: '#fffaf0', color: '#2b2118', border: '2px solid #2b2118', borderRadius: '14px',
+        padding: '6px 10px', font: '700 0.9rem/1.25 system-ui, sans-serif', boxShadow: '3px 3px 0 rgba(43,33,24,0.35)',
+        opacity: '0', transformOrigin: '50% 100%',
+      } satisfies Partial<CSSStyleDeclaration>);
+      const tail = document.createElement('span');
+      Object.assign(tail.style, {
+        position: 'absolute', left: '50%', bottom: '-9px', width: '14px', height: '14px', marginLeft: '-7px',
+        background: '#fffaf0', borderRight: '2px solid #2b2118', borderBottom: '2px solid #2b2118', transform: 'rotate(45deg)',
+      } satisfies Partial<CSSStyleDeclaration>);
+      bubble.append(tail);
+      this.labelHost.append(bubble);
+    }
+    this.hits.set(id, { age: 0, reducedMotion, stars, mats, tex, bubble });
+  }
+
+  /** Is a slapstick overlay still running for this persona (tests)? */
+  reacting(id: string): boolean { return this.hits.has(id); }
+
+  private clearHit(id: string) {
+    const h = this.hits.get(id);
+    if (!h) return;
+    h.stars.removeFromParent();
+    for (const m of h.mats) m.dispose();
+    h.tex?.dispose();
+    h.bubble?.remove();
+    const v = this.views.get(id);
+    if (v) v.avatar.root.scale.set(1, 1, 1);
+    this.hits.delete(id);
+  }
+
+  /** Squash, hop, star orbit and bubble, after the base pose for this frame. */
+  private updateHit(id: string, v: View, dt: number, camera: THREE.Camera, w: number, h: number) {
+    const hit = this.hits.get(id);
+    if (!hit) return;
+    hit.age += dt;
+    const a = hit.age;
+    const rm = hit.reducedMotion;
+    const root = v.avatar.root;
+    if (!rm) {
+      // Squash on contact, then an elastic wobble back to shape.
+      const sq = a < 0.06 ? a / 0.06 : Math.exp(-(a - 0.06) * 7) * Math.cos((a - 0.06) * 22);
+      const sy = 1 - 0.32 * sq;
+      root.scale.set(1 / Math.sqrt(sy), sy, 1 / Math.sqrt(sy));
+      // Surprised hop right after the squash.
+      if (a > 0.12 && a < 0.5) root.position.y += Math.sin(((a - 0.12) / 0.38) * Math.PI) * 0.22;
+    } else root.scale.set(1, 1, 1);
+    // Stars: orbit the head with a little bob and spin, fade out at the end.
+    const fade = a < 1.6 ? 1 : Math.max(0, 1 - (a - 1.6) / 0.7);
+    hit.stars.children.forEach((s, i) => {
+      const ang = (i / 5) * Math.PI * 2 + (rm ? 0 : a * 5.5);
+      const r = 0.3 + (rm ? 0 : 0.03 * Math.sin(a * 9 + i));
+      s.position.set(Math.cos(ang) * r, rm ? 0 : Math.sin(a * 7 + i * 1.3) * 0.05, Math.sin(ang) * r);
+      const m = (s as THREE.Sprite).material;
+      m.opacity = fade;
+      if (!rm) m.rotation = a * 6 + i;
+      const pop = rm ? 1 : Math.min(1, a / 0.15);
+      s.scale.setScalar(0.17 * pop);
+    });
+    // Speech bubble over the head (pops in after the hit, gone by 3.4 s).
+    const b = hit.bubble;
+    if (b) {
+      const p = root.position.clone().add(new THREE.Vector3(0, 2.25, 0)).project(camera);
+      const on = root.visible && p.z < 1 && Math.abs(p.x) < 1.1 && Math.abs(p.y) < 1.1;
+      const k = a < 0.25 ? 0 : a < 0.4 ? (a - 0.25) / 0.15 : a < 3.1 ? 1 : Math.max(0, 1 - (a - 3.1) / 0.3);
+      const s = rm ? 1 : k < 1 && a < 0.4 ? 0.6 + 0.4 * easeOutBackSmall(k) : 1;
+      b.style.opacity = on ? String(k) : '0';
+      b.style.transform = `translate(-50%, -100%) translate(${((p.x + 1) / 2) * w}px, ${((1 - p.y) / 2) * h}px) scale(${s.toFixed(3)})`;
+    }
+    if (a > 3.5) this.clearHit(id);
   }
 
   /** Reaction clip right now, if any (tests read it through clipFor). */
@@ -164,12 +291,8 @@ export class NpcLayer {
       }
       v.avatar.talking = npc.phase === 'paused';
       v.avatar.play(this.clipFor(npc));
-      const st = this.stars.get(npc.id);
-      if (st?.visible) {
-        if (this.sim.time > (st.userData.until as number)) st.visible = false;
-        else st.rotation.y += dt * 6;
-      }
       v.avatar.update(dt, npc.phase === 'travel' ? 1 : 0, reducedMotion);
+      this.updateHit(npc.id, v, dt, camera, w, h);
       // Personas glance at the CEO walking past (REQ-ANIM-05); seated workers keep their eyes on the screen.
       if (visible && playerPos && !(npc.phase === 'perform' && npc.workStatus === 'working')) {
         const d = Math.hypot(npc.pos[0] - playerPos[0], npc.pos[1] - playerPos[1]);
@@ -183,7 +306,8 @@ export class NpcLayer {
       const activityText = `${npc.name} · ${busy ? t(WORK_LABEL[npc.workStatus]) : (ACTIVITY_LABEL[npc.activity] ? t(ACTIVITY_LABEL[npc.activity]) : npc.activity)}`;
       v.label.classList.toggle('busy', busy);
       if (v.label.textContent !== activityText) v.label.textContent = activityText;
-      const on = s.z < 1 && Math.abs(s.x) < 1.05 && Math.abs(s.y) < 1.05
+      // The speech bubble replaces the name tag while a reprimand plays.
+      const on = s.z < 1 && Math.abs(s.x) < 1.05 && Math.abs(s.y) < 1.05 && !this.hits.get(npc.id)?.bubble
         && labelClear(screenX - v.label.offsetWidth / 2, screenY - v.label.offsetHeight,
           v.label.offsetWidth, v.label.offsetHeight, labelBlockers);
       v.label.style.opacity = on ? '1' : '0';

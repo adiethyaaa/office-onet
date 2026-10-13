@@ -17,6 +17,10 @@ export const FACILITY_GAMES: { type: string; game: string; rooms?: string[] }[] 
   { type: 'drafting_table', game: 'susun-denah' },
   { type: 'easel', game: 'desain-poster' },
   { type: 'bookshelf', game: 'kuis-perpustakaan', rooms: ['L2-READ'] },
+  // Chess is played at the board game table in the game room (Budi): sit on
+  // one of its stools or use the table itself. Not a Game Station slot.
+  { type: 'board_table', game: 'catur' },
+  { type: 'stool', game: 'catur', rooms: ['L2-GAME'] },
   { type: 'arcade_cabinet', game: 'arcade' },
   { type: 'media_console', game: 'arcade' },
   { type: 'beanbag', game: 'arcade', rooms: ['L2-GAME'] },
@@ -25,7 +29,7 @@ export const FACILITY_GAMES: { type: string; game: string; rooms?: string[] }[] 
 export const FACILITY_TITLE: Record<string, string> = {
   'lari-pagi': 'Lari Pagi', 'angkat-beban': 'Angkat Beban', 'peregangan': 'Peregangan', 'biliar': 'Biliar 8-Ball',
   'barista': 'Barista', 'server-down': 'Server Down', 'susun-denah': 'Susun Denah', 'desain-poster': 'Desain Poster',
-  'kuis-perpustakaan': 'Kuis Perpustakaan', 'arcade': 'Game Station',
+  'kuis-perpustakaan': 'Kuis Perpustakaan', 'catur': 'Catur Kantor', 'arcade': 'Game Station',
 };
 
 export function facilityGame(type: string, room: string | undefined): string | null {

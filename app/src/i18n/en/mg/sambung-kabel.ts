@@ -21,4 +21,8 @@ export const EN_SAMBUNG_KABEL: Record<string, string> = {
   'Bonus waktu +{s}': 'Time bonus +{s}',
   'Waktu habis': 'Time is up',
   'OLT': 'OLT',
+  'Pilih ubin': 'Pick a tile',
+  'Putar searah jarum jam': 'Rotate clockwise',
+  'Putar berlawanan arah': 'Rotate counterclockwise',
+  'Ketuk ubin untuk memutarnya searah jarum jam': 'Tap a tile to rotate it clockwise',
 };

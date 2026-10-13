@@ -33,6 +33,21 @@ describe('v2.0 facilities and Game Station', () => {
     expect(facilityGame(shelfWork.type, shelfWork.room)).toBeNull();
   });
 
+  it('chess is played at the board game table and its stools in the game room, not in the Game Station', () => {
+    const table = world.fixtures.find((x) => x.type === 'board_table')!;
+    expect(table.room).toBe('L2-GAME');
+    expect(facilityGame(table.type, table.room)).toBe('catur');
+    const stools = world.fixtures.filter((x) => x.type === 'stool' && x.room === 'L2-GAME');
+    expect(stools.length).toBeGreaterThanOrEqual(2);
+    for (const s of stools) {
+      expect(facilityGame(s.type, s.room)).toBe('catur');
+      expect(Math.hypot(s.pos[0] - table.pos[0], s.pos[1] - table.pos[1])).toBeLessThan(1.6);
+    }
+    const pantryStool = world.fixtures.find((x) => x.type === 'stool' && x.room !== 'L2-GAME')!;
+    expect(facilityGame(pantryStool.type, pantryStool.room)).toBeNull();
+    expect(ARCADE_SLOTS).not.toContain('catur');
+  });
+
   it('Game Station has 10 slots, 5 filled, all loadable and described', () => {
     expect(ARCADE_SLOTS).toHaveLength(10);
     const filled = ARCADE_SLOTS.filter(Boolean) as string[];

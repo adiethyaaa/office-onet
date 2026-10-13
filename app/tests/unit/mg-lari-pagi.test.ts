@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { run } from './mg-harness';
-import lari, { DURATION, segmentAt, SEGMENTS } from '../../src/minigames/games/lari-pagi';
+import lari, { DURATION, FLOW_AT, segmentAt, SEGMENTS } from '../../src/minigames/games/lari-pagi';
 import type { Btn } from '../../src/minigames/types';
 
 type S = { time: number; frame: number; speed: number; dist: number; stamina: number; winded: boolean; lastFoot: string | null; beat: number; sinceStep: number; counts: Record<string, number>; bestCombo: number };
@@ -51,6 +51,41 @@ describe('mini game: lari-pagi', () => {
     const r = run(lari);
     const res = r.play(onBeat(['a', 'b']), 61)!;
     expect(res.score).toBeGreaterThan(200);
+  });
+
+  it('one button (A only) or canvas taps alternate feet automatically', () => {
+    const a = run(lari).play(onBeat(['a', 'a']), 61)!;
+    expect(a.score).toBeGreaterThan(200);
+    const r = run(lari);
+    const pol = onBeat();
+    const res = r.play((f, s) => (pol(f, s).press ? { tap: { x: 320, y: 200 } } : {}), 61)!;
+    expect(res.score).toBe(a.score);
+    expect((r.snap() as S).counts.salah).toBe(0);
+  });
+
+  it('a step lands on the frame it is pressed (foot, sfx and grade all update)', () => {
+    const r = run(lari);
+    r.step(30);
+    r.step(1, [], ['a']);
+    expect((r.snap() as S).lastFoot).toBe('L');
+    expect(r.sfx).toContain('step');
+    r.step(29);
+    r.step(1, [], ['a']);
+    const s = r.snap() as S;
+    expect(s.lastFoot).toBe('R');
+    expect(s.counts.pas).toBe(1);
+    expect(s.sinceStep).toBe(0);
+  });
+
+  it('a long on-beat streak earns the flow distance bonus', () => {
+    const r = run(lari);
+    r.play(onBeat(), 15);
+    const s = r.snap() as S & { combo: number };
+    expect(s.combo).toBeGreaterThanOrEqual(FLOW_AT);
+    const d0 = s.dist, v = s.speed;
+    r.step(1);
+    const d1 = (r.snap() as S).dist;
+    expect(d1 - d0).toBeGreaterThan((v / 3.6 / 60) * 1.05);
   });
 
   it('off-beat alternating (too slow) scores less than on-beat; standing still drops speed to zero', () => {

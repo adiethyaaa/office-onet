@@ -35,6 +35,12 @@ export function initHudMenu() {
     label.textContent = state === 'open' ? t('Sembunyikan menu') : t('Tampilkan menu');
   };
   apply(loadHudPrefs().menu);
+  // Icon-only layouts (phones, 600-959 px) hide the label visually: a title
+  // keeps it discoverable on hover.
+  for (const b of document.querySelectorAll<HTMLElement>('#hud-menu .btn')) {
+    const l = b.querySelector('.lbl')?.textContent?.trim();
+    if (l && !b.title) b.title = l;
+  }
   btn.addEventListener('click', () => {
     const next = hud.dataset.menu === 'closed' ? 'open' : 'closed';
     apply(next);

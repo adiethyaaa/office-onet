@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { run, mulberry } from './mg-harness';
-import lompat, { LEVELS, TILE, findTile, makeGame, type LevelDef } from '../../src/minigames/games/lompat-lantai';
+import lompat, { LEVELS, PHYS, TILE, findTile, makeGame, type LevelDef } from '../../src/minigames/games/lompat-lantai';
 import type { Btn, GameModule } from '../../src/minigames/types';
 
-type Snap = { level: number; lives: number; px: number; py: number; vx: number; vy: number; onGround: boolean; phase: string; docs: number; stomps: number; score: number; deaths: number; lastHurt: string; enemies: { x: number; y: number; alive: boolean }[] };
+type Snap = { buffer: number; coyote: number; jumps: number; nudges: number; cam: number; level: number; lives: number; px: number; py: number; vx: number; vy: number; onGround: boolean; phase: string; docs: number; stomps: number; score: number; deaths: number; lastHurt: string; enemies: { x: number; y: number; alive: boolean }[] };
 
 const solid = (c: string | undefined) => c === '#' || c === 'B';
 
@@ -174,6 +174,101 @@ describe('mini game: lompat-lantai', () => {
     let rejumped = false;
     for (let i = 0; i < 6; i++) { b.step(1); if ((b.snap() as Snap).vy < -300) rejumped = true; }
     expect(rejumped).toBe(true);
+  });
+
+  it('jump buffer: a press up to 0.15 s before landing still jumps, a much earlier one does not', () => {
+    expect(PHYS.buffer).toBeGreaterThanOrEqual(0.15);
+    const flat: LevelDef = { name: 'Lobi', theme: 'lobby', par: 30, rows: ['#.........', '#.........', '#.........', '#.........', '#.S......E', '##########'] };
+    const tryEarly = (framesBefore: number) => {
+      const b = run({ meta: lompat.meta, create: (ctx) => makeGame(ctx, { levels: [flat] }) });
+      b.step(2);
+      b.step(1, [], ['a']);
+      // find the landing frame of this jump on a dry run
+      let land = 0;
+      const probe = run({ meta: lompat.meta, create: (ctx) => makeGame(ctx, { levels: [flat] }) });
+      probe.step(2); probe.step(1, [], ['a']);
+      for (let i = 1; i < 120; i++) { probe.step(1); if ((probe.snap() as Snap).onGround) { land = i; break; } }
+      b.step(land - framesBefore - 1);
+      expect((b.snap() as Snap).onGround).toBe(false);
+      b.step(1, [], ['a']);
+      b.step(framesBefore + 2);
+      return (b.snap() as Snap).jumps;
+    };
+    expect(tryEarly(Math.floor(PHYS.buffer * 60) - 1)).toBe(2);
+    expect(tryEarly(Math.ceil(PHYS.buffer * 60) + 6)).toBe(1);
+  });
+
+  it('coyote time: jumping 5 frames after walking off a ledge works, 12 frames late does not', () => {
+    const ledge: LevelDef = { name: 'Lobi', theme: 'lobby', par: 30, rows: ['#..........', '#..........', '#..........', '#.S........', '####.......', '#..........', '#..........', '#..........', '#..........', '#.........E', '###########'] };
+    const late = (frames: number) => {
+      const r = run({ meta: lompat.meta, create: (ctx) => makeGame(ctx, { levels: [ledge] }) });
+      for (let i = 0; i < 200; i++) { r.step(1, ['right']); if (!(r.snap() as Snap).onGround) break; }
+      r.step(frames - 1, ['right']);
+      r.step(1, ['right', 'a'], ['a']);
+      return (r.snap() as Snap).jumps;
+    };
+    expect(late(5)).toBe(1);
+    expect(late(12)).toBe(0);
+  });
+
+  it('air control: the player can reverse direction mid-jump', () => {
+    const lv: LevelDef = { name: 'Lobi', theme: 'lobby', par: 30, rows: ['#..........', '#..........', '#..........', '#..........', '#.....S....', '#.........E', '###########'] };
+    const r = run({ meta: lompat.meta, create: (ctx) => makeGame(ctx, { levels: [lv] }) });
+    r.step(20, ['right']);
+    r.step(1, ['right', 'a'], ['a']);
+    r.step(4, ['right', 'a']);
+    expect((r.snap() as Snap).vx).toBeGreaterThan(100);
+    r.step(12, ['left', 'a']);
+    const s = r.snap() as Snap;
+    expect(s.onGround).toBe(false);
+    expect(s.vx).toBeLessThan(-60);
+  });
+
+  it('a long fall never tunnels through a thin shelf', () => {
+    const rows = ['#......', '#.S....'];
+    for (let i = 0; i < 39; i++) rows.push('#......');
+    rows.push('#-----E', '#......', '#######');
+    const lv: LevelDef = { name: 'Lobi', theme: 'lobby', par: 30, rows };
+    const shelfRow = rows.indexOf('#-----E');
+    const r = run({ meta: lompat.meta, create: (ctx) => makeGame(ctx, { levels: [lv] }) });
+    let maxV = 0;
+    for (let i = 0; i < 240; i++) { r.step(1); maxV = Math.max(maxV, (r.snap() as Snap).vy); }
+    const s = r.snap() as Snap;
+    expect(maxV).toBe(PHYS.maxFall);
+    expect(s.onGround).toBe(true);
+    expect(s.py).toBe(shelfRow * TILE);
+    expect(s.deaths).toBe(0);
+  });
+
+  it('clipping a ceiling corner by a few pixels slides around it instead of stopping the jump', () => {
+    const lv: LevelDef = { name: 'Lobi', theme: 'lobby', par: 30, rows: ['#..........', '#..........', '#..........', '#..#.......', '#..........', '#..........', '#.S......E.', '###########'] };
+    const r = run({ meta: lompat.meta, create: (ctx) => makeGame(ctx, { levels: [lv] }) });
+    // stand so the body overlaps the ceiling block's right edge by 3 px
+    r.step(2);
+    for (let i = 0; i < 120; i++) {
+      const s = r.snap() as Snap;
+      const target = 4 * TILE + PHYS.pw / 2 - 3;
+      if (Math.abs(s.px - target) < 1.5 && Math.abs(s.vx) < 1) break;
+      r.step(1, s.px < target ? ['right'] : ['left']);
+      r.step(1);
+    }
+    const x0 = (r.snap() as Snap).px;
+    expect(Math.floor((x0 - PHYS.pw / 2) / TILE)).toBe(3);
+    r.step(1, ['a'], ['a']);
+    let minY = Infinity;
+    for (let i = 0; i < 40; i++) { r.step(1, ['a']); minY = Math.min(minY, (r.snap() as Snap).py); }
+    const s = r.snap() as Snap;
+    expect(s.nudges).toBeGreaterThan(0);
+    expect(minY).toBeLessThan(4 * TILE + PHYS.ph);
+  });
+
+  it('a tap on the screen jumps', () => {
+    const lv: LevelDef = { name: 'Lobi', theme: 'lobby', par: 30, rows: ['#.........', '#.........', '#.........', '#.........', '#.........', '#.S......E', '##########'] };
+    const r = run({ meta: lompat.meta, create: (ctx) => makeGame(ctx, { levels: [lv] }) });
+    r.step(2);
+    r.step(1, [], [], undefined, { x: 300, y: 200 });
+    expect((r.snap() as Snap).jumps).toBe(1);
+    expect((r.snap() as Snap).vy).toBeLessThan(-300);
   });
 
   it('same seed, same run', () => {

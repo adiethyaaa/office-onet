@@ -100,4 +100,38 @@ describe('mini game: server-down', () => {
     expect(a.snap()).toEqual(b.snap());
     expect(run(serverDown, 1).snap()).not.toEqual(run(serverDown, 2).snap());
   });
+
+  it('tapping a ticket grabs its cord, tapping the right switch port closes it', () => {
+    const r = run(serverDown, 11);
+    waitTicket(r);
+    const t = S(r).tickets[0];
+    r.step(1, [], [], undefined, { x: 100, y: 70 });
+    expect(S(r).held).toBe(t.idx);
+    const col = S(r).swPorts.indexOf(t.want);
+    const step = (392 - 68) / S(r).swPorts.length;
+    r.step(1, [], [], undefined, { x: 236 + 34 + (col + 0.5) * step, y: 252 });
+    expect(S(r).closed).toBe(1);
+    expect(S(r).held).toBeNull();
+  });
+
+  it('a switch port tap between port boxes still hits the nearest column', () => {
+    const r = run(serverDown, 11);
+    waitTicket(r);
+    const t = S(r).tickets[0];
+    const ppStep = (392 - 68) / 8;
+    r.step(1, [], [], undefined, { x: 236 + 34 + t.idx * ppStep + 2, y: 60 });
+    expect(S(r).held).toBe(t.idx);
+  });
+
+  it('a "wrong port" ticket never points the cord at another cord\'s home port', () => {
+    for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
+      const r = run(serverDown, seed);
+      for (let k = 0; k < 60 * 80 && !r.result; k += 30) {
+        r.step(30);
+        const s = S(r);
+        const homes = s.pp.map((p) => p.port);
+        s.plug.forEach((p, i) => { if (p !== null && p !== s.pp[i].port) expect(homes).not.toContain(p); });
+      }
+    }
+  });
 });

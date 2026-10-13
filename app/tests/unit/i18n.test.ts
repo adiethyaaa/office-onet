@@ -45,6 +45,23 @@ describe('English dictionary', () => {
     expect(names.filter((n) => !(n in EN))).toEqual([]);
   });
 
+  it('translates every Game Station card and facility title', async () => {
+    const { ARCADE_INFO, FACILITY_TITLE } = await import('../../src/minigames/registry');
+    const s = [...Object.values(ARCADE_INFO).flatMap((i) => [i.title, i.blurb]), ...Object.values(FACILITY_TITLE)];
+    expect(s.filter((n) => !(n in EN))).toEqual([]);
+  });
+
+  it('translates every mini game title, blurb, tutorial row and button name', async () => {
+    const { GAMES } = await import('../../src/minigames/registry');
+    const { TUTORIAL_NAMES } = await import('../../src/minigames/host');
+    const s: string[] = [...TUTORIAL_NAMES];
+    for (const load of Object.values(GAMES)) {
+      const m = (await load()).default.meta;
+      s.push(m.title, m.blurb, m.score.unit, ...m.controls, ...Object.values(m.actions ?? {}) as string[], ...(m.pointerHint ? [m.pointerHint] : []));
+    }
+    expect(s.filter((n) => !(n in EN))).toEqual([]);
+  });
+
   it('translates every persona line and floor finish', () => {
     const lines = Object.values((dialogueJson as { personas: Record<string, string[]> }).personas).flat();
     const w = worldJson as unknown as { rooms: { finish?: { floor?: string } }[] };

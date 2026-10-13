@@ -14,7 +14,7 @@ import { CameraRig } from './camera';
 import { Input } from './input';
 import { Player } from './player';
 import { ACTIVITY_LABEL, NpcLayer, WORK_LABEL } from './npcs';
-import type { WorkStatus } from '../sim/idle';
+import { SCOLD_RUSH_SECONDS, type WorkStatus } from '../sim/idle';
 import { DoorController } from '../world/doors';
 import { DoorMeshes } from '../world/door-meshes';
 import dialogueJson from '@design/dialogue.json';
@@ -430,8 +430,13 @@ export class Game {
    */
   openFacilityGame(fx: Fixture, game: string, slot?: ActivitySlot) {
     if (this.miniGame) return;
-    const slots = slot ? [slot] : this.world.activitySlots.filter((sl) => sl.fixture === fx.id);
-    const free = slots.find((sl) => !this.slotTakenBy(sl.id));
+    const slots = slot ? [slot] : this.facilitySlots(fx, game);
+    // Take the free seat nearest the CEO, not the first one in the list (at
+    // the chess table that teleported Budi across the table).
+    const me = this.player.pos;
+    const free = slots.filter((sl) => !this.slotTakenBy(sl.id) && sl.floor === this.player.floor)
+      .sort((a, b) => Math.hypot(a.pos[0] - me[0], a.pos[1] - me[1]) - Math.hypot(b.pos[0] - me[0], b.pos[1] - me[1]))[0]
+      ?? slots.find((sl) => !this.slotTakenBy(sl.id));
     if (slots.length && !free) { toast(t('Sedang dipakai {name}. Coba lagi nanti.', { name: this.slotTakenBy(slots[0].id) ?? '' })); return; }
     if (this.activity) this.endActivity(false);
     if (free) {
@@ -441,11 +446,15 @@ export class Game {
       this.npcs.sim.reservations.set(free.id, { npc: PLAYER_ID, expires: Number.POSITIVE_INFINITY });
     }
     this.miniGame = game;
+    // Give focus back to what opened the game (Aksi button, HUD) on close;
+    // without this it fell to <body> and a screen reader lost its place.
+    const back = document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : null;
     const done = () => {
       this.miniGame = null;
       if (free && this.npcs.sim.reservations.get(free.id)?.npc === PLAYER_ID) this.npcs.sim.reservations.delete(free.id);
       this.input.clear();
       sound.music(this.areaTrack());
+      if (back?.isConnected) back.focus({ preventScroll: true });
     };
     toast(t('Membuka {game}...', { game: t(FACILITY_TITLE[game] ?? game) }), 1200);
     const common = { reducedMotion: this.settings.reducedMotion, padProfile: () => this.settings.padProfile, playerName: this.playerName };
@@ -454,6 +463,19 @@ export class Game {
     } else {
       void import('../minigames/host').then((m) => m.openMiniGame(game, { ...common, onClose: done })).catch(() => { done(); toast(t('Permainan gagal dimuat.')); });
     }
+  }
+
+  /**
+   * Slots for a facility: its own, or for a table without seats of its own
+   * (chess board) the seats around it that open the same game.
+   */
+  private facilitySlots(fx: Fixture, game: string): ActivitySlot[] {
+    const own = this.world.activitySlots.filter((sl) => sl.fixture === fx.id);
+    if (own.length) return own;
+    const near = new Set(this.world.fixtures
+      .filter((f) => f.floor === fx.floor && f.id !== fx.id && facilityGame(f.type, f.room) === game && Math.hypot(f.pos[0] - fx.pos[0], f.pos[1] - fx.pos[1]) < 1.6)
+      .map((f) => f.id));
+    return this.world.activitySlots.filter((sl) => near.has(sl.fixture));
   }
 
   /** Display name used on the local leaderboards. */
@@ -693,35 +715,104 @@ export class Game {
     return box;
   }
 
+  /** Running reprimand effects (one per persona at most, 10 s cooldown). */
+  private scoldFx: import('./scold').ScoldFx[] = [];
+
   /**
-   * Slapstick reprimand: prop flies or swings, the persona reacts, says a line
-   * and hurries back to its desk for 20 s. Pure animation (REQ-TEGUR-05).
+   * Slapstick reprimand (REQ-TEGUR): the CEO turns to the persona and steps
+   * closer if it is far, the prop pops into the CEO's hand, winds up and
+   * swings (or the paper ball is thrown), then the impact frame and the
+   * persona's reaction: squash, hop, orbiting stars, a line in a speech bubble
+   * and a run back to the desk for 20 s. Pure animation (REQ-TEGUR-05).
    */
   async scold(id: string, kind: string): Promise<string> {
     const npc = this.npcs.sim.npcs.find((n) => n.id === id);
     if (!npc) return 'missing';
     // Resume first so the persona is free to walk away after the hit.
     if (npc.phase === 'paused') this.npcs.sim.resume(id);
+    // The persona card closing must not resume the persona mid wind-up.
+    if (this.talkingTo === id) this.talkingTo = null;
     const res = this.npcs.sim.scold(id);
     if (res === 'working') { toast(t('{name} sedang bekerja: agennya tidak bisa ditegur.', { name: npc.name })); return res; }
     if (res === 'cooldown') { toast(t('Tunggu sebentar sebelum menegur {name} lagi.', { name: npc.name })); return res; }
     if (res !== 'ok') return res;
     this.scolds++;
+    // Hold the persona in place (desk route kept) until the hit lands.
+    this.npcs.sim.pauseForPlayer(id);
     const m = await import('./scold');
-    const elev = this.world.floors.find((f) => f.id === npc.floor)!.elevation;
-    const from = toThree(this.player.pos[0], this.player.pos[1], elev + 1.2);
-    const to = toThree(npc.pos[0], npc.pos[1], elev + 1.75);
+    const rm = this.settings.reducedMotion;
     const prop = m.SCOLD_PROPS.find((p) => p.id === kind) ?? m.SCOLD_PROPS[0];
-    this.player.avatar.react('wave', 'idle');
-    sound.sfx('whoosh');
-    m.animateProp(this.scene, prop.id, from, to, this.settings.reducedMotion, () => {
+    const lines = m.SCOLD_LINES[id] ?? [m.SCOLD_FALLBACK];
+    const line = t(lines[this.scolds % lines.length]);
+    let landed = false;
+    const land = () => {
+      if (landed) return;
+      landed = true;
       this.spatial(prop.sfx, npc.floor, npc.pos, 1.2);
-      this.npcs.react(id, this.settings.reducedMotion);
-      const lines = m.SCOLD_LINES[id] ?? [m.SCOLD_FALLBACK];
-      toast(`${npc.name}: "${t(lines[this.scolds % lines.length])}"`, 2600);
+      this.npcs.react(id, rm, line);
+      toast(`${npc.name}: "${line}"`, 2600);
+      // Rub the head for a beat, then run to the desk for the full 20 s.
+      window.setTimeout(() => {
+        if (npc.phase !== 'paused' || this.talkingTo === id) return;
+        this.npcs.sim.resume(id);
+        npc.scoldedUntil = this.npcs.sim.time + SCOLD_RUSH_SECONDS;
+        npc.until = Math.max(npc.until, npc.scoldedUntil);
+      }, rm ? 600 : 1100);
+    };
+    const near = npc.floor === this.player.floor && Math.hypot(npc.pos[0] - this.player.pos[0], npc.pos[1] - this.player.pos[1]) < 14;
+    if (!near) { land(); return res; } // persona out of sight: reaction only
+    for (const f of this.scoldFx) if (!f.finished) f.dispose();
+    const faceNpc = () => {
+      this.player.facing = (Math.atan2(npc.pos[1] - this.player.pos[1], npc.pos[0] - this.player.pos[0]) * 180) / Math.PI;
+      this.player.avatar.setFacing(this.player.facing);
+    };
+    faceNpc();
+    if (this.activity) this.endActivity(false);
+    this.npcs.faceTowards(id, this.player.pos);
+    const nav = this.nav;
+    const STAND = prop.id === 'bola' ? 3.2 : 1.15;
+    const fx = new m.ScoldFx({
+      scene: this.scene, kind: prop.id, reducedMotion: rm,
+      ceo: { root: this.player.avatar.root, model: this.player.avatar.model },
+      head: () => this.npcs.headOf(id) ?? toThree(npc.pos[0], npc.pos[1], 1.75),
+      floorY: this.world.floors.find((f) => f.id === npc.floor)!.elevation,
+      camera: this.rig.camera,
+      shake: rm ? null : this.renderer.domElement,
+      // Step closer when the persona is out of reach; walls stop the CEO.
+      approach: (dt) => {
+        faceNpc();
+        const dx = npc.pos[0] - this.player.pos[0];
+        const dy = npc.pos[1] - this.player.pos[1];
+        const d = Math.hypot(dx, dy);
+        if (d <= STAND + 0.05) { this.player.avatar.play('idle', 0.12); return true; }
+        const stepLen = Math.min(d - STAND, 4 * dt);
+        const next: Vec2 = [this.player.pos[0] + (dx / d) * stepLen, this.player.pos[1] + (dy / d) * stepLen];
+        if (!nav.walkableAt(next)) { this.player.avatar.play('idle', 0.12); return true; }
+        this.player.pos = next;
+        this.player.avatar.locomotion(4, dt, 0, rm);
+        this.activityUntil = performance.now() + 2500;
+        return false;
+      },
+      onSwing: () => sound.sfx('whoosh'),
+      onImpact: land,
     });
+    this.scoldFx.push(fx);
+    // Keep the frame loop's locomotion from overriding the swing pose.
+    this.activityUntil = performance.now() + 2500;
     return res;
   }
+
+  /** Advance reprimand effects after the CEO's clip posed the skeleton. */
+  private updateScold(dt: number) {
+    if (!this.scoldFx.length) return;
+    this.scoldFx = this.scoldFx.filter((f) => f.update(dt));
+  }
+
+  /** True during an impact hit-stop: the CEO and personas hold for ~80 ms. */
+  private get scoldFrozen(): boolean { return this.scoldFx.some((f) => f.frozen); }
+
+  /** Live reprimand effects (tests). */
+  scoldFxCount(): number { return this.scoldFx.length; }
 
   /** Plan-view state for the minimap and floor map: the CEO and every persona. */
   mapSnapshot() {
@@ -822,10 +913,12 @@ export class Game {
       this.player.avatar.locomotion(speed, dt, this.player.turnRate, this.settings.reducedMotion);
     }
     this.player.avatar.setGroundSpeed(speed);
-    this.player.avatar.update(dt, Math.min(1, speed / 2), this.settings.reducedMotion);
+    const frozen = this.scoldFrozen;
+    this.player.avatar.update(frozen ? 0 : dt, Math.min(1, speed / 2), this.settings.reducedMotion);
     const pv = this.playerVec();
     this.player.avatar.root.position.copy(pv);
     this.player.avatar.lookAt(this.activity ? null : this.lookTarget(), dt, this.settings.reducedMotion);
+    this.updateScold(dt);
     if (this.activity?.slot.pose === 'sit') {
       const el = this.world.floors.find((f) => f.id === this.activity!.slot.floor)!.elevation;
       this.player.avatar.root.position.copy(toThree(this.activity.slot.pos[0], this.activity.slot.pos[1], el));
@@ -836,7 +929,7 @@ export class Game {
     this.npcs.sim.setPlayer(this.activity ? null : this.player.floor, this.player.pos);
     const labelBlockers = [...document.querySelectorAll('.hud-top, .joystick, .touch-btn, #prompt, .activity-chip, .minimap')]
       .map(el => el.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0);
-    this.npcs.update(dt, this.player.floor, this.rig.camera, this.stage.clientWidth, this.stage.clientHeight, this.settings.reducedMotion, this.player.pos, labelBlockers);
+    this.npcs.update(frozen ? 0 : dt, this.player.floor, this.rig.camera, this.stage.clientWidth, this.stage.clientHeight, this.settings.reducedMotion, this.player.pos, labelBlockers);
     const agents = [{ floor: this.player.floor, pos: this.player.pos }, ...this.npcs.sim.npcs.map((n) => ({ floor: n.floor, pos: n.pos }))];
     this.doors.update(dt, agents, this.settings.visitor, this.settings.reducedMotion);
     for (const d of this.doors.justOpened) this.spatial('door', d.floor, d.centre);

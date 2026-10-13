@@ -5,6 +5,8 @@ import { t } from '../i18n';
 import { sound } from '../audio';
 import { ARCADE_INFO, ARCADE_SLOTS } from './registry';
 import { loadScores, openMiniGame, type HostOpts } from './host';
+import { PAD_PROFILES, faceButtons } from '../input/pad-profiles';
+import { PressEdges, isFreshKey, padButtons } from '../input/press-edges';
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string, string> = {}, text?: string): HTMLElementTagNameMap[K] {
   const e = document.createElement(tag);
@@ -72,6 +74,10 @@ export function openArcade(opts: HostOpts): HTMLElement {
   const onKey = (e: KeyboardEvent) => {
     const k = e.key;
     e.stopPropagation();
+    // Enter still held from the office (E/Enter opened the station) auto-repeats
+    // and would click the focused slot: one press fell through into game 01.
+    // A held Esc that just closed a game must not close the station as well.
+    if (!isFreshKey(e) && (k === 'Enter' || k === ' ' || k === 'Escape')) { e.preventDefault(); return; }
     if (k === 'Escape') { e.preventDefault(); teardown(true); return; }
     if (k === 'ArrowRight') { e.preventDefault(); move(1); }
     else if (k === 'ArrowLeft') { e.preventDefault(); move(-1); }
@@ -81,21 +87,23 @@ export function openArcade(opts: HostOpts): HTMLElement {
   };
   // Gamepad: D-pad moves, A plays, B leaves. Polled here because the office pad
   // layer is muted while data-minigame is set.
-  let prev: boolean[] = [];
+  // Buttons already held when the station opens (A that opened it, A on a
+  // game's Keluar that returned here) must be released first, otherwise they
+  // launch slot 01 at once. A/B follow the chosen profile (Japanese layout).
+  const edges = new PressEdges(padButtons(navigator.getGamepads?.()));
   let raf = 0;
   const poll = () => {
     raf = requestAnimationFrame(poll);
-    const p = [...(navigator.getGamepads?.() ?? [])].find((q) => q && q.connected);
-    if (!p) return;
-    const raw = p.buttons.map((b) => b.pressed);
-    const hit = (i: number) => raw[i] && !prev[i];
+    const raw = padButtons(navigator.getGamepads?.());
+    if (!raw.length) return;
+    const hit = edges.next(raw);
+    const face = faceButtons(PAD_PROFILES[opts.padProfile()] ?? PAD_PROFILES.standar);
     if (hit(15)) move(1);
     if (hit(14)) move(-1);
     if (hit(13)) move(cols());
     if (hit(12)) move(-cols());
-    if (hit(0)) (document.activeElement as HTMLElement | null)?.click();
-    if (hit(1) || hit(8)) teardown(true);
-    prev = raw;
+    if (hit(face.A)) (document.activeElement as HTMLElement | null)?.click();
+    if (hit(face.B) || hit(8)) teardown(true);
   };
   raf = requestAnimationFrame(poll);
   window.addEventListener('keydown', onKey, true);

@@ -28,4 +28,11 @@ export const EN_SERVER_DOWN: Record<string, string> = {
   'Patch panel': 'Patch panel',
   'Switch akses': 'Access switch',
   'Panah: pilih port · A: ambil/tancap': 'Arrows: pick a port · A: grab/plug',
+  'Port sebelumnya': 'Previous port',
+  'Port berikutnya': 'Next port',
+  'Ke patch panel': 'To the patch panel',
+  'Ke switch': 'To the switch',
+  'Ambil / tancapkan kabel': 'Grab / plug in the cord',
+  'Lepas kabel': 'Let go of the cord',
+  'Ketuk tiket atau port patch panel untuk ambil kabel, lalu ketuk port switch untuk menancapkan': 'Tap a ticket or a patch panel port to grab the cord, then tap a switch port to plug it in',
 };

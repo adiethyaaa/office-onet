@@ -86,16 +86,21 @@ export function grade(b: Brief, c: Choice): Grade {
   return { ratio, contrast: con, tone, mood, icon, hierarchy, total: con + tone + mood + icon + hierarchy };
 }
 
+export const MIN_START_CONTRAST = 1.5;
 const SESSION_BRIEFS = 3;
 const BRIEF_TIME = 45;
 const REVIEW_TIME = 7;
 const ROWS = 5;
+/** Seconds the review card ignores A, so a double press on submit does not skip Kevin's notes. */
+const REVIEW_GUARD = 0.35;
 
 const meta: GameModule['meta'] = {
   id: 'desain-poster', title: 'Desain Poster', place: 'easel', music: 'lounge',
   blurb: 'Susun poster sesuai brief. Kevin menilai kontras, kecocokan brief dan hierarki judul.',
   controls: ['Atas/bawah: pilih properti', 'Kiri/kanan: ganti nilai', 'A: selesai dan minta penilaian Kevin'],
   view: { w: 640, h: 400 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'right', 'up', 'down', 'a'],
+  actions: { up: 'Properti sebelumnya', down: 'Properti berikutnya', left: 'Nilai sebelumnya', right: 'Nilai berikutnya', a: 'Selesai, minta penilaian / lanjut' },
+  pointerHint: 'Ketuk ◀ atau ▶ di tiap baris untuk ganti nilai, seret judul di poster ke atas atau bawah untuk tata letak',
 };
 
 function create(ctx: GameCtx): GameInstance {
@@ -137,12 +142,23 @@ function create(ctx: GameCtx): GameInstance {
   const grades: number[] = [];
   let ended = false;
   let anim = 0;
+  let bump = 0;
+  let rowFlash = 0;
+  let flashDir = 0;
+  let revealK = 0;
+  let dragY: number | null = null;
+  const sparks: { x: number; y: number; vx: number; vy: number; life: number; col: string }[] = [];
   const kevin = ctx.cast.find((c) => c.id === 'CH-VISUAL') ?? ctx.cast[0];
 
-  const randomChoice = (): Choice => ({
-    bg: Math.floor(ctx.rand() * BGS.length), style: Math.floor(ctx.rand() * STYLES.length), icon: Math.floor(ctx.rand() * ICONS.length),
-    layout: Math.floor(ctx.rand() * LAYOUTS.length), ink: Math.floor(ctx.rand() * INKS.length),
-  });
+  const randomChoice = (): Choice => {
+    const c: Choice = {
+      bg: Math.floor(ctx.rand() * BGS.length), style: Math.floor(ctx.rand() * STYLES.length), icon: Math.floor(ctx.rand() * ICONS.length),
+      layout: Math.floor(ctx.rand() * LAYOUTS.length), ink: Math.floor(ctx.rand() * INKS.length),
+    };
+    // a start with ink equal to the paper looks like a blank poster; keep it weak but visible
+    while (contrast(BGS[c.bg].hex, INKS[c.ink].hex) < MIN_START_CONTRAST) c.ink = (c.ink + 1) % INKS.length;
+    return c;
+  };
   const hud = () => ctx.setHud(ctx.t('Brief {n}/{m} · {p} poin', { n: Math.min(idx + 1, SESSION_BRIEFS), m: SESSION_BRIEFS, p: total }));
   const startBrief = () => { choice = randomChoice(); row = 0; phase = 'edit'; left = BRIEF_TIME; hud(); };
 
@@ -152,7 +168,17 @@ function create(ctx: GameCtx): GameInstance {
     grades.push(last.total);
     phase = 'review';
     reviewT = REVIEW_TIME;
+    revealK = 0;
+    dragY = null;
+    bump = 1;
+    ctx.sfx('stamp');
     ctx.sfx(last.total >= 70 ? 'right' : last.total >= 40 ? 'confirm' : 'wrong');
+    if (last.total >= 70 && !ctx.reducedMotion) {
+      for (let k = 0; k < 18; k++) {
+        const a = (k / 18) * Math.PI * 2;
+        sparks.push({ x: 140, y: 188, vx: Math.cos(a) * (90 + (k % 3) * 40), vy: Math.sin(a) * (90 + (k % 3) * 40) - 40, life: 0.8, col: k % 2 ? PAL.gold : PAL.accent });
+      }
+    }
     hud();
   }
 
@@ -171,10 +197,17 @@ function create(ctx: GameCtx): GameInstance {
     const k = keys[row];
     choice = { ...choice, [k]: (choice[k] + d + counts[row]) % counts[row] };
     ctx.sfx('rotate', { rate: 1 + row * 0.08 });
+    bump = 1;
+    rowFlash = 1;
+    flashDir = d;
   }
 
   // right panel geometry
   const PX = 300, PW = 326, RY = 132, RH = 40;
+  // poster geometry, also the drag target for the headline
+  const QX = 36, QY = 40, QW = 208, QH = 296;
+  const VX = PX + 124, VC = (PX + 156 + PX + PW - 34) / 2;
+  const layoutY = (i: number) => (i === 0 ? QY + 50 : i === 1 ? QY + QH / 2 + 30 : QY + QH - 70);
 
   startBrief();
 
@@ -182,9 +215,14 @@ function create(ctx: GameCtx): GameInstance {
     update(dt, inp) {
       if (ended) return;
       anim += dt;
+      bump = Math.max(0, bump - dt * 4);
+      rowFlash = Math.max(0, rowFlash - dt * 5);
+      for (const s of sparks) { s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 200 * dt; s.life -= dt; }
+      for (let i = sparks.length - 1; i >= 0; i--) if (sparks[i].life <= 0) sparks.splice(i, 1);
       if (phase === 'review') {
         reviewT -= dt;
-        if (reviewT <= 0 || (reviewT < REVIEW_TIME - 0.4 && (inp.hit.a || inp.tap))) advance();
+        revealK = Math.min(1, revealK + dt * 1.6);
+        if (reviewT <= 0 || (reviewT < REVIEW_TIME - REVIEW_GUARD && (inp.hit.a || inp.tap))) advance();
         return;
       }
       left -= dt;
@@ -192,9 +230,25 @@ function create(ctx: GameCtx): GameInstance {
       if (inp.tap) {
         const { x, y } = inp.tap;
         const r = Math.floor((y - RY) / RH);
-        if (x >= PX && x <= PX + PW && r >= 0 && r < ROWS) { row = r; cycle(x < PX + PW / 2 ? -1 : 1); }
-        else if (x >= PX && y >= RY + ROWS * RH + 6 && y <= RY + ROWS * RH + 46) submit();
+        if (x >= PX && x <= PX + PW && r >= 0 && r < ROWS) {
+          if (r !== row) ctx.sfx('tick');
+          row = r;
+          // label column only selects; the value area has a back half and a forward half
+          if (x >= VX) cycle(x < VC ? -1 : 1);
+        } else if (x >= PX && x <= PX + PW && y >= RY + ROWS * RH + 2 && y <= RY + ROWS * RH + 50) submit();
+        else if (x >= QX && x <= QX + QW && y >= QY && y <= QY + QH) {
+          dragY = y;
+          row = 3;
+        }
         return;
+      }
+      if (dragY !== null) {
+        if (inp.ptr && inp.ptr.down) {
+          dragY = inp.ptr.y;
+          let bestI = choice.layout, bestD = Infinity;
+          for (let i = 0; i < LAYOUTS.length; i++) { const d = Math.abs(layoutY(i) - dragY); if (d < bestD) { bestD = d; bestI = i; } }
+          if (bestI !== choice.layout) { choice = { ...choice, layout: bestI }; ctx.sfx('rotate', { rate: 1.24 }); bump = 1; rowFlash = 1; flashDir = 0; }
+        } else dragY = null;
       }
       if (inp.hit.up) { row = (row - 1 + ROWS) % ROWS; ctx.sfx('tick'); }
       if (inp.hit.down) { row = (row + 1) % ROWS; ctx.sfx('tick'); }
@@ -216,14 +270,30 @@ function create(ctx: GameCtx): GameInstance {
       g.stroke();
       g.fillStyle = '#6b522b';
       g.fillRect(36, 338, 208, 10);
-      drawPoster(36, 40, 208, 296);
+      {
+        // poster squashes a touch on every change so the edit reads instantly
+        const sq = ctx.reducedMotion ? 0 : Math.sin(bump * Math.PI) * 0.03;
+        g.save();
+        g.translate(QX + QW / 2, QY + QH);
+        g.scale(1 + sq, 1 - sq);
+        g.translate(-(QX + QW / 2), -(QY + QH));
+        drawPoster(QX, QY, QW, QH);
+        g.restore();
+        if (dragY !== null) {
+          g.strokeStyle = PAL.gold; g.lineWidth = 2; g.setLineDash([5, 4]);
+          g.strokeRect(QX + 4, Math.max(QY + 4, Math.min(QY + QH - 40, dragY - 20)), QW - 8, 40);
+          g.setLineDash([]);
+        }
+      }
+      for (const sp of sparks) { g.globalAlpha = Math.max(0, sp.life / 0.8); g.fillStyle = sp.col; g.fillRect(sp.x - 2.5, sp.y - 2.5, 5, 5); }
+      g.globalAlpha = 1;
 
       // brief + rows
       const b = order[Math.min(idx, SESSION_BRIEFS - 1)];
       g.fillStyle = PAL.surface;
       roundRect(g, PX, 12, PW, 106, 10);
       text(g, ctx.t('Brief {n}/{m}', { n: Math.min(idx + 1, SESSION_BRIEFS), m: SESSION_BRIEFS }), PX + 14, 30, 15, PAL.accent, 'left');
-      text(g, ctx.t('{s} dtk', { s: Math.ceil(left) }), PX + PW - 14, 30, 15, left < 10 && phase === 'edit' ? PAL.red : PAL.ink2, 'right');
+      if (phase === 'edit') text(g, ctx.t('{s} dtk', { s: Math.ceil(left) }), PX + PW - 14, 30, 15, left < 10 ? PAL.red : PAL.ink2, 'right');
       wrap(briefText(b.id), PX + 14, 54, PW - 28, 17, 20, PAL.ink);
       if (phase === 'edit') {
         const r = contrast(BGS[choice.bg].hex, INKS[choice.ink].hex);
@@ -234,22 +304,32 @@ function create(ctx: GameCtx): GameInstance {
       if (phase === 'edit') {
         for (let i = 0; i < ROWS; i++) {
           const y = RY + i * RH;
-          g.fillStyle = i === row ? '#fff3d6' : PAL.surface;
+          const on = i === row;
+          g.fillStyle = on ? '#fff3d6' : PAL.surface;
           roundRect(g, PX, y, PW, RH - 6, 8);
-          if (i === row) { g.strokeStyle = PAL.gold; g.lineWidth = 2; g.strokeRect(PX + 1, y + 1, PW - 2, RH - 8); }
-          text(g, rowName(i), PX + 12, y + 17, 14, PAL.ink2, 'left');
-          const v = i === 0 ? bgName(choice.bg) : i === 1 ? styleName(choice.style) : i === 2 ? iconName(choice.icon) : i === 3 ? layoutName(choice.layout) : inkName(choice.ink);
-          text(g, `◀  ${v}  ▶`, PX + PW - 14, y + 17, 15, PAL.ink, 'right');
+          if (on) { g.strokeStyle = PAL.gold; g.lineWidth = 2; g.strokeRect(PX + 1, y + 1, PW - 2, RH - 8); }
+          fitLine(rowName(i), PX + 12, y + 17, 84, 14, PAL.ink2, 'left');
           if (i === 0 || i === 4) {
             g.fillStyle = i === 0 ? BGS[choice.bg].hex : INKS[choice.ink].hex;
-            g.fillRect(PX + 112, y + 8, 18, 18);
-            g.strokeStyle = PAL.ink2; g.lineWidth = 1; g.strokeRect(PX + 112.5, y + 8.5, 17, 17);
+            g.fillRect(PX + 100, y + 8, 18, 18);
+            g.strokeStyle = PAL.ink2; g.lineWidth = 1; g.strokeRect(PX + 100.5, y + 8.5, 17, 17);
           }
+          const v = i === 0 ? bgName(choice.bg) : i === 1 ? styleName(choice.style) : i === 2 ? iconName(choice.icon) : i === 3 ? layoutName(choice.layout) : inkName(choice.ink);
+          const fl = on ? rowFlash : 0;
+          const slide = ctx.reducedMotion ? 0 : fl * flashDir * 8;
+          // arrow chips: the pressed side pops
+          for (const [cx, d] of [[PX + 140, -1], [PX + PW - 18, 1]] as const) {
+            const pop = !ctx.reducedMotion && flashDir === d ? fl * 3 : 0;
+            g.fillStyle = on ? '#f4dfae' : '#efe6d2';
+            roundRect(g, cx - 13 - pop, y + 4 - pop, 26 + pop * 2, RH - 14 + pop * 2, 6);
+            text(g, d < 0 ? '◀' : '▶', cx, y + 17, 13, PAL.ink);
+          }
+          fitLine(v, VC + slide, y + 17, PW - 194, 15, PAL.ink, 'center');
         }
         const by = RY + ROWS * RH + 6;
         g.fillStyle = PAL.green;
         roundRect(g, PX, by, PW, 40, 10);
-        text(g, ctx.t('A: Selesai, minta penilaian'), PX + PW / 2, by + 20, 16, '#ffffff');
+        fitLine(ctx.t('A: Selesai, minta penilaian'), PX + PW / 2, by + 20, PW - 20, 16, '#ffffff', 'center');
 
       } else if (last) {
         g.fillStyle = PAL.surface;
@@ -265,21 +345,44 @@ function create(ctx: GameCtx): GameInstance {
         ];
         lines.forEach(([s, v, max], i) => {
           const y = RY + 52 + i * 38;
-          text(g, s, PX + 14, y, 13, PAL.ink, 'left');
+          // bars fill one after another; ease out so each lands softly
+          const k = ctx.reducedMotion ? 1 : Math.max(0, Math.min(1, revealK * 5 - i * 0.6));
+          const e = 1 - Math.pow(1 - k, 3);
+          g.globalAlpha = ctx.reducedMotion ? 1 : Math.min(1, 0.25 + k);
+          fitLine(s, PX + 14, y, PW - 28, 13, PAL.ink, 'left');
           g.fillStyle = 'rgba(29,42,35,0.12)';
           g.fillRect(PX + 14, y + 12, PW - 80, 6);
           g.fillStyle = v / max >= 0.75 ? PAL.green : v / max >= 0.4 ? PAL.gold : PAL.red;
-          g.fillRect(PX + 14, y + 12, (PW - 80) * (v / max), 6);
-          text(g, `${v}/${max}`, PX + PW - 14, y + 14, 12, PAL.ink2, 'right');
+          g.fillRect(PX + 14, y + 12, (PW - 80) * (v / max) * e, 6);
+          text(g, `${Math.round(v * e)}/${max}`, PX + PW - 14, y + 14, 12, PAL.ink2, 'right');
+          g.globalAlpha = 1;
         });
-        text(g, idx + 1 < SESSION_BRIEFS ? ctx.t('A: brief berikutnya') : ctx.t('A: lihat hasil'), PX + PW / 2, RY + 240, 13, PAL.ink2);
+        text(g, reviewT < REVIEW_TIME - REVIEW_GUARD ? (idx + 1 < SESSION_BRIEFS ? ctx.t('A atau ketuk: brief berikutnya') : ctx.t('A atau ketuk: lihat hasil')) : '', PX + PW / 2, RY + 240, 13, PAL.ink2);
+        // stamp with the total, squashes in on submit
+        const sc = ctx.reducedMotion ? 1 : 1 + bump * 0.5;
+        g.save();
+        g.translate(QX + QW - 34, QY + 30);
+        g.rotate(-0.18);
+        g.scale(sc, 2 - sc);
+        const col = last.total >= 70 ? PAL.green : last.total >= 40 ? PAL.gold : PAL.red;
+        g.fillStyle = 'rgba(255,250,240,0.92)';
+        g.beginPath(); g.arc(0, 0, 28, 0, Math.PI * 2); g.fill();
+        g.strokeStyle = col; g.lineWidth = 3; g.stroke();
+        text(g, String(last.total), 0, 1, 20, col);
+        g.restore();
       }
     },
     snapshot: () => ({
-      brief: idx, briefIds: order.map((o) => o.id), phase, row, choice: { ...choice }, left: Math.round(left * 100) / 100,
+      brief: idx, briefIds: order.map((o) => o.id), phase, row, dragging: dragY !== null, choice: { ...choice }, left: Math.round(left * 100) / 100,
       total, grades: [...grades], last: last ? { ...last, ratio: Math.round(last.ratio * 100) / 100 } : null, ended,
     }),
   };
+
+  function fitLine(s: string, x: number, y: number, maxW: number, size: number, color: string, align: CanvasTextAlign) {
+    let sz = size;
+    for (; sz > 9; sz--) { g.font = `700 ${sz}px 'Alegreya Sans', system-ui, sans-serif`; if (g.measureText(s).width <= maxW) break; }
+    text(g, s, x, y, sz, color, align);
+  }
 
   function wrap(s: string, x: number, y: number, maxW: number, size: number, lh: number, color: string) {
     g.font = `700 ${size}px 'Alegreya Sans', system-ui, sans-serif`;
@@ -302,7 +405,7 @@ function create(ctx: GameCtx): GameInstance {
     g.fillStyle = bg;
     g.fillRect(x, y, pw, ph);
     const lay = LAYOUTS[choice.layout];
-    const ty = lay === 'atas' ? y + 50 : lay === 'tengah' ? y + ph / 2 + 30 : y + ph - 70;
+    const ty = layoutY(choice.layout) - QY + y;
     const iy = lay === 'atas' ? y + 170 : lay === 'tengah' ? y + 90 : y + 110;
     drawIcon(ICONS[choice.icon], x + pw / 2, iy, 46, ink);
     // headline, wrapped to the poster width

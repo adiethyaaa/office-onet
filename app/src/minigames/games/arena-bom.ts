@@ -69,14 +69,20 @@ const meta: GameModule['meta'] = {
   blurb: 'Pasang bom, buka jalan, kalahkan 3 lawan.',
   controls: ['Panah atau D-pad: jalan', 'A: pasang bom', 'Ledakan menghancurkan lemari arsip; ambil power-up yang jatuh', 'Menang 2 dari 3 ronde. Setelah 120 detik arena menyempit'],
   view: { w: GW * T, h: GH * T + TOP }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'up', 'down', 'right', 'a'],
+  actions: { arah: 'Jalan (tahan untuk terus jalan)', a: 'Pasang bom' },
 };
+
+/** Seconds a press is remembered: a turn or bomb pressed slightly early still happens. */
+export const BUFFER_T = 0.15;
+/** Furthest sideways slide (cells) the corner assist will do for the player. */
+export const CORNER_ASSIST = 0.6;
 
 interface Player {
   c: CastMember; x: number; y: number; alive: boolean; cpu: boolean;
   maxBombs: number; range: number; speed: number;
   target: number | null; wait: number; moving: boolean; deathT: number;
 }
-interface Bomb extends BombLite { t: number; owner: number; pass: Set<number> }
+interface Bomb extends BombLite { t: number; owner: number; pass: Set<number>; age: number }
 
 function create(ctx: GameCtx): GameInstance {
   const { g, w, h } = ctx;
@@ -112,6 +118,16 @@ function create(ctx: GameCtx): GameInstance {
   let time = 0;
   let playT = 0;
   let shake = 0;
+  // player movement memory: the direction actually walked last and how long ago,
+  // plus a buffered bomb press
+  let lastDir = -1;
+  let lastDirT = 0;
+  // axis pressed most recently (0 vertical, 1 horizontal): with two keys held it wins
+  let prefAxis = 1;
+  let prevH = false, prevV = false;
+  let bombBuf = 0;
+  let goT = 0;
+  let squash = 0;
 
   const score = () => boxesBroken * 10 + kills * 300 + wins * 500;
   const hud = () => ctx.setHud(ctx.t('Ronde {r} · Menang {w} · Skor {s}', { r: round, w: wins, s: score() }));
@@ -152,6 +168,9 @@ function create(ctx: GameCtx): GameInstance {
     shrinkOrder = shrinkOrder.filter((c) => grid[c] !== WALL);
     phase = 'intro';
     phaseT = 1.6;
+    lastDir = -1;
+    lastDirT = 0;
+    bombBuf = 0;
     hud();
   }
   newRound();
@@ -164,7 +183,7 @@ function create(ctx: GameCtx): GameInstance {
     return bi < 0 || bombs[bi].pass.has(pi);
   };
 
-  function move(pi: number, dir: number, dist: number) {
+  function move(pi: number, dir: number, dist: number, maxSlide = Infinity) {
     const p = players[pi];
     const dx = DX[dir], dy = DY[dir];
     const cx = Math.round(p.x), cy = Math.round(p.y);
@@ -186,7 +205,7 @@ function create(ctx: GameCtx): GameInstance {
         const o = Math.sign(off);
         const lane = dx ? (cy + o) * GW + cx : cy * GW + cx + o;
         const laneAhead = dx ? (cy + o) * GW + cx + dx : (cy + dy) * GW + cx + o;
-        if (walkable(pi, lane) && walkable(pi, laneAhead)) {
+        if (1 - Math.abs(off) <= maxSlide && walkable(pi, lane) && walkable(pi, laneAhead)) {
           if (dx) p.y += o * dist; else p.x += o * dist;
         }
         return;
@@ -208,7 +227,7 @@ function create(ctx: GameCtx): GameInstance {
     if (bombs.filter((b) => b.owner === pi).length >= p.maxBombs) return false;
     const pass = new Set<number>();
     players.forEach((q, qi) => { if (q.alive && Math.abs(q.x - cx) < 0.95 && Math.abs(q.y - cy) < 0.95) pass.add(qi); });
-    bombs.push({ x: cx, y: cy, range: p.range, t: FUSE, owner: pi, pass });
+    bombs.push({ x: cx, y: cy, range: p.range, t: FUSE, owner: pi, pass, age: 0 });
     ctx.sfx('fuse', { pan: (cx / GW) * 2 - 1, gain: pi === 0 ? 1 : 0.6 });
     return true;
   }
@@ -381,6 +400,67 @@ function create(ctx: GameCtx): GameInstance {
     if (p.target !== null) walkTo(pi, p.target, p.speed * dt);
   }
 
+  /** Try walking `dir`; true when the player actually moved. */
+  function tryMove(dir: number, dist: number, maxSlide = Infinity): boolean {
+    const P = players[0];
+    const bx = P.x, by = P.y;
+    move(0, dir, dist, maxSlide);
+    return P.x !== bx || P.y !== by;
+  }
+
+  /**
+   * Player walking. Holding a direction keeps walking; a turn pressed before the
+   * junction keeps the old heading for up to BUFFER_T so the corner assist in
+   * move() can take it; with two directions held the new axis wins and the
+   * other is the fallback; releasing mid-step glides on to the next cell centre
+   * so a quick tap is one clean step.
+   */
+  function playerWalk(dt: number, ax: number, ay: number) {
+    const P = players[0];
+    const mag = Math.min(1, Math.hypot(ax, ay));
+    const hx = Math.abs(ax) > 0.3, vy = Math.abs(ay) > 0.3;
+    if (vy && !prevV) prefAxis = 0;
+    if (hx && !prevH) prefAxis = 1;
+    prevH = hx; prevV = vy;
+    lastDirT += dt;
+    if (hx || vy) {
+      const dh = ax > 0 ? 1 : 3, dv = ay > 0 ? 2 : 0;
+      let order: number[];
+      if (hx && vy) order = prefAxis === 0 ? [dv, dh] : [dh, dv];
+      else order = [hx ? dh : dv];
+      // analog sticks: gentle tilt walks slower, full tilt or keys at full speed
+      const dist = P.speed * dt * Math.max(0.45, Math.min(1, (mag - 0.25) / 0.55));
+      // corner assist slides at most 0.6 cell sideways into an open lane; a
+      // turn pressed a little early (two keys held, or the last heading
+      // within BUFFER_T) carries on to the next junction instead of backing up
+      const tries: [number, number][] = order.map((d) => [d, CORNER_ASSIST]);
+      if (order.length === 1 && lastDir >= 0 && lastDir % 2 !== order[0] % 2 && lastDirT <= BUFFER_T) tries.push([lastDir, CORNER_ASSIST]);
+      // one key held and nothing else works: full slide toward the open lane (classic assist)
+      if (order.length === 1) tries.push([order[0], Infinity]);
+      for (const [d, lim] of tries) {
+        if (tryMove(d, dist, lim)) {
+          // the buffered heading does not reset the timer, so the turn wins as soon as it opens
+          if (order.includes(d)) { lastDir = d; lastDirT = 0; }
+          P.moving = true;
+          return;
+        }
+      }
+      return;
+    }
+    if (lastDir < 0) return;
+    // glide to the next cell centre along the last heading
+    const along = lastDir % 2 ? P.x : P.y;
+    const sgn = lastDir === 1 || lastDir === 2 ? 1 : -1;
+    const goal = sgn > 0 ? Math.ceil(along - 1e-6) : Math.floor(along + 1e-6);
+    const left = Math.abs(goal - along);
+    if (left < 1e-4) { if (lastDir % 2) P.x = goal; else P.y = goal; lastDir = -1; return; }
+    const step = Math.min(left, P.speed * dt);
+    if (tryMove(lastDir, step)) {
+      P.moving = true;
+      if (Math.abs(goal - (lastDir % 2 ? P.x : P.y)) < 1e-4) { if (lastDir % 2) P.x = goal; else P.y = goal; }
+    } else lastDir = -1;
+  }
+
   function kill(pi: number, by: number) {
     const p = players[pi];
     if (!p.alive) return;
@@ -432,9 +512,12 @@ function create(ctx: GameCtx): GameInstance {
       shake = Math.max(0, shake - dt);
       for (const p of players) if (!p.alive) p.deathT += dt;
       if (phase === 'over') return;
+      squash = Math.max(0, squash - dt);
+      goT = Math.max(0, goT - dt);
       if (phase === 'intro') {
         phaseT -= dt;
-        if (phaseT <= 0) { phase = 'play'; ctx.sfx('start'); }
+        bombBuf = inp.hit.a && phaseT < BUFFER_T ? BUFFER_T : Math.max(0, bombBuf - dt);
+        if (phaseT <= 0) { phase = 'play'; goT = 0.7; ctx.sfx('start'); }
         return;
       }
       if (phase === 'roundEnd') {
@@ -455,14 +538,12 @@ function create(ctx: GameCtx): GameInstance {
       const P = players[0];
       P.moving = false;
       if (P.alive) {
-        const ax = inp.ax, ay = inp.ay;
-        if (Math.abs(ax) > 0.3 || Math.abs(ay) > 0.3) {
-          const dir = Math.abs(ax) >= Math.abs(ay) ? (ax > 0 ? 1 : 3) : ay > 0 ? 2 : 0;
-          const bx = P.x, by = P.y;
-          move(0, dir, P.speed * dt);
-          P.moving = P.x !== bx || P.y !== by;
+        // bomb first so a press while walking lands on the cell you stand on now
+        if (inp.hit.a) bombBuf = BUFFER_T;
+        if (bombBuf > 0) {
+          if (placeBomb(0)) { bombBuf = 0; squash = 0.12; } else bombBuf = Math.max(0, bombBuf - dt);
         }
-        if (inp.hit.a) placeBomb(0);
+        playerWalk(dt, inp.ax, inp.ay);
       }
       danger = computeDanger();
       for (let i = 1; i < players.length; i++) if (players[i].alive) ai(i, dt);
@@ -472,6 +553,7 @@ function create(ctx: GameCtx): GameInstance {
           if (!q.alive || Math.abs(q.x - b.x) >= 0.95 || Math.abs(q.y - b.y) >= 0.95) b.pass.delete(qi);
         }
         b.t -= dt;
+        b.age += dt;
       }
       for (let c = 0; c < flameT.length; c++) flameT[c] = Math.max(0, flameT[c] - dt);
       detonate();
@@ -557,8 +639,9 @@ function create(ctx: GameCtx): GameInstance {
         const cx = b.x * T + T / 2, cy = b.y * T + T / 2 + 2;
         g.fillStyle = 'rgba(0,0,0,0.2)';
         g.beginPath(); g.ellipse(cx, cy + 12, 12, 4, 0, 0, Math.PI * 2); g.fill();
+        const pop = ctx.reducedMotion ? 0 : Math.max(0, 1 - b.age / 0.15) * 5;
         g.fillStyle = b.t < 0.6 ? '#7a2418' : '#2b2b2b';
-        g.beginPath(); g.arc(cx, cy, 13 + pulse, 0, Math.PI * 2); g.fill();
+        g.beginPath(); g.arc(cx, cy, 13 + pulse + pop, 0, Math.PI * 2); g.fill();
         g.fillStyle = 'rgba(255,255,255,0.35)';
         g.beginPath(); g.arc(cx - 4, cy - 5, 4, 0, Math.PI * 2); g.fill();
         g.strokeStyle = '#8a6a3c'; g.lineWidth = 2.5;
@@ -571,7 +654,14 @@ function create(ctx: GameCtx): GameInstance {
         const p = players[i];
         if (!p.alive && p.deathT > 1.2) continue;
         g.globalAlpha = p.alive ? 1 : Math.max(0, 1 - p.deathT / 1.2);
-        drawToken(g, p.c, p.x * T + T / 2, p.y * T + T / 2 - 4, 15, time, p.moving);
+        if (i === 0 && squash > 0 && !ctx.reducedMotion) {
+          // squash on dropping a bomb
+          const k = Math.sin((squash / 0.12) * Math.PI) * 0.18;
+          const bx = p.x * T + T / 2, by = p.y * T + T / 2 + 10;
+          g.save(); g.translate(bx, by); g.scale(1 + k, 1 - k); g.translate(-bx, -by);
+          drawToken(g, p.c, p.x * T + T / 2, p.y * T + T / 2 - 4, 15, time, p.moving);
+          g.restore();
+        } else drawToken(g, p.c, p.x * T + T / 2, p.y * T + T / 2 - 4, 15, time, p.moving);
         g.globalAlpha = 1;
         if (i === 0 && p.alive) {
           g.fillStyle = PAL.accent;
@@ -587,12 +677,18 @@ function create(ctx: GameCtx): GameInstance {
         roundRect(g, w / 2 - 170, TOP + GH * T / 2 - 44, 340, 88, 16);
         if (phase === 'intro') {
           text(g, ctx.t('Ronde {r}', { r: round }), w / 2, TOP + GH * T / 2 - 12, 28, PAL.green);
-          text(g, phaseT > 0.5 ? ctx.t('Bersiap...') : ctx.t('Mulai!'), w / 2, TOP + GH * T / 2 + 20, 18, PAL.ink2);
+          text(g, ctx.t('Bersiap...'), w / 2, TOP + GH * T / 2 + 20, 18, PAL.ink2);
         } else {
           const msg = outcome === 'win' ? ctx.t('Kamu menang ronde ini!') : outcome === 'lose' ? ctx.t('Kamu tersingkir') : ctx.t('Seri');
           text(g, msg, w / 2, TOP + GH * T / 2 - 12, 24, outcome === 'win' ? PAL.green : PAL.red);
           text(g, ctx.t('Skor {s}', { s: score() }), w / 2, TOP + GH * T / 2 + 20, 18, PAL.ink2);
         }
+      }
+      if (phase === 'play' && goT > 0) {
+        // non-blocking start cue: the round is already live underneath
+        g.globalAlpha = Math.min(1, goT / 0.3);
+        text(g, ctx.t('Mulai!'), w / 2, TOP + GH * T / 2, 40, PAL.green);
+        g.globalAlpha = 1;
       }
       g.restore();
     },
@@ -600,7 +696,7 @@ function create(ctx: GameCtx): GameInstance {
     snapshot: () => ({
       phase, round, wins, losses, score: score(), kills, boxesBroken, suicides, suicideTimes: [...suicideTimes],
       roundT: Math.round(roundT * 100) / 100, playT: Math.round(playT * 100) / 100,
-      bombs: bombs.length, boxes: Array.from(grid).filter((v) => v === BOX).length,
+      bombs: bombs.length, myBombs: bombs.filter((b) => b.owner === 0).length, boxes: Array.from(grid).filter((v) => v === BOX).length, grid: Array.from(grid).join(''),
       players: players.map((p) => ({ id: p.c.id, x: Math.round(p.x * 1000) / 1000, y: Math.round(p.y * 1000) / 1000, alive: p.alive, maxBombs: p.maxBombs, range: p.range })),
     }),
   };

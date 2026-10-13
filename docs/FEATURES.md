@@ -165,6 +165,7 @@ Each facility opens its own 2D game. A game downloads only when opened, so the o
 | Hugo's drafting table | Floor Plan Puzzle | Put the real office rooms in place before time runs out |
 | Kevin's easel | Poster Design | Pick background, title, icon, colours; scored on contrast and fit to the brief |
 | Bookshelf (Library) | Library Quiz | 5 questions about this office and ICT |
+| Board game table and its stools (Game room) | Office Chess | Chess against a teammate, 3 levels; the CEO sits on the nearest stool (v2.1) |
 | Arcade cabinets and TV (Game room) | Game Station | 10-slot menu, 5 filled |
 
 Game Station:

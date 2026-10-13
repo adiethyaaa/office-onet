@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { run } from './mg-harness';
-import arena, { BOX, FLOOR, GH, GW, WALL, blast, isPillar } from '../../src/minigames/games/arena-bom';
+import arena, { BOX, FLOOR, GH, GW, WALL, BUFFER_T, blast, isPillar } from '../../src/minigames/games/arena-bom';
 
 type P = { id: string; x: number; y: number; alive: boolean; maxBombs: number; range: number };
-type Snap = { phase: string; round: number; wins: number; losses: number; score: number; kills: number; boxesBroken: number; suicides: number; suicideTimes: number[]; playT: number; roundT: number; bombs: number; boxes: number; players: P[] };
+type Snap = { phase: string; round: number; wins: number; losses: number; score: number; kills: number; boxesBroken: number; suicides: number; suicideTimes: number[]; playT: number; roundT: number; bombs: number; myBombs: number; boxes: number; grid: string; players: P[] };
 
 const open = () => {
   const g = new Uint8Array(GW * GH);
@@ -113,5 +113,97 @@ describe('mini game: arena-bom play', () => {
     const a = go(99);
     expect(a).toBe(go(99));
     expect(a).not.toBe(go(100));
+  });
+});
+
+describe('mini game: arena-bom controls', () => {
+  const floor = (s: Snap, x: number, y: number) => s.grid[y * GW + x] === String(FLOOR);
+  /** First seed whose row 1 is open from x=1 to x=n. */
+  const seedWithRow = (n: number) => {
+    for (let seed = 1; seed < 400; seed++) {
+      const r = run(arena, seed);
+      const s = r.snap() as Snap;
+      let ok = true;
+      for (let x = 1; x <= n; x++) ok &&= floor(s, x, 1);
+      if (ok) return r;
+    }
+    throw new Error('no seed');
+  };
+
+  it('holding a direction keeps walking through several cells without stopping', () => {
+    const r = seedWithRow(5);
+    r.step(100);
+    let prev = (r.snap() as Snap).players[0].x;
+    let stalls = 0;
+    for (let f = 0; f < 50; f++) {
+      r.step(1, ['right']);
+      const x = (r.snap() as Snap).players[0].x;
+      if (x <= prev + 1e-6 && x < 5) stalls++;
+      prev = x;
+    }
+    expect(prev).toBeGreaterThanOrEqual(3);
+    expect(stalls).toBe(0);
+  });
+
+  it('a short tap is one clean step: the player glides to the next cell centre', () => {
+    const r = seedWithRow(3);
+    r.step(100);
+    r.step(3, ['right']);
+    const mid = (r.snap() as Snap).players[0].x;
+    expect(mid).toBeGreaterThan(1);
+    expect(mid).toBeLessThan(2);
+    r.step(30);
+    const p = (r.snap() as Snap).players[0];
+    expect(p.x).toBe(2);
+    expect(p.y).toBe(1);
+  });
+
+  it('holding a turn early (both directions held) takes the junction without stopping', () => {
+    let r: ReturnType<typeof run> | null = null;
+    for (let seed = 1; seed < 400 && !r; seed++) {
+      const q = run(arena, seed);
+      const s = q.snap() as Snap;
+      if (floor(s, 2, 1) && floor(s, 3, 1) && floor(s, 3, 2) && floor(s, 3, 3)) r = q;
+    }
+    r!.step(100);
+    // past the (1,2) turn, nearest cell is now x=2 whose south is a pillar
+    r!.step(14, ['right']);
+    // press down early and keep right held: corner assist carries on to x=3, then turns
+    r!.step(40, ['right', 'down']);
+    const p = (r!.snap() as Snap).players[0];
+    expect(p.x).toBe(3);
+    expect(p.y).toBeGreaterThan(2);
+  });
+
+  it('a bomb pressed just before the round starts is buffered and placed on the first frame', () => {
+    const r = run(arena, 21);
+    // intro is 1.6 s; press at 1.6 - BUFFER_T/2
+    const pre = Math.round((1.6 - BUFFER_T / 2) * 60);
+    r.step(pre);
+    expect((r.snap() as Snap).phase).toBe('intro');
+    r.step(1, [], ['a']);
+    r.step(Math.round(BUFFER_T * 60));
+    const s = r.snap() as Snap;
+    expect(s.phase).toBe('play');
+    expect(s.myBombs).toBe(1);
+  });
+
+  it('switching keys a bit before the junction (release right, press down) still turns at the next one', () => {
+    let r: ReturnType<typeof run> | null = null;
+    for (let seed = 1; seed < 400 && !r; seed++) {
+      const q = run(arena, seed);
+      const s = q.snap() as Snap;
+      if (floor(s, 2, 1) && floor(s, 3, 1) && floor(s, 3, 2) && floor(s, 3, 3)) r = q;
+    }
+    r!.step(100);
+    // walk to about x = 2.3: nearest cell (2,1) has a pillar below
+    r!.step(23, ['right']);
+    const x0 = (r!.snap() as Snap).players[0].x;
+    expect(x0).toBeGreaterThan(2.2);
+    expect(x0).toBeLessThan(2.4);
+    r!.step(40, ['down']);
+    const p = (r!.snap() as Snap).players[0];
+    expect(p.x).toBe(3);
+    expect(p.y).toBeGreaterThan(2);
   });
 });

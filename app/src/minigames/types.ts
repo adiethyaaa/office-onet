@@ -14,6 +14,12 @@ export interface InputState {
   ay: number;
   /** Last pointer tap in game units, consumed by the game (games that support tap). */
   tap: { x: number; y: number } | null;
+  /**
+   * Live pointer (mouse or finger) in game units while it is over the canvas,
+   * `down` true while pressed. Lets games offer drag controls (aim, pull back).
+   * Optional so the headless harness and older games can ignore it.
+   */
+  ptr?: { x: number; y: number; down: boolean } | null;
 }
 
 export interface GameResult {
@@ -41,6 +47,14 @@ export interface GameMeta {
   place: string;
   /** Which on-screen buttons a touch player needs. */
   touch: Btn[];
+  /**
+   * What each button does in this game (Indonesian source, host translates).
+   * The tutorial turns these into per-device rows: keyboard keys, gamepad
+   * buttons and on-screen buttons. 'arah' covers the four directions.
+   */
+  actions?: Partial<Record<Btn | 'arah', string>>;
+  /** Extra tutorial line for touch/mouse players (drag or tap controls). */
+  pointerHint?: string;
 }
 
 /** Everything the host gives a running game. */

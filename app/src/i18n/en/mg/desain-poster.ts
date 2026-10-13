@@ -79,4 +79,12 @@ export const EN_DESAIN_POSTER: Record<string, string> = {
   'A: brief berikutnya': 'A: next brief',
   'A: lihat hasil': 'A: see results',
   'Info internal kantor': 'Internal office notice',
+  'Properti sebelumnya': 'Previous property',
+  'Properti berikutnya': 'Next property',
+  'Nilai sebelumnya': 'Previous value',
+  'Nilai berikutnya': 'Next value',
+  'Selesai, minta penilaian / lanjut': 'Done, ask for a review / continue',
+  'Ketuk ◀ atau ▶ di tiap baris untuk ganti nilai, seret judul di poster ke atas atau bawah untuk tata letak': 'Tap ◀ or ▶ on a row to change its value, drag the headline on the poster up or down to change the layout',
+  'A atau ketuk: brief berikutnya': 'A or tap: next brief',
+  'A atau ketuk: lihat hasil': 'A or tap: see results',
 };

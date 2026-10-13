@@ -66,8 +66,15 @@ async function openChat(page: Page, profile: string) {
   await page.route('**/api/**', async (route) => {
     const req = route.request();
     const url = new URL(req.url());
-    const res = await route.fetch({ url: backend + url.pathname.replace(/^.*\/api\//, '/api/') + url.search, headers: { ...req.headers(), 'x-kantor-proxy': PROXY } });
-    await route.fulfill({ response: res });
+    // The app aborts superseded polls (chat re-render, dialog close): the
+    // browser side is gone then and fulfill throws "response disposed". That
+    // is the app working as intended, not a test failure.
+    try {
+      const res = await route.fetch({ url: backend + url.pathname.replace(/^.*\/api\//, '/api/') + url.search, headers: { ...req.headers(), 'x-kantor-proxy': PROXY } });
+      await route.fulfill({ response: res });
+    } catch (e) {
+      if (!/disposed|closed|aborted|Target page/i.test(String(e))) throw e;
+    }
   });
   await boot(page);
   await page.keyboard.press('c');

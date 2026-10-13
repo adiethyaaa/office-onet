@@ -11,6 +11,7 @@ export const GAMES: Record<string, Loader> = {
   'lompat-lantai': () => import('./games/lompat-lantai'),
   'sambung-kabel': () => import('./games/sambung-kabel'),
   'arena-bom': () => import('./games/arena-bom'),
+  'catur': () => import('./games/catur'),
   // Facilities
   'lari-pagi': () => import('./games/lari-pagi'),
   'angkat-beban': () => import('./games/angkat-beban'),
@@ -29,10 +30,11 @@ export const ARCADE_SLOTS: (string | null)[] = ['balap-drone', 'tarung-kantor', 
 /** Launcher card text for the Game Station, kept here so the launcher does not load every game. */
 export const ARCADE_INFO: Record<string, { title: string; blurb: string }> = {
   'balap-drone': { title: 'Balap Drone', blurb: 'Balap tampak atas di sirkuit sekitar kantor. 3 putaran.' },
-  'tarung-kantor': { title: 'Tarung Kantor', blurb: 'Satu lawan satu dengan karakter tim. Mode arcade.' },
+  'tarung-kantor': { title: 'Tarung Kantor', blurb: 'Satu lawan satu dengan karakter tim. Kalahkan 3 lawan berturut-turut.' },
   'lompat-lantai': { title: 'Lompat Lantai', blurb: 'Platformer 2D: kumpulkan dokumen, hindari kabel kusut.' },
   'sambung-kabel': { title: 'Sambung Kabel', blurb: 'Putar ubin, sambungkan OLT ke setiap rumah.' },
   'arena-bom': { title: 'Arena Bom', blurb: 'Pasang bom, buka jalan, kalahkan 3 lawan.' },
+  'catur': { title: 'Catur Kantor', blurb: 'Catur lawan rekan tim, tiga tingkat kesulitan.' },
 };
 
 export { FACILITY_GAMES, FACILITY_TITLE, facilityGame } from './facility';

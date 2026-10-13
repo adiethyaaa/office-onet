@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { run, type Run } from './mg-harness';
-import desainPoster, { BGS, BRIEFS, ICONS, INKS, LAYOUTS, STYLES, contrast, grade, type Choice } from '../../src/minigames/games/desain-poster';
+import { mulberry, run, type Run } from './mg-harness';
+import type { Btn, InputState } from '../../src/minigames/types';
+import { BTNS } from '../../src/minigames/types';
+import desainPoster, { BGS, BRIEFS, ICONS, INKS, LAYOUTS, STYLES, MIN_START_CONTRAST, contrast, grade, type Choice } from '../../src/minigames/games/desain-poster';
 
-type Snap = { brief: number; briefIds: number[]; phase: string; row: number; choice: Choice; total: number; grades: number[]; ended: boolean };
+type Snap = { dragging: boolean; brief: number; briefIds: number[]; phase: string; row: number; choice: Choice; total: number; grades: number[]; ended: boolean };
 const S = (r: Run) => r.snap() as unknown as Snap;
 const bgi = (id: string) => BGS.findIndex((b) => b.id === id);
 const inki = (id: string) => INKS.findIndex((b) => b.id === id);
@@ -81,5 +83,56 @@ describe('mini game: desain-poster', () => {
     expect(a.result).toEqual(b.result);
     expect(a.snap()).toEqual(b.snap());
     expect(new Set(S(a).briefIds).size).toBe(3);
+  });
+
+  it('tapping the right half of a row steps forward, the left half of the value steps back, the label only selects', () => {
+    const r = run(desainPoster, 6);
+    const PX = 300, RY = 132, RH = 40;
+    const c0 = S(r).choice;
+    r.step(1, [], [], undefined, { x: PX + 310, y: RY + 2 * RH + 15 });
+    expect(S(r).row).toBe(2);
+    expect(S(r).choice.icon).toBe((c0.icon + 1) % ICONS.length);
+    r.step(1, [], [], undefined, { x: PX + 140, y: RY + 2 * RH + 15 });
+    expect(S(r).choice.icon).toBe(c0.icon);
+    r.step(1, [], [], undefined, { x: PX + 30, y: RY + 4 * RH + 15 });
+    expect(S(r).row).toBe(4);
+    expect(S(r).choice).toEqual(c0);
+  });
+
+  it('a double press on submit does not skip Kevin\'s review', () => {
+    const r = run(desainPoster, 6);
+    r.step(1, [], ['a']);
+    expect(S(r).phase).toBe('review');
+    r.step(3);
+    r.step(1, [], ['a']);
+    expect(S(r).phase).toBe('review');
+    expect(S(r).brief).toBe(0);
+    r.step(30);
+    r.step(1, [], ['a']);
+    expect(S(r).brief).toBe(1);
+  });
+
+  it('dragging the headline on the poster changes the layout', () => {
+    const ctx = { ...run(desainPoster, 6).ctx, rand: mulberry(6) };
+    const inst = desainPoster.create(ctx);
+    const none = Object.fromEntries(BTNS.map((b) => [b, false])) as Record<Btn, boolean>;
+    const feed = (tap: InputState['tap'], ptr: InputState['ptr']) => inst.update(1 / 60, { down: none, hit: none, ax: 0, ay: 0, tap, ptr });
+    const snap = () => inst.snapshot!() as unknown as Snap;
+    feed({ x: 140, y: 200 }, { x: 140, y: 200, down: true });
+    expect(snap().dragging).toBe(true);
+    feed(null, { x: 140, y: 90, down: true });
+    expect(LAYOUTS[snap().choice.layout]).toBe('atas');
+    feed(null, { x: 140, y: 300, down: true });
+    expect(LAYOUTS[snap().choice.layout]).toBe('bawah');
+    feed(null, { x: 140, y: 300, down: false });
+    expect(snap().dragging).toBe(false);
+    expect(LAYOUTS[snap().choice.layout]).toBe('bawah');
+  });
+
+  it('the starting poster is never blank (ink equal to paper)', () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      const c = S(run(desainPoster, seed)).choice;
+      expect(contrast(BGS[c.bg].hex, INKS[c.ink].hex)).toBeGreaterThanOrEqual(MIN_START_CONTRAST);
+    }
   });
 });
