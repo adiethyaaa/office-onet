@@ -27,19 +27,19 @@ Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap
 
 | | |
 |---|---|
-| Gedung | 2 lantai, 38 ruang, 46 pintu, 39 jendela |
+| Gedung | 2 lantai, 36 ruang, 44 pintu, 39 jendela |
 | Isi | 201 perabot dan perangkat, 54 model GLB perabot, 118 slot aktivitas NPC |
 | Karakter | 9 karakter original (1 avatar pemain, 8 NPC), dimodelkan di Blender |
 | Gambar kerja | 15 sheet arsitektur, interior, dan ICT dalam DWG, DXF, dan PDF |
 | Unduhan JavaScript | three.js 169 kB + app 65 kB (gzip) |
-| Tes | 139 tes unit, 228 skenario E2E (desktop, tablet, HP), 423 tes Python, 23 tes server |
+| Tes | 147 tes unit, 261 skenario E2E (desktop, tablet, HP), 423 tes Python, 32 tes server |
 | Keputusan tercatat | 17 ADR di [docs/decisions.md](docs/decisions.md) |
 
 ## Fitur utama
 
 | Fitur | Ringkasnya |
 |---|---|
-| [Dunia 3D dua lantai](docs/FITUR.md#2-dunia-3d) | 38 ruang, pintu yang membuka sendiri, tangga dan lift antarlantai |
+| [Dunia 3D dua lantai](docs/FITUR.md#2-dunia-3d) | 36 ruang, pintu yang membuka sendiri, tangga dan lift antarlantai |
 | [Karakter NPC](docs/FITUR.md#5-karakter-npc) | 8 karakter dengan jadwal harian, bisa diajak bicara |
 | [Chat agen dan papan kerja](docs/FITUR.md#10-chat-agen) | Beri tugas ke agen AI, sinkron dengan Telegram (butuh backend privat) |
 | [Peta dan minimap](docs/FITUR.md#6a-peta-dan-minimap) | Lokasi semua orang per lantai, **Temui** untuk pindah ke sebelahnya |
@@ -72,14 +72,14 @@ Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap
 |---|---|---|
 | ![Lounge](docs/img/lounge.jpg) | ![Perpustakaan](docs/img/library.jpg) | ![Taman dalam](docs/img/garden.jpg) |
 
-Dinding yang menghalangi pandangan dipotong otomatis, jadi avatar selalu terlihat dari sudut kamera mana pun. Pintu terbuka sendiri saat avatar atau NPC mendekat.
+Dinding dalam dibuat rendah (1,25 m), jadi kamera tetap melihat ke dalam ruang tanpa efek tembus pandang. Pintu terbuka sendiri saat avatar atau NPC mendekat.
 
 ## Karakter yang hidup
 
 <img src="docs/img/cast.jpg" alt="Sembilan karakter original berjajar">
 
 - **Simulasi berseed.** Seed yang sama (`?seed=20261001`) menghasilkan urutan kegiatan yang sama. Demo bisa diulang persis, dan tes E2E memeriksanya.
-- **Tidak saling tabrak.** NPC memesan kursi sebelum duduk dan saling memberi jalan di koridor. NPC yang tersangkut memilih tujuan lain.
+- **Tidak saling tabrak.** NPC memesan kursi sebelum duduk dan saling memberi jalan di koridor. NPC yang tersangkut memilih tujuan lain. NPC juga tidak bisa mengurung avatar: dorong terus 2 detik, atau lari, dan avatar menembusnya. Setelah lewat, NPC padat lagi.
 - **Status kerja nyata.** Dengan backend, karakter yang agennya sedang bekerja meninggalkan kegiatan santai, duduk di mejanya, dan labelnya berubah menjadi `bekerja` atau `menunggu keputusanmu`.
 - **Bisa disapa.** Menyapa NPC membuka profil, ruang utama, kegiatan saat ini, dan potongan dialog. Pemilik mendapat tombol untuk langsung memberi tugas.
 
@@ -143,7 +143,7 @@ Chat dan papan kerja hanya aktif untuk pemilik yang login dengan sandi dan kode 
 - **Desktop.** WASD atau panah untuk berjalan, Shift lari, Q/Z putar kamera, R luruskan kamera, +/- zoom, E interaksi, P peta, C chat agen, H daftar kontrol.
 - **HP dan tablet.** Joystick di kiri bawah, tombol Lari dan Aksi, seret layar untuk memutar kamera. Di HP, menu atas berupa satu baris ikon. Menu bisa dilipat lewat tombol ☰, minimap lewat tombol ✕ di pojoknya, dan pilihan itu tersimpan.
 - **Dua bahasa.** Tampilan tersedia dalam Bahasa Indonesia dan English, mengikuti bahasa browser. Bisa diganti di Pengaturan atau lewat `?lang=en`.
-- **Stik game.** Stik Xbox, PlayStation, atau stik Bluetooth langsung terbaca di browser, tanpa instal apa pun. Stik kiri berjalan (dorong penuh untuk lari), stik kanan kamera, A interaksi, B kembali, X lari, Y luruskan kamera, LB/RB zoom, Select peta, Start Pengaturan. D-pad berpindah tombol di semua menu dan dialog, termasuk Studio. Kode stik baru diunduh saat stik tersambung.
+- **Stik game.** Stik Xbox, PlayStation, atau stik Bluetooth langsung terbaca di browser, tanpa instal apa pun. Stik kiri berjalan (dorong penuh untuk lari), stik kanan kamera, A interaksi, B kembali, X lari, Y luruskan kamera, LB/RB zoom, Select peta, Start Pengaturan. D-pad berpindah tombol di semua menu dan dialog, termasuk Studio. Kode stik baru diunduh saat stik tersambung. Di Pengaturan → Kontroler ada empat profil (Standar, Kidal, Santai, Tombol terbalik gaya Jepang) dan gambar stik yang menyalakan tombol yang sedang ditekan.
 - **Tanpa WebGL.** App berpindah ke mode direktori yang tetap menampilkan ruang dan karakter.
 - **Aksesibilitas.** Tema terang dan gelap, mode kurangi gerak, kualitas grafis ringan untuk perangkat lama, label pembaca layar, dan semua dialog bisa dipakai dengan keyboard. Kontras warna diperiksa otomatis, dan halaman diuji dengan axe.
 
@@ -166,7 +166,7 @@ Itu sudah cukup untuk dunia 3D, NPC, Studio, dan semua fitur pengunjung. Build p
 
 - **App:** TypeScript, Vite, three.js. Tanpa framework UI.
 - **Backend:** Node.js tanpa framework, satu proses, data di SQLite bawaan Node. Login sandi dan TOTP, sesi bercookie dengan CSRF, Web Push dengan VAPID.
-- **3D:** Blender 4 lewat skrip Python. GLB dioptimasi dengan meshopt dan kuantisasi mesh.
+- **3D:** Blender 5 lewat skrip Python. GLB dioptimasi dengan meshopt dan kuantisasi mesh.
 - **CAD:** generator DXF di Python, PDF vektor, DWG lewat AutoCAD.
 - **Tes:** vitest, Playwright, pytest, `node:test`.
 

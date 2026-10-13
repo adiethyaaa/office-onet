@@ -47,7 +47,7 @@ Owner features need the private backend (`server/`). Without the backend, the ap
 
 ![Floor 1 from above](img/hero-l1.jpg)
 
-- Two floors: **Lantai 1 (kerja dan kunjungan)** (Floor 1, work and visits) and **Lantai 2 (rekreasi)** (Floor 2, recreation), with 38 rooms, 46 doors, 39 windows, and 201 pieces of furniture and equipment in total.
+- Two floors: **Lantai 1 (kerja dan kunjungan)** (Floor 1, work and visits) and **Lantai 2 (rekreasi)** (Floor 2, recreation), with 36 rooms, 44 doors, 39 windows, and 201 pieces of furniture and equipment in total.
 - Floor 1 has the lobby and reception (the starting point), a large meeting room, a gallery, a pantry, discussion rooms, an implementation room, work areas per role, a lab, a server room, and a storage room (the ICT riser was removed on 2026-10-13 at Budi's request; its area joined the storage room).
 - Floor 2 has a library, a lounge and coffee bar, a dining room, showers, a game room, a billiard room, a gym, an indoor garden, and a balcony.
 - Change floors using the **U-stair** or the **lift** in the building core. The outdoor emergency stair is only a concept marker and cannot be used.
