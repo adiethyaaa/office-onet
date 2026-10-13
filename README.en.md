@@ -29,19 +29,19 @@ The public demo runs without login. It shows a simulation with a fixed seed, so 
 
 | | |
 |---|---|
-| Building | 2 floors, 38 rooms, 46 doors, 39 windows |
+| Building | 2 floors, 36 rooms, 44 doors, 39 windows |
 | Contents | 201 furniture items and devices, 54 furniture GLB models, 118 NPC activity slots |
 | Characters | 9 original characters (1 player avatar, 8 NPCs), modeled in Blender |
 | Working drawings | 15 architecture, interior, and ICT sheets in DWG, DXF, and PDF |
 | JavaScript download | three.js 169 kB + app 65 kB (gzip) |
-| Tests | 139 unit tests, 228 E2E scenarios (desktop, tablet, phone), 423 Python tests, 23 server tests |
+| Tests | 147 unit tests, 261 E2E scenarios (desktop, tablet, phone), 423 Python tests, 32 server tests |
 | Recorded decisions | 17 ADRs in [docs/decisions.md](docs/decisions.md) |
 
 ## Main features
 
 | Feature | In short |
 |---|---|
-| [Two-floor 3D world](docs/FEATURES.md#2-3d-world) | 38 rooms, doors that open by themselves, stairs and a lift between floors |
+| [Two-floor 3D world](docs/FEATURES.md#2-3d-world) | 36 rooms, doors that open by themselves, stairs and a lift between floors |
 | [NPC characters](docs/FEATURES.md#5-npc-characters) | 8 characters with daily schedules, ready to talk |
 | [Agent chat and work board](docs/FEATURES.md#10-agent-chat) | Give tasks to AI agents, synced with Telegram (needs the private backend) |
 | [Map and minimap](docs/FEATURES.md#6a-map-and-minimap) | Where everyone is on each floor, **Temui** (Meet) to jump next to them |
@@ -74,14 +74,14 @@ The public demo runs without login. It shows a simulation with a fixed seed, so 
 |---|---|---|
 | ![Lounge](docs/img/lounge.jpg) | ![Library](docs/img/library.jpg) | ![Indoor garden](docs/img/garden.jpg) |
 
-Walls that block the view are cut away automatically, so the avatar stays visible from any camera angle. Doors open on their own when the avatar or an NPC comes close.
+Interior walls are kept low (1.25 m), so the camera sees into every room without any see-through effect. Doors open on their own when the avatar or an NPC comes close.
 
 ## Living characters
 
 <img src="docs/img/cast.jpg" alt="Nine original characters standing in a row">
 
 - **Seeded simulation.** The same seed (`?seed=20261001`) produces the same sequence of activities. The demo can be replayed exactly, and the E2E tests check this.
-- **No collisions.** NPCs reserve a chair before sitting and make way for each other in corridors. An NPC that gets stuck picks another destination.
+- **No collisions.** NPCs reserve a chair before sitting and make way for each other in corridors. An NPC that gets stuck picks another destination. NPCs can't trap the avatar either: keep pushing for 2 seconds, or run, and you pass through. Once you're past, the NPC is solid again.
 - **Real work status.** With the backend, a character whose agent is working leaves its leisure activity, sits at its desk, and its label changes to `bekerja` (working) or `menunggu keputusanmu` (waiting for your decision).
 - **You can greet them.** Greeting an NPC opens its profile, main room, current activity, and a snippet of dialogue. The owner gets a button to assign a task directly.
 
@@ -145,7 +145,7 @@ Chat and the work board are only active for the owner, who logs in with a passwo
 - **Desktop.** WASD or arrow keys to walk, Shift to run, Q/Z to rotate the camera, R to straighten the camera, +/- to zoom, E to interact, P for the map, C for agent chat, H for the control list.
 - **Phone and tablet.** Joystick at the bottom left, Run and Action buttons, drag the screen to rotate the camera. On a phone the top menu is one row of icons. The ☰ button folds the menu, the ✕ button on its corner folds the minimap, and the choice is remembered.
 - **Two languages.** The interface is in Indonesian and English and follows the browser language. Switch in Settings or with `?lang=en`.
-- **Gamepad.** Xbox, PlayStation, and Bluetooth gamepads work in the browser with nothing to install. Left stick walks (full tilt to run), right stick moves the camera, A interacts, B goes back, X runs, Y straightens the camera, LB/RB zoom, Select opens the map, Start opens Settings. The D-pad moves between buttons in every menu and dialog, including the Studio. The gamepad code downloads only once a pad connects.
+- **Gamepad.** Xbox, PlayStation, and Bluetooth gamepads work in the browser with nothing to install. Left stick walks (full tilt to run), right stick moves the camera, A interacts, B goes back, X runs, Y straightens the camera, LB/RB zoom, Select opens the map, Start opens Settings. The D-pad moves between buttons in every menu and dialog, including the Studio. The gamepad code downloads only once a pad connects. Settings > Controller has four profiles (Standard, Left-handed, Relaxed, Reversed buttons in Japanese style) and a pad diagram that lights up the button you press.
 - **No WebGL.** The app switches to a directory mode that still shows the rooms and characters.
 - **Accessibility.** Light and dark themes, reduced motion mode, a light graphics quality for older devices, screen reader labels, and every dialog works with the keyboard. Color contrast is checked automatically, and pages are tested with axe.
 
@@ -168,7 +168,7 @@ That is enough for the 3D world, NPCs, Studio, and all visitor features. Product
 
 - **App:** TypeScript, Vite, three.js. No UI framework.
 - **Backend:** Node.js without a framework, one process, data in Node's built-in SQLite. Password and TOTP login, cookie sessions with CSRF, Web Push with VAPID.
-- **3D:** Blender 4 driven by Python scripts. GLB optimized with meshopt and mesh quantization.
+- **3D:** Blender 5 driven by Python scripts. GLB optimized with meshopt and mesh quantization.
 - **CAD:** DXF generator in Python, vector PDF, DWG through AutoCAD.
 - **Tests:** vitest, Playwright, pytest, `node:test`.
 

@@ -47,7 +47,7 @@ Fitur pemilik membutuhkan backend privat (`server/`). Tanpa backend, app tetap b
 
 ![Lantai 1 dari atas](img/hero-l1.jpg)
 
-- Dua lantai: **Lantai 1 (kerja dan kunjungan)** dan **Lantai 2 (rekreasi)**, total 38 ruang, 46 pintu, 39 jendela, dan 201 perabot serta perangkat.
+- Dua lantai: **Lantai 1 (kerja dan kunjungan)** dan **Lantai 2 (rekreasi)**, total 36 ruang, 44 pintu, 39 jendela, dan 201 perabot serta perangkat.
 - Lantai 1 berisi lobby dan resepsi (titik awal), ruang rapat besar, galeri, pantry, ruang diskusi, ruang implementasi, area kerja per peran, lab, ruang server, dan gudang (riser ICT dihapus 2026-10-13 atas perintah Budi, area bekasnya masuk gudang).
 - Lantai 2 berisi perpustakaan, lounge dan coffee bar, ruang makan, shower, ruang game, ruang biliar, ruang olahraga, taman dalam, dan balkon.
 - Pindah lantai lewat **tangga U** atau **lift** di inti bangunan. Tangga darurat luar hanya penanda konsep dan tidak bisa dipakai.
