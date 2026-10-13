@@ -65,6 +65,28 @@ const KEYMAP: Record<string, Btn> = {
 const BTN_LABEL: Record<Btn, string> = { left: '◀', right: '▶', up: '▲', down: '▼', a: 'A', b: 'B', x: 'X', y: 'Y' };
 
 type Phase = 'loading' | 'intro' | 'play' | 'pause' | 'result' | 'error';
+type Device = 'keyboard' | 'pad' | 'touch';
+
+// Tutorial rows: what to press on each device for a logical button. Keyboard
+// keys mirror KEYMAP; pad labels follow the chosen profile (Japanese layout
+// swaps Cross and Circle), touch labels are the on-screen buttons.
+const KEY_NAMES: Record<Btn | 'arah', string> = {
+  arah: 'Panah / WASD', left: 'Panah kiri / A', right: 'Panah kanan / D', up: 'Panah atas / W', down: 'Panah bawah / S',
+  a: 'Spasi / Enter / J', b: 'K / Shift', x: 'L / X', y: 'I / C',
+};
+function padNames(swapFace: boolean): Record<Btn | 'arah', string> {
+  return {
+    arah: 'Stik kiri / D-pad', left: 'D-pad kiri', right: 'D-pad kanan', up: 'D-pad atas', down: 'D-pad bawah',
+    a: swapFace ? 'Lingkaran' : 'Silang', b: swapFace ? 'Silang' : 'Lingkaran', x: swapFace ? 'Segitiga' : 'Kotak', y: swapFace ? 'Kotak' : 'Segitiga',
+  };
+}
+const TOUCH_NAMES: Record<Btn | 'arah', string> = {
+  arah: 'Tombol ◀ ▶ ▲ ▼', left: 'Tombol ◀', right: 'Tombol ▶', up: 'Tombol ▲', down: 'Tombol ▼',
+  a: 'Tombol A', b: 'Tombol B', x: 'Tombol X', y: 'Tombol Y',
+};
+/** Every device button name, for the i18n test (names are passed to t() by variable). */
+export const TUTORIAL_NAMES: string[] = [...new Set([...Object.values(KEY_NAMES), ...Object.values(padNames(false)), ...Object.values(TOUCH_NAMES)])];
+const ACTION_ORDER: (Btn | 'arah')[] = ['arah', 'left', 'right', 'up', 'down', 'a', 'b', 'x', 'y'];
 
 export class MiniGameHost {
   readonly root: HTMLElement;
@@ -81,11 +103,16 @@ export class MiniGameHost {
   private phase: Phase = 'loading';
   private keys = new Set<Btn>();
   private touchDown = new Set<Btn>();
-  // Keys pressed since the last frame. A tap shorter than one frame still counts as a hit.
-  private latched = new Set<Btn>();
+  // Presses waiting for a 60 Hz game step, counted per button. A tap shorter
+  // than a frame, a press on a 120 Hz frame that runs no step, and two quick
+  // presses inside one slow frame each still reach the game, one per step.
+  private queued = Object.fromEntries(BTNS.map((b) => [b, 0])) as Record<Btn, number>;
+  /** Pad buttons held on the previous frame (edge detection for the pad). */
   private prevDown: Record<Btn, boolean> = Object.fromEntries(BTNS.map((b) => [b, false])) as Record<Btn, boolean>;
   private padPrev: boolean[] = [];
   private tap: { x: number; y: number } | null = null;
+  private ptr: { x: number; y: number; down: boolean } | null = null;
+  private device: Device = 'keyboard';
   private raf = 0;
   private last = 0;
   private acc = 0;
@@ -96,6 +123,8 @@ export class MiniGameHost {
   private escHeld = false;
   /** Last frame state for tests (window.__kantor.minigame()). */
   frames = 0;
+  /** Presses handed to the game per button (test hook: no press may get lost). */
+  private delivered: Record<string, number> = {};
 
   constructor(readonly gameId: string, private opts: HostOpts) {
     this.seed = opts.seed ?? (Date.now() >>> 0);
@@ -110,8 +139,16 @@ export class MiniGameHost {
     const stage = el('div', { class: 'mg-stage' });
     stage.append(this.canvas, this.card);
     this.root.append(this.bar, stage, this.touch);
-    this.canvas.addEventListener('pointerdown', (e) => this.onTap(e));
+    this.canvas.addEventListener('pointerdown', (e) => { this.onTap(e); this.onPtr(e, true); if (this.phase === 'play') this.canvas.setPointerCapture?.(e.pointerId); });
+    this.canvas.addEventListener('pointermove', (e) => this.onPtr(e, this.ptr?.down ?? false));
+    this.canvas.addEventListener('pointerup', (e) => this.onPtr(e, false));
+    this.canvas.addEventListener('pointercancel', (e) => this.onPtr(e, false));
+    this.canvas.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && !this.ptr?.down) this.ptr = null; });
     this.syncMute();
+    // Buttons already held when the game opens (the A that picked it in the
+    // Game Station) must be released first, or they press "Mulai" at once.
+    const held = this.readPad();
+    for (const b of BTNS) this.prevDown[b] = !!held.down[b];
   }
 
   async open(): Promise<void> {
@@ -148,9 +185,50 @@ export class MiniGameHost {
     const m = this.mod!.meta;
     this.phase = 'intro';
     const best = loadScores()[m.id]?.[0];
-    const lines = [t(m.blurb), ...m.controls.map((c) => t(c))];
+    const lines = [t(m.blurb)];
     if (best) lines.push(t('Skor terbaik: {score} ({name})', { score: formatScore(m, best.score), name: best.name }));
-    this.showCard(t(m.title), lines, [[t('Mulai'), () => this.start()], [t('Keluar'), () => this.close()]]);
+    this.showCard(t(m.title), lines, [[t('Mulai'), () => this.start()], [t('Keluar'), () => this.close()]], this.tutorial());
+  }
+
+  private detectDevice(): Device {
+    for (const q of navigator.getGamepads?.() ?? []) if (q && q.connected) return 'pad';
+    return matchMedia('(pointer: coarse)').matches ? 'touch' : 'keyboard';
+  }
+
+  /** Tutorial block: device tabs plus "button: what it does" rows for this game. */
+  private tutorial(): HTMLElement {
+    const m = this.mod!.meta;
+    this.device = this.detectDevice();
+    const box = el('div', { class: 'mg-tut' });
+    const tabs = el('div', { class: 'mg-tut-tabs', role: 'group', 'aria-label': t('Cara main') });
+    const list = el('dl', { class: 'mg-tut-list' });
+    const note = el('p', { class: 'mg-tut-note' });
+    const devs: [Device, string][] = [['keyboard', t('Keyboard')], ['pad', t('Stik game')], ['touch', t('Layar sentuh')]];
+    const render = () => {
+      const prof = PAD_PROFILES[this.opts.padProfile()] ?? PAD_PROFILES.standar;
+      const names = this.device === 'keyboard' ? KEY_NAMES : this.device === 'pad' ? padNames(prof.swapFace) : TOUCH_NAMES;
+      list.replaceChildren();
+      if (m.actions) {
+        for (const k of ACTION_ORDER) {
+          const what = m.actions[k];
+          if (!what) continue;
+          list.append(el('dt', {}, t(names[k])), el('dd', {}, t(what)));
+        }
+      } else {
+        for (const c of m.controls) list.append(el('dd', { class: 'wide' }, t(c)));
+      }
+      const extra = this.device === 'keyboard' ? t('Esc atau P: jeda. M: suara.') : this.device === 'pad' ? t('Options/Start: jeda. Share/Select: keluar dari kartu.') : (m.pointerHint ? t(m.pointerHint) : t('Tombol Jeda ada di bilah atas.'));
+      note.textContent = extra;
+      for (const b of tabs.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.dev === this.device));
+    };
+    for (const [d, label] of devs) {
+      const b = el('button', { type: 'button', class: 'btn mg-tut-tab', 'data-dev': d }, label);
+      b.addEventListener('click', () => { this.device = d; render(); });
+      tabs.append(b);
+    }
+    render();
+    box.append(el('h4', {}, t('Cara main')), tabs, list, note);
+    return box;
   }
 
   private start() {
@@ -196,7 +274,7 @@ export class MiniGameHost {
   private togglePause() {
     if (this.phase === 'play') {
       this.phase = 'pause';
-      this.showCard(t('Jeda'), [], [[t('Lanjut'), () => { this.hideCard(); this.phase = 'play'; this.last = performance.now(); }], [t('Ulang'), () => this.start()], [t('Keluar'), () => this.close()]]);
+      this.showCard(t('Jeda'), [], [[t('Lanjut'), () => { this.hideCard(); this.phase = 'play'; this.last = performance.now(); }], [t('Ulang'), () => this.start()], [t('Keluar'), () => this.close()]], this.tutorial());
     } else if (this.phase === 'pause') {
       this.hideCard();
       this.phase = 'play';
@@ -253,19 +331,22 @@ export class MiniGameHost {
   };
 
   private buildTouch(m: GameMeta) {
-    const coarse = matchMedia('(pointer: coarse)').matches;
+    const coarse = matchMedia('(pointer: coarse)').matches || matchMedia('(any-pointer: coarse)').matches;
     this.touch.hidden = !coarse;
     this.touch.replaceChildren();
     const pad = el('div', { class: 'mg-dpad' });
     const btns = el('div', { class: 'mg-btns' });
     for (const b of m.touch) {
       const k = el('button', { type: 'button', class: `mg-tb mg-tb-${b}`, 'aria-label': b }, BTN_LABEL[b]);
-      const on = (e: PointerEvent) => { e.preventDefault(); this.touchDown.add(b); k.setPointerCapture(e.pointerId); };
-      const off = () => this.touchDown.delete(b);
+      // Latch the press too: a quick tap that starts and ends between two
+      // frames must still count as a hit, otherwise taps feel ignored.
+      const on = (e: PointerEvent) => { e.preventDefault(); this.touchDown.add(b); this.press(b); k.classList.add('on'); k.setPointerCapture(e.pointerId); navigator.vibrate?.(8); };
+      const off = () => { this.touchDown.delete(b); k.classList.remove('on'); };
       k.addEventListener('pointerdown', on);
       k.addEventListener('pointerup', off);
       k.addEventListener('pointercancel', off);
       k.addEventListener('lostpointercapture', off);
+      k.addEventListener('contextmenu', (e) => e.preventDefault());
       (['left', 'right', 'up', 'down'].includes(b) ? pad : btns).append(k);
     }
     this.touch.append(pad, btns);
@@ -278,15 +359,17 @@ export class MiniGameHost {
     const onButton = target instanceof HTMLButtonElement && !this.card.hidden;
     if (k === 'escape' || k === 'p') {
       e.preventDefault(); e.stopPropagation();
-      if (!this.escHeld) { this.escHeld = true; if (this.phase === 'play' || this.phase === 'pause') this.togglePause(); else if (this.phase === 'intro' || this.phase === 'error') this.close(); }
+      if (!this.escHeld) { this.escHeld = true; if (this.phase === 'play' || this.phase === 'pause') this.togglePause(); else if (this.phase === 'intro' || this.phase === 'error' || this.phase === 'loading') this.close(); }
       return;
     }
     if (k === 'm') { e.stopPropagation(); sound.with((en) => { en.toggleMute(); this.syncMute(); }); return; }
     const b = KEYMAP[k];
     // Enter/Space on a focused card button must press that button.
-    if (onButton && (k === 'enter' || k === ' ')) { e.stopPropagation(); return; }
+    // A held Enter (from the Game Station slot) auto-repeats and would click
+    // "Mulai" too: only a fresh press may activate a card button.
+    if (onButton && (k === 'enter' || k === ' ')) { e.stopPropagation(); if (e.repeat) e.preventDefault(); return; }
     e.stopPropagation();
-    if (b) { e.preventDefault(); if (!e.repeat) this.latched.add(b); this.keys.add(b); }
+    if (b) { e.preventDefault(); if (!e.repeat) this.press(b); this.keys.add(b); }
   };
 
   private onKeyUp = (e: KeyboardEvent) => {
@@ -297,7 +380,22 @@ export class MiniGameHost {
     e.stopPropagation();
   };
 
-  private onBlur = () => { this.keys.clear(); this.touchDown.clear(); if (this.phase === 'play') this.togglePause(); };
+  /** Queue one press (capped so a mashed burst never leaves a long backlog). */
+  private press(b: Btn) { if (this.queued[b] < 3) this.queued[b]++; }
+
+  private onBlur = () => { for (const b of BTNS) this.queued[b] = 0; this.keys.clear(); this.touchDown.clear(); if (this.ptr) this.ptr.down = false; if (this.phase === 'play') this.togglePause(); };
+
+  private gameXY(e: PointerEvent): { x: number; y: number } {
+    const r = this.canvas.getBoundingClientRect();
+    const m = this.mod!.meta;
+    return { x: ((e.clientX - r.left) / r.width) * m.view.w, y: ((e.clientY - r.top) / r.height) * m.view.h };
+  }
+
+  private onPtr(e: PointerEvent, down: boolean) {
+    if (!this.mod) return;
+    if (e.type === 'pointerdown' || e.type === 'pointermove') e.preventDefault();
+    this.ptr = { ...this.gameXY(e), down };
+  }
 
   private onTap(e: PointerEvent) {
     if (this.phase !== 'play' || !this.mod) return;
@@ -342,21 +440,23 @@ export class MiniGameHost {
       if (pad.down.right && !this.prevDown.right) this.moveCardFocus(1);
     }
     const down = {} as Record<Btn, boolean>;
-    const hit = {} as Record<Btn, boolean>;
+    const padNow = {} as Record<Btn, boolean>;
+    const playing = this.phase === 'play';
     for (const b of BTNS) {
-      const held = this.keys.has(b) || this.touchDown.has(b) || !!pad.down[b];
-      down[b] = held || this.latched.has(b);
-      hit[b] = (down[b] && !this.prevDown[b]) || this.latched.has(b);
+      padNow[b] = !!pad.down[b];
+      if (playing && padNow[b] && !this.prevDown[b]) this.press(b);
+      // Presses made on a card (intro, pause) must not fire once play starts.
+      if (!playing) this.queued[b] = 0;
+      down[b] = this.keys.has(b) || this.touchDown.has(b) || padNow[b] || this.queued[b] > 0;
     }
-    this.latched.clear();
-    this.prevDown = down;
+    this.prevDown = padNow;
+    const hit = Object.fromEntries(BTNS.map((b) => [b, false])) as Record<Btn, boolean>;
     let ax = pad.ax + (down.right && !pad.down.right ? 1 : 0) - (down.left && !pad.down.left ? 1 : 0);
     let ay = pad.ay + (down.down && !pad.down.down ? 1 : 0) - (down.up && !pad.down.up ? 1 : 0);
     ax = Math.max(-1, Math.min(1, ax));
     ay = Math.max(-1, Math.min(1, ay));
-    const tap = this.tap;
-    this.tap = null;
-    return { down, hit, ax, ay, tap };
+    if (!playing) this.tap = null;
+    return { down, hit, ax, ay, tap: null, ptr: this.ptr ? { ...this.ptr } : null };
   }
 
   private moveCardFocus(d: number) {
@@ -372,12 +472,19 @@ export class MiniGameHost {
     const input = this.input();
     if (this.phase === 'play' && this.inst) {
       // Fixed 60 Hz step: game logic is frame-rate independent and replayable.
+      // Each step takes at most one queued press per button; the rest wait
+      // for the next step, so no press is lost or merged.
       this.acc += dt;
       let n = 0;
-      let first = true;
       while (this.acc >= 1 / 60 && n < 6) {
-        this.inst.update(1 / 60, first ? input : { ...input, hit: Object.fromEntries(BTNS.map((b) => [b, false])) as Record<Btn, boolean>, tap: null });
-        first = false;
+        const hit = {} as Record<Btn, boolean>;
+        for (const b of BTNS) {
+          hit[b] = this.queued[b] > 0;
+          if (hit[b]) { this.queued[b]--; this.delivered[b] = (this.delivered[b] ?? 0) + 1; }
+        }
+        const tap = this.tap;
+        this.tap = null;
+        this.inst.update(1 / 60, { ...input, hit, tap });
         this.acc -= 1 / 60;
         n++;
         this.frames++;
@@ -389,7 +496,7 @@ export class MiniGameHost {
   };
 
   /** Test hook: game snapshot plus host phase. */
-  state() { return { phase: this.phase, game: this.gameId, frames: this.frames, hud: this.hudText, result: this.result, snap: this.inst?.snapshot?.() ?? null }; }
+  state() { return { phase: this.phase, game: this.gameId, frames: this.frames, delivered: { ...this.delivered }, hud: this.hudText, result: this.result, snap: this.inst?.snapshot?.() ?? null }; }
 }
 
 let current: MiniGameHost | null = null;

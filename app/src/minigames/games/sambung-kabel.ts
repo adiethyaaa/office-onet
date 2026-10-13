@@ -148,7 +148,12 @@ const meta: GameModule['meta'] = {
   blurb: 'Putar ubin, sambungkan OLT ke setiap rumah.',
   controls: ['Panah atau D-pad: pilih ubin', 'A atau ketuk ubin: putar searah jarum jam', 'B: putar berlawanan arah jarum jam', 'Nyalakan semua rumah sebelum waktu habis, 20 level'],
   view: { w: 640, h: 480 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'up', 'down', 'right', 'a', 'b'],
+  actions: { arah: 'Pilih ubin', a: 'Putar searah jarum jam', b: 'Putar berlawanan arah' },
+  pointerHint: 'Ketuk ubin untuk memutarnya searah jarum jam',
 };
+
+/** Spin animation length; short so fast tapping never lags behind the logic. */
+export const SPIN_T = 0.1;
 
 const CABLE = '#e39a2d';
 const CABLE_EDGE = '#8a5317';
@@ -166,9 +171,18 @@ function create(ctx: GameCtx): GameInstance {
   let phaseT = 0;
   let lastBonus = 0;
   let cursor = L.olt + 1;
+  // per tile: remaining angle to unwind (radians) and the time left on the spin
   let anim: number[] = new Array(L.size * L.size).fill(0);
+  let animT: number[] = new Array(L.size * L.size).fill(0);
+  let glow: number[] = new Array(L.size * L.size).fill(0);
   let time = 0;
   let moves = 0;
+  let lastPtr: { x: number; y: number } | null = null;
+  const tileAt = (x: number, y: number) => {
+    const G = geom();
+    const tx = Math.floor((x - G.ox) / G.cell), ty = Math.floor((y - G.oy) / G.cell);
+    return tx >= 0 && ty >= 0 && tx < G.n && ty < G.n ? ty * G.n + tx : -1;
+  };
 
   const geom = () => {
     const n = L.size;
@@ -187,6 +201,8 @@ function create(ctx: GameCtx): GameInstance {
     timeLeft = timeFor(level);
     cursor = L.olt + 1;
     anim = new Array(L.size * L.size).fill(0);
+    animT = new Array(L.size * L.size).fill(0);
+    glow = new Array(L.size * L.size).fill(0);
     phase = 'play';
     hud();
     ctx.sfx('start');
@@ -195,13 +211,21 @@ function create(ctx: GameCtx): GameInstance {
   const rotate = (i: number, k: number) => {
     const kd = L.kind[i];
     if (kd === 'empty' || kd === 'olt') { ctx.sfx('click', { gain: 0.5 }); return; }
-    const before = housesLit();
+    const before = lit;
+    const beforeN = housesLit();
     L.rot[i] = (L.rot[i] + k) % 4;
-    if (!ctx.reducedMotion) anim[i] = (k === 1 ? -1 : 1) * Math.PI / 2;
+    // stack on any spin still running so double taps read as two quarter turns,
+    // capped so a burst of taps never leaves a long unwind behind
+    if (!ctx.reducedMotion) {
+      const add = (k === 1 ? -1 : 1) * Math.PI / 2;
+      anim[i] = Math.max(-Math.PI, Math.min(Math.PI, (animT[i] > 0 ? anim[i] * (animT[i] / SPIN_T) ** 2 : 0) + add));
+      animT[i] = SPIN_T;
+    }
     moves++;
     lit = litCells(L);
+    for (let c = 0; c < lit.length; c++) if (lit[c] && !before[c]) glow[c] = 0.35;
     ctx.sfx('rotate', { rate: k === 1 ? 1 : 0.9 });
-    if (housesLit() > before) ctx.sfx('connect');
+    if (housesLit() > beforeN) ctx.sfx('connect');
     if (solved(L)) {
       lastBonus = Math.floor(timeLeft);
       score += 100 + lastBonus;
@@ -215,7 +239,10 @@ function create(ctx: GameCtx): GameInstance {
   return {
     update(dt, inp) {
       time += dt;
-      for (let i = 0; i < anim.length; i++) if (anim[i]) anim[i] = Math.abs(anim[i]) < 0.02 ? 0 : anim[i] * Math.pow(0.0005, dt);
+      for (let i = 0; i < animT.length; i++) {
+        if (animT[i] > 0) { animT[i] = Math.max(0, animT[i] - dt); if (!animT[i]) anim[i] = 0; }
+        if (glow[i] > 0) glow[i] = Math.max(0, glow[i] - dt);
+      }
       if (phase === 'over') return;
       if (phase === 'clear') {
         phaseT -= dt;
@@ -243,13 +270,18 @@ function create(ctx: GameCtx): GameInstance {
       if (inp.hit.up) cy = Math.max(0, cy - 1);
       if (inp.hit.down) cy = Math.min(n - 1, cy + 1);
       if (cy * n + cx !== cursor) { cursor = cy * n + cx; ctx.sfx('ui', { gain: 0.4 }); }
-      if (inp.hit.a) rotate(cursor, 1);
+      // a moving mouse/finger drives the cursor, but only when it moves, so arrows keep working
+      if (inp.ptr) {
+        if (!lastPtr || Math.abs(inp.ptr.x - lastPtr.x) + Math.abs(inp.ptr.y - lastPtr.y) > 2) {
+          const t = tileAt(inp.ptr.x, inp.ptr.y);
+          if (t >= 0) cursor = t;
+          lastPtr = { x: inp.ptr.x, y: inp.ptr.y };
+        }
+      } else lastPtr = null;
+      const tapped = inp.tap ? tileAt(inp.tap.x, inp.tap.y) : -1;
+      if (tapped >= 0) { cursor = tapped; rotate(cursor, 1); }
+      else if (inp.hit.a) rotate(cursor, 1);
       else if (inp.hit.b) rotate(cursor, 3);
-      if (inp.tap && phase === 'play') {
-        const G = geom();
-        const tx = Math.floor((inp.tap.x - G.ox) / G.cell), ty = Math.floor((inp.tap.y - G.oy) / G.cell);
-        if (tx >= 0 && ty >= 0 && tx < n && ty < n) { cursor = ty * n + tx; rotate(cursor, 1); }
-      }
     },
 
     render() {
@@ -272,9 +304,9 @@ function create(ctx: GameCtx): GameInstance {
       text(g, `${housesLit()}/${L.houses.length}`, 96, 226, 26, PAL.ink);
       text(g, ctx.t('Skor'), 96, 262, 16, PAL.ink2);
       text(g, `${score}`, 96, 288, 26, PAL.accent);
-      text(g, ctx.t('A atau ketuk: putar kanan'), 96, h - 78, 14, PAL.ink2);
-      text(g, ctx.t('B: putar kiri'), 96, h - 56, 14, PAL.ink2);
-      text(g, ctx.t('Panah: pindah ubin'), 96, h - 34, 14, PAL.ink2);
+      text(g, ctx.t('A atau ketuk: putar kanan'), 96, h - 82, 15, PAL.ink2);
+      text(g, ctx.t('B: putar kiri'), 96, h - 58, 15, PAL.ink2);
+      text(g, ctx.t('Panah: pindah ubin'), 96, h - 34, 15, PAL.ink2);
 
       // trunk from the panel to the OLT
       const oltY = G.oy + Math.floor(L.olt / G.n) * G.cell + G.cell / 2;
@@ -314,6 +346,7 @@ function create(ctx: GameCtx): GameInstance {
       const G = geom();
       return {
         level, size: L.size, phase, score, timeLeft: Math.round(timeLeft * 100) / 100, cursor, moves,
+        spinning: animT.filter((v) => v > 0).length,
         houses: L.houses.length, housesLit: housesLit(), rot: [...L.rot],
         need: L.kind.map((_, i) => turnsNeeded(L, i)),
         geom: { ox: G.ox, oy: G.oy, cell: G.cell },
@@ -323,7 +356,7 @@ function create(ctx: GameCtx): GameInstance {
 
   function drawTile(i: number, x: number, y: number, c: number) {
     const kd = L.kind[i];
-    g.fillStyle = kd === 'empty' ? '#e6d7b8' : '#f6eddc';
+    g.fillStyle = kd === 'empty' ? '#e6d7b8' : glow[i] > 0 ? '#e3f4dc' : '#f6eddc';
     roundRect(g, x + 2, y + 2, c - 4, c - 4, Math.max(4, c * 0.12));
     if (kd === 'empty') return;
     const on = lit[i];
@@ -333,7 +366,13 @@ function create(ctx: GameCtx): GameInstance {
     g.rect(x, y, c, c);
     g.clip();
     g.translate(x + c / 2, y + c / 2);
-    g.rotate(anim[i]);
+    if (animT[i] > 0) {
+      const u = animT[i] / SPIN_T;
+      // ease-out: most of the turn happens at once, then it settles
+      g.rotate(anim[i] * u * u);
+      const sq = 1 - 0.1 * Math.sin(Math.PI * u);
+      g.scale(sq, sq);
+    }
     g.lineCap = 'round';
     for (const pass of [0, 1]) {
       g.strokeStyle = pass === 0 ? (on ? LIT_EDGE : CABLE_EDGE) : on ? LIT : CABLE;
@@ -359,7 +398,8 @@ function create(ctx: GameCtx): GameInstance {
       }
       text(g, ctx.t('OLT'), cx, cy - s * 0.08, Math.max(10, c * 0.2), '#fffaf0');
     } else if (kd === 'house') {
-      const s = c * 0.48;
+      const pop = glow[i] > 0 && !ctx.reducedMotion ? 1 + 0.25 * Math.sin((glow[i] / 0.35) * Math.PI) : 1;
+      const s = c * 0.48 * pop;
       g.fillStyle = PAL.surface;
       g.strokeStyle = PAL.ink2;
       g.lineWidth = 1.5;

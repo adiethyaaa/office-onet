@@ -37,7 +37,10 @@ test('pushing into a persona for 2 s walks through it', async ({ page }) => {
 test('running walks straight through a persona', async ({ page }) => {
   const { x } = await setup(page);
   await page.evaluate(() => (window.__kantor as unknown as K).drive(1, 0, true));
-  await expect.poll(async () => (await state(page)).pos[0], { timeout: 1800 }).toBeGreaterThan(x + 2.0);
+  // Software-rendered CI runs at 6-8 fps, and the 0.1 s dt clamp makes the
+  // sim slower than wall time there, so a wall-clock bound flakes. ghostBy
+  // === 'run' below is the real proof: a 2 s push would report 'push'.
+  await expect.poll(async () => (await state(page)).pos[0], { timeout: 8000 }).toBeGreaterThan(x + 2.0);
   await page.evaluate(() => (window.__kantor as unknown as K).drive(0, 0));
   const s = await page.evaluate(() => (window.__kantor!.state as () => { ghostBy: string | null })());
   expect(s.ghostBy).toBe('run');

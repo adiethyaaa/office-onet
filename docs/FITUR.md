@@ -164,6 +164,7 @@ Tiap fasilitas membuka game 2D sendiri. Game baru diunduh saat dibuka, jadi kant
 | Meja gambar Hugo | Susun Denah | Susun ruang kantor asli ke posisinya sebelum waktu habis |
 | Easel Kevin | Desain Poster | Pilih latar, judul, ikon, warna; dinilai kontras dan kecocokan brief |
 | Rak buku (Perpustakaan) | Kuis Perpustakaan | 5 soal tentang kantor ini dan ICT |
+| Meja board game dan bangkunya (Ruang game) | Catur Kantor | Catur melawan rekan tim, 3 tingkat; CEO duduk di bangku terdekat (v2.1) |
 | Kabinet arcade dan TV (Ruang game) | Game Station | Menu 10 slot, 5 terisi |
 
 Game Station:

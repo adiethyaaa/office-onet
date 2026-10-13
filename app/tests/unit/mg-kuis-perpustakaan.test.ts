@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { mulberry, run, type Run } from './mg-harness';
+import type { Btn, InputState } from '../../src/minigames/types';
+import { BTNS } from '../../src/minigames/types';
 import kuis, { WORLD, buildBank } from '../../src/minigames/games/kuis-perpustakaan';
 
 const t = (s: string, vars?: Record<string, string | number>) => (vars ? s.replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m)) : s);
-type Snap = { idx: number; sel: number; phase: string; correct: number; score: number; results: boolean[]; qs: { id: string; answer: number; opts: string[] }[] };
+type Snap = { picked: number | null; idx: number; sel: number; phase: string; correct: number; score: number; results: boolean[]; qs: { id: string; answer: number; opts: string[] }[] };
 const S = (r: Run) => r.snap() as unknown as Snap;
 
 describe('mini game: kuis-perpustakaan', () => {
@@ -82,5 +84,39 @@ describe('mini game: kuis-perpustakaan', () => {
     expect(a.result).toEqual(b.result);
     expect(S(run(kuis, 1)).qs).not.toEqual(S(run(kuis, 2)).qs);
     expect(new Set(S(a).qs.map((q) => q.id)).size).toBe(5);
+  });
+
+  it('tapping an answer box locks that answer; the same tap cannot skip the explanation', () => {
+    const r = run(kuis, 4);
+    const a = S(r).qs[0].answer;
+    const at = (i: number) => ({ x: 20 + (i % 2) * 304 + 100, y: 168 + Math.floor(i / 2) * 82 + 30 });
+    r.step(1, [], [], undefined, at(a));
+    expect(S(r).phase).toBe('reveal');
+    expect(S(r).picked).toBe(a);
+    expect(S(r).results).toEqual([true]);
+    r.step(1, [], [], undefined, at(a));
+    expect(S(r).idx).toBe(0);
+    r.step(30);
+    r.step(1, [], [], undefined, { x: 300, y: 100 });
+    expect(S(r).idx).toBe(1);
+    expect(S(r).phase).toBe('ask');
+  });
+
+  it('a tap outside the answers does nothing while asking', () => {
+    const r = run(kuis, 4);
+    r.step(1, [], [], undefined, { x: 300, y: 100 });
+    expect(S(r).phase).toBe('ask');
+    expect(S(r).results).toEqual([]);
+  });
+
+  it('mouse hover moves the highlight so A locks the hovered answer', () => {
+    const ctx = { ...run(kuis, 4).ctx, rand: mulberry(4) };
+    const inst = kuis.create(ctx);
+    const none = Object.fromEntries(BTNS.map((b) => [b, false])) as Record<Btn, boolean>;
+    const feed = (ptr: InputState['ptr'], a = false) => inst.update(1 / 60, { down: { ...none, a }, hit: { ...none, a }, ax: 0, ay: 0, tap: null, ptr });
+    feed({ x: 20 + 304 + 100, y: 168 + 82 + 30, down: false });
+    expect((inst.snapshot!() as unknown as Snap).sel).toBe(3);
+    feed({ x: 20 + 304 + 100, y: 168 + 82 + 30, down: false }, true);
+    expect((inst.snapshot!() as unknown as Snap).picked).toBe(3);
   });
 });

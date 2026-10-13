@@ -138,7 +138,11 @@ export const LEVELS: LevelDef[] = [
 export const PHYS = {
   accel: 1500, airAccel: 1000, friction: 1700, maxRun: 165,
   gravity: 1500, cutGravity: 3600, fallGravity: 1900, maxFall: 540,
-  jumpV: 470, stompV: 330, coyote: 0.09, buffer: 0.12,
+  jumpV: 470, stompV: 330, coyote: 0.1, buffer: 0.15,
+  /** Near the top of a held jump gravity eases off for a moment of hang time. */
+  apexV: 40, apexGravity: 0.8,
+  /** Head bumps that clip a ceiling corner by this much slide around it. */
+  cornerNudge: 6,
   pw: 12, ph: 30, ew: 18, eh: 16, enemySpeed: 42,
 };
 const LIVES = 3;
@@ -148,6 +152,14 @@ const meta: GameModule['meta'] = {
   blurb: 'Platformer 2D: kumpulkan dokumen, hindari kabel kusut.',
   controls: ['Kiri/kanan: jalan', 'A: lompat (tahan untuk lebih tinggi)', 'Injak printer dari atas untuk mengalahkannya', 'Bawah: turun dari rak'],
   view: { w: 640, h: 360 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'right', 'down', 'a'],
+  actions: {
+    left: 'Jalan ke kiri',
+    right: 'Jalan ke kanan',
+    up: 'Lompat',
+    down: 'Turun dari rak',
+    a: 'Lompat (tahan untuk lebih tinggi)',
+  },
+  pointerHint: 'Ketuk layar untuk lompat, tahan jari untuk lompat lebih tinggi',
 };
 
 function levelName(ctx: GameCtx, n: string) {
@@ -188,6 +200,7 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
   let enemies: Enemy[] = [];
   let px = 0, py = 0, vx = 0, vy = 0, face: 1 | -1 = 1;
   let onGround = false, coyote = 0, buffer = 0, jumpHeld = false;
+  let squash = 0, jumps = 0, nudges = 0, ptrWas = false;
   let spawnX = 0, spawnY = 0, checkpointX = -1;
   let docs = 0, stomps = 0, bonus = 0, levelDocs = 0, levelTime = 0;
   let phase: 'play' | 'dead' | 'clear' | 'over' = 'play';
@@ -213,13 +226,19 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
     levelDocs = 0; levelTime = 0;
     banner = 1.8;
     respawn();
+    cam = camTarget();
     hud();
   }
 
   function respawn() {
     px = spawnX; py = spawnY; vx = 0; vy = 0; face = 1;
-    onGround = true; coyote = 0; buffer = 0; jumpHeld = false;
+    onGround = true; coyote = 0; buffer = 0; jumpHeld = false; squash = 0;
     phase = 'play';
+  }
+
+  function camTarget() {
+    const worldW = lw * TILE;
+    return Math.max(0, Math.min(Math.max(0, worldW - w), px - w * 0.4 + face * 30));
   }
 
   const tileAt = (tx: number, ty: number) => (tx < 0 || tx >= lw ? '#' : ty < 0 || ty >= lh ? '.' : grid[ty][tx]);
@@ -251,12 +270,15 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
     for (let i = 0; i < n; i++) puffs.push({ x, y, vx: (ctx.rand() - 0.5) * 160, vy: -ctx.rand() * 160 - 40, life: 0.5 + ctx.rand() * 0.3, c });
   }
 
+  /** dirX is -1..1; analog sticks give a walk below full run speed. */
   function movePlayer(dt: number, dirX: number, wantDown: boolean) {
-    // horizontal
+    // horizontal: accelerate toward a target speed; turning around brakes hard so it feels instant
     const acc = onGround ? PHYS.accel : PHYS.airAccel;
+    const target = dirX * PHYS.maxRun;
     if (dirX !== 0) {
-      vx += dirX * acc * dt;
-      if (Math.sign(vx) !== dirX) vx += dirX * PHYS.friction * dt * 0.5;
+      const turning = vx !== 0 && Math.sign(vx) !== Math.sign(dirX);
+      const a = (acc + (turning ? PHYS.friction : 0)) * dt;
+      vx = Math.abs(target - vx) <= a ? target : vx + Math.sign(target - vx) * a;
       face = dirX > 0 ? 1 : -1;
     } else if (onGround) {
       const f = PHYS.friction * dt;
@@ -264,8 +286,9 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
     } else vx *= 1 - Math.min(1, dt * 1.5);
     vx = Math.max(-PHYS.maxRun, Math.min(PHYS.maxRun, vx));
 
-    // vertical: variable height by cutting the rise when A is released
-    const gr = vy < 0 ? (jumpHeld ? PHYS.gravity : PHYS.cutGravity) : PHYS.fallGravity;
+    // vertical: variable height by cutting the rise when A is released, a little hang at the apex
+    let gr = vy < 0 ? (jumpHeld ? PHYS.gravity : PHYS.cutGravity) : PHYS.fallGravity;
+    if (jumpHeld && Math.abs(vy) < PHYS.apexV) gr *= PHYS.apexGravity;
     vy = Math.min(PHYS.maxFall, vy + gr * dt);
 
     const hw = PHYS.pw / 2;
@@ -283,6 +306,7 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
       }
     }
     const prevFeet = py;
+    const prevVy = vy;
     py += vy * dt;
     const l = Math.floor((px - hw + 0.01) / TILE), r = Math.floor((px + hw - 0.01) / TILE);
     const wasGround = onGround;
@@ -296,9 +320,30 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
       }
     } else {
       const ty = Math.floor((py - PHYS.ph) / TILE);
-      for (let tx = l; tx <= r; tx++) if (solid(tileAt(tx, ty))) { py = (ty + 1) * TILE + PHYS.ph; vy = 0; break; }
+      const hitL = solid(tileAt(l, ty)), hitR = solid(tileAt(r, ty));
+      if (hitL || hitR) {
+        // clipped only a corner: slide around it instead of killing the jump
+        const nudgeR = (l + 1) * TILE - (px - hw);
+        const nudgeL = (px + hw) - r * TILE;
+        if (hitL && !hitR && l !== r && nudgeR <= PHYS.cornerNudge && !solidCol(px + nudgeR + 0.01, py)) { px += nudgeR + 0.01; nudges++; }
+        else if (hitR && !hitL && l !== r && nudgeL <= PHYS.cornerNudge && !solidCol(px - nudgeL - 0.01, py)) { px -= nudgeL + 0.01; nudges++; }
+        else { py = (ty + 1) * TILE + PHYS.ph; vy = 0; ctx.sfx('thud', { gain: 0.4, rate: 1.4 }); }
+      }
     }
-    if (onGround && !wasGround && !ctx.reducedMotion) burst(px, py, 'rgba(120,110,95,0.6)', 3);
+    if (onGround && !wasGround) {
+      squash = Math.min(1, 0.4 + prevVy / PHYS.maxFall);
+      if (!ctx.reducedMotion) burst(px, py, 'rgba(120,110,95,0.6)', 3);
+      if (prevVy > 300) ctx.sfx('step', { gain: 0.6 });
+    }
+  }
+
+  /** True when the player's body column at x overlaps a solid tile. */
+  function solidCol(x: number, feet: number) {
+    const hw = PHYS.pw / 2;
+    const l = Math.floor((x - hw) / TILE), r = Math.floor((x + hw - 0.01) / TILE);
+    const t = Math.floor((feet - PHYS.ph) / TILE), b = Math.floor((feet - 0.01) / TILE);
+    for (let ty = t; ty <= b; ty++) for (let tx = l; tx <= r; tx++) if (solid(tileAt(tx, ty))) return true;
+    return false;
   }
 
   function overlapTiles(fn: (c: string, tx: number, ty: number) => void) {
@@ -321,6 +366,7 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
         if (p.life <= 0) puffs.splice(i, 1);
       }
       for (const e of enemies) if (!e.alive) e.squash = Math.max(0, e.squash - dt);
+      cam += (camTarget() - cam) * (1 - Math.exp(-9 * dt));
       if (phase === 'over') return;
       if (phase === 'dead') {
         timer -= dt;
@@ -337,6 +383,7 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
         return;
       }
       levelTime += dt;
+      squash += (0 - squash) * Math.min(1, dt * 12);
 
       // enemies patrol: turn at walls and ledges
       for (const e of enemies) {
@@ -348,13 +395,20 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
         else e.x = nx;
       }
 
-      const dirX = inp.down.left === inp.down.right ? (Math.abs(inp.ax) > 0.3 ? Math.sign(inp.ax) : 0) : inp.down.right ? 1 : -1;
-      if (inp.hit.a || inp.hit.up) buffer = PHYS.buffer; else buffer = Math.max(0, buffer - dt);
-      jumpHeld = inp.down.a || inp.down.up;
+      const dirX = inp.down.left !== inp.down.right ? (inp.down.right ? 1 : -1)
+        : Math.abs(inp.ax) < 0.2 ? 0 : Math.sign(inp.ax) * Math.min(1, 0.45 + (Math.abs(inp.ax) - 0.2) * 1.1);
+      // tap on the play area = A, holding the finger = holding A
+      const ptrDown = !!inp.ptr?.down;
+      const ptrPress = (ptrDown && !ptrWas) || !!inp.tap;
+      ptrWas = ptrDown;
+      if (inp.hit.a || inp.hit.up || ptrPress) buffer = PHYS.buffer; else buffer = Math.max(0, buffer - dt);
+      jumpHeld = inp.down.a || inp.down.up || ptrDown;
       coyote = onGround ? PHYS.coyote : Math.max(0, coyote - dt);
       if (buffer > 0 && coyote > 0) {
-        vy = -PHYS.jumpV; onGround = false; coyote = 0; buffer = 0;
+        vy = -PHYS.jumpV; onGround = false; coyote = 0; buffer = 0; jumps++;
+        squash = -0.8;
         ctx.sfx('jump');
+        if (!ctx.reducedMotion) burst(px, py, 'rgba(120,110,95,0.5)', 2);
       }
       const prevFeet = py;
       movePlayer(dt, dirX, inp.down.down);
@@ -402,8 +456,6 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
     render() {
       const L = levels[li];
       const worldW = lw * TILE;
-      const target = Math.max(0, Math.min(worldW - w, px - w * 0.4 + face * 30));
-      cam += (target - cam) * 0.15;
       cam = Math.max(0, Math.min(Math.max(0, worldW - w), cam));
       drawBackdrop(g, L.theme, cam, w, h, time);
       g.save();
@@ -416,7 +468,15 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
       }
       for (const e of enemies) drawPrinter(g, e, time);
       const pose = phase === 'dead' ? 'hurt' : !onGround ? 'jump' : Math.abs(vx) > 20 ? 'run' : 'idle';
-      drawChar(g, me, px, py + 1, 36, face, pose, time);
+      // squash on landing, stretch on take-off, anchored at the feet
+      const k = ctx.reducedMotion ? 0 : squash;
+      const air = !onGround && phase === 'play' ? Math.max(-0.12, Math.min(0.12, -vy / 3000)) : 0;
+      const scY = 1 - k * 0.22 + air, scX = 1 + k * 0.18 - air * 0.8;
+      g.save();
+      g.translate(px, py + 1);
+      g.scale(scX, scY);
+      drawChar(g, me, 0, 0, 36, face, pose, time);
+      g.restore();
       for (const p of puffs) { g.globalAlpha = Math.min(1, p.life * 2); g.fillStyle = p.c; g.fillRect(p.x - 2, p.y - 2, 4, 4); }
       g.globalAlpha = 1;
       g.restore();
@@ -445,7 +505,7 @@ export function makeGame(ctx: GameCtx, opts: Options = {}): GameInstance {
 
     snapshot: () => ({
       level: li, lives, px: Math.round(px * 100) / 100, py: Math.round(py * 100) / 100, vx: Math.round(vx), vy: Math.round(vy), onGround, phase,
-      docs, stomps, bonus, score: score(), deaths, lastHurt, checkpointX, levelW: lw,
+      docs, stomps, bonus, score: score(), deaths, lastHurt, checkpointX, levelW: lw, buffer: Math.round(buffer * 1000) / 1000, coyote: Math.round(coyote * 1000) / 1000, jumps, nudges, cam: Math.round(cam),
       enemies: enemies.map((e) => ({ x: Math.round(e.x), y: e.y, alive: e.alive })),
     }),
   };

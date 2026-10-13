@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { mulberry, run } from './mg-harness';
-import sambung, { LEVELS, generateLevel, litCells, maskOf, sizeFor, solved, timeFor } from '../../src/minigames/games/sambung-kabel';
+import sambung, { SPIN_T, LEVELS, generateLevel, litCells, maskOf, sizeFor, solved, timeFor } from '../../src/minigames/games/sambung-kabel';
 
-type Snap = { level: number; phase: string; score: number; timeLeft: number; size: number; need: number[]; rot: number[]; moves: number; housesLit: number; houses: number; geom: { ox: number; oy: number; cell: number } };
+type Snap = { spinning: number; cursor: number; level: number; phase: string; score: number; timeLeft: number; size: number; need: number[]; rot: number[]; moves: number; housesLit: number; houses: number; geom: { ox: number; oy: number; cell: number } };
 
 /** Tap the first tile that is not yet in its solution orientation. */
 const solver = (_f: number, s: Record<string, unknown>) => {
@@ -103,5 +103,37 @@ describe('mini game: sambung-kabel play', () => {
     };
     expect(go(42)).toBe(go(42));
     expect(go(42)).not.toBe(go(43));
+  });
+
+  it('fast taps on one tile all count and the spin never outlasts SPIN_T', () => {
+    const r = run(sambung, 5);
+    const s0 = r.snap() as Snap;
+    const i = s0.need.findIndex((k) => k > 0);
+    const { ox, oy, cell } = s0.geom;
+    const tap = { x: ox + (i % s0.size) * cell + cell / 2, y: oy + Math.floor(i / s0.size) * cell + cell / 2 };
+    for (let k = 0; k < 3; k++) r.step(1, [], [], undefined, tap);
+    const s1 = r.snap() as Snap;
+    expect(s1.moves).toBe(3);
+    expect(s1.rot[i]).toBe((s0.rot[i] + 3) % 4);
+    expect(s1.spinning).toBe(1);
+    r.step(Math.ceil(SPIN_T * 60) + 1);
+    expect((r.snap() as Snap).spinning).toBe(0);
+    expect(SPIN_T).toBeLessThanOrEqual(0.12);
+  });
+
+  it('a tap outside the grid is ignored and A still rotates the cursor tile that frame', () => {
+    const r = run(sambung, 5);
+    const s0 = r.snap() as Snap;
+    const i = s0.need.findIndex((k) => k > 0);
+    // move the cursor onto a rotatable tile with arrows
+    const cx = i % s0.size, cy = Math.floor(i / s0.size);
+    let c = s0.cursor;
+    while (c % s0.size !== cx) { r.step(1, [], [c % s0.size < cx ? 'right' : 'left']); c = (r.snap() as Snap).cursor; }
+    while (Math.floor(c / s0.size) !== cy) { r.step(1, [], [Math.floor(c / s0.size) < cy ? 'down' : 'up']); c = (r.snap() as Snap).cursor; }
+    r.step(1, [], ['a'], undefined, { x: 20, y: 20 });
+    const s1 = r.snap() as Snap;
+    expect(s1.cursor).toBe(i);
+    expect(s1.moves).toBe(1);
+    expect(s1.rot[i]).toBe((s0.rot[i] + 1) % 4);
   });
 });

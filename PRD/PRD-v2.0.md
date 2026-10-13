@@ -142,6 +142,13 @@ Gerbang deploy, sama dengan v1.1: tsc, unit, E2E desktop/tablet/HP, Python, serv
 - Audio di Safari iOS punya batasan autoplay dan format. Mitigasi: aktifkan setelah sentuhan pertama, sediakan AAC.
 - Ukuran aset bisa melewati budget. Mitigasi: gerbang ukuran di CI.
 
+## 12. Perubahan v2.1 (2026-10-13)
+
+- REQ-FAC-CATUR Catur Kantor dimainkan di meja board game Ruang game (L2-GAME), bukan di Game Station (keputusan Budi). Meja dan keempat bangkunya membuka catur; CEO duduk di bangku kosong terdekat dan bangku itu tercatat terpakai bagi NPC. Papan catur 8x8 tampak di atas meja. Slot 6 Game Station kembali kosong.
+- REQ-MG-INPUT-01 Setiap tekan tombol sampai ke game di layar 60, 120, maupun 144 Hz. Sebelumnya, di layar 120 Hz tekan singkat yang jatuh di frame tanpa langkah 60 Hz hilang (uji: 0 dari 30 tekanan diterima; sesudah perbaikan 30 dari 30). Tekanan kini diantrekan per tombol dan diberikan satu per langkah game, jadi dua tekan cepat dalam satu frame yang lambat tetap terhitung dua.
+- REQ-MG-INPUT-02 Satu tekan membuka satu lapis: tombol A stik atau Enter yang masih ditahan dari kantor atau Game Station tidak ikut memilih slot atau menekan "Mulai". Esc saat "Memuat permainan..." menutup game.
+- REQ-MG-INPUT-03 Game Station mengikuti profil kontroler (Tombol terbalik) untuk A dan B.
+
 ## Lampiran A. SaaS dan pemasangan lintas platform (DRAF, belum dibahas)
 
 Catatan untuk dibahas nanti, setelah v2.0.

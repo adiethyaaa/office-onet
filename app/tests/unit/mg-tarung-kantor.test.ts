@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { run, type Run } from './mg-harness';
-import tarung from '../../src/minigames/games/tarung-kantor';
+import tarung, { ATK, BUFFER, HITSTOP } from '../../src/minigames/games/tarung-kantor';
 import type { Btn } from '../../src/minigames/types';
 
-interface F { id: string; x: number; y: number; hp: number; meter: number; face: number; atk: string | null; stun: boolean; guard: boolean; ko: boolean }
+interface F { id: string; x: number; y: number; hp: number; meter: number; face: number; atk: string | null; atkT: number; jab: number; stun: boolean; guard: boolean; ko: boolean; flash: boolean; combo: number }
 interface Hit { by: number; kind: string; raw: number; dmg: number; blocked: boolean }
-interface S { phase: string; sel: number; selId: string; opIdx: number; round: number; pWins: number; cWins: number; clock: number; score: number; opponents: string[]; p: F; c: F; fx: string[]; hits: Hit[]; specials: string[] }
+interface S { phase: string; sel: number; selId: string; opIdx: number; round: number; pWins: number; cWins: number; clock: number; score: number; opponents: string[]; p: F; c: F; hitstop: number; frozen: number; pops: number; stars: number; fx: string[]; hits: Hit[]; specials: string[] }
 
 const snap = (r: Run) => r.snap() as unknown as S;
 
@@ -28,6 +28,33 @@ function startWith(r: Run, sel: number) {
   r.step(1, [], ['a']);
   expect(snap(r).phase).toBe('intro');
   for (let g = 0; g < 600 && snap(r).phase !== 'fight'; g++) r.step(1);
+}
+
+
+/** Walk until the rival is in punch reach and both fighters are free to act. */
+function closeIn(r: Run, maxFrames = 600) {
+  for (let i = 0; i < maxFrames; i++) {
+    const s = snap(r);
+    if (s.phase === 'fight' && Math.abs(s.c.x - s.p.x) <= 44 && !s.p.atk && !s.c.atk && !s.p.stun && !s.c.stun && !s.c.guard && s.hitstop === 0) return true;
+    r.step(1, s.phase === 'fight' && Math.abs(s.c.x - s.p.x) > 44 ? [s.c.x > s.p.x ? 'right' : 'left'] : []);
+  }
+  return false;
+}
+
+/** Punch from close range until one connects unblocked; returns the frame state right after contact. */
+function landPunch(r: Run) {
+  for (let tries = 0; tries < 40; tries++) {
+    if (!closeIn(r)) continue;
+    const before = snap(r).hits.filter((x) => x.by === 0).length;
+    for (let f = 0; f < 10; f++) {
+      r.step(1, [], f === 0 ? ['a'] : []);
+      const s = snap(r);
+      const mine = s.hits.filter((x) => x.by === 0);
+      if (mine.length > before) { if (!mine[mine.length - 1].blocked) return s; break; }
+    }
+    r.step(30);
+  }
+  throw new Error('no punch landed');
 }
 
 describe('mini game: tarung-kantor', () => {
@@ -129,6 +156,103 @@ describe('mini game: tarung-kantor', () => {
       fired.add(mine!.split(':')[1]);
     }
     expect(fired.size).toBe(9);
+  });
+
+  it('A starts the punch on the same frame and it is active within 3 frames', () => {
+    const r = run(tarung, 5);
+    startWith(r, snap(r).sel);
+    r.sfx.length = 0;
+    r.step(1, [], ['a']);
+    expect(snap(r).p.atk).toBe('punch');
+    expect(r.sfx).toContain('swat');
+    expect(ATK.punch.s).toBeLessThanOrEqual(3 / 60 + 1e-9);
+    expect(ATK.kick.s).toBeLessThanOrEqual(6 / 60 + 1e-9);
+  });
+
+  it('a landed punch freezes the fight for 3 to 5 frames with flash, number and stars', () => {
+    const r = run(tarung, 8);
+    startWith(r, snap(r).sel);
+    const hitAt = landPunch(r);
+    expect(hitAt.hitstop).toBe(HITSTOP.punch);
+    expect(HITSTOP.punch).toBeGreaterThanOrEqual(3);
+    expect(HITSTOP.special).toBeLessThanOrEqual(5);
+    expect(hitAt.c.flash).toBe(true);
+    expect(hitAt.pops).toBeGreaterThan(0);
+    expect(hitAt.stars).toBeGreaterThan(0);
+    const frozen0 = hitAt.frozen;
+    const pos = [hitAt.p.x, hitAt.c.x, hitAt.clock];
+    r.step(HITSTOP.punch);
+    const s = snap(r);
+    expect(s.frozen - frozen0).toBe(HITSTOP.punch);
+    expect([s.p.x, s.c.x, s.clock]).toEqual(pos);
+    r.step(2);
+    expect(snap(r).c.x).not.toBe(hitAt.c.x);
+  });
+
+  it('knockback pushes the rival away from the blow', () => {
+    const r = run(tarung, 8);
+    startWith(r, snap(r).sel);
+    const s0 = landPunch(r);
+    const dir = Math.sign(s0.c.x - s0.p.x);
+    r.step(HITSTOP.punch + 12);
+    const s1 = snap(r);
+    expect((s1.c.x - s0.c.x) * dir).toBeGreaterThan(8);
+  });
+
+  it('presses made during recovery are buffered and fire when the move ends', () => {
+    const r = run(tarung, 5);
+    startWith(r, snap(r).sel);
+    r.step(1, [], ['a']); // whiff from afar
+    const total = Math.round((ATK.punch.s + ATK.punch.a + ATK.punch.r) * 60);
+    const early = Math.floor(BUFFER * 60) - 2;
+    r.step(total - early - 1);
+    expect(snap(r).p.atk).toBe('punch');
+    r.step(1, [], ['b']);
+    let kicked = false;
+    for (let i = 0; i < early + 3 && !kicked; i++) { r.step(1); kicked = snap(r).p.atk === 'kick'; }
+    expect(kicked).toBe(true);
+  });
+
+  it('a punch that connects cancels straight into a kick', () => {
+    const r = run(tarung, 8);
+    startWith(r, snap(r).sel);
+    landPunch(r);
+    r.step(1, [], ['b']); // pressed during hit-stop
+    let f = 0;
+    for (; f < 12 && snap(r).p.atk !== 'kick'; f++) r.step(1);
+    expect(snap(r).p.atk).toBe('kick');
+    // the uncancelled punch would still be recovering for several more frames
+    expect(f).toBeLessThan(HITSTOP.punch + 3);
+  });
+
+  it('Y guards in place without walking away', () => {
+    const r = run(tarung, 5);
+    startWith(r, snap(r).sel);
+    const x0 = snap(r).p.x;
+    r.step(20, ['y']);
+    const s = snap(r);
+    expect(s.p.guard).toBe(true);
+    expect(s.p.x).toBe(x0);
+  });
+
+  it('the CPU does not read inputs: it cannot guard a fresh punch it was not already guarding', () => {
+    let fresh = 0, blockedFresh = 0;
+    for (const seed of [21, 22, 23]) {
+      const r = run(tarung, seed);
+      startWith(r, snap(r).sel);
+      for (let k = 0; k < 15 && !r.result; k++) {
+        if (!closeIn(r, 300)) break;
+        const before = JSON.stringify(snap(r).hits);
+        r.step(1, [], ['a']);
+        r.step(8);
+        const after = snap(r).hits;
+        const last = after[after.length - 1];
+        if (JSON.stringify(after) !== before && last.by === 0 && last.kind === 'punch') { fresh++; if (last.blocked) blockedFresh++; }
+        r.step(20);
+      }
+    }
+    expect(fresh).toBeGreaterThan(10);
+    expect(blockedFresh / fresh).toBeLessThan(0.2);
   });
 
   it('is deterministic for the same seed', () => {

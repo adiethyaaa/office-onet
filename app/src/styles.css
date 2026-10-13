@@ -189,7 +189,7 @@ html[data-input='pad'] :focus { outline: 3px solid var(--focus); outline-offset:
 .toast {
   /* inset/margin/border reset the UA popover box (toast is a manual popover, see ui/dom.ts). */
   inset: auto; margin: 0; border: none; overflow: visible; z-index: 50;
-  position: fixed; left: 50%; top: 84px; transform: translateX(-50%);
+  position: fixed; left: 50%; top: calc(var(--hud-h, 108px) + 10px); transform: translateX(-50%);
   background: var(--green); color: var(--on-green); padding: 8px 16px; border-radius: 12px; box-shadow: var(--shadow); max-width: min(90vw, 520px);
 }
 .activity-chip {
@@ -241,6 +241,12 @@ html[data-input='pad'] :focus { outline: 3px solid var(--focus); outline-offset:
 .keys { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0 0 16px; }
 .keys dt { font-weight: 700; }
 .keys dd { margin: 0; }
+/* Phones: the long "Stik (Xbox, PlayStation, Bluetooth)" term made the key
+   column ~60% wide and squeezed descriptions to 2-3 words a line. */
+@media (max-width: 599px) {
+  .keys { grid-template-columns: minmax(0, 40%) minmax(0, 1fr); }
+  .keys dt { overflow-wrap: anywhere; }
+}
 .settings fieldset { border: 1px solid var(--surface-2); border-radius: 12px; margin: 0 0 12px; padding: 8px 12px; }
 .settings legend { font-weight: 700; padding: 0 4px; }
 .settings label { display: flex; align-items: center; gap: 10px; min-height: 44px; }
@@ -390,12 +396,22 @@ html[data-reduced-motion='true'] .pad-svg .pad-knob { transition: none; }
   .hud-actions .btn .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   #btn-chat { order: -3; } #btn-boards { order: -2; } #btn-directory { order: -1; }
   .sim-badge { font-size: 0.8rem; }
-  .toast { top: auto; bottom: 180px; }
+  .toast { top: auto; bottom: 296px; }
   .activity-chip { bottom: 240px; font-size: 0.9rem; }
   .directory, .studio { top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 72vh; border-radius: 18px 18px 0 0; padding-bottom: env(safe-area-inset-bottom); }
   .tool-grid { grid-template-columns: repeat(4, 1fr); }
   .avatar-layout { grid-template-columns: 1fr; }
   .avatar-preview { width: 100%; }
+}
+/* 600-959 px (phones in landscape, small tablets, narrow windows): seven
+   labelled buttons are ~890 px wide and ran off the right edge, hiding
+   Pengaturan and Kontrol. Icon-only 44 px buttons fit; labels stay for
+   screen readers and as a hover title. */
+@media (min-width: 600px) and (max-width: 959px) {
+  .hud-actions { flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 100%; }
+  .hud-actions .btn { width: 44px; padding: 0; justify-content: center; }
+  .hud-actions .btn kbd { display: none; }
+  .hud-actions .btn .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 /* Below 356 px seven icons no longer fit one row: wrap, packed to the left. */
 @media (max-width: 355px) { .hud-actions { justify-content: flex-start; } }
@@ -556,3 +572,8 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .scold { margin: 12px 0 0; padding: 8px 10px; border: 1px dashed var(--control-border); border-radius: 10px; }
 .scold legend { padding: 0 4px; font-weight: 700; }
 .scold .row { display: flex; flex-wrap: wrap; gap: 6px; }
+.dialog h2[tabindex='-1']:focus { outline: none; }
+/* The "Membuka ..." toast landed on top of the Game Station grid and the
+   mini game card (the toast is a top-layer popover). The layer shows its own
+   loading card, so office toasts wait until it closes. */
+:root[data-minigame] #toast { visibility: hidden; }

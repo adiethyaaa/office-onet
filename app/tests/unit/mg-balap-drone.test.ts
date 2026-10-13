@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { run } from './mg-harness';
-import balap, { TRACKS, LAPS } from '../../src/minigames/games/balap-drone';
+import balap, { TRACKS, LAPS, DRIFT_TIERS } from '../../src/minigames/games/balap-drone';
 import type { Btn } from '../../src/minigames/types';
 
-type P = { x: number; y: number; ang: number; v: number; lap: number; next: number; done: boolean; place: number; onRoad: boolean; turbos: number; turbo: number; pos: number };
-type S = { phase: string; sel: number; track: string; raceT: number; player: P | null; cpus: { lap: number; done: boolean; finishT: number; place: number }[] };
+type P = { x: number; y: number; ang: number; v: number; lap: number; next: number; done: boolean; place: number; onRoad: boolean; turbos: number; turbo: number; pos: number; steer: number; slip: number; drift: number; driftCharge: number };
+type S = { phase: string; sel: number; track: string; raceT: number; player: P | null; cruise: boolean; wallHits: number; bounds: { x0: number; y0: number; x1: number; y1: number }; cpus: { lap: number; done: boolean; finishT: number; place: number }[] };
 
 const wrap = (a: number) => { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; };
 /** Steer toward a world point, full gas unless the turn is sharp. */
@@ -121,6 +121,73 @@ describe('mini game: balap-drone', () => {
     for (let i = 0; i < 6; i++) { r.step(1, ['a'], ['x']); r.step(110, ['a']); }
     expect((r.snap() as S).player!.turbos).toBe(0);
     expect(r.sfx.filter((n) => n === 'turbo').length).toBe(3);
+  });
+
+  it('digital steering eases in and recentres, analog input steers proportionally', () => {
+    const r = startRace(0);
+    r.step(60 * 3.2, ['a']);
+    r.step(1, ['a', 'right']);
+    const s1 = (r.snap() as S).player!.steer;
+    expect(s1).toBeGreaterThan(0);
+    expect(s1).toBeLessThan(0.5);
+    r.step(10, ['a', 'right']);
+    expect((r.snap() as S).player!.steer).toBe(1);
+    r.step(6, ['a']);
+    expect((r.snap() as S).player!.steer).toBe(0);
+    r.step(20, ['a'], [], { x: 0.4, y: 0 });
+    expect((r.snap() as S).player!.steer).toBeCloseTo(0.4, 5);
+  });
+
+  it('holding B in a hard turn drifts and releasing it gives a boost straight away', () => {
+    const r = startRace(0);
+    r.step(60 * 3.2);
+    r.step(80, ['a']);
+    const v0 = (r.snap() as S).player!.v;
+    expect(v0).toBeGreaterThan(150);
+    let drifted = false;
+    // flick left to start the slide, then counter-steer to hold a gentle line on the road
+    for (let i = 0; i < Math.ceil(DRIFT_TIERS[0] * 60) + 16; i++) {
+      r.step(1, ['a', 'b', i < 6 ? 'left' : 'right']);
+      if ((r.snap() as S).player!.drift !== 0) drifted = true;
+    }
+    const mid = (r.snap() as S).player!;
+    expect(drifted).toBe(true);
+    expect(Math.abs(mid.slip)).toBeGreaterThan(5);
+    expect(mid.driftCharge).toBeGreaterThanOrEqual(DRIFT_TIERS[0]);
+    r.step(1, ['a']);
+    const after = (r.snap() as S).player!;
+    expect(after.drift).toBe(0);
+    expect(after.turbo).toBeGreaterThan(0);
+    expect(after.v).toBeGreaterThan(mid.v);
+    expect(after.turbos).toBe(3);
+  });
+
+  it('driving into the outer fence slides along it instead of sticking', () => {
+    const r = startRace(0);
+    r.step(60 * 3.2);
+    // aim up and a little right, into the top fence
+    let hit = false;
+    for (let i = 0; i < 60 * 25 && !hit; i++) {
+      const p = (r.snap() as S).player!;
+      const d = wrap(-Math.PI / 2 + 0.5 - p.ang);
+      r.step(1, ['a'], [], { x: Math.max(-1, Math.min(1, d * 3)), y: 0 });
+      hit = (r.snap() as S).wallHits > 0;
+    }
+    expect(hit).toBe(true);
+    const a = (r.snap() as S).player!;
+    r.step(30, ['a'], [], { x: 0, y: 0 });
+    const b = (r.snap() as S).player!;
+    expect(Math.hypot(b.x - a.x, b.y - a.y)).toBeGreaterThan(20);
+    const { bounds } = r.snap() as S;
+    expect(b.y).toBeGreaterThanOrEqual(bounds.y0);
+  });
+
+  it('Y toggles auto throttle so the car drives without holding A', () => {
+    const r = startRace(0);
+    r.step(1, [], ['y']);
+    expect((r.snap() as S).cruise).toBe(true);
+    r.step(60 * 4);
+    expect((r.snap() as S).player!.v).toBeGreaterThan(100);
   });
 
   it('same seed gives the same race', () => {

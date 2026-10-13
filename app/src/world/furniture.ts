@@ -98,6 +98,20 @@ function panel(w: number, h: number, d: number, y: number, frame: number, face: 
   }
 }
 
+/** 8x8 chessboard with a wooden rim on a table top (catur is played there). */
+function chessboard(h: number) {
+  const n = 8, sq = 0.06, s0 = -((n - 1) * sq) / 2;
+  box(n * sq + 0.06, 0.012, n * sq + 0.06, 0, h, 0, ENV.woodDark, 0);
+  for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) box(sq, 0.006, sq, s0 + i * sq, h + 0.012, s0 + j * sq, (i + j) % 2 ? 0x3b2f2a : 0xf0e6d2, 0);
+}
+
+/** Extra parts drawn on top of a Blender kit model (the kit has no board). */
+export function kitOverlay(fx: Fixture): Part[] {
+  P.length = 0;
+  if (fx.type === 'board_table') chessboard(fx.size[2]);
+  return P.slice();
+}
+
 export function buildFixture(fx: Fixture): Part[] {
   P.length = 0;
   const [w, d, h] = fx.size;
@@ -117,7 +131,7 @@ export function buildFixture(fx: Fixture): Part[] {
     case 'stool': chairShape(w, d, h, ENV.fabricTerracotta, ENV.woodDark, false); break;
     case 'meeting_table': case 'dining_table': case 'coffee_table': case 'work_table': case 'board_table':
       table(w, d, h, fx.type === 'board_table' ? ENV.woodLight : ENV.wood);
-      if (fx.type === 'board_table') box(0.5, 0.01, 0.5, 0, h, 0, ENV.fabricGreen, 0);
+      if (fx.type === 'board_table') chessboard(h);
       break;
     case 'high_table': table(w, d, h, ENV.woodLight); break;
     case 'round_table':

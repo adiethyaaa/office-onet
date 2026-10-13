@@ -254,6 +254,9 @@ export class MapUI {
   private shown: FloorId = 'L1';
   private selected: string | null = null;
   private listSig = '';
+  /** The list is rebuilt as personas move; a finger or scroll on it holds the
+   *  rebuild so a tap never lands on a button that was just replaced. */
+  private listHoldUntil = 0;
   private timer = 0;
 
   constructor(private world: World, private host: MapHost) {
@@ -305,6 +308,9 @@ export class MapUI {
     const legend = el('p', { class: 'map-legend muted small' });
     legend.innerHTML = `<span class="lg you"></span>${t('Kamu')} <span class="lg npc"></span>${t('Persona')} <span class="lg busy"></span>${t('Sedang bekerja')} <span class="lg link"></span>${t('Tangga atau lift')}`;
     this.lists = el('div', { class: 'map-lists' });
+    const hold = () => { this.listHoldUntil = performance.now() + 1500; };
+    for (const ev of ['pointerdown', 'pointermove', 'touchstart', 'wheel', 'scroll'] as const) this.lists.addEventListener(ev, hold, { passive: true, capture: true });
+    this.dlg.addEventListener('scroll', hold, { passive: true, capture: true });
     const close = el('form', { method: 'dialog' });
     close.append(el('button', { class: 'btn primary', value: 'close' }, t('Tutup')));
     const left = el('div', { class: 'map-left' });
@@ -396,7 +402,7 @@ export class MapUI {
 
   private renderLists(snap: MapSnapshot, force: boolean) {
     const sig = JSON.stringify([snap.floor, this.selected, snap.people.map((p) => [p.id, p.floor, placeText(this.world, p), p.doing, p.busy])]);
-    if (!force && sig === this.listSig) return;
+    if (!force && (sig === this.listSig || performance.now() < this.listHoldUntil)) return;
     this.listSig = sig;
     const active = document.activeElement as HTMLElement | null;
     const keep = active && this.lists.contains(active) ? { id: active.dataset.id, act: active.dataset.act } : null;

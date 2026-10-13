@@ -134,12 +134,16 @@ export function buildBank(t: T, rand: () => number): Question[] {
 const PER_SESSION = 5;
 const Q_TIME = 15;
 const REVEAL = 4;
+/** Reveal ignores input this long so the tap that answered cannot also skip the explanation. */
+const REVEAL_GUARD = 0.3;
 
 const meta: GameModule['meta'] = {
   id: 'kuis-perpustakaan', title: 'Kuis Perpustakaan', place: 'bookshelf', music: 'calm',
   blurb: 'Lima soal tentang kantor ini dan dunia ICT/ISP. 15 detik per soal.',
   controls: ['Panah atau D-pad: pilih jawaban', 'A: kunci jawaban, A lagi: soal berikutnya', 'Atau ketuk jawabannya'],
   view: { w: 640, h: 400 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'right', 'up', 'down', 'a'],
+  actions: { arah: 'Pilih jawaban', a: 'Kunci jawaban / soal berikutnya' },
+  pointerHint: 'Ketuk jawaban untuk menguncinya, ketuk lagi untuk soal berikutnya',
 };
 
 function create(ctx: GameCtx): GameInstance {
@@ -163,6 +167,13 @@ function create(ctx: GameCtx): GameInstance {
   let correct = 0, bonus = 0;
   let ended = false;
   let anim = 0;
+  let selT = 0;
+  let pickT = 0;
+  let shake = 0;
+  let qIn = 0;
+  let gained = 0;
+  let lastPtr = { x: -1, y: -1 };
+  const sparks: { x: number; y: number; vx: number; vy: number; life: number; col: string }[] = [];
   const results: boolean[] = [];
   const nova = ctx.cast.find((c) => c.id === 'CH-ICTSPEC') ?? ctx.cast[0];
 
@@ -173,9 +184,19 @@ function create(ctx: GameCtx): GameInstance {
     picked = i;
     const ok = i !== null && i === qs[idx].answer;
     results.push(ok);
-    if (ok) { correct++; bonus += Math.ceil(left) * 5; ctx.sfx('right'); } else ctx.sfx('wrong');
+    gained = 0;
+    if (ok) { gained = 100 + Math.ceil(left) * 5; correct++; bonus += Math.ceil(left) * 5; ctx.sfx('right'); } else { ctx.sfx('wrong'); shake = i === null ? 0 : 0.35; }
     phase = 'reveal';
     revealT = REVEAL;
+    pickT = 1;
+    if (ok && !ctx.reducedMotion) {
+      const b = box(i!);
+      for (let k = 0; k < 16; k++) {
+        const a = (k / 16) * Math.PI * 2;
+        const v = 80 + (k % 3) * 40;
+        sparks.push({ x: b.x + OW / 2, y: b.y + OH / 2, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 40, life: 0.7, col: k % 2 ? PAL.gold : '#9be37a' });
+      }
+    }
     hud();
   }
   function next() {
@@ -185,7 +206,7 @@ function create(ctx: GameCtx): GameInstance {
       ctx.end({ score: score(), won: correct >= 3, summary: ctx.t('{c} dari {m} soal benar', { c: correct, m: PER_SESSION }) });
       return;
     }
-    phase = 'ask'; left = Q_TIME; sel = 0; picked = null;
+    phase = 'ask'; left = Q_TIME; sel = 0; picked = null; qIn = 1; selT = 1;
     ctx.sfx('page');
     hud();
   }
@@ -193,6 +214,10 @@ function create(ctx: GameCtx): GameInstance {
   // option boxes, 2x2
   const OX = 20, OY = 168, OW = 296, OH = 74, GAP = 8;
   const box = (i: number) => ({ x: OX + (i % 2) * (OW + GAP), y: OY + Math.floor(i / 2) * (OH + GAP) });
+  const boxAt = (x: number, y: number) => {
+    for (let i = 0; i < 4; i++) { const b = box(i); if (x >= b.x && x <= b.x + OW && y >= b.y && y <= b.y + OH) return i; }
+    return -1;
+  };
 
   hud();
 
@@ -200,19 +225,32 @@ function create(ctx: GameCtx): GameInstance {
     update(dt, inp) {
       if (ended) return;
       anim += dt;
+      selT = Math.max(0, selT - dt * 6);
+      pickT = Math.max(0, pickT - dt * 3);
+      shake = Math.max(0, shake - dt);
+      qIn = Math.max(0, qIn - dt * 4);
+      for (const s of sparks) { s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 240 * dt; s.life -= dt; }
+      for (let i = sparks.length - 1; i >= 0; i--) if (sparks[i].life <= 0) sparks.splice(i, 1);
       if (phase === 'reveal') {
         revealT -= dt;
-        if (revealT <= 0 || (revealT < REVEAL - 0.3 && (inp.hit.a || inp.tap))) next();
+        if (revealT <= 0 || (revealT < REVEAL - REVEAL_GUARD && (inp.hit.a || inp.tap))) next();
         return;
       }
       left -= dt;
       if (left <= 0) { left = 0; answer(null); return; }
       if (inp.tap) {
-        for (let i = 0; i < 4; i++) { const b = box(i); if (inp.tap.x >= b.x && inp.tap.x <= b.x + OW && inp.tap.y >= b.y && inp.tap.y <= b.y + OH) { sel = i; answer(i); return; } }
+        const i = boxAt(inp.tap.x, inp.tap.y);
+        if (i >= 0) { sel = i; answer(i); }
         return;
       }
-      if (inp.hit.left || inp.hit.right) { sel ^= 1; ctx.sfx('tick'); }
-      if (inp.hit.up || inp.hit.down) { sel ^= 2; ctx.sfx('tick'); }
+      // mouse hover moves the highlight, so a click and the keys agree on the choice
+      if (inp.ptr && (inp.ptr.x !== lastPtr.x || inp.ptr.y !== lastPtr.y)) {
+        lastPtr = { x: inp.ptr.x, y: inp.ptr.y };
+        const i = boxAt(inp.ptr.x, inp.ptr.y);
+        if (i >= 0 && i !== sel) { sel = i; selT = 1; ctx.sfx('tick'); }
+      }
+      if (inp.hit.left || inp.hit.right) { sel ^= 1; selT = 1; ctx.sfx('tick'); }
+      if (inp.hit.up || inp.hit.down) { sel ^= 2; selT = 1; ctx.sfx('tick'); }
       if (inp.hit.a) answer(sel);
     },
     render() {
@@ -233,28 +271,56 @@ function create(ctx: GameCtx): GameInstance {
       drawChar(g, nova, w - 62, 150, 80, -1, phase === 'reveal' ? (picked === q.answer ? 'win' : 'hurt') : 'idle', anim);
 
       for (let i = 0; i < 4; i++) {
-        const b = box(i);
+        const b0 = box(i);
         let fill = PAL.surface, ink = PAL.ink;
         if (phase === 'reveal') {
           if (i === q.answer) { fill = PAL.green; ink = '#ffffff'; }
           else if (i === picked) { fill = PAL.red; ink = '#ffffff'; }
         } else if (i === sel) fill = '#fff3d6';
+        // squash on the picked box, slide-in for a new question, shake on a miss
+        let sc = 1, dx = 0, dy = 0;
+        if (!ctx.reducedMotion) {
+          if (phase === 'reveal' && i === picked) sc = 1 + Math.sin(pickT * Math.PI) * 0.06;
+          else if (phase === 'reveal' && i === q.answer && picked !== q.answer) sc = 1 + Math.sin(pickT * Math.PI * 2) * 0.03;
+          else if (phase === 'ask' && i === sel) sc = 1 + selT * 0.035;
+          if (phase === 'reveal' && i === picked && picked !== q.answer) dx = Math.sin(shake * 70) * shake * 18;
+          dy = qIn * qIn * (24 + i * 10);
+        }
+        g.save();
+        g.translate(b0.x + OW / 2 + dx, b0.y + OH / 2 + dy);
+        g.scale(sc, sc);
+        g.globalAlpha = 1 - qIn * 0.8;
+        const b = { x: -OW / 2, y: -OH / 2 };
         g.fillStyle = fill;
         roundRect(g, b.x, b.y, OW, OH, 10);
         if (phase === 'ask' && i === sel) { g.strokeStyle = PAL.gold; g.lineWidth = 3; g.strokeRect(b.x + 1.5, b.y + 1.5, OW - 3, OH - 3); }
-        text(g, 'ABCD'[i], b.x + 18, b.y + OH / 2, 18, phase === 'reveal' && (i === q.answer || i === picked) ? '#ffffff' : PAL.accent);
-        wrapText(q.opts[i], b.x + 36, b.y + OH / 2, OW - 46, 15, 17, ink, 3, true);
+        text(g, 'ABCD'[i], b.x + 18, 0, 18, phase === 'reveal' && (i === q.answer || i === picked) ? '#ffffff' : PAL.accent);
+        wrapText(q.opts[i], b.x + 36, 0, OW - 66, 15, 17, ink, 3, true);
+        if (phase === 'reveal' && (i === q.answer || i === picked)) text(g, i === q.answer ? '✓' : '✗', b.x + OW - 16, 0, 18, '#ffffff');
+        g.restore();
+      }
+      for (const sp of sparks) { g.globalAlpha = Math.max(0, sp.life / 0.7); g.fillStyle = sp.col; g.fillRect(sp.x - 2.5, sp.y - 2.5, 5, 5); }
+      g.globalAlpha = 1;
+      if (phase === 'reveal' && gained > 0 && picked !== null) {
+        const b = box(picked);
+        const k = 1 - pickT;
+        g.globalAlpha = Math.min(1, pickT * 3);
+        text(g, ctx.t('+{p} poin', { p: gained }), b.x + OW / 2, b.y - 4 - k * 18, 18, PAL.green);
+        g.globalAlpha = 1;
       }
       if (phase === 'reveal') {
-        g.fillStyle = 'rgba(29,42,35,0.92)';
-        roundRect(g, 12, h - 66, w - 24, 58, 10);
+        const k = ctx.reducedMotion ? 1 : Math.min(1, (REVEAL - revealT) / 0.18);
+        const py = h - 66 + (1 - (1 - Math.pow(1 - k, 3))) * 70;
+        g.fillStyle = 'rgba(29,42,35,0.94)';
+        roundRect(g, 12, py, w - 24, 58, 10);
         const ok = picked === q.answer;
-        text(g, picked === null ? ctx.t('Waktu habis!') : ok ? ctx.t('Benar!') : ctx.t('Kurang tepat'), 28, h - 50, 15, ok ? '#9be37a' : '#ffb39e', 'left');
-        wrapText(q.why, 28, h - 28, w - 60, 13, 15, '#fffaf0', 2);
+        text(g, picked === null ? ctx.t('Waktu habis!') : ok ? ctx.t('Benar!') : ctx.t('Kurang tepat'), 28, py + 16, 15, ok ? '#9be37a' : '#ffb39e', 'left');
+        if (revealT < REVEAL - REVEAL_GUARD) text(g, idx + 1 < PER_SESSION ? ctx.t('A atau ketuk: lanjut') : ctx.t('A atau ketuk: lihat hasil'), w - 28, py + 16, 12, '#d9e4dc', 'right', 400);
+        wrapText(q.why, 28, py + 38, w - 60, 13, 15, '#fffaf0', 2);
       }
     },
     snapshot: () => ({
-      idx, sel, phase, left: Math.round(left * 100) / 100, correct, bonus, score: score(), ended, results: [...results],
+      idx, sel, phase, picked, left: Math.round(left * 100) / 100, correct, bonus, score: score(), ended, results: [...results],
       qs: qs.map((q) => ({ id: q.id, answer: q.answer, opts: [...q.opts] })),
     }),
   };

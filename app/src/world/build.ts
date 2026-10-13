@@ -3,7 +3,7 @@
 // instead of one per furniture part.
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { buildFixture, type Part } from './furniture';
+import { buildFixture, kitOverlay, type Part } from './furniture';
 import { kitParts, type FurnitureKit } from './furniture-kit';
 import { CATEGORY_TINT, ENV, FINISH_COLOR } from './palette';
 import type { DerivedWalls, Fixture, FloorId, World } from './types';
@@ -131,6 +131,10 @@ export function buildFixturesInto(fixtures: Fixture[], floor: FloorId, elevation
     else parts = buildFixture(fx);
     const m = fixtureMatrix(fx, elevation + lift);
     for (const p of parts) batch.add(p.geo, p.color, m, p);
+    if (entry) {
+      const top = kitOverlay(fx);
+      if (top.length) { const m0 = fixtureMatrix(fx, elevation); for (const p of top) batch.add(p.geo, p.color, m0, p); }
+    }
   }
   batch.build(materials, group, castShadow);
 }

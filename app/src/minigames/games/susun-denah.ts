@@ -35,11 +35,17 @@ export function floorCells(floor: string) {
 const meta: GameModule['meta'] = {
   id: 'susun-denah', title: 'Susun Denah', place: 'drafting_table', music: 'puzzle',
   blurb: 'Potongan ruang lepas dari denah kantor. Kembalikan tiap ruang ke tempatnya sebelum waktu habis.',
-  controls: ['Panah atau D-pad: pilih potongan, lalu geser', 'A: ambil potongan, A lagi: taruh', 'B: kembalikan potongan ke baki', 'Ketuk potongan, lalu ketuk posisinya di denah'],
+  controls: ['Panah atau D-pad: pilih potongan, lalu geser', 'A: ambil potongan, A lagi: taruh', 'B: kembalikan potongan ke baki', 'Seret potongan ke denah, atau ketuk potongan lalu ketuk posisinya'],
   view: { w: 640, h: 400 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'right', 'up', 'down', 'a', 'b'],
+  actions: { arah: 'Pilih potongan / geser di denah', a: 'Ambil / taruh potongan', b: 'Kembalikan ke baki' },
+  pointerHint: 'Seret potongan dari baki ke garis putus-putus yang cocok, lalu lepas',
 };
 
-interface Piece extends RoomCell { placed: boolean; tx: number; ty: number }
+interface Piece extends RoomCell { placed: boolean; tx: number; ty: number; pop: number }
+interface Fx { x: number; y: number; vx: number; vy: number; life: number; col: string }
+
+const REPEAT_DELAY = 0.24;
+const REPEAT_RATE = 0.07;
 
 function create(ctx: GameCtx): GameInstance {
   const { g, w, h } = ctx;
@@ -60,6 +66,16 @@ function create(ctx: GameCtx): GameInstance {
   let pause = 0;
   let ended = false;
   let anim = 0;
+  // pointer drag: `drag` is set by a press on a piece, live position comes from input.ptr
+  let drag: { ox: number; oy: number; sx: number; sy: number; moved: boolean; fromTray: boolean } | null = null;
+  const dragAt = { x: 0, y: 0 };
+  let overPlan = true;
+  let repT = 0;
+  let lastDir = '';
+  let shake = 0;
+  let squash = 0;
+  const fx: Fx[] = [];
+  const floats: { x: number; y: number; t: number; s: string }[] = [];
   const hugo = ctx.cast.find((c) => c.id === 'CH-ARCHITECT') ?? ctx.cast[0];
 
   // layout
@@ -71,21 +87,28 @@ function create(ctx: GameCtx): GameInstance {
   const score = () => placedTotal * 50 + timeBonus;
   const hud = () => ctx.setHud(ctx.t('Denah {n}/{m} · {p} poin', { n: Math.min(planNo, PLANS), m: PLANS, p: score() }));
   const open = () => pieces.filter((p) => !p.placed);
+  const inPlan = (x: number, y: number) => x >= FX && x < FX + fw * CP && y >= FY && y < FY + fh * CP;
+  const clampPos = (p: Piece) => {
+    pos.x = Math.max(0, Math.min(fw - p.w, pos.x));
+    pos.y = Math.max(0, Math.min(fh - p.h, pos.y));
+  };
 
   function layoutTray() {
     // shelf packing; shrink the tray scale until everything fits
+    const sorted = [...pieces].sort((a, b) => b.h - a.h || b.w - a.w || a.id.localeCompare(b.id));
     for (tscale = 1; tscale > 0.4; tscale -= 0.05) {
       let x = 0, y = 0, row = 0, ok = true;
-      const sorted = [...pieces].sort((a, b) => b.h - a.h || b.w - a.w || a.id.localeCompare(b.id));
       for (const p of sorted) {
         const pw = p.w * CP * tscale, ph = p.h * CP * tscale;
         if (x + pw > TW - 16) { x = 0; y += row + 8; row = 0; }
-        if (y + ph > TH - 40) { ok = false; break; }
+        if (y + ph > TH - 104) { ok = false; break; }
         p.tx = TX + 8 + x; p.ty = TY + 32 + y;
         x += pw + 8; row = Math.max(row, ph);
       }
-      if (ok) return;
+      if (ok) break;
     }
+    // arrow keys walk the tray in reading order, so keep the array in that order
+    pieces.sort((a, b) => a.ty - b.ty || a.tx - b.tx);
   }
 
   function nextPlan() {
@@ -102,12 +125,13 @@ function create(ctx: GameCtx): GameInstance {
     const rest = pool.filter((r) => !chosen.includes(r));
     while (chosen.length < PIECES && rest.length) chosen.push(rest.splice(Math.floor(ctx.rand() * rest.length), 1)[0]);
     chosen.forEach((r) => used.add(r.id));
-    pieces = chosen.map((r) => ({ ...r, placed: false, tx: 0, ty: 0 }));
+    pieces = chosen.map((r) => ({ ...r, placed: false, tx: 0, ty: 0, pop: 0 }));
     context = all.filter((r) => !chosen.some((c) => c.id === r.id));
     layoutTray();
     left = PLAN_TIME;
     sel = 0;
     holding = false;
+    drag = null;
     say(ctx.t('Denah {n}: susun {k} ruang', { n: planNo, k: pieces.length }));
     hud();
   }
@@ -123,9 +147,20 @@ function create(ctx: GameCtx): GameInstance {
     sel = i;
     holding = true;
     const p = open()[i];
-    pos.x = Math.max(0, Math.min(fw - p.w, Math.floor((fw - p.w) / 2)));
-    pos.y = Math.max(0, Math.min(fh - p.h, Math.floor((fh - p.h) / 2)));
+    pos.x = Math.floor((fw - p.w) / 2);
+    pos.y = Math.floor((fh - p.h) / 2);
+    clampPos(p);
+    squash = 1;
     ctx.sfx('click');
+  }
+
+  function burst(x: number, y: number, col: string) {
+    if (ctx.reducedMotion) return;
+    for (let k = 0; k < 14; k++) {
+      const a = (k / 14) * Math.PI * 2;
+      const v = 60 + (k % 3) * 30;
+      fx.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 30, life: 0.6, col });
+    }
   }
 
   function drop() {
@@ -133,10 +168,15 @@ function create(ctx: GameCtx): GameInstance {
     if (!p) return;
     if (pos.x === p.x && pos.y === p.y) {
       p.placed = true;
+      p.pop = 1;
       placedTotal++;
       holding = false;
+      drag = null;
       ctx.sfx('connect');
       say(ctx.t('Pas!'));
+      const cx = FX + (p.x + p.w / 2) * CP, cy = FY + (p.y + p.h / 2) * CP;
+      burst(cx, cy, PAL.gold);
+      floats.push({ x: cx, y: cy, t: 0.9, s: '+50' });
       sel = 0;
       if (!open().length) {
         plansDone++;
@@ -148,9 +188,80 @@ function create(ctx: GameCtx): GameInstance {
       hud();
     } else {
       wrong++;
+      shake = 0.3;
       ctx.sfx('wrong');
       say(ctx.t('Belum pas, coba posisi lain'), true);
     }
+  }
+
+  /** Grid position for a piece whose top-left corner sits at game point (x, y). */
+  function snapTo(p: Piece, x: number, y: number) {
+    pos.x = Math.round((x - FX) / CP);
+    pos.y = Math.round((y - FY) / CP);
+    clampPos(p);
+  }
+
+  function hitTray(x: number, y: number) {
+    const list = open();
+    return list.findIndex((p) => !(holding && list[sel] === p) && x >= p.tx - 3 && x <= p.tx + p.w * CP * tscale + 3 && y >= p.ty - 3 && y <= p.ty + p.h * CP * tscale + 3);
+  }
+
+  function press(x: number, y: number) {
+    const list = open();
+    const ti = hitTray(x, y);
+    if (ti >= 0) {
+      pick(ti);
+      const p = list[ti];
+      // finger holds the piece at the same relative spot it grabbed it, in plan scale
+      const ox = ((x - p.tx) / tscale), oy = ((y - p.ty) / tscale);
+      drag = { ox, oy, sx: x, sy: y, moved: false, fromTray: true };
+      dragAt.x = x - ox; dragAt.y = y - oy;
+      overPlan = false;
+      return;
+    }
+    if (!holding) return;
+    const p = list[sel];
+    const px = FX + pos.x * CP, py = FY + pos.y * CP;
+    if (x >= px && x <= px + p.w * CP && y >= py && y <= py + p.h * CP) {
+      drag = { ox: x - px, oy: y - py, sx: x, sy: y, moved: false, fromTray: false };
+      dragAt.x = px; dragAt.y = py;
+      overPlan = true;
+      squash = 1;
+      return;
+    }
+    if (inPlan(x, y)) {
+      // tap to place: centre the held piece on the tapped cell
+      pos.x = Math.round((x - FX) / CP - p.w / 2);
+      pos.y = Math.round((y - FY) / CP - p.h / 2);
+      clampPos(p);
+      drop();
+    } else if (x >= TX && y >= TY - 6) { holding = false; ctx.sfx('back'); }
+  }
+
+  function updateDrag(ptr: { x: number; y: number; down: boolean } | null | undefined) {
+    if (!drag) return;
+    const p = open()[sel];
+    if (!p) { drag = null; return; }
+    if (ptr && ptr.down) {
+      if (Math.hypot(ptr.x - drag.sx, ptr.y - drag.sy) > 6) drag.moved = true;
+      dragAt.x = ptr.x - drag.ox; dragAt.y = ptr.y - drag.oy;
+      const cx = dragAt.x + (p.w * CP) / 2;
+      const was = overPlan;
+      overPlan = cx < FX + fw * CP + CP;
+      if (overPlan) {
+        const ox = pos.x, oy = pos.y;
+        snapTo(p, dragAt.x, dragAt.y);
+        if (ox !== pos.x || oy !== pos.y || !was) ctx.sfx('tick');
+      }
+      return;
+    }
+    // released (or the pointer left the canvas)
+    const d = drag;
+    drag = null;
+    overPlan = true;
+    if (!d.moved) { if (!d.fromTray) drop(); return; }
+    if (dragAt.x + (p.w * CP) / 2 < FX + fw * CP + CP) drop();
+    else { holding = false; ctx.sfx('back'); }
   }
 
   nextPlan();
@@ -160,6 +271,13 @@ function create(ctx: GameCtx): GameInstance {
       if (ended) return;
       anim += dt;
       msgT -= dt;
+      shake = Math.max(0, shake - dt);
+      squash = Math.max(0, squash - dt * 5);
+      for (const p of pieces) p.pop = Math.max(0, p.pop - dt * 2.5);
+      for (const f of fx) { f.x += f.vx * dt; f.y += f.vy * dt; f.vy += 220 * dt; f.life -= dt; }
+      for (let i = fx.length - 1; i >= 0; i--) if (fx[i].life <= 0) fx.splice(i, 1);
+      for (const f of floats) f.t -= dt;
+      for (let i = floats.length - 1; i >= 0; i--) if (floats[i].t <= 0) floats.splice(i, 1);
       if (pause > 0) {
         pause -= dt;
         if (pause <= 0) { if (plansDone >= PLANS) finish(true); else nextPlan(); }
@@ -167,31 +285,31 @@ function create(ctx: GameCtx): GameInstance {
       }
       left -= dt;
       if (left <= 0) { left = 0; ctx.sfx('alarm'); finish(false); return; }
+      if (inp.tap) press(inp.tap.x, inp.tap.y);
+      if (drag) { updateDrag(inp.ptr); return; }
       const list = open();
-      if (inp.tap) {
-        const { x, y } = inp.tap;
-        const ti = list.findIndex((p) => !(holding && list[sel] === p) && x >= p.tx && x <= p.tx + p.w * CP * tscale && y >= p.ty && y <= p.ty + p.h * CP * tscale);
-        if (ti >= 0) { pick(ti); return; }
-        if (holding && x >= FX && x < FX + fw * CP && y >= FY && y < FY + fh * CP) {
-          const p = list[sel];
-          pos.x = Math.max(0, Math.min(fw - p.w, Math.round((x - FX) / CP - p.w / 2)));
-          pos.y = Math.max(0, Math.min(fh - p.h, Math.round((y - FY) / CP - p.h / 2)));
-          drop();
-        }
-        return;
-      }
+      if (!list.length) return;
+      if (sel >= list.length) sel = 0;
+      // held direction auto-repeats so long moves do not need many presses
+      const dirs = ['right', 'left', 'down', 'up'] as const;
+      let dir: string = dirs.find((d) => inp.hit[d]) ?? '';
+      const held = dirs.find((d) => inp.down[d]) ?? '';
+      if (dir) { repT = REPEAT_DELAY; lastDir = dir; } else if (held && held === lastDir) {
+        repT -= dt;
+        if (repT <= 0) { repT += REPEAT_RATE; dir = held; }
+      } else { lastDir = held; repT = REPEAT_DELAY; }
       if (!holding) {
-        if (inp.hit.right || inp.hit.down) { sel = (sel + 1) % list.length; ctx.sfx('tick'); }
-        if (inp.hit.left || inp.hit.up) { sel = (sel - 1 + list.length) % list.length; ctx.sfx('tick'); }
+        if (dir === 'right' || dir === 'down') { sel = (sel + 1) % list.length; ctx.sfx('tick'); }
+        if (dir === 'left' || dir === 'up') { sel = (sel - 1 + list.length) % list.length; ctx.sfx('tick'); }
         if (inp.hit.a) pick(sel);
         return;
       }
       const p = list[sel];
-      const dx = (inp.hit.right ? 1 : 0) - (inp.hit.left ? 1 : 0);
-      const dy = (inp.hit.down ? 1 : 0) - (inp.hit.up ? 1 : 0);
+      const dx = dir === 'right' ? 1 : dir === 'left' ? -1 : 0;
+      const dy = dir === 'down' ? 1 : dir === 'up' ? -1 : 0;
       if (dx || dy) {
-        pos.x = Math.max(0, Math.min(fw - p.w, pos.x + dx));
-        pos.y = Math.max(0, Math.min(fh - p.h, pos.y + dy));
+        pos.x += dx; pos.y += dy;
+        clampPos(p);
         ctx.sfx('tick');
       }
       if (inp.hit.b) { holding = false; ctx.sfx('back'); return; }
@@ -204,13 +322,17 @@ function create(ctx: GameCtx): GameInstance {
       g.fillStyle = '#fbf7ee';
       roundRect(g, 4, 4, 318, 392, 8);
       text(g, ctx.t('Denah {n}/{m} · Lantai {f}', { n: planNo, m: PLANS, f: floor.replace('L', '') }), 16, 22, 17, PAL.ink, 'left');
-      text(g, ctx.t('{s} dtk', { s: Math.ceil(left) }), 310, 22, 17, left < 10 ? PAL.red : PAL.ink2, 'right');
+      const low = left < 10;
+      const pulse = low && !ctx.reducedMotion ? 1 + Math.max(0, Math.sin(anim * 8)) * 0.12 : 1;
+      text(g, ctx.t('{s} dtk', { s: Math.ceil(left) }), 310, 22, Math.round(17 * pulse), low ? PAL.red : PAL.ink2, 'right');
       g.fillStyle = 'rgba(29,42,35,0.15)';
       g.fillRect(16, 38, 294, 5);
-      g.fillStyle = left < 10 ? PAL.red : PAL.green;
+      g.fillStyle = low ? PAL.red : PAL.green;
       g.fillRect(16, 38, 294 * (left / PLAN_TIME), 5);
       text(g, ctx.t('Grid 1,5 m'), 16, 56, 11, PAL.ink2, 'left', 400);
 
+      g.save();
+      if (shake > 0 && !ctx.reducedMotion) g.translate(Math.sin(shake * 60) * shake * 10, 0);
       g.fillStyle = '#ffffff';
       g.fillRect(FX, FY, fw * CP, fh * CP);
       g.strokeStyle = 'rgba(60,110,145,0.18)';
@@ -230,12 +352,13 @@ function create(ctx: GameCtx): GameInstance {
         g.lineWidth = 1.5;
         g.strokeRect(FX + p.x * CP + 1.5, FY + p.y * CP + 1.5, p.w * CP - 3, p.h * CP - 3);
         g.setLineDash([]);
-        if (p.w >= 2 && p.h >= 2) text(g, p.id.replace(/^L\d-/, ''), FX + (p.x + p.w / 2) * CP, FY + (p.y + p.h / 2) * CP, 8, PAL.blue, 'center', 400);
+        if (p.w >= 2 && p.h >= 2) fitLine(p.id.replace(/^L\d-/, ''), FX + (p.x + p.w / 2) * CP, FY + (p.y + p.h / 2) * CP, p.w * CP - 6, 9, PAL.blue);
       }
-      pieces.forEach((p, i) => { if (p.placed) drawPiece(p, FX + p.x * CP, FY + p.y * CP, CP, i, false); });
+      pieces.forEach((p, i) => { if (p.placed) drawPiece(p, FX + p.x * CP, FY + p.y * CP, CP, i, false, 1 + p.pop * 0.15); });
       g.strokeStyle = PAL.ink;
       g.lineWidth = 2.5;
       g.strokeRect(FX, FY, fw * CP, fh * CP);
+      g.restore();
 
       // tray
       g.fillStyle = '#d9c7a4';
@@ -243,42 +366,73 @@ function create(ctx: GameCtx): GameInstance {
       text(g, ctx.t('Baki potongan'), TX + 10, TY + 12, 14, PAL.ink, 'left');
       const list = open();
       list.forEach((p, i) => {
-        if (holding && i === sel) return;
-        drawPiece(p, p.tx, p.ty, CP * tscale, pieces.indexOf(p), !holding && i === sel);
+        if (holding && i === sel) {
+          // empty slot keeps its outline so the tray does not jump
+          g.setLineDash([3, 3]); g.strokeStyle = 'rgba(29,42,35,0.35)'; g.lineWidth = 1;
+          g.strokeRect(p.tx + 1, p.ty + 1, p.w * CP * tscale - 2, p.h * CP * tscale - 2); g.setLineDash([]);
+          return;
+        }
+        const hi = !holding && i === sel;
+        const bob = hi && !ctx.reducedMotion ? Math.sin(anim * 6) * 1.5 : 0;
+        drawPiece(p, p.tx, p.ty + bob, CP * tscale, pieces.indexOf(p), hi);
       });
-      if (holding && list[sel]) {
-        const p = list[sel];
-        g.globalAlpha = 0.85;
-        drawPiece(p, FX + pos.x * CP, FY + pos.y * CP, CP, pieces.indexOf(p), true);
+      // name of the selected piece, since small pieces have tiny labels
+      const cur = list[sel];
+      if (cur) fitLine(holding ? ctx.t('Dipegang: {r}', { r: ctx.t(cur.name) }) : ctx.t('Terpilih: {r}', { r: ctx.t(cur.name) }), TX + TW / 2, TY + TH - 60, TW - 24, 13, PAL.ink);
+      if (holding && cur) {
+        const free = drag && !overPlan;
+        const x = free ? dragAt.x : FX + pos.x * CP, y = free ? dragAt.y : FY + pos.y * CP;
+        if (drag && overPlan && !ctx.reducedMotion) {
+          // ghost under the finger, snapped piece shows where it lands
+          g.globalAlpha = 0.3;
+          drawPiece(cur, dragAt.x, dragAt.y, CP, pieces.indexOf(cur), false);
+        }
+        g.globalAlpha = 0.88;
+        const sq = ctx.reducedMotion ? 1 : 1 + Math.sin(squash * Math.PI) * 0.08;
+        drawPiece(cur, x, y, CP, pieces.indexOf(cur), true, sq);
         g.globalAlpha = 1;
       }
-      drawChar(g, hugo, 40, 392, 72, 1, pause > 0 ? 'win' : 'idle', anim);
-      text(g, ctx.t('Hugo: cocokkan bentuk dengan garis putus-putus'), 72, 372, 12, PAL.ink2, 'left');
+      for (const f of fx) { g.globalAlpha = Math.max(0, f.life / 0.6); g.fillStyle = f.col; g.fillRect(f.x - 2, f.y - 2, 4, 4); }
+      g.globalAlpha = 1;
+      for (const f of floats) { g.globalAlpha = Math.min(1, f.t * 2); text(g, f.s, f.x, f.y - (0.9 - f.t) * 30, 16, PAL.green); }
+      g.globalAlpha = 1;
+      drawChar(g, hugo, 34, 392, 66, 1, pause > 0 ? 'win' : 'idle', anim);
+      fitLine(ctx.t('Hugo: cocokkan bentuk dengan garis putus-putus'), 62, 372, 252, 12, PAL.ink2, 'left');
       if (msgT > 0 || pause > 0) {
         g.fillStyle = msgBad ? '#f6d9cf' : '#e6efe0';
         roundRect(g, TX + 8, TY + TH - 42, TW - 16, 28, 6);
-        text(g, msg, TX + TW / 2, TY + TH - 28, 13, msgBad ? PAL.red : PAL.green);
+        fitLine(msg, TX + TW / 2, TY + TH - 28, TW - 28, 13, msgBad ? PAL.red : PAL.green);
       } else {
-        text(g, holding ? ctx.t('Geser dengan panah, A: taruh') : ctx.t('Pilih potongan, A: ambil'), TX + TW / 2, TY + TH - 28, 12, PAL.ink);
+        fitLine(holding ? ctx.t('Geser dengan panah, A: taruh') : ctx.t('Pilih potongan, A: ambil'), TX + TW / 2, TY + TH - 28, TW - 24, 12, PAL.ink);
       }
     },
     snapshot: () => ({
-      plan: planNo, floor, left: Math.round(left * 100) / 100, sel, holding, pos: { ...pos },
+      plan: planNo, floor, left: Math.round(left * 100) / 100, sel, holding, dragging: !!drag, pos: { ...pos },
       placedTotal, timeBonus, wrong, plansDone, score: score(), ended,
-      pieces: pieces.map((p) => ({ id: p.id, name: p.name, floor: p.floor, x: p.x, y: p.y, w: p.w, h: p.h, placed: p.placed })),
+      pieces: pieces.map((p) => ({ id: p.id, name: p.name, floor: p.floor, x: p.x, y: p.y, w: p.w, h: p.h, placed: p.placed, tx: Math.round(p.tx), ty: Math.round(p.ty) })),
       openIds: open().map((p) => p.id),
+      tscale: Math.round(tscale * 100) / 100,
     }),
   };
 
-  function drawPiece(p: Piece, x: number, y: number, cp: number, i: number, hi: boolean) {
+  function drawPiece(p: Piece, x: number, y: number, cp: number, i: number, hi: boolean, scale = 1) {
     const pw = p.w * cp, ph = p.h * cp;
+    g.save();
+    if (scale !== 1) { g.translate(x + pw / 2, y + ph / 2); g.scale(scale, 2 - scale); g.translate(-(x + pw / 2), -(y + ph / 2)); }
     const hues = ['#f2c48d', '#b9d8c2', '#c9d7ec', '#efc1b4', '#d9cdea', '#f0dd9a', '#c7e1e0'];
     g.fillStyle = hues[i % hues.length];
     g.fillRect(x + 1, y + 1, pw - 2, ph - 2);
     g.strokeStyle = hi ? PAL.accent : PAL.ink2;
     g.lineWidth = hi ? 3 : 1.5;
     g.strokeRect(x + 1, y + 1, pw - 2, ph - 2);
-    fitLabel(p.name, x + pw / 2, y + ph / 2, pw - 4, ph - 4);
+    fitLabel(ctx.t(p.name), x + pw / 2, y + ph / 2, pw - 4, ph - 4);
+    g.restore();
+  }
+
+  function fitLine(s: string, x: number, y: number, maxW: number, size: number, color: string, align: CanvasTextAlign = 'center') {
+    let sz = size;
+    for (; sz > 6; sz--) { g.font = `700 ${sz}px 'Alegreya Sans', system-ui, sans-serif`; if (g.measureText(s).width <= maxW) break; }
+    text(g, s, x, y, sz, color, align);
   }
 
   function fitLabel(s: string, cx: number, cy: number, maxW: number, maxH: number) {

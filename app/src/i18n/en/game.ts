@@ -159,4 +159,8 @@ export const EN_GAME: Record<string, string> = {
   'Benchmark selesai': 'Benchmark finished',
   "Lari: menembus NPC.": "Running: passing through the NPC.",
   "Terhalang NPC 2 detik: menembus.": "Blocked by an NPC for 2 seconds: passing through.",
+  // Reprimand impact words (src/game/scold.ts IMPACT_WORD)
+  'PLAK!': 'WHAP!',
+  'TUK!': 'BONK!',
+  'POK!': 'POMF!',
 };

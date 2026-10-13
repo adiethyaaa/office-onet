@@ -68,7 +68,17 @@ const meta: GameModule['meta'] = {
     'Latte art: ikuti arah panah dengan D-pad',
   ],
   view: { w: 640, h: 400 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'up', 'down', 'right', 'a', 'b'],
+  actions: { arah: 'Latte art: ikuti panah', a: 'Giling / tuang (tahan, atau ketuk mulai lalu ketuk stop)', b: 'Selesai menggiling' },
+  pointerHint: 'Ketuk atau tahan meja kerja sebagai tombol A; latte art: ketuk sisi cangkir sesuai panah',
 };
+
+/** A press shorter than this starts a pour that keeps going until the next press. */
+export const TAP_LATCH = 0.2;
+/** Workstation panel; taps here act as the A button. */
+const PANEL = { x: 226, y: 54, w: 404, h: 256 };
+const DONE_BTN = { x: 510, y: 226, w: 104, h: 32 };
+const ART_C = { x: 300, y: 210 };
+const inRect = (p: { x: number; y: number }, r: { x: number; y: number; w: number; h: number }) => p.x >= r.x && p.y >= r.y && p.x <= r.x + r.w && p.y <= r.y + r.h;
 
 function create(ctx: GameCtx): GameInstance {
   const { g, w, h } = ctx;
@@ -96,6 +106,11 @@ function create(ctx: GameCtx): GameInstance {
   let artFlash: 'ok' | 'miss' | null = null;
   let artFlashT = 0;
   let lastScore = 0;
+  // tap mode for hold gauges: pour keeps running after a short press
+  let latched = false;
+  let holdT = 0;
+  let squish = 0;
+  let pops: { x: number; y: number; t: number; s: string; c: string }[] = [];
   let total = 0;
   let late = false;
   let time = 0;
@@ -118,6 +133,8 @@ function create(ctx: GameCtx): GameInstance {
     idle = 0;
     const k = kind();
     value = k === 'grind' ? 0 : k === 'art' ? 0 : gauge(k).start;
+    latched = false;
+    holdT = 0;
     artIdx = 0; artHits = 0; artT = ART_TIME; artFlash = null;
   };
 
@@ -128,6 +145,8 @@ function create(ctx: GameCtx): GameInstance {
     total += s;
     phase = 'stepDone';
     timer = 0.75;
+    latched = false;
+    if (!ctx.reducedMotion) pops.push({ x: 428, y: 250, t: 0.8, s: `+${s}`, c: s >= 85 ? PAL.green : s >= 50 ? PAL.accent : PAL.red });
     ctx.sfx(s >= 85 ? 'right' : s >= 50 ? 'confirm' : 'wrong');
     hud();
   };
@@ -169,7 +188,17 @@ function create(ctx: GameCtx): GameInstance {
 
   const update = (dt: number, inp: InputState) => {
     time += dt;
-    if (!inp.down.a) armed = true;
+    squish = Math.max(0, squish - dt);
+    pops = pops.filter((p) => (p.t -= dt) > 0);
+    // pointer: a tap/press on the workstation is the A button, the Done chip is B
+    const tap = inp.tap;
+    const tapDone = !!tap && phase === 'step' && kind() === 'grind' && started && inRect(tap, DONE_BTN);
+    const tapA = !!tap && !tapDone && inRect(tap, PANEL);
+    const ptrA = !!inp.ptr?.down && inRect(inp.ptr, PANEL) && !(phase === 'step' && kind() === 'grind' && inRect(inp.ptr, DONE_BTN));
+    const hitA = inp.hit.a || tapA;
+    const downA = inp.down.a || ptrA;
+    const hitB = inp.hit.b || tapDone;
+    if (!downA) armed = true;
     artFlashT = Math.max(0, artFlashT - dt);
     if (phase === 'done') {
       timer -= dt;
@@ -180,35 +209,44 @@ function create(ctx: GameCtx): GameInstance {
       }
       return;
     }
-    if (phase === 'arrive') { timer -= dt; if (timer <= 0) { ctx.sfx('coffee', { gain: 0.5 }); beginStep(); } return; }
-    if (phase === 'serve') { timer -= dt; if (timer <= 0) next(); return; }
+    // waits between steps can be skipped with A after a short grace, so the
+    // press that ended a step does not also skip its result
+    const skip = hitA && ((phase === 'stepDone' && timer < 0.55) || (phase === 'serve' && timer < 1.6) || (phase === 'arrive' && timer < 1.0));
+    if (phase === 'arrive') { timer -= dt; if (timer <= 0 || skip) { ctx.sfx('coffee', { gain: 0.5 }); beginStep(); armed = skip; } return; }
+    if (phase === 'serve') { timer -= dt; if (timer <= 0 || skip) { next(); if (skip) ctx.sfx('ui', { gain: 0.4 }); } return; }
     if (phase === 'stepDone') {
       timer -= dt;
-      if (timer <= 0) { si++; if (si >= steps().length) serve(); else beginStep(); }
+      if (timer <= 0 || skip) { si++; if (si >= steps().length) serve(); else { beginStep(); if (skip) armed = true; } }
       return;
     }
     orderT -= dt;
     if (orderT <= 0) { late = true; serve(); return; }
     const k = kind();
     if (k === 'grind') {
-      if (inp.hit.a) {
+      if (hitA) {
         value += 1.1 + ctx.rand() * 0.2;
         started = true;
         idle = 0;
+        squish = 0.1;
         ctx.sfx('click', { rate: 0.7 + ctx.rand() * 0.3 });
         if (value >= GRIND.max) { value = GRIND.max; finishStep(); }
         return;
       }
       if (started) {
         idle += dt;
-        if (inp.hit.b || idle >= 1.6) finishStep();
+        if (hitB || idle >= 1.6) finishStep();
       }
       return;
     }
     if (k === 'art') {
       artT -= dt;
       const seq = PATTERNS[order().pattern];
-      const pressed = DIRS.find((d) => inp.hit[d]);
+      let pressed = DIRS.find((d) => inp.hit[d]);
+      if (!pressed && tap) {
+        // tap the side of the cup the arrow points to
+        const dx = tap.x - ART_C.x, dy = tap.y - ART_C.y;
+        if (Math.hypot(dx, dy) > 14 && Math.hypot(dx, dy) < 110) pressed = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up';
+      }
       if (pressed) {
         const ok = pressed === seq[artIdx];
         if (ok) artHits++;
@@ -223,16 +261,27 @@ function create(ctx: GameCtx): GameInstance {
     const gg = gauge(k);
     if (!started) {
       if (!armed) return;
-      if (inp.down.a) { started = true; ctx.sfx(k === 'steam' ? 'breath' : 'pour'); }
+      if (downA || hitA) { started = true; holdT = 0; squish = 0.1; ctx.sfx(k === 'steam' ? 'breath' : 'pour'); }
       else return;
     }
-    if (inp.down.a) {
-      value = Math.min(gg.max, value + gg.rate * dt);
-      if (value >= gg.max) finishStep();
-    } else finishStep();
+    if (latched) {
+      // tap mode: the next press stops the pour on this very frame
+      if (hitA) { finishStep(); return; }
+    } else if (!downA && !hitA) {
+      if (holdT < TAP_LATCH) { latched = true; } else { finishStep(); return; }
+    }
+    holdT += dt;
+    value = Math.min(gg.max, value + gg.rate * dt);
+    if (value >= gg.max) finishStep();
   };
 
   // ---------- drawing ----------
+  /** Left-aligned text that shrinks (down to 8 px) to fit `maxW`. */
+  const fitText = (s: string, x: number, y: number, size: number, color: string, maxW: number) => {
+    let sz = size;
+    for (; sz > 8; sz--) { g.font = `600 ${sz}px 'Alegreya Sans', system-ui, sans-serif`; if (g.measureText(s).width <= maxW) break; }
+    text(g, s, x, y, sz, color, 'left', 600);
+  };
   const face = (x: number, y: number, r: number, mood: number) => {
     g.fillStyle = mood === 3 ? PAL.gold : mood === 2 ? '#e6c98a' : '#d8a48c';
     g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
@@ -269,6 +318,8 @@ function create(ctx: GameCtx): GameInstance {
   const cup = (x: number, y: number, fill: number, color: string, foam = 0) => {
     g.fillStyle = '#fffaf0';
     g.beginPath(); g.moveTo(x - 30, y - 60); g.lineTo(x + 30, y - 60); g.lineTo(x + 24, y); g.lineTo(x - 24, y); g.closePath(); g.fill();
+    // outline so the white cup reads against the cream panel
+    g.strokeStyle = '#c9b48f'; g.lineWidth = 2; g.stroke();
     const fh = Math.max(0, Math.min(1, fill)) * 54;
     if (fh > 0) {
       g.save();
@@ -327,7 +378,7 @@ function create(ctx: GameCtx): GameInstance {
       roundRect(g, x, 6, 118, 38, 8);
       const ink = cur ? '#fffaf0' : PAL.ink;
       text(g, person(o.who).name, x + 8, 17, 13, ink, 'left');
-      text(g, drinkName(o.drink), x + 8, 33, 11, cur ? '#e8f0e8' : PAL.ink2, 'left', 600);
+      fitText(drinkName(o.drink), x + 8, 33, 11, cur ? '#e8f0e8' : PAL.ink2, 104);
       if (stars[i]) starRow(x + 98, 17, stars[i], 4.5);
     });
     // counter
@@ -396,14 +447,27 @@ function create(ctx: GameCtx): GameInstance {
     let hint = '';
     if (k === 'grind') {
       hint = started ? ctx.t('Tekan A lagi, atau B bila sudah pas') : ctx.t('Tekan A berulang untuk menggiling');
+      const q = squish > 0 && !ctx.reducedMotion ? Math.sin((squish / 0.1) * Math.PI) * 0.08 : 0;
+      g.save(); g.translate(285, 220); g.scale(1 + q, 1 - q); g.translate(-285, -220);
       g.fillStyle = '#3a2a20'; roundRect(g, 260, 150, 50, 70, 8);
       g.fillStyle = '#6b4a35'; g.beginPath(); g.moveTo(256, 150); g.lineTo(314, 150); g.lineTo(300, 130); g.lineTo(270, 130); g.fill();
+      g.restore();
+      if (started) {
+        g.fillStyle = PAL.green; roundRect(g, DONE_BTN.x, DONE_BTN.y, DONE_BTN.w, DONE_BTN.h, 10);
+        text(g, ctx.t('Selesai (B)'), DONE_BTN.x + DONE_BTN.w / 2, DONE_BTN.y + DONE_BTN.h / 2 + 1, 14, '#fffaf0');
+      }
       g.fillStyle = '#5a3a24'; g.beginPath(); g.ellipse(285, 230, 22, 6 + Math.min(1, value / GRIND.max) * 6, 0, 0, Math.PI * 2); g.fill();
-      gaugeBar(340, 170, 260, value, GRIND.lo, GRIND.hi, 0, GRIND.max, ctx.t('Takaran {v} g (target 18 g)', { v: value.toFixed(1) }));
+      gaugeBar(340, 160, 260, value, GRIND.lo, GRIND.hi, 0, GRIND.max, ctx.t('Takaran {v} g (target 18 g)', { v: value.toFixed(1) }));
     } else if (k === 'art') {
       const seq = PATTERNS[o.pattern];
       hint = ctx.t('Ikuti panah: pola {p}', { p: patName(o.pattern) });
-      artDraw(300, 210, o.pattern, artHits / seq.length);
+      artDraw(ART_C.x, ART_C.y, o.pattern, artHits / seq.length);
+      if (artIdx < seq.length) {
+        // pointer target: a faint arrow on the side of the cup to tap
+        const d = seq[artIdx];
+        const ox = d === 'left' ? -70 : d === 'right' ? 70 : 0, oy = d === 'up' ? -70 : d === 'down' ? 70 : 0;
+        if (oy <= 0 || ART_C.y + oy < PANEL.y + PANEL.h - 8) text(g, ARROW[d], ART_C.x + ox, ART_C.y + Math.min(oy, PANEL.y + PANEL.h - 14 - ART_C.y), 16, 'rgba(29,42,35,0.45)');
+      }
       seq.forEach((d, i) => {
         const x = 380 + i * 46, y = 196;
         g.fillStyle = i < artIdx ? '#dfe9dc' : i === artIdx ? PAL.gold : PAL.sand;
@@ -415,7 +479,7 @@ function create(ctx: GameCtx): GameInstance {
       g.fillStyle = PAL.accent; roundRect(g, 362, 262, Math.max(6, 220 * Math.max(0, artT / ART_TIME)), 6, 3);
     } else {
       const gg = gauge(k);
-      hint = started ? ctx.t('Lepas A di zona hijau') : ctx.t('Tahan A untuk mulai');
+      hint = !started ? ctx.t('Tahan A, atau ketuk A untuk mulai') : latched ? ctx.t('Ketuk A di zona hijau') : ctx.t('Lepas A di zona hijau');
       const f = (value - gg.start) / (gg.max - gg.start);
       if (k === 'extract') {
         g.fillStyle = '#4b5a51'; roundRect(g, 262, 136, 76, 26, 6);
@@ -441,13 +505,18 @@ function create(ctx: GameCtx): GameInstance {
       g.fillStyle = 'rgba(29,42,35,0.85)'; roundRect(g, 340, 268, 176, 34, 10);
       text(g, ctx.t('Nilai {n}', { n: lastScore }), 428, 285, 18, lastScore >= 85 ? '#bfe8c4' : lastScore >= 50 ? PAL.gold : '#f2b3a3');
     } else text(g, hint, 428, 290, 15, PAL.ink2);
+    for (const p of pops) {
+      g.globalAlpha = Math.min(1, p.t / 0.3);
+      text(g, p.s, p.x + 96, p.y - (0.8 - p.t) * 40, 20, p.c);
+      g.globalAlpha = 1;
+    }
   };
 
   return {
     update,
     render,
     snapshot: () => ({
-      phase, order: oi, step: si, kind: phase === 'done' ? null : kind(), value, started, artIdx,
+      phase, order: oi, step: si, kind: phase === 'done' ? null : kind(), value, started, latched, artIdx,
       art: phase === 'done' ? [] : [...PATTERNS[order().pattern]],
       zone: phase !== 'done' && kind() !== 'grind' && kind() !== 'art' ? [gauge(kind()).lo, gauge(kind()).hi] : [GRIND.lo, GRIND.hi],
       orders: orders.map((q) => `${q.who}:${q.drink}:${q.pattern}`), stepScores: stepScores.map((s) => [...s]), stars: [...stars], total,

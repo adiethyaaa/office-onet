@@ -19,4 +19,6 @@ export const EN_ARENA_BOM: Record<string, string> = {
   'Kamu tersingkir': 'You are out',
   'Seri': 'Draw',
   'Skor {s}': 'Score {s}',
+  'Jalan (tahan untuk terus jalan)': 'Walk (hold to keep walking)',
+  'Pasang bom': 'Drop a bomb',
 };
