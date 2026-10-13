@@ -1,11 +1,11 @@
 {
   "tool": "blender/validate_assets.py",
   "blender": "5.2.2 LTS",
-  "gitHead": "fa666c9acf6cdc38adf74a73ddd13e0e97637016",
+  "gitHead": "30d0ae7142f93ea92fb8f842f92c65df19049445",
   "worktreeNote": "gitHead is the commit the files were validated on top of; generated files may be uncommitted",
-  "seconds": 37.2,
+  "seconds": 18.9,
   "passed": true,
-  "checks": 1488,
+  "checks": 2055,
   "failed": 0,
   "characters": {
     "CH-CEO": {
@@ -263,17 +263,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -344,6 +355,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -359,7 +425,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -627,9 +704,9 @@
             "min_z": -0.0033,
             "lod1_bbox_dev_m": 0.003,
             "lod1_min_z": -0.0027,
-            "native_speed_mps": 2.416,
+            "native_speed_mps": 2.495,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.416,
+            "mean_stance_speed_mps": 2.495,
             "slip_ratio": 0.0
           }
         },
@@ -804,6 +881,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0027
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0027
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0014
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0033
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0012
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0017
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0015
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0021
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0025
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0008
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.003
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0033
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0033
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0027
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0033,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": -0.0027,
+            "native_speed_mps": 2.495,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.495,
+            "slip_ratio": 0.0
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -819,7 +1109,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 620612
+          "detail": 677744
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -837,17 +1127,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -1285,8 +1586,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.845,
-            "kantor_run_native_speed_mps": 2.416
+            "kantor_run_native_speed_mps": 2.495
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -1294,14 +1600,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -1314,9 +1635,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -1329,9 +1660,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -1339,9 +1685,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -1382,7 +1738,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -1514,9 +1870,9 @@
             "min_z": -0.0033,
             "lod1_bbox_dev_m": 0.003,
             "lod1_min_z": -0.0027,
-            "native_speed_mps": 2.416,
+            "native_speed_mps": 2.495,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.416,
+            "mean_stance_speed_mps": 2.495,
             "slip_ratio": 0.0
           },
           "wave": {
@@ -1571,6 +1927,67 @@
             "lod1_bbox_dev_m": 0.0021,
             "lod1_min_z": 0.2005,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0027,
+            "lod1_bbox_dev_m": 0.0014,
+            "lod1_min_z": -0.0014
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0033,
+            "lod1_min_z": 0.0008
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0014,
+            "lod1_min_z": 0.0008
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0012,
+            "lod1_min_z": 0.0008
+          },
+          "bike": {
+            "min_z": 0.1274,
+            "lod1_bbox_dev_m": 0.0017,
+            "lod1_min_z": 0.1274,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0015,
+            "lod1_min_z": 0.0008
+          },
+          "cable": {
+            "min_z": 0.0016,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": 0.0014
+          },
+          "type_fast": {
+            "min_z": 0.2,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": 0.2005,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0021,
+            "lod1_min_z": 0.0008
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0025,
+            "lod1_min_z": -0.0008
+          },
+          "flee": {
+            "min_z": -0.0033,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": -0.0027,
+            "native_speed_mps": 2.495,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.495,
+            "slip_ratio": 0.0
           }
         },
         "default_hair": "hair_short_tuft",
@@ -1605,7 +2022,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.845,
-          "kantor_run_native_speed_mps": 2.416
+          "kantor_run_native_speed_mps": 2.495
         },
         "atlas": {
           "size": 32,
@@ -1680,35 +2097,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-ceo.glb",
-        "bytes": 620612,
-        "exportBytes": 1157336,
+        "bytes": 677744,
+        "exportBytes": 1309884,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -2074,17 +2513,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -2155,6 +2605,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -2170,7 +2675,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -2433,9 +2949,9 @@
             "min_z": -0.0033,
             "lod1_bbox_dev_m": 0.0031,
             "lod1_min_z": -0.0038,
-            "native_speed_mps": 2.388,
+            "native_speed_mps": 2.467,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.388,
+            "mean_stance_speed_mps": 2.467,
             "slip_ratio": 0.0002
           }
         },
@@ -2610,6 +3126,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.001
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0027
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0027
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0021
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0032
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.001
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0018
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0011
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0017
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0017
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0025
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0011
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.001
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.003
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0033
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0033
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0038
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0033,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": -0.0038,
+            "native_speed_mps": 2.467,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.467,
+            "slip_ratio": 0.0002
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -2625,7 +3354,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 498320
+          "detail": 555452
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -2643,17 +3372,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -3077,8 +3817,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.835,
-            "kantor_run_native_speed_mps": 2.388
+            "kantor_run_native_speed_mps": 2.467
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -3086,14 +3831,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -3106,9 +3866,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -3121,9 +3891,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -3131,9 +3916,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -3174,7 +3969,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -3284,9 +4079,9 @@
             "min_z": -0.0033,
             "lod1_bbox_dev_m": 0.0031,
             "lod1_min_z": -0.0038,
-            "native_speed_mps": 2.388,
+            "native_speed_mps": 2.467,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.388,
+            "mean_stance_speed_mps": 2.467,
             "slip_ratio": 0.0002
           },
           "wave": {
@@ -3341,6 +4136,67 @@
             "lod1_bbox_dev_m": 0.0025,
             "lod1_min_z": 0.2025,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0027,
+            "lod1_bbox_dev_m": 0.001,
+            "lod1_min_z": -0.0021
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0032,
+            "lod1_min_z": 0.0006
+          },
+          "turn": {
+            "min_z": 0.0,
+            "lod1_bbox_dev_m": 0.001,
+            "lod1_min_z": 0.0006
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": 0.0006
+          },
+          "bike": {
+            "min_z": 0.1314,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": 0.1306,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0018,
+            "lod1_min_z": 0.0006
+          },
+          "cable": {
+            "min_z": 0.0017,
+            "lod1_bbox_dev_m": 0.0011,
+            "lod1_min_z": 0.0014
+          },
+          "type_fast": {
+            "min_z": 0.2031,
+            "lod1_bbox_dev_m": 0.0025,
+            "lod1_min_z": 0.2025,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0011,
+            "lod1_min_z": 0.0006
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0024,
+            "lod1_min_z": -0.001
+          },
+          "flee": {
+            "min_z": -0.0033,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": -0.0038,
+            "native_speed_mps": 2.467,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.467,
+            "slip_ratio": 0.0002
           }
         },
         "default_hair": "hair_swept",
@@ -3375,7 +4231,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.835,
-          "kantor_run_native_speed_mps": 2.388
+          "kantor_run_native_speed_mps": 2.467
         },
         "atlas": {
           "size": 32,
@@ -3450,35 +4306,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-supervisor.glb",
-        "bytes": 498320,
-        "exportBytes": 939408,
+        "bytes": 555452,
+        "exportBytes": 1090828,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -3836,17 +4714,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -3917,6 +4806,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -3932,7 +4876,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -4195,9 +5150,9 @@
             "min_z": -0.0032,
             "lod1_bbox_dev_m": 0.0024,
             "lod1_min_z": -0.003,
-            "native_speed_mps": 2.499,
+            "native_speed_mps": 2.581,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.499,
+            "mean_stance_speed_mps": 2.581,
             "slip_ratio": 0.0
           }
         },
@@ -4372,6 +5327,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0011
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0026
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0026
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.002
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0015
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0017
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0022
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0021
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0018
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0009
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0007
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0032
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0032
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.003
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0032,
+            "lod1_bbox_dev_m": 0.0024,
+            "lod1_min_z": -0.003,
+            "native_speed_mps": 2.581,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.581,
+            "slip_ratio": 0.0
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -4387,7 +5555,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 468836
+          "detail": 526476
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -4405,17 +5573,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -4839,8 +6018,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.873,
-            "kantor_run_native_speed_mps": 2.499
+            "kantor_run_native_speed_mps": 2.581
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -4848,14 +6032,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -4868,9 +6067,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -4883,9 +6092,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -4893,9 +6117,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -4936,7 +6170,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -5046,9 +6280,9 @@
             "min_z": -0.0032,
             "lod1_bbox_dev_m": 0.0024,
             "lod1_min_z": -0.003,
-            "native_speed_mps": 2.499,
+            "native_speed_mps": 2.581,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.499,
+            "mean_stance_speed_mps": 2.581,
             "slip_ratio": 0.0
           },
           "wave": {
@@ -5103,6 +6337,67 @@
             "lod1_bbox_dev_m": 0.0019,
             "lod1_min_z": 0.1854,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0026,
+            "lod1_bbox_dev_m": 0.0011,
+            "lod1_min_z": -0.002
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0015,
+            "lod1_min_z": 0.0008
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0017,
+            "lod1_min_z": 0.0008
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0014,
+            "lod1_min_z": 0.0008
+          },
+          "bike": {
+            "min_z": 0.1095,
+            "lod1_bbox_dev_m": 0.0022,
+            "lod1_min_z": 0.1092,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0021,
+            "lod1_min_z": 0.0008
+          },
+          "cable": {
+            "min_z": 0.0024,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": 0.0018
+          },
+          "type_fast": {
+            "min_z": 0.1851,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": 0.1854,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0009,
+            "lod1_min_z": 0.0008
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": -0.0007
+          },
+          "flee": {
+            "min_z": -0.0032,
+            "lod1_bbox_dev_m": 0.0024,
+            "lod1_min_z": -0.003,
+            "native_speed_mps": 2.581,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.581,
+            "slip_ratio": 0.0
           }
         },
         "default_hair": "hair_bun",
@@ -5137,7 +6432,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.873,
-          "kantor_run_native_speed_mps": 2.499
+          "kantor_run_native_speed_mps": 2.581
         },
         "atlas": {
           "size": 32,
@@ -5212,35 +6507,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-architect.glb",
-        "bytes": 468836,
-        "exportBytes": 887228,
+        "bytes": 526476,
+        "exportBytes": 1038912,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -5603,17 +6920,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -5684,6 +7012,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -5699,7 +7082,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -5940,7 +7334,7 @@
         {
           "check": "run: lod1 deforms with LOD0 (bbox within 3 cm)",
           "ok": true,
-          "detail": 0.0026
+          "detail": 0.0027
         },
         {
           "check": "run: no floor penetration (6 mm tolerance)",
@@ -5962,11 +7356,11 @@
           "ok": true,
           "detail": {
             "min_z": -0.0028,
-            "lod1_bbox_dev_m": 0.0026,
+            "lod1_bbox_dev_m": 0.0027,
             "lod1_min_z": -0.0034,
-            "native_speed_mps": 2.274,
+            "native_speed_mps": 2.352,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.274,
+            "mean_stance_speed_mps": 2.352,
             "slip_ratio": 0.0001
           }
         },
@@ -6141,6 +7535,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0015
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0022
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0022
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0017
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0015
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0011
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0028
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0028
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0025
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0009
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0015
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0009
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0026
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0028
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0028
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0034
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0028,
+            "lod1_bbox_dev_m": 0.0026,
+            "lod1_min_z": -0.0034,
+            "native_speed_mps": 2.352,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.352,
+            "slip_ratio": 0.0001
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -6156,7 +7763,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 488336
+          "detail": 545468
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -6174,17 +7781,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -6616,8 +8234,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.795,
-            "kantor_run_native_speed_mps": 2.274
+            "kantor_run_native_speed_mps": 2.352
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -6625,14 +8248,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -6645,9 +8283,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -6660,9 +8308,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -6670,9 +8333,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -6713,7 +8386,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -6822,11 +8495,11 @@
           },
           "run": {
             "min_z": -0.0028,
-            "lod1_bbox_dev_m": 0.0026,
+            "lod1_bbox_dev_m": 0.0027,
             "lod1_min_z": -0.0034,
-            "native_speed_mps": 2.274,
+            "native_speed_mps": 2.352,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.274,
+            "mean_stance_speed_mps": 2.352,
             "slip_ratio": 0.0001
           },
           "wave": {
@@ -6881,6 +8554,67 @@
             "lod1_bbox_dev_m": 0.0022,
             "lod1_min_z": 0.2181,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0022,
+            "lod1_bbox_dev_m": 0.0015,
+            "lod1_min_z": -0.0017
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0015,
+            "lod1_min_z": 0.0007
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0008,
+            "lod1_min_z": 0.0007
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": 0.0007
+          },
+          "bike": {
+            "min_z": 0.1517,
+            "lod1_bbox_dev_m": 0.0016,
+            "lod1_min_z": 0.151,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0011,
+            "lod1_min_z": 0.0007
+          },
+          "cable": {
+            "min_z": 0.0028,
+            "lod1_bbox_dev_m": 0.0024,
+            "lod1_min_z": 0.0025
+          },
+          "type_fast": {
+            "min_z": 0.2178,
+            "lod1_bbox_dev_m": 0.0009,
+            "lod1_min_z": 0.2181,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0015,
+            "lod1_min_z": 0.0007
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": -0.0009
+          },
+          "flee": {
+            "min_z": -0.0028,
+            "lod1_bbox_dev_m": 0.0026,
+            "lod1_min_z": -0.0034,
+            "native_speed_mps": 2.352,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.352,
+            "slip_ratio": 0.0001
           }
         },
         "default_hair": "hair_bob",
@@ -6915,7 +8649,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.795,
-          "kantor_run_native_speed_mps": 2.274
+          "kantor_run_native_speed_mps": 2.352
         },
         "atlas": {
           "size": 32,
@@ -6990,35 +8724,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-ictspec.glb",
-        "bytes": 488336,
-        "exportBytes": 921020,
+        "bytes": 545468,
+        "exportBytes": 1072592,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -7378,17 +9134,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -7459,6 +9226,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -7474,7 +9296,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -7737,10 +9570,10 @@
             "min_z": -0.0037,
             "lod1_bbox_dev_m": 0.0034,
             "lod1_min_z": -0.0043,
-            "native_speed_mps": 2.338,
+            "native_speed_mps": 2.415,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.338,
-            "slip_ratio": 0.0002
+            "mean_stance_speed_mps": 2.415,
+            "slip_ratio": 0.0001
           }
         },
         {
@@ -7914,6 +9747,219 @@
           "detail": 0.4305
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.001
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0031
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0031
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0017
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0036
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0012
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.001
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.4305
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0015
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0003
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0003
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.002
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.4305
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0009
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0034
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0037
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0037
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0043
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0037,
+            "lod1_bbox_dev_m": 0.0034,
+            "lod1_min_z": -0.0043,
+            "native_speed_mps": 2.415,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.415,
+            "slip_ratio": 0.0001
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -7929,7 +9975,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 479504
+          "detail": 536636
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -7947,17 +9993,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -8381,8 +10438,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.818,
-            "kantor_run_native_speed_mps": 2.338
+            "kantor_run_native_speed_mps": 2.415
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -8390,14 +10452,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -8410,9 +10487,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -8425,9 +10512,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -8435,9 +10537,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -8478,7 +10590,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -8588,10 +10700,10 @@
             "min_z": -0.0037,
             "lod1_bbox_dev_m": 0.0034,
             "lod1_min_z": -0.0043,
-            "native_speed_mps": 2.338,
+            "native_speed_mps": 2.415,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.338,
-            "slip_ratio": 0.0002
+            "mean_stance_speed_mps": 2.415,
+            "slip_ratio": 0.0001
           },
           "wave": {
             "min_z": -0.0018,
@@ -8645,6 +10757,67 @@
             "lod1_bbox_dev_m": 0.0028,
             "lod1_min_z": 0.2118,
             "pelvis_underside_z": 0.4305
+          },
+          "start": {
+            "min_z": -0.0031,
+            "lod1_bbox_dev_m": 0.001,
+            "lod1_min_z": -0.0017
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0036,
+            "lod1_min_z": 0.0006
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0012,
+            "lod1_min_z": 0.0006
+          },
+          "lift": {
+            "min_z": 0.0,
+            "lod1_bbox_dev_m": 0.0008,
+            "lod1_min_z": 0.0006
+          },
+          "bike": {
+            "min_z": 0.1406,
+            "lod1_bbox_dev_m": 0.001,
+            "lod1_min_z": 0.1399,
+            "pelvis_underside_z": 0.4305
+          },
+          "draw": {
+            "min_z": 0.0,
+            "lod1_bbox_dev_m": 0.0014,
+            "lod1_min_z": 0.0006
+          },
+          "cable": {
+            "min_z": 0.0003,
+            "lod1_bbox_dev_m": 0.0015,
+            "lod1_min_z": 0.0
+          },
+          "type_fast": {
+            "min_z": 0.212,
+            "lod1_bbox_dev_m": 0.002,
+            "lod1_min_z": 0.2118,
+            "pelvis_underside_z": 0.4305
+          },
+          "surprised": {
+            "min_z": 0.0,
+            "lod1_bbox_dev_m": 0.0008,
+            "lod1_min_z": 0.0006
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0016,
+            "lod1_min_z": -0.0009
+          },
+          "flee": {
+            "min_z": -0.0037,
+            "lod1_bbox_dev_m": 0.0034,
+            "lod1_min_z": -0.0043,
+            "native_speed_mps": 2.415,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.415,
+            "slip_ratio": 0.0001
           }
         },
         "default_hair": "hair_cap",
@@ -8679,7 +10852,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.818,
-          "kantor_run_native_speed_mps": 2.338
+          "kantor_run_native_speed_mps": 2.415
         },
         "atlas": {
           "size": 32,
@@ -8754,35 +10927,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-netinstall.glb",
-        "bytes": 479504,
-        "exportBytes": 907540,
+        "bytes": 536636,
+        "exportBytes": 1058408,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -9145,17 +11340,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -9226,6 +11432,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -9241,7 +11502,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -9506,9 +11778,9 @@
             "min_z": -0.003,
             "lod1_bbox_dev_m": 0.0028,
             "lod1_min_z": -0.0036,
-            "native_speed_mps": 2.32,
+            "native_speed_mps": 2.398,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.32,
+            "mean_stance_speed_mps": 2.398,
             "slip_ratio": 0.0001
           }
         },
@@ -9683,6 +11955,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0024
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0024
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.003
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0021
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0018
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0009
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0023
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0018
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0007
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0028
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.003
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.003
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0036
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.003,
+            "lod1_bbox_dev_m": 0.0028,
+            "lod1_min_z": -0.0036,
+            "native_speed_mps": 2.398,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.398,
+            "slip_ratio": 0.0001
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -9698,7 +12183,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 493900
+          "detail": 551036
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -9716,17 +12201,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -10158,8 +12654,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.811,
-            "kantor_run_native_speed_mps": 2.32
+            "kantor_run_native_speed_mps": 2.398
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -10167,14 +12668,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -10187,9 +12703,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -10202,9 +12728,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -10212,9 +12753,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -10255,7 +12806,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -10366,9 +12917,9 @@
             "min_z": -0.003,
             "lod1_bbox_dev_m": 0.0028,
             "lod1_min_z": -0.0036,
-            "native_speed_mps": 2.32,
+            "native_speed_mps": 2.398,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.32,
+            "mean_stance_speed_mps": 2.398,
             "slip_ratio": 0.0001
           },
           "wave": {
@@ -10423,6 +12974,67 @@
             "lod1_bbox_dev_m": 0.0023,
             "lod1_min_z": 0.2112,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0024,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": -0.0018
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": 0.0008
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": 0.0008
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": 0.0008
+          },
+          "bike": {
+            "min_z": 0.1422,
+            "lod1_bbox_dev_m": 0.0021,
+            "lod1_min_z": 0.1419,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0018,
+            "lod1_min_z": 0.0008
+          },
+          "cable": {
+            "min_z": 0.0024,
+            "lod1_bbox_dev_m": 0.0014,
+            "lod1_min_z": 0.0009
+          },
+          "type_fast": {
+            "min_z": 0.2109,
+            "lod1_bbox_dev_m": 0.0023,
+            "lod1_min_z": 0.2112,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": 0.0008
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0018,
+            "lod1_min_z": -0.0007
+          },
+          "flee": {
+            "min_z": -0.003,
+            "lod1_bbox_dev_m": 0.0028,
+            "lod1_min_z": -0.0036,
+            "native_speed_mps": 2.398,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.398,
+            "slip_ratio": 0.0001
           }
         },
         "default_hair": "hair_spiky_soft",
@@ -10457,7 +13069,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.811,
-          "kantor_run_native_speed_mps": 2.32
+          "kantor_run_native_speed_mps": 2.398
         },
         "atlas": {
           "size": 32,
@@ -10532,35 +13144,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-visual.glb",
-        "bytes": 493900,
-        "exportBytes": 931224,
+        "bytes": 551036,
+        "exportBytes": 1082088,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -10925,17 +13559,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -11006,6 +13651,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -11021,7 +13721,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -11286,10 +13997,10 @@
             "min_z": -0.0031,
             "lod1_bbox_dev_m": 0.0024,
             "lod1_min_z": -0.0029,
-            "native_speed_mps": 2.361,
+            "native_speed_mps": 2.44,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.361,
-            "slip_ratio": 0.0
+            "mean_stance_speed_mps": 2.44,
+            "slip_ratio": 0.0001
           }
         },
         {
@@ -11463,6 +14174,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0025
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0025
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.002
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0025
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0012
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0019
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.002
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0012
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.002
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.002
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0018
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0025
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0009
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0024
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0031
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0031
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0029
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0031,
+            "lod1_bbox_dev_m": 0.0024,
+            "lod1_min_z": -0.0029,
+            "native_speed_mps": 2.44,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.44,
+            "slip_ratio": 0.0001
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -11478,7 +14402,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 501396
+          "detail": 558528
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -11496,17 +14420,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -11938,8 +14873,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.826,
-            "kantor_run_native_speed_mps": 2.361
+            "kantor_run_native_speed_mps": 2.44
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -11947,14 +14887,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -11967,9 +14922,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -11982,9 +14947,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -11992,9 +14972,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -12035,7 +15025,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -12146,10 +15136,10 @@
             "min_z": -0.0031,
             "lod1_bbox_dev_m": 0.0024,
             "lod1_min_z": -0.0029,
-            "native_speed_mps": 2.361,
+            "native_speed_mps": 2.44,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.361,
-            "slip_ratio": 0.0
+            "mean_stance_speed_mps": 2.44,
+            "slip_ratio": 0.0001
           },
           "wave": {
             "min_z": -0.0018,
@@ -12203,6 +15193,67 @@
             "lod1_bbox_dev_m": 0.0022,
             "lod1_min_z": 0.2065,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0025,
+            "lod1_bbox_dev_m": 0.0008,
+            "lod1_min_z": -0.002
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0025,
+            "lod1_min_z": 0.0007
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0012,
+            "lod1_min_z": 0.0007
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0019,
+            "lod1_min_z": 0.0007
+          },
+          "bike": {
+            "min_z": 0.1358,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": 0.1355,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.002,
+            "lod1_min_z": 0.0007
+          },
+          "cable": {
+            "min_z": 0.002,
+            "lod1_bbox_dev_m": 0.0012,
+            "lod1_min_z": 0.0018
+          },
+          "type_fast": {
+            "min_z": 0.2062,
+            "lod1_bbox_dev_m": 0.0016,
+            "lod1_min_z": 0.2065,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0014,
+            "lod1_min_z": 0.0007
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0025,
+            "lod1_min_z": -0.0009
+          },
+          "flee": {
+            "min_z": -0.0031,
+            "lod1_bbox_dev_m": 0.0024,
+            "lod1_min_z": -0.0029,
+            "native_speed_mps": 2.44,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.44,
+            "slip_ratio": 0.0001
           }
         },
         "default_hair": "hair_side_part",
@@ -12237,7 +15288,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.826,
-          "kantor_run_native_speed_mps": 2.361
+          "kantor_run_native_speed_mps": 2.44
         },
         "atlas": {
           "size": 32,
@@ -12312,35 +15363,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-qa.glb",
-        "bytes": 501396,
-        "exportBytes": 943744,
+        "bytes": 558528,
+        "exportBytes": 1094332,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -12705,17 +15778,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -12786,6 +15870,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -12801,7 +15940,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -13042,7 +16192,7 @@
         {
           "check": "run: lod1 deforms with LOD0 (bbox within 3 cm)",
           "ok": true,
-          "detail": 0.0028
+          "detail": 0.0029
         },
         {
           "check": "run: no floor penetration (6 mm tolerance)",
@@ -13064,12 +16214,12 @@
           "ok": true,
           "detail": {
             "min_z": -0.0031,
-            "lod1_bbox_dev_m": 0.0028,
+            "lod1_bbox_dev_m": 0.0029,
             "lod1_min_z": -0.0029,
-            "native_speed_mps": 2.333,
+            "native_speed_mps": 2.412,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.333,
-            "slip_ratio": 0.0002
+            "mean_stance_speed_mps": 2.412,
+            "slip_ratio": 0.0
           }
         },
         {
@@ -13243,6 +16393,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.001
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0025
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0025
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0012
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.003
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0009
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0011
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0021
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0012
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0022
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0022
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0013
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0008
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0025
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0008
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0028
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0031
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0031
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0029
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0031,
+            "lod1_bbox_dev_m": 0.0028,
+            "lod1_min_z": -0.0029,
+            "native_speed_mps": 2.412,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.412,
+            "slip_ratio": 0.0
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -13258,7 +16621,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 498604
+          "detail": 555736
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -13276,17 +16639,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -13718,8 +17092,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.816,
-            "kantor_run_native_speed_mps": 2.333
+            "kantor_run_native_speed_mps": 2.412
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -13727,14 +17106,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -13747,9 +17141,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -13762,9 +17166,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -13772,9 +17191,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -13815,7 +17244,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -13924,12 +17353,12 @@
           },
           "run": {
             "min_z": -0.0031,
-            "lod1_bbox_dev_m": 0.0028,
+            "lod1_bbox_dev_m": 0.0029,
             "lod1_min_z": -0.0029,
-            "native_speed_mps": 2.333,
+            "native_speed_mps": 2.412,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.333,
-            "slip_ratio": 0.0002
+            "mean_stance_speed_mps": 2.412,
+            "slip_ratio": 0.0
           },
           "wave": {
             "min_z": -0.0018,
@@ -13983,6 +17412,67 @@
             "lod1_bbox_dev_m": 0.0024,
             "lod1_min_z": 0.2099,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0025,
+            "lod1_bbox_dev_m": 0.001,
+            "lod1_min_z": -0.0012
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": 0.0008
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0009,
+            "lod1_min_z": 0.0008
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0011,
+            "lod1_min_z": 0.0008
+          },
+          "bike": {
+            "min_z": 0.14,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": 0.14,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0021,
+            "lod1_min_z": 0.0008
+          },
+          "cable": {
+            "min_z": 0.0022,
+            "lod1_bbox_dev_m": 0.0012,
+            "lod1_min_z": 0.0014
+          },
+          "type_fast": {
+            "min_z": 0.2093,
+            "lod1_bbox_dev_m": 0.0016,
+            "lod1_min_z": 0.2099,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0013,
+            "lod1_min_z": 0.0008
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0025,
+            "lod1_min_z": -0.0008
+          },
+          "flee": {
+            "min_z": -0.0031,
+            "lod1_bbox_dev_m": 0.0028,
+            "lod1_min_z": -0.0029,
+            "native_speed_mps": 2.412,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.412,
+            "slip_ratio": 0.0
           }
         },
         "default_hair": "hair_side_part",
@@ -14017,7 +17507,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.816,
-          "kantor_run_native_speed_mps": 2.333
+          "kantor_run_native_speed_mps": 2.412
         },
         "atlas": {
           "size": 32,
@@ -14092,35 +17582,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-assistant.glb",
-        "bytes": 498604,
-        "exportBytes": 939064,
+        "bytes": 555736,
+        "exportBytes": 1089084,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },
@@ -14485,17 +17997,28 @@
           "check": "action names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -14566,6 +18089,61 @@
           "detail": 1.6
         },
         {
+          "check": "clip length start",
+          "ok": true,
+          "detail": 0.267
+        },
+        {
+          "check": "clip length stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
+          "check": "clip length turn",
+          "ok": true,
+          "detail": 0.333
+        },
+        {
+          "check": "clip length lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
+          "check": "clip length bike",
+          "ok": true,
+          "detail": 1.0
+        },
+        {
+          "check": "clip length draw",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length cable",
+          "ok": true,
+          "detail": 2.0
+        },
+        {
+          "check": "clip length type_fast",
+          "ok": true,
+          "detail": 0.5
+        },
+        {
+          "check": "clip length surprised",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
+          "check": "clip length rub_head",
+          "ok": true,
+          "detail": 1.2
+        },
+        {
+          "check": "clip length flee",
+          "ok": true,
+          "detail": 0.6
+        },
+        {
           "check": "NLA tracks hold every clip",
           "ok": true,
           "detail": [
@@ -14581,7 +18159,18 @@
             "stretch",
             "exercise",
             "billiards",
-            "game"
+            "game",
+            "start",
+            "stop",
+            "turn",
+            "lift",
+            "bike",
+            "draw",
+            "cable",
+            "type_fast",
+            "surprised",
+            "rub_head",
+            "flee"
           ]
         },
         {
@@ -14846,10 +18435,10 @@
             "min_z": -0.0032,
             "lod1_bbox_dev_m": 0.003,
             "lod1_min_z": -0.0029,
-            "native_speed_mps": 2.421,
+            "native_speed_mps": 2.501,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.421,
-            "slip_ratio": 0.0001
+            "mean_stance_speed_mps": 2.501,
+            "slip_ratio": 0.0002
           }
         },
         {
@@ -15023,6 +18612,219 @@
           "detail": 0.442
         },
         {
+          "check": "start: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0007
+        },
+        {
+          "check": "start: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0026
+        },
+        {
+          "check": "start: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0026
+        },
+        {
+          "check": "start: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0013
+        },
+        {
+          "check": "stop: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0032
+        },
+        {
+          "check": "stop: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "stop: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "turn: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "turn: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "turn: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "lift: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0011
+        },
+        {
+          "check": "lift: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "lift: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "bike: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0011
+        },
+        {
+          "check": "bike: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "draw: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.002
+        },
+        {
+          "check": "draw: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "draw: a foot touches the floor",
+          "ok": true,
+          "detail": 0.0
+        },
+        {
+          "check": "draw: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "cable: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0014
+        },
+        {
+          "check": "cable: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.002
+        },
+        {
+          "check": "cable: a foot touches the floor",
+          "ok": true,
+          "detail": 0.002
+        },
+        {
+          "check": "cable: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0017
+        },
+        {
+          "check": "type_fast: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0025
+        },
+        {
+          "check": "type_fast: pelvis on 0.45 m seat",
+          "ok": true,
+          "detail": 0.442
+        },
+        {
+          "check": "surprised: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0016
+        },
+        {
+          "check": "surprised: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0
+        },
+        {
+          "check": "surprised: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": 0.0006
+        },
+        {
+          "check": "rub_head: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.0018
+        },
+        {
+          "check": "rub_head: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0018
+        },
+        {
+          "check": "rub_head: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0009
+        },
+        {
+          "check": "flee: lod1 deforms with LOD0 (bbox within 3 cm)",
+          "ok": true,
+          "detail": 0.003
+        },
+        {
+          "check": "flee: no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0032
+        },
+        {
+          "check": "flee: a foot touches the floor",
+          "ok": true,
+          "detail": -0.0032
+        },
+        {
+          "check": "flee: lod1 no floor penetration (6 mm tolerance)",
+          "ok": true,
+          "detail": -0.0029
+        },
+        {
+          "check": "flee: planted foot speed matches root speed (slip < 5%)",
+          "ok": true,
+          "detail": {
+            "min_z": -0.0032,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": -0.0029,
+            "native_speed_mps": 2.501,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.501,
+            "slip_ratio": 0.0002
+          }
+        },
+        {
           "check": "talk morph combined with talk clip moves only head vertices",
           "ok": true,
           "detail": {
@@ -15038,7 +18840,7 @@
         {
           "check": "glb size within target",
           "ok": true,
-          "detail": 492268
+          "detail": 549400
         },
         {
           "check": "glb is the optimised file (KHR_mesh_quantization required)",
@@ -15056,17 +18858,28 @@
           "check": "glb animation names exact",
           "ok": true,
           "detail": [
+            "bike",
             "billiards",
+            "cable",
             "coffee",
+            "draw",
             "exercise",
+            "flee",
             "game",
             "idle",
+            "lift",
             "read",
+            "rub_head",
             "run",
             "sit",
+            "start",
+            "stop",
             "stretch",
+            "surprised",
             "talk",
+            "turn",
             "type",
+            "type_fast",
             "walk",
             "wave"
           ]
@@ -15498,8 +19311,13 @@
           "ok": true,
           "detail": {
             "kantor_walk_native_speed_mps": 0.846,
-            "kantor_run_native_speed_mps": 2.421
+            "kantor_run_native_speed_mps": 2.501
           }
+        },
+        {
+          "check": "glb clip duration bike",
+          "ok": true,
+          "detail": 1
         },
         {
           "check": "glb clip duration billiards",
@@ -15507,14 +19325,29 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration cable",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration coffee",
           "ok": true,
           "detail": 3
         },
         {
+          "check": "glb clip duration draw",
+          "ok": true,
+          "detail": 2
+        },
+        {
           "check": "glb clip duration exercise",
           "ok": true,
           "detail": 0.8
+        },
+        {
+          "check": "glb clip duration flee",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration game",
@@ -15527,9 +19360,19 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration lift",
+          "ok": true,
+          "detail": 1.6
+        },
+        {
           "check": "glb clip duration read",
           "ok": true,
           "detail": 2.4
+        },
+        {
+          "check": "glb clip duration rub_head",
+          "ok": true,
+          "detail": 1.2
         },
         {
           "check": "glb clip duration run",
@@ -15542,9 +19385,24 @@
           "detail": 2
         },
         {
+          "check": "glb clip duration start",
+          "ok": true,
+          "detail": 0.2667
+        },
+        {
+          "check": "glb clip duration stop",
+          "ok": true,
+          "detail": 0.3
+        },
+        {
           "check": "glb clip duration stretch",
           "ok": true,
           "detail": 3
+        },
+        {
+          "check": "glb clip duration surprised",
+          "ok": true,
+          "detail": 0.6
         },
         {
           "check": "glb clip duration talk",
@@ -15552,9 +19410,19 @@
           "detail": 2.4
         },
         {
+          "check": "glb clip duration turn",
+          "ok": true,
+          "detail": 0.3333
+        },
+        {
           "check": "glb clip duration type",
           "ok": true,
           "detail": 1
+        },
+        {
+          "check": "glb clip duration type_fast",
+          "ok": true,
+          "detail": 0.5
         },
         {
           "check": "glb clip duration walk",
@@ -15595,7 +19463,7 @@
         {
           "check": "reimport: actions present",
           "ok": true,
-          "detail": 13
+          "detail": 24
         },
         {
           "check": "reimport: body shape keys = expressions",
@@ -15706,10 +19574,10 @@
             "min_z": -0.0032,
             "lod1_bbox_dev_m": 0.003,
             "lod1_min_z": -0.0029,
-            "native_speed_mps": 2.421,
+            "native_speed_mps": 2.501,
             "planted_frames": 5,
-            "mean_stance_speed_mps": 2.421,
-            "slip_ratio": 0.0001
+            "mean_stance_speed_mps": 2.501,
+            "slip_ratio": 0.0002
           },
           "wave": {
             "min_z": -0.0018,
@@ -15763,6 +19631,67 @@
             "lod1_bbox_dev_m": 0.0025,
             "lod1_min_z": 0.1983,
             "pelvis_underside_z": 0.442
+          },
+          "start": {
+            "min_z": -0.0026,
+            "lod1_bbox_dev_m": 0.0007,
+            "lod1_min_z": -0.0013
+          },
+          "stop": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0032,
+            "lod1_min_z": 0.0006
+          },
+          "turn": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0016,
+            "lod1_min_z": 0.0006
+          },
+          "lift": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0011,
+            "lod1_min_z": 0.0006
+          },
+          "bike": {
+            "min_z": 0.1249,
+            "lod1_bbox_dev_m": 0.0011,
+            "lod1_min_z": 0.125,
+            "pelvis_underside_z": 0.442
+          },
+          "draw": {
+            "min_z": 0.0,
+            "lod1_bbox_dev_m": 0.002,
+            "lod1_min_z": 0.0006
+          },
+          "cable": {
+            "min_z": 0.002,
+            "lod1_bbox_dev_m": 0.0014,
+            "lod1_min_z": 0.0017
+          },
+          "type_fast": {
+            "min_z": 0.1977,
+            "lod1_bbox_dev_m": 0.0025,
+            "lod1_min_z": 0.1983,
+            "pelvis_underside_z": 0.442
+          },
+          "surprised": {
+            "min_z": -0.0,
+            "lod1_bbox_dev_m": 0.0016,
+            "lod1_min_z": 0.0006
+          },
+          "rub_head": {
+            "min_z": -0.0018,
+            "lod1_bbox_dev_m": 0.0018,
+            "lod1_min_z": -0.0009
+          },
+          "flee": {
+            "min_z": -0.0032,
+            "lod1_bbox_dev_m": 0.003,
+            "lod1_min_z": -0.0029,
+            "native_speed_mps": 2.501,
+            "planted_frames": 5,
+            "mean_stance_speed_mps": 2.501,
+            "slip_ratio": 0.0002
           }
         },
         "default_hair": "hair_bun",
@@ -15797,7 +19726,7 @@
         "uv_max_offset": 0.0,
         "loco": {
           "kantor_walk_native_speed_mps": 0.846,
-          "kantor_run_native_speed_mps": 2.421
+          "kantor_run_native_speed_mps": 2.501
         },
         "atlas": {
           "size": 32,
@@ -15872,35 +19801,57 @@
       },
       "glb_report": {
         "glb": "app/public/assets/characters/ch-designer.glb",
-        "bytes": 492268,
-        "exportBytes": 928276,
+        "bytes": 549400,
+        "exportBytes": 1078884,
         "animations": [
+          "bike",
           "billiards",
+          "cable",
           "coffee",
+          "draw",
           "exercise",
+          "flee",
           "game",
           "idle",
+          "lift",
           "read",
+          "rub_head",
           "run",
           "sit",
+          "start",
+          "stop",
           "stretch",
+          "surprised",
           "talk",
+          "turn",
           "type",
+          "type_fast",
           "walk",
           "wave"
         ],
         "durations": {
+          "bike": 1,
           "billiards": 2.4,
+          "cable": 2,
           "coffee": 3,
+          "draw": 2,
           "exercise": 0.8,
+          "flee": 0.6,
           "game": 1.6,
           "idle": 2,
+          "lift": 1.6,
           "read": 2.4,
+          "rub_head": 1.2,
           "run": 0.6,
           "sit": 2,
+          "start": 0.2667,
+          "stop": 0.3,
           "stretch": 3,
+          "surprised": 0.6,
           "talk": 2.4,
+          "turn": 0.3333,
           "type": 1,
+          "type_fast": 0.5,
           "walk": 1,
           "wave": 1.6
         },

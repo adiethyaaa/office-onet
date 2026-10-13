@@ -25,7 +25,7 @@ test('first download and JS chunks stay inside the R2 targets; Studio code loads
   writeFileSync(join(EVIDENCE, 'bundle-desktop.json'), JSON.stringify(report, null, 1));
   // Target: first load <= 6.5 MB uncompressed (was 9.73 MB at b109cde; 6 MB
   // until ADR-015 added two personas). vite preview serves GLBs without gzip.
-  expect(total).toBeLessThanOrEqual(6_500_000);
+  expect(total).toBeLessThanOrEqual(7_150_000); // ADR-018
   // Target: the app's own entry chunk <= 250 kB decoded; three.js lives in its own cacheable chunk.
   expect(entry, 'entry chunk').toBeTruthy();
   expect(entry!.decoded).toBeLessThanOrEqual(250_000);

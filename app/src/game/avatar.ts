@@ -19,6 +19,23 @@ export function loadCharacter(url: string): Promise<{ scene: THREE.Group; animat
   return p;
 }
 
+const LOCO = '<loco>';
+const LOCO_CLIPS = ['idle', 'walk', 'run'];
+
+/**
+ * Crossfade seconds per clip pair (REQ-ANIM-06). Quick for reactions and
+ * standing up into a walk, slower for settling into a seat.
+ */
+export function crossfade(from: string, to: string): number {
+  const f = from === LOCO ? 'walk' : from;
+  if (to === 'surprised' || to === 'flee') return 0.08;
+  if (to === 'sit' || to === 'type' || to === 'type_fast') return 0.35;
+  if (f === 'sit' || f === 'type' || f === 'type_fast') return 0.3;
+  if (to === 'talk' || to === 'wave') return 0.25;
+  if ((f === 'walk' || f === 'run') && (to === 'idle' || to === 'walk' || to === 'run')) return 0.15;
+  return 0.2;
+}
+
 interface AtlasSpec { size: number; cell: number; zones: Record<string, [number, number]> }
 
 export class Avatar {
@@ -66,6 +83,7 @@ export class Avatar {
       if (typeof x.kantor_default_hair === 'string') this.defaultHair = x.kantor_default_hair.replace(/^hair_/, '');
       if (x.kantor_atlas && typeof x.kantor_atlas === 'object') this.atlas = x.kantor_atlas as AtlasSpec;
       if (o.name === 'lod1') this.lod1 = o;
+      if (o.name === 'head' && (o as THREE.Bone).isBone) this.head = o;
       const mesh = o as THREE.Mesh;
       if (mesh.isMesh && mesh.morphTargetDictionary && 'blink' in mesh.morphTargetDictionary) this.face = mesh;
     });
@@ -91,14 +109,171 @@ export class Avatar {
 
   has(name: string): boolean { return this.actions.has(name); }
 
-  play(name: string, fade = 0.2): void {
+  play(name: string, fade?: number): void {
     if (name === this.current) return;
     const next = this.actions.get(name) ?? this.actions.get('idle');
-    const prev = this.actions.get(this.current);
+    const from = this.current;
+    const f = fade ?? crossfade(from, name);
+    if (from === LOCO) {
+      // Leaving the locomotion blend: fade each of its clips from the weight it has now.
+      for (const n of LOCO_CLIPS) { const a = this.actions.get(n); if (a && a !== next) a.fadeOut(f); }
+      this.endOneShot(f);
+    }
+    const prev = this.actions.get(from);
     this.current = name;
     if (!next) return;
-    next.reset().setEffectiveWeight(1).fadeIn(fade).play();
-    if (prev && prev !== next) prev.fadeOut(fade);
+    next.reset().setEffectiveWeight(1).fadeIn(f).play();
+    if (prev && prev !== next) prev.fadeOut(f);
+  }
+
+  // ---- locomotion (PRD v2.0 REQ-ANIM-01..06) ---------------------------------
+  private locoW: Record<string, number> = { idle: 0, walk: 0, run: 0 };
+  private oneShot: { name: string; action: THREE.AnimationAction; t: number; dur: number } | null = null;
+  private lastSpeed = 0;
+  private lean = 0;
+  private pitch = 0;
+  /** Last one-shot started (tests read it). */
+  lastOneShot = '';
+
+  /**
+   * Idle, walk and run as one blend driven by ground speed, instead of
+   * swapping clips at a threshold: half stick gives a brisk walk, and walk
+   * and run share one cycle phase so feet never jump when the blend moves.
+   * turnRate is degrees per second (positive = turning left).
+   */
+  locomotion(speed: number, dt: number, turnRate: number, reducedMotion: boolean): void {
+    const idle = this.actions.get('idle');
+    const walk = this.actions.get('walk');
+    const run = this.actions.get('run');
+    if (!this.mixer || !idle || !walk || !run) {
+      this.play(speed > 2.4 ? 'run' : speed > 0.2 ? 'walk' : 'idle');
+      this.lastSpeed = speed;
+      return;
+    }
+    if (this.current !== LOCO) {
+      const prev = this.actions.get(this.current);
+      const f = crossfade(this.current, speed > 0.2 ? 'walk' : 'idle');
+      if (prev && !LOCO_CLIPS.includes(this.current)) prev.fadeOut(f);
+      for (const n of LOCO_CLIPS) {
+        const a = this.actions.get(n)!;
+        // Start from whatever weight the clip has (it may be mid fade-out).
+        this.locoW[n] = n === this.current ? 1 : this.locoW[n] * (a.isRunning() ? 1 : 0);
+        if (!a.isRunning()) a.reset().play();
+      }
+      this.current = LOCO;
+    }
+    // One-shots: start from rest, stop from a run, quick turn.
+    if (this.lastSpeed < 0.25 && speed >= 0.25) this.startOneShot('start');
+    else if (this.lastSpeed > 1.4 && speed < 0.35) this.startOneShot('stop');
+    if (Math.abs(turnRate) > 600 && speed > 0.4 && this.oneShot?.name !== 'turn') this.startOneShot('turn');
+    this.lastSpeed = speed;
+
+    const moving = THREE.MathUtils.clamp((speed - 0.12) / 0.5, 0, 1);
+    const r = THREE.MathUtils.smoothstep(speed, 1.9, 3.0);
+    const target = { idle: 1 - moving, walk: moving * (1 - r), run: moving * r };
+    const k = Math.min(1, dt * 9);
+    let shotW = 0;
+    if (this.oneShot) {
+      const o = this.oneShot;
+      o.t += dt;
+      const fadeIn = Math.min(1, o.t / 0.06);
+      const fadeOut = Math.min(1, (o.dur - o.t) / 0.1);
+      shotW = Math.max(0, Math.min(fadeIn, fadeOut)) * 0.85;
+      o.action.setEffectiveWeight(shotW);
+      if (o.t >= o.dur) this.endOneShot(0);
+    }
+    for (const n of LOCO_CLIPS) {
+      this.locoW[n] += (target[n as keyof typeof target] - this.locoW[n]) * k;
+      this.actions.get(n)!.setEffectiveWeight(this.locoW[n] * (1 - shotW));
+    }
+    // Shared phase: cycles per second blended from both clips' native speeds.
+    const wd = walk.getClip().duration || 1;
+    const rd = run.getClip().duration || 1;
+    const wsum = this.locoW.walk + this.locoW.run || 1;
+    const s = Math.max(speed, 0.4);
+    const rate = ((this.locoW.walk * s) / this.walkNative / wd + (this.locoW.run * s) / this.runNative / rd) / wsum;
+    walk.timeScale = THREE.MathUtils.clamp(rate * wd, 0.4, 2.8);
+    run.timeScale = THREE.MathUtils.clamp(rate * rd, 0.5, 2.2);
+    if (this.locoW.run > 0.02 && this.locoW.walk > 0.02) run.time = (walk.time / wd) * rd;
+
+    // Lean: forward with speed, sideways into the turn. Off under reduced motion.
+    const wantPitch = reducedMotion ? 0 : THREE.MathUtils.degToRad(6) * r;
+    const wantLean = reducedMotion ? 0 : THREE.MathUtils.clamp(-turnRate * 0.0009 * Math.min(1, speed / 2.5), -0.21, 0.21);
+    this.pitch += (wantPitch - this.pitch) * Math.min(1, dt * 6);
+    this.lean += (wantLean - this.lean) * Math.min(1, dt * 6);
+    if (this.body) { this.body.rotation.x = this.pitch; this.body.rotation.z = this.lean; }
+  }
+
+  private startOneShot(name: string) {
+    const a = this.actions.get(name);
+    if (!a) return;
+    this.endOneShot(0);
+    a.reset();
+    a.setLoop(THREE.LoopOnce, 1);
+    a.clampWhenFinished = true;
+    a.setEffectiveWeight(0).play();
+    this.oneShot = { name, action: a, t: 0, dur: a.getClip().duration };
+    this.lastOneShot = name;
+  }
+
+  private endOneShot(fade: number) {
+    if (!this.oneShot) return;
+    if (fade > 0) this.oneShot.action.fadeOut(fade); else this.oneShot.action.stop();
+    this.oneShot = null;
+  }
+
+  /** Clear body lean (sitting, activities). */
+  settle(): void {
+    this.lean = 0;
+    this.pitch = 0;
+    if (this.body) { this.body.rotation.x = 0; this.body.rotation.z = 0; }
+  }
+
+  /**
+   * Play a non-looping reaction clip once (surprised, rub_head...) and return to
+   * `then` afterwards. Falls back to `then` when the GLB predates the clip.
+   */
+  react(name: string, then: string): number {
+    const a = this.actions.get(name);
+    if (!a) { this.play(then); return 0; }
+    this.play(name, 0.08);
+    a.setLoop(THREE.LoopOnce, 1);
+    a.clampWhenFinished = true;
+    return a.getClip().duration;
+  }
+
+  // ---- head look (REQ-ANIM-05) ----------------------------------------------
+  private head: THREE.Object3D | null = null;
+  private lookYaw = 0;
+  private static readonly qa = new THREE.Quaternion();
+  private static readonly qb = new THREE.Quaternion();
+  private static readonly up = new THREE.Vector3(0, 1, 0);
+
+  /**
+   * Turn the head toward a point after the clip has posed the skeleton.
+   * Applied in world space (rotation about world up) so it does not depend on
+   * the bone's local axes; clamped to +-60 degrees from the body.
+   */
+  lookAt(target: THREE.Vector3 | null, dt: number, reducedMotion: boolean): void {
+    if (!this.head) return;
+    let want = 0;
+    if (target && !reducedMotion) {
+      const p = this.root.position;
+      const ang = Math.atan2(target.x - p.x, target.z - p.z);
+      const body = this.root.rotation.y;
+      want = THREE.MathUtils.clamp(((ang - body + Math.PI * 3) % (Math.PI * 2)) - Math.PI, -1.05, 1.05);
+    }
+    this.lookYaw += (want - this.lookYaw) * Math.min(1, dt * 5);
+    if (Math.abs(this.lookYaw) < 1e-3) return;
+    const h = this.head;
+    const parent = h.parent;
+    if (!parent) return;
+    parent.updateWorldMatrix(true, false);
+    const pw = Avatar.qa;
+    parent.getWorldQuaternion(pw);
+    const hw = Avatar.qb.copy(pw).multiply(h.quaternion);
+    hw.premultiply(new THREE.Quaternion().setFromAxisAngle(Avatar.up, this.lookYaw));
+    h.quaternion.copy(pw.invert().multiply(hw));
   }
 
   setFacing(deg: number): void { this.root.rotation.y = THREE.MathUtils.degToRad(deg) + Math.PI / 2; }

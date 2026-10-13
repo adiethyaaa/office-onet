@@ -1,0 +1,20 @@
+// English for the mini game host, launcher, audio settings and reprimand.
+export const EN_MG_HOST: Record<string, string> = {
+  'Keluar': 'Exit',
+  'Jeda': 'Pause',
+  'Lanjut': 'Resume',
+  'Ulang': 'Restart',
+  'Mulai': 'Start',
+  'Main lagi': 'Play again',
+  'Memuat permainan...': 'Loading game...',
+  'Permainan gagal dimuat.': 'The game failed to load.',
+  'Periksa koneksi, lalu coba lagi.': 'Check your connection, then try again.',
+  'Skor terbaik: {score} ({name})': 'Best score: {score} ({name})',
+  'Skor: {score}': 'Score: {score}',
+  'Peringkat {n} di papan skor perangkat ini.': 'Rank {n} on this device\'s leaderboard.',
+  'Papan skor': 'Leaderboard',
+  'Belum berhasil': 'Not this time',
+  'Selesai!': 'Done!',
+  'Suara mati': 'Sound off',
+  'Suara nyala': 'Sound on',
+};

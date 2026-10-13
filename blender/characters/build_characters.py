@@ -1699,10 +1699,14 @@ class Anim:
             f, u = self.ankle_from_contact(g + ball[0], ball, tau)
         return f, u, tau
 
-    def gait(self, t, T, stance, D, drop, bob, lift, lean, arm_amp, fore_base, run=False):
+    def gait(self, t, T, stance, D, drop, bob, lift, lean, arm_amp, fore_base, run=False, pitch=0.0, fore_amp=10.0):
         P = self.P
         hipz = P.hip_z - drop - bob * math.cos(TAU * 2 * t / T)
         pose = {"_hips": (0.010 * math.sin(TAU * t / T) * (0.5 if run else 1.0), 0, hipz - P.hip_z)}
+        if pitch:
+            # the thigh heads lie on the pelvis pitch axis, so the leg IK below stays valid
+            # once the thighs cancel the pitch
+            pose["hips"] = [("X", pitch)]
         f_end, u_end, tau_end = self.stance_ankle(1.0, D)
         f_start, u_start, tau_start = self.stance_ankle(0.0, D)
         for side, sfx, ph in ((1, "_L", 0.0), (-1, "_R", 0.5)):
@@ -1715,12 +1719,12 @@ class Anim:
                 a_z = lerp(u_end, u_start, k) + lift * math.sin(math.pi * min(1.0, k * 1.1))
                 tau = lerp(tau_end, tau_start, smoothstep(0.0, 0.8, k))
             alpha, beta = leg_ik(a_fwd, hipz - a_z, P.L1, P.L2)
-            pose["thigh" + sfx] = [("X", -alpha)]
+            pose["thigh" + sfx] = [("X", -alpha - pitch)]
             pose["shin" + sfx] = [("X", beta)]
             pose["foot" + sfx] = [("X", alpha - beta + tau)]
             arm_ph = math.cos(TAU * (t / T + ph))
-            pose["upper_arm" + sfx] = [ab(side, 4.0 if run else 1.0), ("X", arm_amp * arm_ph)]
-            pose["forearm" + sfx] = [("X", -fore_base - 10.0 * max(0.0, -arm_ph))]
+            pose["upper_arm" + sfx] = [ab(side, 4.0 if run else 1.0), ("X", arm_amp * arm_ph - pitch)]
+            pose["forearm" + sfx] = [("X", -fore_base - fore_amp * max(0.0, -arm_ph))]
             pose["hand" + sfx] = [("X", -6.0)]
         # torso twist lives above the pelvis: yawing the hips would swing the
         # planted foot and reintroduce slip
@@ -1751,7 +1755,9 @@ class Anim:
         return self.gait(t, 1.0, WALK_STANCE, self.walk_D, self.walk_drop, 0.012, 0.075, 5.0, 22.0, 14.0)
 
     def run(self, t):
-        return self.gait(t, 0.6, RUN_STANCE, self.run_D, self.run_drop, 0.018, 0.13, 13.0, 38.0, 75.0, run=True)
+        # pelvis 5 deg + spine/chest 6 deg: about 11 deg forward lean; elbows near 90 deg
+        return self.gait(t, 0.6, RUN_STANCE, self.run_D, self.run_drop, RUN_BOB, 0.13, 6.0, 55.0, 82.0,
+                         run=True, pitch=5.0, fore_amp=14.0)
 
     def wave(self, t):
         T = 1.6
@@ -1910,9 +1916,259 @@ class Anim:
         pose["head"] = [("Y", -3.0 * tilt), ("X", 6.0 + 2.0 * math.sin(TAU * 2 * t / T))]
         return pose
 
+    # ---- PRD v2 clips --------------------------------------------------------
+    def plant(self, pose, sfx, fwd, hipz, up=0.0, tau=0.0, pitch=0.0):
+        """Leg IK: ankle `fwd` ahead of the hip joint and `up` above its rest height."""
+        P = self.P
+        alpha, beta = leg_ik(fwd, hipz - (P.ankle_z + up), P.L1, P.L2)
+        pose["thigh" + sfx] = [("X", -alpha - pitch)]
+        pose["shin" + sfx] = [("X", beta)]
+        pose["foot" + sfx] = [("X", alpha - beta + tau)]
+
+    def start(self, t):
+        T = 0.25
+        P = self.P
+        k = smoothstep(0.0, T, t)
+        pose = self.stand(0.0, 0.0)
+        drop = 0.03 * P.s * k
+        shift = 0.03 * P.s * k  # pelvis moves ahead of the planted feet
+        hipz = P.hip_z - drop
+        pose["_hips"] = (0, -shift, -drop)
+        heel = 14.0 * smoothstep(0.4, 1.0, t / T)
+        for sfx, tau in (("_L", 0.0), ("_R", heel)):
+            # the rear foot rolls onto the ball, ready to push off
+            up = 0.0
+            if tau:
+                _, ball = self.foot_contacts()
+                f0, u0 = self.ankle_from_contact(ball[0], ball, tau)
+                fwd, up = f0 - shift, u0 - P.ankle_z
+            else:
+                fwd = -shift
+            self.plant(pose, sfx, fwd, hipz, up, tau)
+        pose["spine"] = [("X", 5.0 * k)]
+        pose["chest"] = [("X", 5.0 * k)]
+        pose["neck"] = [("X", -3.0 * k)]
+        pose["head"] = [("X", -2.0 * k)]
+        for side, sfx, sw in ((1, "_L", 1.0), (-1, "_R", -1.0)):
+            pose["upper_arm" + sfx] = [ab(side, 3.0), ("X", -24.0 * sw * k)]
+            pose["forearm" + sfx] = [("X", -8.0 - 50.0 * k)]
+        return pose
+
+    def stop(self, t):
+        T = 0.3
+        P = self.P
+        k = t / T
+        pose = self.stand(0.0, 0.0)
+        # momentum carries the pelvis over the braking foot, the rear foot steps up
+        hips_f = lerp(-0.05 * P.s, 0.0, smoothstep(0.0, 0.55, k))
+        drop = 0.035 * P.s * (1 - smoothstep(0.45, 1.0, k))
+        hipz = P.hip_z - drop
+        pose["_hips"] = (0, -hips_f, -drop)
+        self.plant(pose, "_L", -hips_f, hipz)
+        sk = smoothstep(0.25, 0.85, k)
+        r_f = lerp(-0.14 * P.s, 0.0, sk)
+        lift = 0.05 * P.s * math.sin(math.pi * sk)
+        self.plant(pose, "_R", r_f - hips_f, hipz, lift, 10.0 * math.sin(math.pi * sk))
+        lean = lerp(7.0, 12.0, smoothstep(0.0, 0.3, k)) * (1 - smoothstep(0.35, 1.0, k))
+        pose["spine"] = [("X", lean * 0.5)]
+        pose["chest"] = [("X", lean * 0.5)]
+        pose["neck"] = [("X", -lean * 0.3)]
+        settle = 1 - smoothstep(0.3, 1.0, k)
+        for side, sfx, sw in ((1, "_L", -1.0), (-1, "_R", 1.0)):
+            pose["upper_arm" + sfx] = [ab(side, 4.0 * settle), ("X", 28.0 * sw * settle)]
+            pose["forearm" + sfx] = [("X", -8.0 - 60.0 * settle)]
+        return pose
+
+    def turn(self, t):
+        # runtime yaws the root +180 deg (to the character's left) across the clip;
+        # the clip adds two quick steps and a head/torso lead, ending at the rest stance
+        T = 0.35
+        P = self.P
+        k = t / T
+        pose = self.stand(0.0, 0.0)
+        crouch = 0.03 * P.s * math.sin(math.pi * k)
+        hipz = P.hip_z - crouch
+        pose["_hips"] = (0, 0, -crouch)
+        for sfx, a, b in (("_L", 0.0, 0.55), ("_R", 0.45, 1.0)):
+            sk = smoothstep(a, b, k) if a < k < b else (1.0 if k >= b else 0.0)
+            lift = 0.06 * P.s * math.sin(math.pi * sk)
+            self.plant(pose, sfx, 0.0, hipz, lift, 8.0 * math.sin(math.pi * sk))
+        lead = math.sin(math.pi * k)
+        pose["spine"] = [("X", 4.0 * lead), ("Z", 10.0 * lead)]
+        pose["chest"] = [("X", 3.0 * lead), ("Z", 12.0 * lead)]
+        pose["head"] = [("Z", 18.0 * lead)]
+        for side, sfx in ((1, "_L"), (-1, "_R")):
+            pose["upper_arm" + sfx] = [ab(side, 6.0 + 14.0 * lead), ("X", -10.0 * lead)]
+            pose["forearm" + sfx] = [("X", -8.0 - 40.0 * lead)]
+        return pose
+
+    def lift(self, t):
+        # dumbbell shoulder press: elbows out at shoulder height, then lock out overhead
+        T = 1.6
+        P = self.P
+        pose = self.stand(t * 2.0 / T, 0.5)
+        press = 0.5 - 0.5 * math.cos(TAU * t / T)
+        dip = 0.02 * P.s * math.sin(TAU * t / T) ** 2
+        hipz = P.hip_z - dip
+        pose["_hips"] = (0, 0, -dip)
+        for sfx in ("_L", "_R"):
+            self.plant(pose, sfx, 0.0, hipz)
+        for side, sfx in ((1, "_L"), (-1, "_R")):
+            pose["upper_arm" + sfx] = [ab(side, lerp(88.0, 162.0, press)), ("X", lerp(-12.0, -4.0, press))]
+            # forearm stays vertical: folding further at the top drives the fists into the big head
+            pose["forearm" + sfx] = [ab(side, lerp(95.0, -6.0, press))]
+            pose["hand" + sfx] = [ab(side, -6.0)]
+        pose["chest"] = [("X", -3.0 * press)]
+        pose["head"] = [("X", -4.0 * press)]
+        return pose
+
+    def bike(self, t):
+        T = 1.0
+        P = self.P
+        pose = self.seated(t * 2.0 / T, swing=False)
+        L = P.L1 + P.L2
+        cf, cd, r = 0.36 * L, 0.52 * L, 0.11 * L
+        for side, sfx, ph in ((1, "_L", 0.0), (-1, "_R", 0.5)):
+            a = TAU * (t / T + ph)
+            fwd = cf + r * math.cos(a)
+            down = cd - r * math.sin(a)
+            alpha, beta = leg_ik(fwd, down, P.L1, P.L2)
+            pose["thigh" + sfx] = [("X", -alpha), ab(side, 2.0)]
+            pose["shin" + sfx] = [("X", beta)]
+            pose["foot" + sfx] = [("X", alpha - beta + 12.0 * math.sin(a))]
+            pose["upper_arm" + sfx] = [ab(side, 4.0), ("X", -52.0)]
+            pose["forearm" + sfx] = [("X", -28.0)]
+            pose["hand" + sfx] = [("X", 8.0)]
+        sway = math.sin(TAU * t / T)
+        pose["spine"] = [("X", 8.0), ("Y", 2.0 * sway)]
+        pose["chest"] = [("X", 6.0), ("Y", 2.0 * sway)]
+        pose["neck"] = [("X", -6.0)]
+        pose["head"] = [("X", -4.0), ("Y", -2.0 * sway)]
+        return pose
+
+    def draw(self, t):
+        # standing at a desk, bent over; the right hand traces loops on the sheet
+        T = 2.0
+        P = self.P
+        pose = self.stand(t, 0.5)
+        drop = 0.02 * P.s
+        hipz = P.hip_z - drop
+        pose["_hips"] = (0, 0.02 * P.s, -drop)
+        for sfx in ("_L", "_R"):
+            self.plant(pose, sfx, 0.02 * P.s, hipz, pitch=8.0)
+        pose["hips"] = [("X", 8.0)]
+        pose["spine"] = [("X", 12.0)]
+        pose["chest"] = [("X", 8.0)]
+        pose["neck"] = [("X", 4.0)]
+        a = TAU * t / (T / 2.0)
+        pose["head"] = [("X", 10.0), ("Y", 3.0 * math.sin(TAU * t / T))]
+        pose["upper_arm_L"] = [ab(1, 10.0), ("X", -30.0)]
+        pose["forearm_L"] = [("X", -40.0), ("Z", -20.0)]
+        pose["hand_L"] = [("X", 20.0)]
+        pose["upper_arm_R"] = [ab(-1, 8.0 + 4.0 * math.cos(a)), ("X", -38.0 + 5.0 * math.sin(a))]
+        pose["forearm_R"] = [("X", -38.0 + 6.0 * math.cos(a)), ("Z", 14.0 + 8.0 * math.sin(a))]
+        pose["hand_R"] = [("X", 18.0 + 6.0 * math.sin(2 * a))]
+        return pose
+
+    def cable(self, t):
+        # deep squat at floor level: hands in front, low, feeding a cable
+        T = 2.0
+        P = self.P
+        drop = 0.40 * P.leg_len
+        hipz = P.hip_z - drop
+        pose = self.stand(t, 0.4)
+        pose["_hips"] = (0, 0.03 * P.s, -drop)
+        for side, sfx, fwd in ((1, "_L", 0.12 * P.s), (-1, "_R", 0.04 * P.s)):
+            # 8 mm clearance: the splayed foot rolls its sole edge a few mm into the floor
+            alpha, beta = leg_ik(fwd + 0.03 * P.s, hipz - P.ankle_z - 0.008, P.L1, P.L2)
+            pose["thigh" + sfx] = [("X", -alpha), ab(side, 14.0)]
+            pose["shin" + sfx] = [("X", beta)]
+            pose["foot" + sfx] = [("X", alpha - beta), ab(side, -14.0)]
+        pose["spine"] = [("X", 18.0)]
+        pose["chest"] = [("X", 12.0)]
+        pose["neck"] = [("X", -6.0)]
+        a = TAU * t / T
+        pose["head"] = [("X", 6.0), ("Y", 3.0 * math.sin(a))]
+        for side, sfx, ph in ((1, "_L", 0.0), (-1, "_R", math.pi)):
+            pull = math.sin(2 * a + ph)
+            pose["upper_arm" + sfx] = [ab(side, 6.0), ("X", -46.0 + 8.0 * pull)]
+            pose["forearm" + sfx] = [("X", -22.0 - 10.0 * pull), ("Z", -side * 10.0)]
+            pose["hand" + sfx] = [("X", 12.0)]
+        return pose
+
+    def type_fast(self, t):
+        T = 0.5
+        pose = self.type(t * 2.0 / T)
+        for side, sfx in ((1, "_L"), (-1, "_R")):
+            ph = 0.0 if side > 0 else 0.25
+            tap = math.sin(TAU * (8 * t + ph))
+            pose["upper_arm" + sfx] = [ab(side, 6.0), ("X", -40.0 + 2.5 * tap)]
+            pose["forearm" + sfx] = [("X", -52.0 - 3.5 * tap), ("Z", side * (8.0 + 3.0 * math.sin(TAU * 2 * t / T)))]
+            pose["hand" + sfx] = [("X", 14.0 + 12.0 * max(0.0, tap))]
+        pose["spine"] = [("X", 7.0)]
+        pose["chest"] = [("X", 5.0 + 1.0 * math.sin(TAU * 4 * t / T))]
+        pose["head"] = [("X", 9.0), ("Y", 1.5 * math.sin(TAU * 2 * t / T))]
+        pose["neck"] = [("X", 1.0)]
+        return pose
+
+    def surprised(self, t):
+        T = 0.6
+        P = self.P
+        pose = self.stand(0.0, 0.0)
+        crouch = 0.025 * P.s * (smoothstep(0.0, 0.08, t) * (1 - smoothstep(0.08, 0.14, t))
+                                + smoothstep(0.34, 0.40, t) * (1 - smoothstep(0.40, 0.56, t)))
+        air = 0.06 * P.s * math.sin(math.pi * (t - 0.12) / 0.24) if 0.12 < t < 0.36 else 0.0
+        hipz = P.hip_z - crouch + air
+        pose["_hips"] = (0, 0.01 * P.s * smoothstep(0.1, 0.3, t), hipz - P.hip_z)
+        point = 18.0 * (air / (0.06 * P.s))
+        for sfx in ("_L", "_R"):
+            self.plant(pose, sfx, 0.0, hipz, air, point)
+        # back to the rest pose at the end so the runtime crossfade out is short
+        up = smoothstep(0.04, 0.18, t) * (1 - smoothstep(0.40, 0.6, t))
+        for side, sfx in ((1, "_L"), (-1, "_R")):
+            pose["upper_arm" + sfx] = [ab(side, 112.0 * up), ("X", -26.0 * up)]
+            pose["forearm" + sfx] = [ab(side, 12.0 * up), ("X", -20.0 * up)]
+            pose["hand" + sfx] = [ab(side, -10.0 * up)]
+        pose["spine"] = [("X", -4.0 * up)]
+        pose["chest"] = [("X", -5.0 * up)]
+        pose["head"] = [("X", -8.0 * up)]
+        return pose
+
+    def rub_head(self, t):
+        # sheepish rub: right palm on the back of the head, small circles
+        T = 1.2
+        pose = self.stand(t * 2.0 / T, 0.6)
+        a = TAU * t / (T / 2.0)
+        # arms are short for the chibi head: the palm can reach the upper back of the
+        # skull from the side, not the crown
+        pose["upper_arm_R"] = [ab(-1, 130.0 + 4.0 * math.cos(a)), ("X", 20.0 + 6.0 * math.sin(a))]
+        pose["forearm_R"] = [ab(-1, 60.0 + 6.0 * math.cos(a))]
+        pose["hand_R"] = [ab(-1, 20.0)]
+        pose["neck"] = [("X", 6.0)]
+        pose["head"] = [("X", 8.0 + 2.0 * math.sin(a)), ("Y", -6.0), ("Z", 4.0 * math.sin(TAU * t / T))]
+        pose["chest"] = [("Y", -2.0)]
+        return pose
+
+    def flee(self, t):
+        # same legs as run (shared native speed); both hands clamp over the head
+        pose = self.gait(t, 0.6, RUN_STANCE, self.run_D, self.run_drop, RUN_BOB, 0.13, 10.0, 0.0, 0.0,
+                         run=True, pitch=6.0, fore_amp=0.0)
+        shake = math.sin(TAU * 2 * t / 0.6)
+        for side, sfx in ((1, "_L"), (-1, "_R")):
+            pose["upper_arm" + sfx] = [ab(side, 128.0 + 4.0 * shake), ("X", 10.0)]
+            pose["forearm" + sfx] = [ab(side, 60.0)]
+            pose["hand" + sfx] = [ab(side, 20.0)]
+        pose["neck"] = [("X", 6.0)]
+        pose["head"] = [("X", 8.0 + 2.0 * shake)]
+        return pose
+
 
 WALK_STANCE, RUN_STANCE = 0.58, 0.38
-ACTION_ORDER = ["idle", "walk", "run", "wave", "talk", "sit", "type", "read", "coffee", "stretch", "exercise", "billiards", "game"]
+RUN_BOB = 0.024
+# new clips are appended so the indices of the first 13 stay stable for runtime code
+ACTION_ORDER = ["idle", "walk", "run", "wave", "talk", "sit", "type", "read", "coffee", "stretch", "exercise", "billiards",
+                "game", "start", "stop", "turn", "lift", "bike", "draw", "cable", "type_fast", "surprised", "rub_head",
+                "flee"]
 
 
 def bake_actions(arm, P, anim_spec, fps):
@@ -1921,7 +2177,7 @@ def bake_actions(arm, P, anim_spec, fps):
     A.walk_drop = 0.058 * P.s
     A.run_drop = 0.070 * P.s
     A.walk_D = A.solve_stride(WALK_STANCE, A.walk_drop, 0.012)
-    A.run_D = A.solve_stride(RUN_STANCE, A.run_drop, 0.018)
+    A.run_D = A.solve_stride(RUN_STANCE, A.run_drop, RUN_BOB)
     rest = {b.name: b.matrix_local.to_quaternion() for b in arm.data.bones}
     rest_inv = {k: q.inverted() for k, q in rest.items()}
     ad = arm.animation_data_create()

@@ -1,5 +1,11 @@
 // Indonesian -> English for static text and attributes in index.html.
 export const EN_HTML: Record<string, string> = {
+  "Suara": "Sound",
+  "Bisukan semua suara": "Mute all sound",
+  "Utama": "Master",
+  "Musik": "Music",
+  "Efek": "Effects",
+  "Suara: nyalakan atau bisukan musik dan efek": "Sound: turn music and effects on or off",
   "Bahasa": "Language",
   "Kantor RPG, kantor virtual 3D (simulasi)": "Kantor RPG, 3D virtual office (simulation)",
   "Lewati ke direktori": "Skip to directory",

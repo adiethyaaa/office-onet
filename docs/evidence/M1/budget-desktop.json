@@ -1,15 +1,15 @@
 {
  "label": "fixed route benchmark; client-specific measurement",
- "seconds": 25.1,
- "frames": 150,
- "fpsAverage": 6,
- "frameMsMedian": 150,
- "frameMsP95": 263,
- "frameMsMax": 1029.8,
- "framesOver33ms": 148,
- "dropRate": 0.987,
- "distanceM": 22,
- "floorSwitches": 0,
+ "seconds": 25,
+ "frames": 355,
+ "fpsAverage": 14.2,
+ "frameMsMedian": 67.2,
+ "frameMsP95": 96,
+ "frameMsMax": 509.4,
+ "framesOver33ms": 349,
+ "dropRate": 0.983,
+ "distanceM": 33,
+ "floorSwitches": 1,
  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)",
  "lowQuality": true,
  "pixelRatio": 1,
@@ -17,32 +17,32 @@
   1366,
   820
  ],
- "jsHeapMB": 51,
+ "jsHeapMB": 57.5,
  "stats": {
-  "drawCalls": 56,
-  "triangles": 186094,
-  "geometries": 76,
-  "textures": 48,
+  "drawCalls": 41,
+  "triangles": 133437,
+  "geometries": 115,
+  "textures": 51,
   "floorTriangles": {
-   "L1": 122846,
-   "L2": 100080
+   "L1": 122734,
+   "L2": 99968
   },
   "furnitureKit": {
    "loaded": 54,
    "failed": []
   },
   "npcLod": {
-   "lod0": 2,
-   "lod1": 4
+   "lod0": 1,
+   "lod1": 1
   }
  },
  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.37 Safari/537.36",
  "peak": {
   "drawCalls": 57,
-  "triangles": 211782,
+  "triangles": 211750,
   "at": [
-   15.743531095441755,
-   6.400737182512793
+   16.961675775034593,
+   10.047577694121498
   ],
   "floor": "L1"
  },
@@ -63,6 +63,6 @@
   "gpuRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)"
  },
  "url": "?perf=route&seconds=25",
- "measuredAt": "2026-10-10T14:14:07.594Z",
+ "measuredAt": "2026-10-13T07:06:31.908Z",
  "note": "peak over fixed 25 s route; SwiftShader container, FPS not a device result"
 }

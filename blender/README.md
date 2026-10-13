@@ -62,7 +62,7 @@ Tujuan: memperkecil unduhan awal app (target proyek R2: GLB karakter + furnitur 
 
 ## Karakter (M1)
 
-Status M1: tujuh karakter original (Budi/CEO, Max, Hugo, Nova, Bruno, Kevin, Rex) dibangun sepenuhnya oleh script dari `design/characters.json`, di-rig pada satu skeleton bersama, diberi 13 klip animasi, disimpan sebagai `.blend` sumber dan GLB runtime, lalu dibuka ulang dan divalidasi. Ini art procedural stylized semi-anime (primitif halus: superellipsoid, loft, tube), bukan sculpt tangan final. Tidak ada aset, tekstur, atau karakter pihak ketiga; semua warna adalah faktor material.
+Status M1: tujuh karakter original (Budi/CEO, Max, Hugo, Nova, Bruno, Kevin, Rex) dibangun sepenuhnya oleh script dari `design/characters.json`, di-rig pada satu skeleton bersama, diberi 13 klip animasi (v2.0: 24 klip, lihat ADR-018), disimpan sebagai `.blend` sumber dan GLB runtime, lalu dibuka ulang dan divalidasi. Ini art procedural stylized semi-anime (primitif halus: superellipsoid, loft, tube), bukan sculpt tangan final. Tidak ada aset, tekstur, atau karakter pihak ketiga; semua warna adalah faktor material.
 
 ### Tool yang dipakai
 
@@ -143,7 +143,7 @@ Tidak ada random tanpa seed: jitter rambut dan noda cat memakai `random.Random("
 Per karakter, dari `.blend` yang dibuka ulang (tambahan hardening: satu material `kantor_atlas` di file dan di tiap mesh, gambar atlas ter-pack 32 px dengan interpolasi Closest, warna tiap sel sama dengan characters.json, semua UV di pusat sel, zona di extras mencakup semua zona terpakai, lima shape key dengan delta minimal 2 mm hanya pada vertex ber-bobot `head`, `lod1` ter-skin, paling banyak 5000 segitiga, tanpa shape key, bbox `lod1` mengikuti LOD0 dalam 3 cm pada tiap klip, `talk` di atas klip `talk` hanya menggerakkan kepala):
 - armature ada, set bone sama dengan `rig.bones`; node rambut sesuai spec/varian; extras default rambut;
 - semua mesh punya modifier Armature ke `rig`, tidak ada vertex tanpa bobot, vertex group hanya nama bone;
-- nama action persis 13 klip, durasi tiap klip sesuai spec (toleransi 1 frame), NLA track per klip;
+- nama action persis sesuai `design/characters.json` animations (24 klip sejak v2.0), durasi tiap klip sesuai spec (toleransi 1 frame), NLA track per klip;
 - segitiga LOD0 terlihat (body + rambut default + prop) di bawah budget (NPC 15k, pemain 25k), dan untuk CEO total semua varian juga di bawah 25k;
 - tinggi bounding box pose rest dalam 5 persen `heightM`, kaki pada Z 0 (toleransi 4 mm), mata (zona `eye_iris`) di sisi -Y (arah hadap);
 - tiap klip: mesh tidak menembus lantai lebih dari 6 mm, ada kaki yang menyentuh lantai (klip berdiri), panggul pada kursi 0.45 m dalam 3 cm (sit/type/game);

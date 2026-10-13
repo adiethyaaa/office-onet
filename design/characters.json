@@ -113,6 +113,51 @@
       "durationS": 1.6,
       "loop": true
     }
+,
+    "start": {
+      "durationS": 0.25,
+      "loop": false
+    },
+    "stop": {
+      "durationS": 0.3,
+      "loop": false
+    },
+    "turn": {
+      "durationS": 0.35,
+      "loop": false
+    },
+    "lift": {
+      "durationS": 1.6,
+      "loop": true
+    },
+    "bike": {
+      "durationS": 1.0,
+      "loop": true
+    },
+    "draw": {
+      "durationS": 2.0,
+      "loop": true
+    },
+    "cable": {
+      "durationS": 2.0,
+      "loop": true
+    },
+    "type_fast": {
+      "durationS": 0.5,
+      "loop": true
+    },
+    "surprised": {
+      "durationS": 0.6,
+      "loop": false
+    },
+    "rub_head": {
+      "durationS": 1.2,
+      "loop": true
+    },
+    "flee": {
+      "durationS": 0.6,
+      "loop": true
+    }
   },
   "hairStyles": {
     "short_tuft": "short cropped cap, five short bangs and one curled crown tuft",

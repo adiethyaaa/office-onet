@@ -334,6 +334,6 @@ def test_validation_report_passed():
     assert sorted(data["characters"]) == sorted(IDS)
     for cid, c in data["characters"].items():
         clips = c["blend_report"]["clips"]
-        for gait in ("walk", "run"):
+        for gait in ("walk", "run", "flee"):
             assert clips[gait]["slip_ratio"] < 0.05, (cid, gait, clips[gait])
         assert all(c["lod1_bbox_dev_m"] <= 0.03 for c in clips.values()), cid

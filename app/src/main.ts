@@ -1,3 +1,5 @@
+import { sound } from './audio';
+import { loadAudioPrefs, type AudioPrefs } from './audio/prefs';
 import './styles.css';
 import worldJson from '@design/world.json';
 import wallsJson from '@design/derived/walls.json';
@@ -128,6 +130,25 @@ function wireGamepad(world: import('./input/gamepad').PadWorld | null) {
   if ([...(navigator.getGamepads?.() ?? [])].some((p) => p && p.connected)) start();
 }
 
+const AUDIO_FIELDS = [['audioMaster', 'master'], ['audioMusic', 'music'], ['audioSfx', 'sfx']] as const;
+function syncAudioForm(form: HTMLFormElement) {
+  const p = sound.engine?.prefs ?? loadAudioPrefs();
+  (form.elements.namedItem('audioMuted') as HTMLInputElement).checked = p.muted;
+  for (const [name, key] of AUDIO_FIELDS) {
+    (form.elements.namedItem(name) as HTMLInputElement).value = String(Math.round(p[key] * 100));
+    (form.elements.namedItem(`${name}Out`) as HTMLOutputElement).value = `${Math.round(p[key] * 100)}%`;
+  }
+}
+function readAudioForm(form: HTMLFormElement) {
+  const next: Partial<AudioPrefs> = { muted: (form.elements.namedItem('audioMuted') as HTMLInputElement).checked };
+  for (const [name, key] of AUDIO_FIELDS) {
+    const v = Number((form.elements.namedItem(name) as HTMLInputElement).value) / 100;
+    next[key] = v;
+    (form.elements.namedItem(`${name}Out`) as HTMLOutputElement).value = `${Math.round(v * 100)}%`;
+  }
+  sound.with((en) => { en.setPrefs(next); en.sfx('ui'); });
+}
+
 function wireSettings(game: Game | null, s: Settings) {
   const dlg = $('dlg-settings') as HTMLDialogElement;
   const form = dlg.querySelector('form')!;
@@ -138,6 +159,7 @@ function wireSettings(game: Game | null, s: Settings) {
     (form.elements.namedItem('reducedMotion') as HTMLInputElement).checked = s.reducedMotion;
     (form.elements.namedItem('visitor') as HTMLInputElement).checked = s.visitor;
     (form.elements.namedItem('padProfile') as RadioNodeList).value = s.padProfile;
+    syncAudioForm(form);
     void padLoad().then((v) => { v.setProfile(s.padProfile); v.start(); });
     $('settings-renderer').textContent = game ? t('Renderer: {name}. Kualitas aktif: {quality}. Perubahan kualitas berlaku setelah muat ulang.', { name: game.rendererName, quality: game.lowQuality ? t('ringan') : t('tinggi') }) : t('Mode direktori: renderer 3D tidak aktif.');
     openDialog(dlg, e.currentTarget as HTMLElement);
@@ -146,6 +168,10 @@ function wireSettings(game: Game | null, s: Settings) {
   let padView: import('./ui/pad-settings').PadSettings | null = null;
   const padLoad = () => import('./ui/pad-settings').then((m) => (padView ??= new m.PadSettings($('pad-settings'), s.padProfile)));
   dlg.addEventListener('close', () => padView?.stop());
+  form.addEventListener('input', (e) => {
+    const n = (e.target as HTMLInputElement).name;
+    if (n?.startsWith('audio')) readAudioForm(form);
+  });
   form.addEventListener('change', () => {
     const l = (form.elements.namedItem('lang') as RadioNodeList).value;
     if (l !== lang && (l === 'id' || l === 'en')) return setLang(l);
@@ -271,6 +297,15 @@ function boot() {
     // Test-only boundary helper: occupies a slot as an NPC would.
     reserveForTest: (slot: string, npc: string) => game.npcs.sim.reservations.set(slot, { npc, expires: game.npcs.sim.time + 600 }),
     reservations: () => [...game.npcs.sim.reservations.entries()].map(([k, r]) => [k, r.npc]),
+    miniGame: () => game.miniGame,
+    scold: (id: string, kind = 'gulungan') => game.scold(id, kind),
+    scolds: () => game.scolds,
+    talkTo: (id: string) => game.talkTo(id),
+    npcClip: (id: string) => { const n = game.npcs.sim.npcs.find((x) => x.id === id); return n ? game.npcs.clipFor(n) : null; },
+    setWorkStatus: (id: string, status: string) => { const n = game.npcs.sim.npcs.find((x) => x.id === id); if (n) n.workStatus = status as typeof n.workStatus; },
+    lastOneShot: () => game.player.avatar.lastOneShot,
+    miniGameState: () => import('./minigames/host').then((m) => m.currentMiniGame()?.state() ?? null),
+    audio: () => ({ loaded: sound.loaded, track: sound.engine?.currentTrack ?? null, played: { ...(sound.engine?.played ?? {}) }, prefs: sound.engine?.prefs ?? loadAudioPrefs() }),
     renderer: game.rendererName,
     // Test helper: stand the CEO on the nearest cell reachable in the current
     // mode (never inside a locked room). For tests that check what happens

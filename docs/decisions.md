@@ -72,3 +72,14 @@ Keputusan Budi: opsi 3, satu percakapan penuh.
 - Tiga pilihan RPG berlaku hanya selama balasan itu masih balasan terbaru di chat; obrolan Telegram berikutnya membuatnya kedaluwarsa (410).
 - Bot tanpa sesi Telegram tetap memakai percakapan RPG sendiri. Gateway Telegram yang sedang menyimpan riwayat di memori bisa belum melihat giliran dari RPG sampai sesinya dimuat ulang; konteks tetap tersimpan di sesi yang sama.
 - Jalan mundur: kembalikan rilis backend sebelumnya; kolom `channel` diabaikan versi lama.
+
+## ADR-018: PRD v2.0, klip animasi baru, suara sintesis, mini game lazy (2026-10-13)
+
+Keputusan Budi: semua fitur game masuk v2.0 (PRD/PRD-v2.0.md), v3 multiplayer dilewati.
+
+- Animasi: 11 klip baru (start, stop, turn, lift, bike, draw, cable, type_fast, surprised, rub_head, flee) dan klip run dibuat ulang. GLB karakter naik 11,3% (total 4,54 MB menjadi 5,06 MB; terbesar ch-ceo 0,68 MB, tetap di bawah 1,5 MB per berkas). Batas kategori karakter 4,6 MB menjadi 5,75 MB dan muat awal 6,5 MB menjadi 7,15 MB, sesuai PRD v2.0 bagian 3 (kenaikan maksimal 25% per karakter, dijaga tes per karakter di tests/py/test_asset_size.py).
+- Runtime memadukan idle, walk dan run berdasarkan kecepatan (satu fase siklus), memainkan start/stop/turn sebagai one-shot berbobot, dan memutar badan (condong) di kode. Klip yang belum ada di GLB lama jatuh ke klip lama, jadi app tetap jalan dengan aset v1.1.
+- Suara disintesis Web Audio saat berjalan, bukan berkas audio: tanpa lisensi pihak ketiga, sekitar 10 kB kode, dimuat saat tombol pertama ditekan (aturan autoplay browser). Pengganti rencana Opus/AAC CC0 di draf PRD.
+- Mini game: satu host (app/src/minigames/host.ts) dan 14 modul kanvas 2D, masing-masing chunk terpisah. Muat awal app naik 14,2 kB (5,5 kB gzip), di bawah batas 15 kB.
+- Tegur hanya visual: tidak ada panggilan ke backend, agen atau Telegram; persona yang agennya sedang bekerja ditolak.
+

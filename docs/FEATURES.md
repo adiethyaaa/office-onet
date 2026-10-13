@@ -145,13 +145,46 @@ When the avatar is near something usable, a hint appears at the bottom of the sc
 | Directory board | Open the directory |
 | Wall boards | Open the Handoff Board, Task List, or Activity Log |
 | Gallery works | View the work |
-| Coffee machine | Make coffee |
-| Billiard table | Play billiards: each shot is random, score kept only for the session |
-| Game console | Play a game round, no saved score |
-| Gym equipment | Work out |
-| NPC character | Greet, then open the profile and dialog |
+| Facilities (see 4a) | Open a mini game |
+| NPC character | Greet, then open the profile, dialog and **Reprimand** |
 
-These activities are virtual. They do not change anyone's work status. If a spot is in use by an NPC, the app tells you who is using it. The **Selesai** (Done) button or E ends the activity.
+Mini games and activities do not change anyone's work status. If a spot is in use by an NPC, the app tells you who is using it; while you play, NPCs see the spot as taken.
+
+## 4a. Mini games (v2.0)
+
+Each facility opens its own 2D game. A game downloads only when opened, so the office stays light. Controls are the same everywhere: keyboard (arrows/WASD, Space or J = A, K = B, L = X, I = Y), touch buttons on phones, and gamepads. Esc or P pauses. The top 10 scores are kept in the browser.
+
+| Place | Game | What you do |
+|---|---|---|
+| Treadmill (Gym) | Morning Run | Alternate left and right on the beat for 60 seconds |
+| Dumbbell rack (Gym) | Weightlifting | Pick 5/10/15 kg, press when the marker is in the green zone, 10 reps |
+| Mat (Gym) | Stretching | Repeat a move sequence that keeps growing |
+| Billiard table | 8-Ball Pool | 8-ball rules against an NPC, cue with an aim line |
+| Coffee bar (Lounge) | Barista | Grind, extract, steam milk, latte art for 5 orders |
+| Server rack | Server Down | Plug cables into the right ports, labels from the real ICT port map |
+| Hugo's drafting table | Floor Plan Puzzle | Put the real office rooms in place before time runs out |
+| Kevin's easel | Poster Design | Pick background, title, icon, colours; scored on contrast and fit to the brief |
+| Bookshelf (Library) | Library Quiz | 5 questions about this office and ICT |
+| Arcade cabinets and TV (Game room) | Game Station | 10-slot menu, 5 filled |
+
+Game Station:
+
+| Slot | Game | What you do |
+|---|---|---|
+| 1 | Drone Race | Top-down race on 3 tracks against 3 CPUs, 3 boosts |
+| 2 | Office Brawl | 2D one-on-one fights, 9 characters with role-based special moves |
+| 3 | Floor Hopper | Platformer, 6 levels from the lobby to the roof |
+| 4 | Cable Link | Rotate cable tiles until every home links to the OLT, 20 levels |
+| 5 | Bomb Arena | Drop bombs, break filing cabinets, beat 3 CPUs, best of 3 |
+| 6 to 10 | Coming soon | Empty slots for future games |
+
+## 4b. Sound
+
+Footsteps, doors, the lift and background music that changes per area. Nearby effects get louder as you approach. All sound is generated in the browser, with no audio files. Adjust it in **Pengaturan > Suara** (Settings > Sound: master, music, effects, mute). **V** mutes sound in the office, **M** inside a mini game.
+
+## 4c. Reprimand
+
+The NPC profile card offers three props: swat with a paper roll, bonk with a toy hammer, or throw a paper ball. The NPC jumps, stars spin over its head, it rubs its head and hurries to its desk for 20 seconds. It is animation only: nothing is sent to the agent or Telegram. An NPC whose agent is working cannot be reprimanded.
 
 ## 5. NPC characters
 

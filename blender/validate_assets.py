@@ -57,7 +57,9 @@ REPORT = EVID / "blender-characters-validate.json"
 REPORT_TXT = EVID / "blender-characters-validate.txt"
 SCRIPT = "blender/characters/build_characters.py"
 RAW_GLB = ROOT / "blender" / "out" / "raw-glb" / "characters"  # Blender export, optimiser input
-SEATED = {"sit", "type", "game"}
+SEATED = {"sit", "type", "game", "bike", "type_fast"}
+# flee reuses the run legs, so it is held to the run native speed
+GAIT_SPEED = {"walk": "walk", "run": "run", "flee": "run"}
 MIN_MORPH_M = 0.002  # an expression must move some face vertex at least 2 mm
 LOD_BBOX_TOL = 0.03  # lod1 world bbox vs LOD0 world bbox in every sampled pose
 
@@ -412,8 +414,8 @@ def check_blend(cid, spec, data, C: Check):
             C(f"{name}: a foot touches the floor", floor_touch <= 0.03, round(floor_touch, 4))
             if lod1 is not None:
                 C(f"{name}: lod1 no floor penetration (6 mm tolerance)", lod_min_z >= -0.006, round(lod_min_z, 4))
-        if name in ("walk", "run"):
-            speed = rig.get(f"kantor_{name}_native_speed_mps")
+        if name in GAIT_SPEED:
+            speed = rig.get(f"kantor_{GAIT_SPEED[name]}_native_speed_mps")
             planted = [(f, p) for f, p in samples if p.z <= ankle_rest + 0.002]
             vels = []
             for (f0, p0), (f1, p1) in zip(planted, planted[1:]):

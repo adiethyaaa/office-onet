@@ -18,6 +18,9 @@ import type { WorkStatus } from '../sim/idle';
 import { DoorController } from '../world/doors';
 import { DoorMeshes } from '../world/door-meshes';
 import dialogueJson from '@design/dialogue.json';
+import { facilityGame, FACILITY_TITLE } from '../minigames/facility';
+import { sound } from '../audio';
+import { trackForRoom } from '../audio/rooms';
 
 const DIALOGUE = dialogueJson as { personas: Record<string, string[]> };
 
@@ -277,7 +280,10 @@ export class Game {
       }
     }
     for (const slot of this.world.activitySlots) {
-      list.push({ id: `slot:${slot.id}`, kind: 'fixture', floor: slot.floor, pos: slot.pos, radius: 0.85, label: slotVerb(slot), run: () => this.startActivity(slot) });
+      const sfx = this.world.fixtures.find((f) => f.id === slot.fixture);
+      const sg = sfx ? facilityGame(sfx.type, sfx.room) : null;
+      const label = sg ? t('Main {game}', { game: t(FACILITY_TITLE[sg] ?? sg) }) : slotVerb(slot);
+      list.push({ id: `slot:${slot.id}`, kind: 'fixture', floor: slot.floor, pos: slot.pos, radius: 0.85, label, run: () => this.startActivity(slot) });
     }
     for (const fx of this.world.fixtures) {
       const board = BOARD_FIXTURES[fx.id];
@@ -285,7 +291,7 @@ export class Game {
         list.push({ id: fx.id, kind: 'fixture', floor: fx.floor, pos: fx.pos, radius: Math.max(fx.size[0], fx.size[1]) / 2 + 0.9, label: t('Buka {board}', { board: t(BOARD_LABEL[board]) }), run: () => this.onBoard?.(board) });
         continue;
       }
-      const inter = this.world.catalog[fx.type]?.interaction;
+      const inter = this.world.catalog[fx.type]?.interaction ?? (facilityGame(fx.type, fx.room) ? 'minigame' : undefined);
       if (!inter) continue;
       list.push({ id: fx.id, kind: 'fixture', floor: fx.floor, pos: fx.pos, radius: Math.max(fx.size[0], fx.size[1]) / 2 + 0.9, label: this.fixtureLabel(fx, inter), run: () => this.useFixture(fx, inter) });
     }
@@ -293,6 +299,8 @@ export class Game {
   }
 
   private fixtureLabel(fx: Fixture, inter: string): string {
+    const game = facilityGame(fx.type, fx.room);
+    if (game) return t('Main {game}', { game: t(FACILITY_TITLE[game] ?? game) });
     switch (inter) {
       case 'blueprint': return t('Baca denah dan ICT');
       case 'directory': return t('Buka direktori');
@@ -318,6 +326,7 @@ export class Game {
       else if (k === 'b') this.onBoard?.('handoffs');
       else if (k === 'p') this.onMap?.();
       else if (k === 'c') this.onAgentPicker?.();
+      else if (k === 'v') sound.with((en) => toast(en.toggleMute() ? t('Suara dimatikan (V untuk menyalakan).') : t('Suara dinyalakan.'), 1400));
       else if (k === 'escape' && this.activity) this.endActivity(true);
     };
     $('touch-interact').addEventListener('click', () => this.interact());
@@ -391,6 +400,7 @@ export class Game {
       this.player.pos = [...(end.arrive ?? end.point)] as Vec2;
       if (end.facing !== undefined) this.player.facing = end.facing;
       this.floorSwitches++;
+      sound.sfx(vl.type === 'lift' || vl.type === 'elevator' ? 'lift' : 'step');
       this.applyFloorVisibility();
       toast(`${this.world.floors.find((f) => f.id === to)!.name}`);
     }, (vl.travelSeconds ?? 2) * 120);
@@ -398,6 +408,8 @@ export class Game {
 
   private useFixture(fx: Fixture, inter: string) {
     if (inter === 'directory') { this.toggleDirectory(true); return; }
+    const game = facilityGame(fx.type, fx.room);
+    if (game) { this.openFacilityGame(fx, game); return; }
     if (inter === 'blueprint') { showBlueprintCard(this.world); return; }
     if (inter === 'artwork') { showArtworkCard(fx); return; }
     // Activities without a backend run on the fixture's own slots so NPCs see
@@ -407,6 +419,48 @@ export class Game {
     if (free) this.startActivity(free);
     else if (slots.length) toast(t('Sedang dipakai {name}. Coba lagi nanti.', { name: this.slotTakenBy(slots[0].id) ?? '' }));
     else toast(t('{label}: aktivitas virtual, tidak mengubah status kerja.', { label: this.fixtureLabel(fx, inter) }));
+  }
+
+  /** Mini game currently open from a facility (PRD v2.0 REQ-MG). */
+  miniGame: string | null = null;
+
+  /**
+   * Walk-up use of a facility: hold a free slot (NPCs see it taken), then open
+   * the game. The arcade cabinet and TV open the Game Station launcher.
+   */
+  openFacilityGame(fx: Fixture, game: string, slot?: ActivitySlot) {
+    if (this.miniGame) return;
+    const slots = slot ? [slot] : this.world.activitySlots.filter((sl) => sl.fixture === fx.id);
+    const free = slots.find((sl) => !this.slotTakenBy(sl.id));
+    if (slots.length && !free) { toast(t('Sedang dipakai {name}. Coba lagi nanti.', { name: this.slotTakenBy(slots[0].id) ?? '' })); return; }
+    if (this.activity) this.endActivity(false);
+    if (free) {
+      const fr = this.floors.get(free.floor)!;
+      const spot = fr.nav[this.mode].nearestWalkable(free.pos, 0.9, fr.reach[this.mode]);
+      if (spot) { this.player.pos = spot; this.player.facing = free.facing; }
+      this.npcs.sim.reservations.set(free.id, { npc: PLAYER_ID, expires: Number.POSITIVE_INFINITY });
+    }
+    this.miniGame = game;
+    const done = () => {
+      this.miniGame = null;
+      if (free && this.npcs.sim.reservations.get(free.id)?.npc === PLAYER_ID) this.npcs.sim.reservations.delete(free.id);
+      this.input.clear();
+      sound.music(this.areaTrack());
+    };
+    toast(t('Membuka {game}...', { game: t(FACILITY_TITLE[game] ?? game) }), 1200);
+    const common = { reducedMotion: this.settings.reducedMotion, padProfile: () => this.settings.padProfile, playerName: this.playerName };
+    if (game === 'arcade') {
+      void import('../minigames/arcade').then((m) => m.openArcade({ ...common, onClose: done })).catch(() => { done(); toast(t('Permainan gagal dimuat.')); });
+    } else {
+      void import('../minigames/host').then((m) => m.openMiniGame(game, { ...common, onClose: done })).catch(() => { done(); toast(t('Permainan gagal dimuat.')); });
+    }
+  }
+
+  /** Display name used on the local leaderboards. */
+  playerName = 'Budi';
+
+  private areaTrack(): string {
+    return trackForRoom(this.roomId, this.player.floor);
   }
 
   private activityUntil = 0;
@@ -420,6 +474,9 @@ export class Game {
   }
 
   startActivity(slot: ActivitySlot) {
+    const sfx = this.world.fixtures.find((f) => f.id === slot.fixture);
+    const sgame = sfx ? facilityGame(sfx.type, sfx.room) : null;
+    if (sfx && sgame) { this.openFacilityGame(sfx, sgame, slot); return; }
     if (this.activity?.slot.id === slot.id) { this.activityAction(); return; }
     if (this.activity) this.endActivity(false);
     const taker = this.slotTakenBy(slot.id);
@@ -603,6 +660,7 @@ export class Game {
       el('div', { class: 'row' }),
     ];
     (body[body.length - 1] as HTMLElement).append(more, ...(profile && this.onAgent ? [command] : []));
+    body.push(this.scoldRow(id, busy));
     $('dlg-info-title').textContent = npc.name;
     $('dlg-info-body').replaceChildren(...body);
     const dlg = $('dlg-info') as HTMLDialogElement;
@@ -611,6 +669,58 @@ export class Game {
       this.talkingTo = null;
     }, { once: true });
     openDialog(dlg);
+  }
+
+  /** Reprimands done this visit (tests, HUD). */
+  scolds = 0;
+
+  /** Tegur buttons for the persona card (REQ-TEGUR-01, -04). */
+  private scoldRow(id: string, busy: boolean): HTMLElement {
+    const box = el('fieldset', { class: 'scold' });
+    box.append(el('legend', {}, t('Tegur (visual saja)')));
+    if (busy) {
+      box.append(el('p', { class: 'sim-note' }, t('Sedang bekerja: agennya tidak bisa ditegur.')));
+      return box;
+    }
+    const row = el('div', { class: 'row' });
+    const props: [string, string][] = [['gulungan', t('Tepuk gulungan kertas')], ['palu', t('Ketuk palu mainan')], ['bola', t('Lempar bola kertas')]];
+    for (const [kind, label] of props) {
+      const b = el('button', { type: 'button', class: 'btn', 'data-scold': kind }, label);
+      b.addEventListener('click', () => { ($('dlg-info') as HTMLDialogElement).close(); void this.scold(id, kind); });
+      row.append(b);
+    }
+    box.append(row, el('p', { class: 'sim-note' }, t('Tidak mengirim apa pun ke agen atau Telegram.')));
+    return box;
+  }
+
+  /**
+   * Slapstick reprimand: prop flies or swings, the persona reacts, says a line
+   * and hurries back to its desk for 20 s. Pure animation (REQ-TEGUR-05).
+   */
+  async scold(id: string, kind: string): Promise<string> {
+    const npc = this.npcs.sim.npcs.find((n) => n.id === id);
+    if (!npc) return 'missing';
+    // Resume first so the persona is free to walk away after the hit.
+    if (npc.phase === 'paused') this.npcs.sim.resume(id);
+    const res = this.npcs.sim.scold(id);
+    if (res === 'working') { toast(t('{name} sedang bekerja: agennya tidak bisa ditegur.', { name: npc.name })); return res; }
+    if (res === 'cooldown') { toast(t('Tunggu sebentar sebelum menegur {name} lagi.', { name: npc.name })); return res; }
+    if (res !== 'ok') return res;
+    this.scolds++;
+    const m = await import('./scold');
+    const elev = this.world.floors.find((f) => f.id === npc.floor)!.elevation;
+    const from = toThree(this.player.pos[0], this.player.pos[1], elev + 1.2);
+    const to = toThree(npc.pos[0], npc.pos[1], elev + 1.75);
+    const prop = m.SCOLD_PROPS.find((p) => p.id === kind) ?? m.SCOLD_PROPS[0];
+    this.player.avatar.react('wave', 'idle');
+    sound.sfx('whoosh');
+    m.animateProp(this.scene, prop.id, from, to, this.settings.reducedMotion, () => {
+      this.spatial(prop.sfx, npc.floor, npc.pos, 1.2);
+      this.npcs.react(id, this.settings.reducedMotion);
+      const lines = m.SCOLD_LINES[id] ?? [m.SCOLD_FALLBACK];
+      toast(`${npc.name}: "${t(lines[this.scolds % lines.length])}"`, 2600);
+    });
+    return res;
   }
 
   /** Plan-view state for the minimap and floor map: the CEO and every persona. */
@@ -672,6 +782,8 @@ export class Game {
     const raw = this.timer.getDelta();
     // Simulation clamps dt so a stall cannot tunnel the avatar; metrics keep the raw value.
     const dt = Math.min(0.1, raw);
+    // The mini game layer covers the office; skip the 3D frame (the host runs its own loop).
+    if (this.miniGame && document.documentElement.hasAttribute('data-minigame')) return;
     this.lastRawMs = raw * 1000;
     this.frameTimes.push(this.lastRawMs);
     if (this.frameTimes.length > 4000) this.frameTimes.splice(0, 1000);
@@ -700,17 +812,20 @@ export class Game {
       toast(this.player.ghostBy === 'run' ? t('Lari: menembus NPC.') : t('Terhalang NPC 2 detik: menembus.'), 1400);
     }
     const speed = moved / Math.max(dt, 1e-4);
+    this.footsteps(moved, speed);
     if (this.activity) {
       this.player.avatar.play(slotClip(this.activity.slot));
       this.player.avatar.setFacing(this.activity.slot.facing);
       if (Math.floor(performance.now() / 500) !== Math.floor((performance.now() - dt * 1000) / 500)) this.renderActivity();
+      this.player.avatar.settle();
     } else if (performance.now() > this.activityUntil || speed > 0.2) {
-      this.player.avatar.play(speed > 2.4 ? 'run' : speed > 0.2 ? 'walk' : 'idle');
+      this.player.avatar.locomotion(speed, dt, this.player.turnRate, this.settings.reducedMotion);
     }
     this.player.avatar.setGroundSpeed(speed);
     this.player.avatar.update(dt, Math.min(1, speed / 2), this.settings.reducedMotion);
     const pv = this.playerVec();
     this.player.avatar.root.position.copy(pv);
+    this.player.avatar.lookAt(this.activity ? null : this.lookTarget(), dt, this.settings.reducedMotion);
     if (this.activity?.slot.pose === 'sit') {
       const el = this.world.floors.find((f) => f.id === this.activity!.slot.floor)!.elevation;
       this.player.avatar.root.position.copy(toThree(this.activity.slot.pos[0], this.activity.slot.pos[1], el));
@@ -724,6 +839,7 @@ export class Game {
     this.npcs.update(dt, this.player.floor, this.rig.camera, this.stage.clientWidth, this.stage.clientHeight, this.settings.reducedMotion, this.player.pos, labelBlockers);
     const agents = [{ floor: this.player.floor, pos: this.player.pos }, ...this.npcs.sim.npcs.map((n) => ({ floor: n.floor, pos: n.pos }))];
     this.doors.update(dt, agents, this.settings.visitor, this.settings.reducedMotion);
+    for (const d of this.doors.justOpened) this.spatial('door', d.floor, d.centre);
     this.doorMeshes.sync(this.world);
     $('sim-clock').textContent = this.npcs.sim.clockLabel();
     this.updateFocus(dt);
@@ -763,11 +879,54 @@ export class Game {
     void dt;
   }
 
+  /**
+   * Positional one-shot: louder when near the CEO, silent beyond 14 m or on
+   * another floor, panned by the angle relative to the camera.
+   */
+  spatial(name: string, floor: FloorId, pos: Vec2, base = 1) {
+    if (floor !== this.player.floor) return;
+    const dx = pos[0] - this.player.pos[0];
+    const dy = pos[1] - this.player.pos[1];
+    const d = Math.hypot(dx, dy);
+    if (d > 14) return;
+    const gain = base / (1 + d * d * 0.06);
+    const right = this.rig.planDirection(1, 0);
+    const pan = d > 0.3 ? (dx * right[0] + dy * right[1]) / d : 0;
+    sound.sfx(name, { gain, pan: pan * 0.8 });
+  }
+
+  /** Nearest persona within 3 m on this floor, for the CEO's head turn. */
+  private lookTarget(): THREE.Vector3 | null {
+    let best: Vec2 | null = null;
+    let bd = 3;
+    for (const n of this.npcs.sim.npcs) {
+      if (n.floor !== this.player.floor) continue;
+      const d = Math.hypot(n.pos[0] - this.player.pos[0], n.pos[1] - this.player.pos[1]);
+      if (d < bd) { bd = d; best = n.pos; }
+    }
+    if (!best) return null;
+    const elev = this.world.floors.find((f) => f.id === this.player.floor)!.elevation;
+    return toThree(best[0], best[1], elev + 1.4);
+  }
+
+  private stride = 0;
+  /** One step sound per stride: ~0.75 m walking, ~1.1 m running. */
+  private footsteps(moved: number, speed: number) {
+    if (moved <= 0) { this.stride = 0; return; }
+    this.stride += moved;
+    const len = speed > 2.4 ? 1.1 : 0.75;
+    if (this.stride >= len) {
+      this.stride -= len;
+      sound.sfx('step', { gain: speed > 2.4 ? 0.7 : 0.45, rate: 0.9 + Math.random() * 0.2 });
+    }
+  }
+
   private updateRoom() {
     let id: string | null = null;
     for (const r of this.world.rooms) if (r.floor === this.player.floor && insidePoly(this.player.pos, r.polygon)) { id = r.id; break; }
     if (id !== this.roomId) {
       this.roomId = id;
+      if (!this.miniGame) sound.music(this.areaTrack());
       const r = this.world.rooms.find((x) => x.id === id);
       $('room-name').textContent = r ? r.name : t('Di luar ruang');
     }

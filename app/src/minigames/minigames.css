@@ -1,0 +1,62 @@
+/* Mini game host (src/minigames/host.ts). Lazy: imported with the host chunk.
+   Uses the office tokens from styles.css, so both themes and contrast checks apply. */
+.mg-host {
+  position: fixed; inset: 0; z-index: 40; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; grid-template-columns: minmax(0, 1fr);
+  background: var(--bg); color: var(--ink); font-family: var(--font);
+}
+.mg-bar {
+  display: flex; align-items: center; gap: 8px; padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+  background: var(--surface); border-bottom: 2px solid var(--control-border);
+}
+.mg-title { margin: 0; font-size: 1.15rem; white-space: nowrap; }
+.mg-hud { flex: 1; min-width: 0; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mg-stage { position: relative; min-width: 0; padding: 6px; display: grid; place-items: center; overflow: hidden; min-height: 0; }
+.mg-canvas { display: block; max-width: 100%; image-rendering: auto; border-radius: 10px; box-shadow: var(--shadow); touch-action: none; background: var(--surface-2); }
+.mg-card {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(460px, calc(100vw - 32px)); max-height: calc(100% - 24px); overflow: auto;
+  background: var(--surface); color: var(--ink); border: 2px solid var(--control-border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 18px 20px;
+}
+.mg-card h3 { margin: 0 0 8px; font-size: 1.4rem; }
+.mg-card p { margin: 6px 0; color: var(--ink); }
+.mg-card .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.mg-board { margin: 10px 0 0; padding-left: 1.4em; }
+.mg-board li span:first-child { display: inline-block; min-width: 9em; }
+.mg-board li.me { font-weight: 700; color: var(--accent-ink); }
+.mg-touch { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px max(12px, env(safe-area-inset-bottom)); gap: 12px; }
+.mg-touch[hidden] { display: none; }
+.mg-dpad { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(2, 56px); gap: 6px; }
+.mg-dpad:empty, .mg-btns:empty { visibility: hidden; }
+.mg-tb {
+  min-width: 56px; min-height: 56px; border-radius: 14px; border: 2px solid var(--control-border);
+  background: var(--surface); color: var(--ink); font: 700 1.2rem var(--font); touch-action: none; user-select: none;
+}
+.mg-tb:active { background: var(--surface-2); }
+.mg-tb-up { grid-column: 2; grid-row: 1; }
+.mg-tb-left { grid-column: 1; grid-row: 2; }
+.mg-tb-down { grid-column: 2; grid-row: 2; }
+.mg-tb-right { grid-column: 3; grid-row: 2; }
+.mg-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.mg-tb-a { background: var(--green); color: var(--on-green); border-color: var(--green); min-width: 68px; min-height: 68px; border-radius: 50%; }
+.mg-tb-b { border-radius: 50%; }
+.mg-tb-x, .mg-tb-y { border-radius: 50%; }
+@media (max-width: 560px) {
+  .mg-title { font-size: 1rem; }
+  .mg-bar .btn { padding: 6px 10px; }
+  .mg-mute { display: none; }
+}
+:root[data-minigame] .hud-top, :root[data-minigame] .touch, :root[data-minigame] .minimap { visibility: hidden; }
+
+/* Game Station launcher (src/minigames/arcade.ts) */
+.arcade-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 8px 0; }
+.arcade-slot {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; min-height: 96px;
+  padding: 10px 12px; border-radius: 12px; border: 2px solid var(--control-border); background: var(--surface); color: var(--ink); font: inherit; cursor: pointer;
+}
+.arcade-slot:hover { background: var(--surface-2); }
+.arcade-slot strong { font-size: 1.05rem; }
+.arcade-slot small { color: var(--ink-2); }
+.arcade-slot[aria-disabled='true'] { border-style: dashed; cursor: default; }
+.arcade-slot .num { font-variant-numeric: tabular-nums; color: var(--accent-ink); font-weight: 700; }
+

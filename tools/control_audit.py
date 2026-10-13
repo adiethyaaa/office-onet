@@ -107,6 +107,16 @@ INVENTORY = [
     ("Perf report Salin hasil", "src:perf-report-copy", ["#perf-report-copy"]),
     ("Perf report Unduh JSON", "src:perf-report-download", ["#perf-report-download"]),
     ("Perf report Tutup", "src:perf-report-close", ["#perf-report-close"]),
+    # v2.0: sound, mini games, Game Station, reprimand
+    ("Suara bisu", "html:audioMuted", ["audioMuted"]),
+    ("Volume utama", "html:audioMaster", ["audioMaster"]),
+    ("Volume musik", "html:audioMusic", ["audioMusic"]),
+    ("Volume efek", "html:audioSfx", ["audioSfx"]),
+    ("Key V mute", "src:k === 'v'", ["press('v')"]),
+    ("Mini game Mulai/Lanjut/Keluar", "src:t('Mulai')", ["name: 'Mulai'", "name: 'Lanjut'"]),
+    ("Mini game Jeda (Escape/P)", "src:k === 'escape' || k === 'p'", ["press('Escape')"]),
+    ("Game Station slot", "src:arcade-slot", [".arcade-slot"]),
+    ("Tegur persona", "src:data-scold", ["data-scold", "__kantor!.scold"]),
 ]
 
 

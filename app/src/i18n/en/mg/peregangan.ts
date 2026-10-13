@@ -1,0 +1,20 @@
+// English for src/minigames/games/peregangan.ts
+export const EN_PEREGANGAN: Record<string, string> = {
+  'Peregangan': 'Stretching',
+  'Lihat urutan gerakan, lalu ulangi. Tiap ronde bertambah satu gerakan.': 'Watch the moves, then repeat them. Each round adds one move.',
+  'Panah atau D-pad: pilih gerakan': 'Arrows or D-pad: pick a move',
+  'Tiga kali salah, sesi selesai': 'Three mistakes end the session',
+  'gerakan': 'moves',
+  'Tangan ke atas': 'Arms up',
+  'Condong kanan': 'Lean right',
+  'Sentuh lutut': 'Touch knees',
+  'Condong kiri': 'Lean left',
+  'Ronde {n} · Salah {m}/3': 'Round {n} · Misses {m}/3',
+  'Urutan terpanjang: {n} gerakan': 'Longest sequence: {n} moves',
+  'Pelatih': 'Coach',
+  'Kamu': 'You',
+  'Perhatikan...': 'Watch...',
+  'Ulangi: {i}/{n}': 'Repeat: {i}/{n}',
+  'Tepat!': 'Correct!',
+  'Salah, ulangi dari awal': 'Wrong, start over',
+};

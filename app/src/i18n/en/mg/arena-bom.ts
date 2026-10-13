@@ -1,0 +1,22 @@
+// English for src/minigames/games/arena-bom.ts
+export const EN_ARENA_BOM: Record<string, string> = {
+  'Arena Bom': 'Bomb Arena',
+  'Pasang bom, buka jalan, kalahkan 3 lawan.': 'Drop bombs, clear a path, beat 3 rivals.',
+  'Panah atau D-pad: jalan': 'Arrows or D-pad: walk',
+  'A: pasang bom': 'A: drop a bomb',
+  'Ledakan menghancurkan lemari arsip; ambil power-up yang jatuh': 'Blasts break filing cabinets; grab the power-ups they drop',
+  'Menang 2 dari 3 ronde. Setelah 120 detik arena menyempit': 'Win 2 of 3 rounds. After 120 seconds the arena closes in',
+  'poin': 'points',
+  'Ronde {r} · Menang {w} · Skor {s}': 'Round {r} · Wins {w} · Score {s}',
+  'Ronde menang {w}, lawan kalah {k}, lemari {b}': 'Rounds won {w}, rivals beaten {k}, cabinets {b}',
+  'Kamu': 'You',
+  'Menyempit!': 'Closing in!',
+  'Ronde {r} · {w}-{l}': 'Round {r} · {w}-{l}',
+  'Ronde {r}': 'Round {r}',
+  'Bersiap...': 'Get ready...',
+  'Mulai!': 'Go!',
+  'Kamu menang ronde ini!': 'You won this round!',
+  'Kamu tersingkir': 'You are out',
+  'Seri': 'Draw',
+  'Skor {s}': 'Score {s}',
+};

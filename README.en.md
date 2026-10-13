@@ -42,7 +42,9 @@ The public demo runs without login. It shows a simulation with a fixed seed, so 
 | Feature | In short |
 |---|---|
 | [Two-floor 3D world](docs/FEATURES.md#2-3d-world) | 36 rooms, doors that open by themselves, stairs and a lift between floors |
-| [NPC characters](docs/FEATURES.md#5-npc-characters) | 8 characters with daily schedules, ready to talk |
+| [NPC characters](docs/FEATURES.md#5-npc-characters) | 8 characters with daily schedules, ready to talk and to reprimand (animation only) |
+| [Mini games](docs/FEATURES.md#4a-mini-games-v20) | 9 games at office facilities and a 5-game Game Station: racing, fighting, platformer, cable puzzle, bomb arena |
+| [Sound](docs/FEATURES.md#4b-sound) | Footsteps, doors, music per area; generated in the browser, no audio files |
 | [Agent chat and work board](docs/FEATURES.md#10-agent-chat) | Give tasks to AI agents, synced with Telegram (needs the private backend) |
 | [Map and minimap](docs/FEATURES.md#6a-map-and-minimap) | Where everyone is on each floor, **Temui** (Meet) to jump next to them |
 | [Office Studio](docs/FEATURES.md#8-office-studio-rearranging-furniture) | Rearrange furniture, save drafts, publish, roll back |
