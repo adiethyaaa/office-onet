@@ -11,6 +11,8 @@ import { AGENT_GAP, stepBlocked } from '../sim/agents';
 // which reads as brisk steps without visible sliding (timeScale follows speed).
 export const WALK_SPEED = 1.6;
 export const RUN_SPEED = 3.4;
+/** Pushing into a persona this long (s) lets the CEO walk through them. */
+export const PUSH_THROUGH_S = 2;
 
 export class Player {
   pos: Vec2;
@@ -19,6 +21,12 @@ export class Player {
   speed = 0;
   readonly avatar: Avatar;
   stuckRecoveries = 0;
+  /** Seconds spent pressing against a persona without getting past. */
+  pushTime = 0;
+  /** Walking through personas: set by Run or by a 2 s push, cleared once clear of everyone. */
+  ghost = false;
+  /** How the CEO last got through a persona, for the HUD hint. */
+  ghostBy: 'run' | 'push' | null = null;
 
   constructor(pos: Vec2, floor: FloorId, facing: number) {
     this.pos = [pos[0], pos[1]];
@@ -29,9 +37,26 @@ export class Player {
   }
 
   /** Move by intent (plan direction, 0..1). Returns metres actually moved. */
-  /** `others`: NPC discs on this floor; the CEO stops at them and slides around them. */
+  /** `others`: NPC discs on this floor; the CEO stops at them and slides around them.
+   *  Running, or pushing into one for PUSH_THROUGH_S, walks straight through instead
+   *  (personas never trap the CEO). Walls and furniture always block. */
   step(dt: number, dir: Vec2, run: boolean, nav: NavGrid, others: Vec2[] = []): number {
     const mag = Math.hypot(dir[0], dir[1]);
+    const touching = others.some((o) => Math.hypot(o[0] - this.pos[0], o[1] - this.pos[1]) < AGENT_GAP + 0.05);
+    if (run && mag > 0.05 && touching && !this.ghost) { this.ghost = true; this.ghostBy = 'run'; }
+    // Ghosting ends as soon as no persona overlaps the CEO any more.
+    if (this.ghost && !touching) { this.ghost = false; this.pushTime = 0; }
+    const moved = this.move(dt, dir, mag, run, nav, this.ghost ? [] : others);
+    if (!this.ghost) {
+      const want = this.speed * dt;
+      const pushing = mag > 0.05 && touching && want > 1e-4 && moved < want * 0.35;
+      this.pushTime = pushing ? this.pushTime + dt : Math.max(0, this.pushTime - dt * 2);
+      if (this.pushTime >= PUSH_THROUGH_S) { this.ghost = true; this.ghostBy = 'push'; this.pushTime = 0; }
+    }
+    return moved;
+  }
+
+  private move(dt: number, dir: Vec2, mag: number, run: boolean, nav: NavGrid, others: Vec2[]): number {
     const target = mag > 0.05 ? (run ? RUN_SPEED : WALK_SPEED) * Math.min(1, mag) : 0;
     this.speed += (target - this.speed) * Math.min(1, dt * 10);
     if (mag > 0.05) {

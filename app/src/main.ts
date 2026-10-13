@@ -252,7 +252,7 @@ function boot() {
     openAgent,
     openPicker,
     mode: 'world',
-    state: () => ({ floor: game.player.floor, pos: game.player.pos, facing: game.player.facing, room: game.roomId, visitor: game.settings.visitor, avatarPlaceholder: game.player.avatar.isPlaceholder, clips: game.player.avatar.clipNames, recoveries: game.player.stuckRecoveries, floorSwitches: game.floorSwitches }),
+    state: () => ({ floor: game.player.floor, pos: game.player.pos, facing: game.player.facing, room: game.roomId, visitor: game.settings.visitor, avatarPlaceholder: game.player.avatar.isPlaceholder, clips: game.player.avatar.clipNames, recoveries: game.player.stuckRecoveries, floorSwitches: game.floorSwitches, ghost: game.player.ghost, ghostBy: game.player.ghostBy }),
     stats: () => game.stats(),
     studioOpen: () => studio?.isOpen ?? false,
     npcFace: (id: string) => game.npcs.face(id),
@@ -284,6 +284,15 @@ function boot() {
       game.applyFloorVisibility();
       return spot;
     },
+    // Test helper: hold a persona still at (x, y), as when the CEO talks to them.
+    parkNpc: (id: string, x: number, y: number) => {
+      const n = game.npcs.sim.pauseForPlayer(id);
+      if (!n) return false;
+      n.pos = [x, y];
+      return true;
+    },
+    // Test helper: push the CEO in a plan direction with the normal movement code.
+    drive: (dx: number, dy: number, run = false) => { game.autopilot = dx || dy ? { dir: [dx, dy], run } : null; },
     // Test helper: is there a walkable route from the CEO to (x, y) right now?
     canReach: (x: number, y: number) => game.nav.findPath(game.player.pos, [x, y]) !== null,
     // Test/benchmark helper: drives the CEO with the normal movement code along

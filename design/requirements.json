@@ -1267,6 +1267,25 @@
      "status": "belum diuji"
     }
    ]
+  },
+  {
+   "id": "REQ-MOVE-01",
+   "milestone": "M8",
+   "story": "Sebagai CEO, jangan tertahan NPC yang berdiri di jalan.",
+   "ac": "NPC padat; mendorong ke NPC 2 detik menembus; lari langsung menembus; mode tembus berakhir saat tak bersentuhan; dinding/perabot tetap menahan.",
+   "failure": "NPC berpindah saat ditembus -> CEO tetap di sel navgrid sah",
+   "boundary": "tembus hanya untuk NPC, bukan dinding/perabot/pintu terkunci",
+   "parts": [
+    {
+     "scope": "Dorong 2 detik menembus, lari langsung menembus, dorongan singkat tidak, dinding tetap menahan.",
+     "tests": [
+      "app/tests/unit/collision.test.ts",
+      "app/tests/e2e/npc-push.spec.ts"
+     ],
+     "evidence": [],
+     "status": "belum diuji"
+    }
+   ]
   }
  ]
 }

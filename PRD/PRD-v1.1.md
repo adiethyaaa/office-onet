@@ -463,6 +463,17 @@ Permintaan pemilik: harus bisa melihat posisi setiap persona tanpa berkeliling g
 - Failure: nilai profil di storage rusak/tidak dikenal → kembali ke Standar.
 - Batas: mengetik teks tetap memakai keyboard atau keyboard layar. Tombol dengan pemetaan non-standar tidak dipetakan ulang.
 
+## 23. Menembus NPC (permintaan Budi 2026-10-13)
+
+- REQ-MOVE-01: Sebagai CEO, saya tidak mau tertahan NPC yang berdiri di jalan. AC:
+  - NPC tetap padat seperti biasa: CEO berhenti di tepinya dan bergeser ke samping bila bisa.
+  - Bila CEO terus mendorong ke arah NPC dan tertahan selama 2 detik, CEO menembus NPC itu. Dorongan singkat tidak menembus; penghitung turun lagi saat CEO mundur.
+  - Selama lari (Shift, tombol Lari, stik didorong penuh, atau tombol lari stik), CEO langsung menembus NPC yang ditabrak tanpa menunggu.
+  - Mode tembus berakhir begitu CEO sudah tidak bersentuhan dengan NPC mana pun; menabrak lagi ditahan lagi.
+  - Dinding, kaca, perabot dan pintu terkunci tetap menahan CEO; mode tembus hanya berlaku untuk NPC.
+  - Satu toast singkat saat mulai menembus (paling sering sekali tiap 8 detik).
+- Failure: NPC berpindah saat ditembus → CEO tetap di sel navgrid yang sah.
+
 ## Sumber
 
 [1] https://voffice.holixora.com/ : demo menyatakan simulasi, bukan data pekerjaan nyata.

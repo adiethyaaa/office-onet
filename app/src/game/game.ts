@@ -69,6 +69,7 @@ export class Game {
   lastRawMs = 0;
   onFrame: ((dt: number) => void) | null = null;
   autopilot: { dir: Vec2; run: boolean } | null = null;
+  private ghostHintAt = 0;
   npcs!: NpcLayer;
   doors!: DoorController;
   private doorMeshes!: DoorMeshes;
@@ -691,7 +692,13 @@ export class Game {
     }
     if (this.activity && Math.hypot(dir[0], dir[1]) > 0.1) this.endActivity(false);
     const others = this.npcs.sim.npcs.filter((n) => n.floor === this.player.floor).map((n) => n.pos);
+    const wasGhost = this.player.ghost;
     const moved = this.activity ? 0 : this.player.step(dt, dir, run, nav, others);
+    // One short hint when the CEO starts walking through a persona.
+    if (this.player.ghost && !wasGhost && performance.now() > this.ghostHintAt) {
+      this.ghostHintAt = performance.now() + 8000;
+      toast(this.player.ghostBy === 'run' ? t('Lari: menembus NPC.') : t('Terhalang NPC 2 detik: menembus.'), 1400);
+    }
     const speed = moved / Math.max(dt, 1e-4);
     if (this.activity) {
       this.player.avatar.play(slotClip(this.activity.slot));
