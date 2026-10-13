@@ -132,7 +132,7 @@ There are four profiles. The choice is saved in the browser and applies right aw
 Below the profile choice is a DualSense-style controller drawing with what each button does in that profile. While a pad is connected, pressed buttons light up and the drawn sticks move, so players can check their pad is read. Pointing at or focusing a row in the button list highlights that button in the drawing. The body, grips and touchpad follow Leo's controller drawing (mockup39), with no logo or brand name.
 
 
-The avatar cannot pass through walls, furniture, or NPCs. If the avatar's position becomes invalid (for example after furniture is moved), the avatar is returned to the nearest safe point.
+The avatar cannot pass through walls or furniture. NPCs also block the avatar, but cannot trap it: keep pushing into an NPC for 2 seconds, or run (Shift, the Run button, full stick tilt), and the avatar passes through. Once past, the NPC is solid again. If the avatar's position becomes invalid (for example after furniture is moved), the avatar is returned to the nearest safe point.
 
 ## 4. Interaction and activities
 

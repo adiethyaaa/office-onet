@@ -157,4 +157,6 @@ export const EN_GAME: Record<string, string> = {
   'Layout lokal diabaikan: {error}': 'Local layout ignored: {error}',
   'Benchmark rute tetap {secs} s berjalan': 'Fixed route benchmark running for {secs} s',
   'Benchmark selesai': 'Benchmark finished',
+  "Lari: menembus NPC.": "Running: passing through the NPC.",
+  "Terhalang NPC 2 detik: menembus.": "Blocked by an NPC for 2 seconds: passing through.",
 };

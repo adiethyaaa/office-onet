@@ -131,7 +131,7 @@ Ada empat profil. Pilihan tersimpan di browser dan langsung berlaku tanpa muat u
 
 Di bawah pilihan profil ada gambar kontroler gaya DualSense beserta fungsi setiap tombol untuk profil itu. Selama stik terhubung, tombol yang ditekan menyala di gambar dan stik di gambar ikut bergerak, jadi pemain bisa mengecek stiknya terbaca. Arahkan kursor atau fokus ke satu baris di daftar tombol, tombol itu ikut disorot di gambar. Bentuk badan, grip dan touchpad memakai gambar kontroler Leo (mockup39), tanpa logo atau nama merek.
 
-Avatar tidak bisa menembus dinding, perabot, atau NPC. Bila posisi avatar tidak valid (misalnya setelah perabot dipindah), avatar dikembalikan ke titik aman terdekat.
+Avatar tidak bisa menembus dinding atau perabot. NPC juga menahan avatar, tapi tidak bisa membuatnya terjebak: dorong terus ke arah NPC selama 2 detik, atau lari (Shift, tombol Lari, stik didorong penuh), dan avatar menembus NPC itu. Setelah lewat, NPC kembali padat. Bila posisi avatar tidak valid (misalnya setelah perabot dipindah), avatar dikembalikan ke titik aman terdekat.
 
 ## 4. Interaksi dan aktivitas
 

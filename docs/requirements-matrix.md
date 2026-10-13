@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit ec27003; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit bedba72; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -80,8 +80,9 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-I18N-01 | M8 | ?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus. | app/tests/unit/i18n.test.ts<br>app/tests/e2e/i18n.spec.ts | - | belum diuji |
 | REQ-PAD-01 | M8 | Gamepad API pemetaan standar, chunk lazy; stik kiri jalan/lari, stik kanan kamera, A/B/X/Y/LB/RB/Select/Start; D-pad navigasi fokus spasial di menu dan dialog, A pilih, B tutup; gerak berhenti saat dialog terbuka. | app/tests/unit/gamepad.test.ts<br>app/tests/e2e/gamepad.spec.ts | - | belum diuji |
 | REQ-PAD-02 | M8 | Empat profil, gambar DualSense yang menyala, Kidal menukar stik, Tombol terbalik menukar tombol muka, pilihan tersimpan. | app/tests/unit/pad-profiles.test.ts<br>app/tests/e2e/gamepad.spec.ts | - | belum diuji |
+| REQ-MOVE-01 | M8 | Dorong 2 detik menembus, lari langsung menembus, dorongan singkat tidak, dinding tetap menahan. | app/tests/unit/collision.test.ts<br>app/tests/e2e/npc-push.spec.ts | - | belum diuji |
 
-Ringkasan status bagian: belum diuji 5, target 1, terverifikasi 69.
+Ringkasan status bagian: belum diuji 6, target 1, terverifikasi 69.
 
 ## Story, AC, failure dan boundary
 
@@ -380,3 +381,11 @@ Sebagai pemain stik, pilih profil kontroler di Pengaturan dan lihat fungsi setia
 Pengaturan > Kontroler: empat profil (Standar, Kidal stik ditukar, Santai kamera 58%/zona mati 32%/tanpa lari otomatis, Tombol terbalik Silang-Lingkaran dan Kotak-Segitiga) dengan keterangan dan daftar tombol; gambar kontroler gaya DualSense menyalakan tombol yang ditekan; pilihan tersimpan dan berlaku tanpa muat ulang.
 
 Failure: nilai profil tersimpan tidak dikenal -> Standar. Boundary: tanpa logo/merek; pemetaan tombol per profil tidak bisa diatur bebas.
+
+### REQ-MOVE-01 (M8)
+
+Sebagai CEO, jangan tertahan NPC yang berdiri di jalan.
+
+NPC padat; mendorong ke NPC 2 detik menembus; lari langsung menembus; mode tembus berakhir saat tak bersentuhan; dinding/perabot tetap menahan.
+
+Failure: NPC berpindah saat ditembus -> CEO tetap di sel navgrid sah. Boundary: tembus hanya untuk NPC, bukan dinding/perabot/pintu terkunci.

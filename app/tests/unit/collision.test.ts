@@ -4,7 +4,7 @@ import walls from '@design/derived/walls.json';
 import { NavGrid } from '../../src/world/navgrid';
 import { IdleSim } from '../../src/sim/idle';
 import { AGENT_GAP } from '../../src/sim/agents';
-import { Player } from '../../src/game/player';
+import { PUSH_THROUGH_S, Player } from '../../src/game/player';
 import type { DerivedWalls, FloorId, Vec2, World } from '../../src/world/types';
 
 const W = world as unknown as World;
@@ -126,5 +126,55 @@ describe('CEO / persona collision', () => {
     }
     expect(minD).toBeGreaterThanOrEqual(AGENT_GAP - 0.02);
     expect(p.pos[0]).toBeGreaterThan(npc[0]); // got past by sliding
+  });
+
+  it('pushing straight into a persona for 2 s walks through it, then collision is back', () => {
+    const p = new Player([10, 9.25], 'L1', 0);
+    const npc: Vec2 = [11.2, 9.25];
+    let t = 0;
+    let through = -1;
+    for (let k = 0; k < 240; k++) {
+      p.step(1 / 30, [1, 0], false, nav.L1, [npc]);
+      t += 1 / 30;
+      if (through < 0 && p.ghost) through = t;
+    }
+    // Blocked first (head-on, no tangent to slide on), through after about 2 s of pushing.
+    expect(through).toBeGreaterThan(PUSH_THROUGH_S);
+    expect(through).toBeLessThan(PUSH_THROUGH_S + 0.8);
+    expect(p.ghostBy).toBe('push');
+    expect(p.pos[0]).toBeGreaterThan(npc[0] + AGENT_GAP);
+    expect(p.ghost).toBe(false);
+    // Walking back into the same persona is blocked again.
+    const back = p.pos[0];
+    for (let k = 0; k < 30; k++) p.step(1 / 30, [-1, 0], false, nav.L1, [npc]);
+    expect(p.pos[0]).toBeGreaterThanOrEqual(npc[0] + AGENT_GAP - 0.02);
+    expect(p.pos[0]).toBeLessThan(back);
+  });
+
+  it('running walks straight through a persona without waiting', () => {
+    const p = new Player([10, 9.25], 'L1', 0);
+    const npc: Vec2 = [11.2, 9.25];
+    for (let k = 0; k < 45; k++) p.step(1 / 30, [1, 0], true, nav.L1, [npc]);
+    expect(p.ghostBy).toBe('run');
+    expect(p.pos[0]).toBeGreaterThan(npc[0] + AGENT_GAP);
+  });
+
+  it('a short bump does not pass through: the push timer drains when the CEO backs off', () => {
+    const p = new Player([10, 9.25], 'L1', 0);
+    const npc: Vec2 = [11.2, 9.25];
+    for (let k = 0; k < 45; k++) p.step(1 / 30, [1, 0], false, nav.L1, [npc]); // 1.5 s push
+    for (let k = 0; k < 30; k++) p.step(1 / 30, [-1, 0], false, nav.L1, [npc]);
+    for (let k = 0; k < 30; k++) p.step(1 / 30, [1, 0], false, nav.L1, [npc]); // 1 s push
+    expect(p.ghost).toBe(false);
+    expect(p.pos[0]).toBeLessThan(npc[0]);
+  });
+
+  it('ghosting never lets the CEO through walls', () => {
+    const p = new Player([10, 9.25], 'L1', 0);
+    p.ghost = true;
+    const start: Vec2 = [p.pos[0], p.pos[1]];
+    for (let k = 0; k < 600; k++) p.step(1 / 30, [0, 1], true, nav.L1, []);
+    expect(nav.L1.walkableAt(p.pos)).toBe(true);
+    expect(d(start, p.pos)).toBeGreaterThan(0);
   });
 });
