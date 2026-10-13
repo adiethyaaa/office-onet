@@ -58,6 +58,7 @@ INVENTORY = [
     ("Profil kontroler Standar", "html:padProfile=standar", ['padProfile"][value="standar"']),
     ("Profil kontroler Kidal", "html:padProfile=kidal", ["hasText: 'Kidal'"]),
     ("Profil kontroler Santai", "html:padProfile=santai", ["hasText: 'Santai'"]),
+    ("Profil kontroler Tombol terbalik", "html:padProfile=terbalik", ["hasText: 'Tombol terbalik'"]),
     ("Mode visitor", "html:visitor", ["Mode visitor"]),
     ("Lipat menu HUD (HP)", "html:btn-hud-toggle", ["#btn-hud-toggle"]),
     ("Lipat minimap", "src:minimap-fold", ["#minimap-fold"]),

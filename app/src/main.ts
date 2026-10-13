@@ -157,7 +157,7 @@ function wireSettings(game: Game | null, s: Settings) {
     if (game && visitor !== s.visitor) game.setVisitor(visitor);
     s.visitor = visitor;
     const pad = (form.elements.namedItem('padProfile') as RadioNodeList).value;
-    if (pad === 'standar' || pad === 'kidal' || pad === 'santai') { s.padProfile = pad; padView?.setProfile(pad); }
+    if (pad === 'standar' || pad === 'kidal' || pad === 'santai' || pad === 'terbalik') { s.padProfile = pad; padView?.setProfile(pad); }
     saveSettings(s);
   });
 }

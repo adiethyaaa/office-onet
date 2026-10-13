@@ -12,7 +12,7 @@
 // dead zone, slow the camera and turn off running at full tilt.
 import { toast } from '../ui/dom';
 import { t } from '../i18n';
-import { PAD_PROFILES, stickAxes, type PadProfileId } from './pad-profiles';
+import { PAD_PROFILES, faceButtons, stickAxes, type PadProfileId } from './pad-profiles';
 
 /** What the pad drives in the 3D world. Absent in the no-WebGL fallback. */
 export interface PadWorld {
@@ -158,11 +158,17 @@ export class GamepadControl {
   }
 
   private poll(p: Gamepad, now: number, dt: number) {
-    const down = p.buttons.map((b) => b.pressed || b.value > 0.5);
-    const hit = (i: number) => !!down[i] && !this.prev[i];
+    const prof = PAD_PROFILES[this.profile()] ?? PAD_PROFILES.standar;
+    const raw = p.buttons.map((b) => b.pressed || b.value > 0.5);
+    // Logical A/B/X/Y read from the physical buttons the profile assigns to them.
+    // Edges are taken on the physical button, so switching profile while a
+    // button is held does not fire the action it now maps to.
+    const face = faceButtons(prof);
+    const phys = (i: number) => (i === BTN.A ? face.A : i === BTN.B ? face.B : i === BTN.X ? face.X : i === BTN.Y ? face.Y : i);
+    const down = raw.map((_, i) => !!raw[phys(i)]);
+    const hit = (i: number) => !!raw[phys(i)] && !this.prev[phys(i)];
     const dialog = topDialog();
     const ui = !!dialog || (this.navigating && document.activeElement !== document.body);
-    const prof = PAD_PROFILES[this.profile()] ?? PAD_PROFILES.standar;
     const ax = stickAxes(prof);
     const [lx, ly] = stick(p.axes[ax.move[0]] ?? 0, p.axes[ax.move[1]] ?? 0, prof.dead);
     const [rx, ry] = stick(p.axes[ax.look[0]] ?? 0, p.axes[ax.look[1]] ?? 0, prof.dead);
@@ -216,7 +222,7 @@ export class GamepadControl {
       if (dialog) this.closeDialog(dialog);
       else document.getElementById('btn-settings')?.click();
     }
-    this.prev = down;
+    this.prev = raw;
   }
 
   private direction(dir: Dir, inDialog: boolean) {

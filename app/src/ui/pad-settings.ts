@@ -60,13 +60,16 @@ function rows(id: PadProfileId): Row[] {
   const p = PAD_PROFILES[id];
   const walk = p.autoRun ? t('Berjalan (dorong penuh untuk lari)') : t('Berjalan (dorong penuh tidak lari)');
   const look = t('Memutar dan memiringkan kamera');
+  // Each physical face button shows the action the profile gives it.
+  const act = { A: t('Interaksi, di menu: pilih'), B: t('Kembali, di menu: tutup'), X: t('Lari nyala/mati'), Y: t('Luruskan kamera') };
+  const f = p.swapFace ? { cross: act.B, circle: act.A, square: act.Y, triangle: act.X } : { cross: act.A, circle: act.B, square: act.X, triangle: act.Y };
   return [
     { part: 'ls', label: t('Stik kiri'), action: `${p.swapSticks ? look : walk}. ${t('Tekan: lari nyala/mati')}` },
     { part: 'rs', label: t('Stik kanan'), action: `${p.swapSticks ? walk : look}. ${t('Tekan: luruskan kamera')}` },
-    { part: 'cross', label: t('Silang (A)'), action: t('Interaksi, di menu: pilih') },
-    { part: 'circle', label: t('Lingkaran (B)'), action: t('Kembali, di menu: tutup') },
-    { part: 'square', label: t('Kotak (X)'), action: t('Lari nyala/mati') },
-    { part: 'triangle', label: t('Segitiga (Y)'), action: t('Luruskan kamera') },
+    { part: 'cross', label: t('Silang'), action: f.cross },
+    { part: 'circle', label: t('Lingkaran'), action: f.circle },
+    { part: 'square', label: t('Kotak'), action: f.square },
+    { part: 'triangle', label: t('Segitiga'), action: f.triangle },
     { part: 'l1', label: 'L1', action: t('Kamera menjauh') },
     { part: 'r1', label: 'R1', action: t('Kamera mendekat') },
     { part: 'dpad', label: t('D-pad'), action: t('Pindah tombol di menu dan HUD') },
@@ -80,6 +83,10 @@ function info(id: PadProfileId): { who: string; note: string } {
   if (id === 'kidal') return {
     who: t('Stik ditukar: stik kanan berjalan, stik kiri kamera. Untuk pemain kidal atau yang lebih nyaman mengarahkan kamera dengan tangan kiri.'),
     note: t('Tombol lain tetap. Di dalam dialog, stik kanan yang ikut memindah fokus.'),
+  };
+  if (id === 'terbalik') return {
+    who: t('Tombol muka dibalik gaya Jepang/Nintendo: Lingkaran untuk interaksi dan pilih, Silang untuk kembali, Segitiga untuk lari, Kotak untuk luruskan kamera. Untuk pemain yang terbiasa dengan konsol Jepang atau Nintendo Switch.'),
+    note: t('Stik, D-pad, L1/R1, Create dan Options tetap sama dengan Standar.'),
   };
   if (id === 'santai') return {
     who: t('Kamera lebih pelan dan zona mati lebih lebar. Untuk yang mudah pusing dengan kamera cepat, atau stik lama yang sedikit miring sendiri.'),
@@ -128,7 +135,9 @@ export class PadSettings {
     fact(t('Berjalan'), p.swapSticks ? t('Stik kanan') : t('Stik kiri'));
     fact(t('Zona mati'), t('{n} dari dorongan penuh', { n: pct(p.dead) }));
     fact(t('Kecepatan kamera'), p.lookYaw === base.lookYaw ? t('Normal') : t('{n} dari normal', { n: pct(p.lookYaw / base.lookYaw) }));
-    fact(t('Lari'), p.autoRun ? t('Otomatis saat stik didorong penuh, atau tombol Kotak') : t('Hanya tombol Kotak atau tekan stik kiri'));
+    const runBtn = p.swapFace ? t('Segitiga') : t('Kotak');
+    fact(t('Lari'), p.autoRun ? t('Otomatis saat stik didorong penuh, atau tombol {b}', { b: runBtn }) : t('Hanya tombol {b} atau tekan stik kiri', { b: runBtn }));
+    fact(t('Tombol muka'), p.swapFace ? t('Dibalik: Lingkaran pilih, Silang kembali') : t('Silang pilih, Lingkaran kembali'));
     about.append(facts, el('p', { class: 'muted small' }, about0.note));
     const list = el('ul', { class: 'pad-map', 'aria-label': t('Fungsi tombol untuk profil ini') });
     for (const r of rows(id)) {

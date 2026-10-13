@@ -120,13 +120,14 @@ Selama dialog terbuka, avatar tidak bergerak dan stik kiri ikut memindah fokus. 
 
 **Profil kontroler (Pengaturan → Kontroler)**
 
-Ada tiga profil. Pilihan tersimpan di browser dan langsung berlaku tanpa muat ulang.
+Ada empat profil. Pilihan tersimpan di browser dan langsung berlaku tanpa muat ulang.
 
 | Profil | Untuk siapa | Bedanya dari Standar |
 |---|---|---|
 | Standar | Kebanyakan pemain | Stik kiri berjalan, stik kanan kamera, zona mati 22%, dorong penuh = lari |
 | Kidal (stik ditukar) | Pemain kidal, atau yang lebih nyaman mengarahkan kamera dengan tangan kiri | Stik kanan berjalan, stik kiri kamera. Di dalam dialog stik kanan yang memindah fokus. Tombol lain sama |
 | Santai (kamera pelan) | Yang mudah pusing dengan kamera cepat, atau stik lama yang sedikit miring sendiri | Kamera 58% dari kecepatan normal, zona mati 32%, dorong penuh tidak lari (lari dengan Kotak/X atau tekan stik kiri) |
+| Tombol terbalik (gaya Jepang) | Pemain yang terbiasa konsol Jepang atau Nintendo Switch | Silang ↔ Lingkaran dan Kotak ↔ Segitiga ditukar: Lingkaran interaksi/pilih, Silang kembali/tutup, Segitiga lari, Kotak luruskan kamera. Stik, D-pad, L1/R1, Create, Options sama |
 
 Di bawah pilihan profil ada gambar kontroler gaya DualSense beserta fungsi setiap tombol untuk profil itu. Selama stik terhubung, tombol yang ditekan menyala di gambar dan stik di gambar ikut bergerak, jadi pemain bisa mengecek stiknya terbaca. Arahkan kursor atau fokus ke satu baris di daftar tombol, tombol itu ikut disorot di gambar. Bentuk badan, grip dan touchpad memakai gambar kontroler Leo (mockup39), tanpa logo atau nama merek.
 

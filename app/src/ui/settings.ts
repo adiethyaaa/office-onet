@@ -2,7 +2,7 @@
 // so every access is guarded and defaults keep the app usable.
 export type Theme = 'system' | 'light' | 'dark';
 export type Quality = 'auto' | 'low' | 'high';
-export type PadProfileId = 'standar' | 'kidal' | 'santai';
+export type PadProfileId = 'standar' | 'kidal' | 'santai' | 'terbalik';
 export interface Settings { theme: Theme; quality: Quality; reducedMotion: boolean; visitor: boolean; padProfile: PadProfileId }
 
 const KEY = 'kantor-rpg.settings.v1';
@@ -22,7 +22,7 @@ export function loadSettings(): Settings {
       quality: v.quality === 'low' || v.quality === 'high' ? v.quality : 'auto',
       reducedMotion: typeof v.reducedMotion === 'boolean' ? v.reducedMotion : base.reducedMotion,
       visitor: v.visitor === true,
-      padProfile: v.padProfile === 'kidal' || v.padProfile === 'santai' ? v.padProfile : 'standar',
+      padProfile: v.padProfile === 'kidal' || v.padProfile === 'santai' || v.padProfile === 'terbalik' ? v.padProfile : 'standar',
     };
   } catch {
     return base;

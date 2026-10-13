@@ -1253,12 +1253,12 @@
    "id": "REQ-PAD-02",
    "milestone": "M8",
    "story": "Sebagai pemain stik, pilih profil kontroler di Pengaturan dan lihat fungsi setiap tombol.",
-   "ac": "Pengaturan > Kontroler: tiga profil (Standar, Kidal stik ditukar, Santai kamera 58%/zona mati 32%/tanpa lari otomatis) dengan keterangan dan daftar tombol; gambar kontroler gaya DualSense menyalakan tombol yang ditekan; pilihan tersimpan dan berlaku tanpa muat ulang.",
+   "ac": "Pengaturan > Kontroler: empat profil (Standar, Kidal stik ditukar, Santai kamera 58%/zona mati 32%/tanpa lari otomatis, Tombol terbalik Silang-Lingkaran dan Kotak-Segitiga) dengan keterangan dan daftar tombol; gambar kontroler gaya DualSense menyalakan tombol yang ditekan; pilihan tersimpan dan berlaku tanpa muat ulang.",
    "failure": "nilai profil tersimpan tidak dikenal -> Standar",
    "boundary": "tanpa logo/merek; pemetaan tombol per profil tidak bisa diatur bebas",
    "parts": [
     {
-     "scope": "Tiga profil, gambar DualSense yang menyala, Kidal menukar stik, pilihan tersimpan.",
+     "scope": "Empat profil, gambar DualSense yang menyala, Kidal menukar stik, Tombol terbalik menukar tombol muka, pilihan tersimpan.",
      "tests": [
       "app/tests/unit/pad-profiles.test.ts",
       "app/tests/e2e/gamepad.spec.ts"

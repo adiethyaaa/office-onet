@@ -63,4 +63,5 @@ export const EN_HTML: Record<string, string> = {
   "Standar": "Standard",
   "Kidal (stik ditukar)": "Left-handed (sticks swapped)",
   "Santai (kamera pelan)": "Relaxed (slow camera)",
+  "Tombol terbalik (gaya Jepang)": "Reversed buttons (Japanese style)",
 };

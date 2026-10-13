@@ -1,6 +1,6 @@
 # Matriks requirement
 
-Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit 627f00d; evidence menunjuk file di repo).
+Dibuat dari `design/requirements.json` oleh `tools/req_matrix.py` (basis commit ec27003; evidence menunjuk file di repo).
 Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi pada commit tercatat. Evidence kosong = belum diuji.
 
 | REQ | Milestone | Bagian | Test | Evidence | Status |
@@ -79,7 +79,7 @@ Status hanya 'terverifikasi' bila bagian itu punya evidence file hasil eksekusi 
 | REQ-MAP-01 | M8 | P/klik minimap membuka Peta kantor; tab per lantai + jumlah; nama ruang dan persona; daftar dikelompokkan lantai kamu/lantai lain dengan tag beda lantai dan status menuju lantai lain; Lihat/klik titik menandai; Temui memakai jalur meet; tombol >=44 px; kontras dicek. | app/tests/unit/map.test.ts<br>app/tests/e2e/map.spec.ts | - | belum diuji |
 | REQ-I18N-01 | M8 | ?lang, pilihan tersimpan, lalu bahasa browser; pilihan Bahasa di Pengaturan memuat ulang halaman; html lang mengikuti; kamus EN chunk terpisah; tes kelengkapan kamus. | app/tests/unit/i18n.test.ts<br>app/tests/e2e/i18n.spec.ts | - | belum diuji |
 | REQ-PAD-01 | M8 | Gamepad API pemetaan standar, chunk lazy; stik kiri jalan/lari, stik kanan kamera, A/B/X/Y/LB/RB/Select/Start; D-pad navigasi fokus spasial di menu dan dialog, A pilih, B tutup; gerak berhenti saat dialog terbuka. | app/tests/unit/gamepad.test.ts<br>app/tests/e2e/gamepad.spec.ts | - | belum diuji |
-| REQ-PAD-02 | M8 | Tiga profil, gambar DualSense yang menyala, Kidal menukar stik, pilihan tersimpan. | app/tests/unit/pad-profiles.test.ts<br>app/tests/e2e/gamepad.spec.ts | - | belum diuji |
+| REQ-PAD-02 | M8 | Empat profil, gambar DualSense yang menyala, Kidal menukar stik, Tombol terbalik menukar tombol muka, pilihan tersimpan. | app/tests/unit/pad-profiles.test.ts<br>app/tests/e2e/gamepad.spec.ts | - | belum diuji |
 
 Ringkasan status bagian: belum diuji 5, target 1, terverifikasi 69.
 
@@ -377,6 +377,6 @@ Failure: stik terputus -> gerak dari stik berhenti. Boundary: mengetik tetap lew
 
 Sebagai pemain stik, pilih profil kontroler di Pengaturan dan lihat fungsi setiap tombol.
 
-Pengaturan > Kontroler: tiga profil (Standar, Kidal stik ditukar, Santai kamera 58%/zona mati 32%/tanpa lari otomatis) dengan keterangan dan daftar tombol; gambar kontroler gaya DualSense menyalakan tombol yang ditekan; pilihan tersimpan dan berlaku tanpa muat ulang.
+Pengaturan > Kontroler: empat profil (Standar, Kidal stik ditukar, Santai kamera 58%/zona mati 32%/tanpa lari otomatis, Tombol terbalik Silang-Lingkaran dan Kotak-Segitiga) dengan keterangan dan daftar tombol; gambar kontroler gaya DualSense menyalakan tombol yang ditekan; pilihan tersimpan dan berlaku tanpa muat ulang.
 
 Failure: nilai profil tersimpan tidak dikenal -> Standar. Boundary: tanpa logo/merek; pemetaan tombol per profil tidak bisa diatur bebas.
