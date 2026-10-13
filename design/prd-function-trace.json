@@ -12,7 +12,7 @@
   {"id": "PF-L1-08", "floor": "L1", "prd": "area Nova", "rooms": ["L1-NOVA"]},
   {"id": "PF-L1-09", "floor": "L1", "prd": "area Bruno", "rooms": ["L1-BRUNO"]},
   {"id": "PF-L1-10", "floor": "L1", "prd": "lab ICT terpisah dari server", "rooms": ["L1-LAB"]},
-  {"id": "PF-L1-11", "floor": "L1", "prd": "server rack tidak menjadi jalur umum", "rooms": ["L1-SERVER", "L1-RISER"]},
+  {"id": "PF-L1-11", "floor": "L1", "prd": "server rack tidak menjadi jalur umum", "rooms": ["L1-SERVER"]},
   {"id": "PF-L1-12", "floor": "L1", "prd": "ruang kerja implementasi/review", "rooms": ["L1-IMPL"]},
   {"id": "PF-L1-13", "floor": "L1", "prd": "ruang rapat besar", "rooms": ["L1-MEET"]},
   {"id": "PF-L1-14", "floor": "L1", "prd": "toilet aksesibel", "rooms": ["L1-WC"]},
@@ -27,7 +27,7 @@
   {"id": "PF-L2-07", "floor": "L2", "prd": "makan/pantry", "rooms": ["L2-DINE"]},
   {"id": "PF-L2-08", "floor": "L2", "prd": "shower dan toilet", "rooms": ["L2-SHOWER", "L2-WC"]},
   {"id": "PF-L2-09", "floor": "L2", "prd": "balkon/taman", "rooms": ["L2-BALCONY", "L2-GARDEN"]},
-  {"id": "PF-L2-10", "floor": "L2", "prd": "gudang dan area servis", "rooms": ["L2-STORE", "L2-SERVICE", "L2-SHAFT-W", "L2-RISER"]},
+  {"id": "PF-L2-10", "floor": "L2", "prd": "gudang dan area servis", "rooms": ["L2-STORE", "L2-SERVICE", "L2-SHAFT-W"]},
   {"id": "PF-L2-11", "floor": "L2", "prd": "jalur evakuasi", "rooms": ["L2-CORE", "L2-CORR", "L2-NCORR"]}
  ]
 }

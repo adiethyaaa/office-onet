@@ -2,16 +2,16 @@
  "file": "A-201.dxf",
  "modelspace": {
   "A-WALL": {
-   "HATCH": 70,
-   "LWPOLYLINE": 70
+   "HATCH": 67,
+   "LWPOLYLINE": 67
   },
   "A-AREA": {
-   "LWPOLYLINE": 20
+   "LWPOLYLINE": 19
   },
   "A-DOOR": {
-   "LWPOLYLINE": 35,
+   "LWPOLYLINE": 32,
    "ARC": 23,
-   "HATCH": 2
+   "HATCH": 1
   },
   "A-GLAZ": {
    "LWPOLYLINE": 178
@@ -22,7 +22,7 @@
    "TEXT": 20
   },
   "A-FURN": {
-   "LWPOLYLINE": 106
+   "LWPOLYLINE": 108
   },
   "A-STRS": {
    "LWPOLYLINE": 31,
@@ -37,12 +37,12 @@
    "TEXT": 22
   },
   "A-ANNO-RMNM": {
-   "TEXT": 20,
-   "LWPOLYLINE": 2,
-   "HATCH": 2
+   "TEXT": 19,
+   "LWPOLYLINE": 1,
+   "HATCH": 1
   },
   "A-FURN-IDEN": {
-   "TEXT": 108,
+   "TEXT": 110,
    "LWPOLYLINE": 21
   }
  },
@@ -91,15 +91,15 @@
     "LWPOLYLINE": 1
    },
    "A-ANNO-SCHD": {
-    "HATCH": 56,
-    "TEXT": 448,
-    "LWPOLYLINE": 116
+    "HATCH": 59,
+    "TEXT": 456,
+    "LWPOLYLINE": 118
    }
   }
  },
  "totals": {
-  "modelspace": 827,
-  "paperspace": 839
+  "modelspace": 817,
+  "paperspace": 852
  },
  "layers": [
   "0",

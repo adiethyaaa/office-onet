@@ -2,16 +2,16 @@
  "file": "ICT-102.dxf",
  "modelspace": {
   "A-WALL": {
-   "HATCH": 61,
-   "LWPOLYLINE": 61
+   "HATCH": 58,
+   "LWPOLYLINE": 58
   },
   "A-AREA": {
-   "LWPOLYLINE": 18
+   "LWPOLYLINE": 17
   },
   "A-DOOR": {
-   "LWPOLYLINE": 31,
+   "LWPOLYLINE": 28,
    "ARC": 15,
-   "HATCH": 4
+   "HATCH": 3
   },
   "A-GLAZ": {
    "LWPOLYLINE": 186
@@ -61,9 +61,9 @@
    "TEXT": 2
   },
   "A-ANNO-RMNM": {
-   "TEXT": 18,
-   "LWPOLYLINE": 2,
-   "HATCH": 2
+   "TEXT": 17,
+   "LWPOLYLINE": 1,
+   "HATCH": 1
   }
  },
  "paperspace": {
@@ -117,7 +117,7 @@
   }
  },
  "totals": {
-  "modelspace": 692,
+  "modelspace": 678,
   "paperspace": 225
  },
  "layers": [

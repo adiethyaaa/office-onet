@@ -161,10 +161,10 @@
    "check": "nav_walkable_counts",
    "ok": true,
    "detail": {
-    "L1_staff": 48192,
-    "L1_visitor": 48049,
-    "L2_staff": 49821,
-    "L2_visitor": 49741
+    "L1_staff": 48289,
+    "L1_visitor": 48186,
+    "L2_staff": 49918,
+    "L2_visitor": 49878
    }
   },
   {
@@ -175,7 +175,7 @@
   {
    "check": "adjacency_ADJ-02",
    "ok": true,
-   "detail": "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER', 'L1-RISER']"
+   "detail": "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER']"
   },
   {
    "check": "adjacency_ADJ-03",
@@ -267,8 +267,8 @@
    "check": "walls_derived",
    "ok": true,
    "detail": {
-    "L1": 50,
-    "L2": 42
+    "L1": 47,
+    "L2": 39
    }
   }
  ],
@@ -284,7 +284,7 @@
   {
    "id": "ADJ-02",
    "ok": true,
-   "detail": "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER', 'L1-RISER']",
+   "detail": "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER']",
    "text": "Rapat dicapai visitor tanpa melewati server"
   },
   {

@@ -810,7 +810,6 @@
     "D-L1-16",
     "D-L1-17",
     "D-L1-18",
-    "D-L1-20",
     "D-L1-21"
    ],
    "doorConnected": [
@@ -821,7 +820,6 @@
     "L1-HUGO",
     "L1-KEVIN",
     "L1-LAB",
-    "L1-RISER",
     "L1-STORE"
    ],
    "sharedWall": [
@@ -834,7 +832,6 @@
     "L1-KEVIN",
     "L1-LAB",
     "L1-NOVA",
-    "L1-RISER",
     "L1-SERVER",
     "L1-STORE"
    ],
@@ -1145,7 +1142,6 @@
    "sharedWall": [
     "L1-BRUNO",
     "L1-NCORR",
-    "L1-RISER",
     "L1-STORE"
    ],
    "furnishing": {
@@ -1170,62 +1166,6 @@
    ]
   },
   {
-   "id": "L1-RISER",
-   "name": "Riser ICT",
-   "floor": "L1",
-   "category": "shaft",
-   "access": "restricted",
-   "noise": "quiet",
-   "function": "Riser kabel vertikal L1-L2",
-   "polygon": [
-    [
-     29,
-     18.5
-    ],
-    [
-     30,
-     18.5
-    ],
-    [
-     30,
-     20
-    ],
-    [
-     29,
-     20
-    ]
-   ],
-   "area_m2": 1.5,
-   "seats": 0,
-   "doors": [
-    "D-L1-20"
-   ],
-   "doorConnected": [
-    "L1-NCORR"
-   ],
-   "sharedWall": [
-    "L1-NCORR",
-    "L1-SERVER",
-    "L1-STORE"
-   ],
-   "furnishing": {},
-   "ictOutlets": 0,
-   "ictPorts": 0,
-   "ictProfile": [
-    "riser kabel ke L2"
-   ],
-   "finish": {
-    "floor": "-",
-    "wall": "-",
-    "ceiling": "-"
-   },
-   "status": "proposal konsep",
-   "assumptions": [
-    "AS-DIM-01",
-    "AS-DIM-02"
-   ]
-  },
-  {
    "id": "L1-STORE",
    "name": "Gudang & utilitas",
    "floor": "L1",
@@ -1236,14 +1176,6 @@
    "polygon": [
     [
      29,
-     20
-    ],
-    [
-     30,
-     20
-    ],
-    [
-     30,
      18.5
     ],
     [
@@ -1259,7 +1191,7 @@
      24
     ]
    ],
-   "area_m2": 15.0,
+   "area_m2": 16.5,
    "seats": 0,
    "doors": [
     "D-L1-21"
@@ -1269,7 +1201,6 @@
    ],
    "sharedWall": [
     "L1-NCORR",
-    "L1-RISER",
     "L1-SERVER"
    ],
    "furnishing": {
@@ -2021,7 +1952,6 @@
     "D-L2-14",
     "D-L2-15",
     "D-L2-16",
-    "D-L2-17",
     "D-L2-18"
    ],
    "doorConnected": [
@@ -2030,7 +1960,6 @@
     "L2-CORE",
     "L2-GAME",
     "L2-GYM",
-    "L2-RISER",
     "L2-SERVICE",
     "L2-STORE"
    ],
@@ -2042,7 +1971,6 @@
     "L2-GAME",
     "L2-GARDEN",
     "L2-GYM",
-    "L2-RISER",
     "L2-SERVICE",
     "L2-STORE"
    ],
@@ -2283,7 +2211,6 @@
    "sharedWall": [
     "L2-GYM",
     "L2-NCORR",
-    "L2-RISER",
     "L2-SERVICE"
    ],
    "furnishing": {
@@ -2304,62 +2231,6 @@
    ]
   },
   {
-   "id": "L2-RISER",
-   "name": "Riser ICT L2",
-   "floor": "L2",
-   "category": "shaft",
-   "access": "restricted",
-   "noise": "quiet",
-   "function": "Lanjutan riser",
-   "polygon": [
-    [
-     29,
-     18.5
-    ],
-    [
-     30,
-     18.5
-    ],
-    [
-     30,
-     20
-    ],
-    [
-     29,
-     20
-    ]
-   ],
-   "area_m2": 1.5,
-   "seats": 0,
-   "doors": [
-    "D-L2-17"
-   ],
-   "doorConnected": [
-    "L2-NCORR"
-   ],
-   "sharedWall": [
-    "L2-NCORR",
-    "L2-SERVICE",
-    "L2-STORE"
-   ],
-   "furnishing": {},
-   "ictOutlets": 0,
-   "ictPorts": 0,
-   "ictProfile": [
-    "riser kabel dari L1"
-   ],
-   "finish": {
-    "floor": "-",
-    "wall": "-",
-    "ceiling": "-"
-   },
-   "status": "proposal konsep",
-   "assumptions": [
-    "AS-DIM-01",
-    "AS-DIM-02"
-   ]
-  },
-  {
    "id": "L2-SERVICE",
    "name": "Area servis L2",
    "floor": "L2",
@@ -2370,14 +2241,6 @@
    "polygon": [
     [
      29,
-     20
-    ],
-    [
-     30,
-     20
-    ],
-    [
-     30,
      18.5
     ],
     [
@@ -2393,7 +2256,7 @@
      24
     ]
    ],
-   "area_m2": 15.0,
+   "area_m2": 16.5,
    "seats": 0,
    "doors": [
     "D-L2-18"
@@ -2403,7 +2266,6 @@
    ],
    "sharedWall": [
     "L2-NCORR",
-    "L2-RISER",
     "L2-STORE"
    ],
    "furnishing": {
@@ -2435,7 +2297,7 @@
   {
    "id": "ADJ-02",
    "ok": true,
-   "detail": "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER', 'L1-RISER']",
+   "detail": "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER']",
    "text": "Rapat dicapai visitor tanpa melewati server"
   },
   {

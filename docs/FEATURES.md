@@ -48,7 +48,7 @@ Owner features need the private backend (`server/`). Without the backend, the ap
 ![Floor 1 from above](img/hero-l1.jpg)
 
 - Two floors: **Lantai 1 (kerja dan kunjungan)** (Floor 1, work and visits) and **Lantai 2 (rekreasi)** (Floor 2, recreation), with 38 rooms, 46 doors, 39 windows, and 201 pieces of furniture and equipment in total.
-- Floor 1 has the lobby and reception (the starting point), a large meeting room, a gallery, a pantry, discussion rooms, an implementation room, work areas per role, a lab, a server room, a riser, and a storage room.
+- Floor 1 has the lobby and reception (the starting point), a large meeting room, a gallery, a pantry, discussion rooms, an implementation room, work areas per role, a lab, a server room, and a storage room (the ICT riser was removed on 2026-10-13 at Budi's request; its area joined the storage room).
 - Floor 2 has a library, a lounge and coffee bar, a dining room, showers, a game room, a billiard room, a gym, an indoor garden, and a balcony.
 - Change floors using the **U-stair** or the **lift** in the building core. The outdoor emergency stair is only a concept marker and cannot be used.
 - Walls that block the view are cut away automatically, including windows and door leaves, so the avatar is always visible.
@@ -338,7 +338,7 @@ Matching messages are held with the status `Menunggu persetujuan` (Awaiting appr
 | Theme | Follow system, light, dark |
 | Graphics quality | Auto, low (no shadows), high. Auto picks low when the browser uses a software renderer |
 | Reduce motion | Turns off secondary animations. Follows the system setting by default |
-| Visitor mode | Locks restricted rooms (server room, riser, shaft). The avatar is moved to a safe point if it is inside one |
+| Visitor mode | Locks restricted rooms (server room, shaft). The avatar is moved to a safe point if it is inside one |
 | Language | Indonesian or English. The default follows the browser language: an Indonesian browser gets Indonesian, everything else gets English. Switching reloads the page |
 
 Settings are stored in the browser.
@@ -370,7 +370,7 @@ All artifacts are generated from one source, `design/world.json`. When the datas
 | ICT-001 | Network topology |
 | ICT-101, ICT-102 | Outlets, access points, and cameras per floor |
 | ICT-201 | Rack elevation |
-| ICT-301 | Pathways and riser |
+| ICT-301 | Pathways and vertical backbone |
 | ICT-401 | Port and device schedule |
 
 - Per-sheet and combined PDFs are in `drawings/pdf/`; DXF and DWG are in `cad/out/`.

@@ -73,7 +73,7 @@ KR_RENDER_UTC
   9
 $CUSTOMPROPERTY
   1
-2026-10-02T02:42:18Z
+2026-10-13T01:12:51Z
   9
 $CUSTOMPROPERTYTAG
   1
@@ -113,7 +113,7 @@ KR_WORLD_SHA256
   9
 $CUSTOMPROPERTY
   1
-488597bb0552fbde4c67baa4ffa6f73f6cb6882cb8f02fcb10adbc3fc07e5969
+38f94d70975b0c429ccf33c71429d3b9785563661bcc46280537666767761298
   9
 $CUSTOMPROPERTYTAG
   1
@@ -597,7 +597,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461316.4461689815
+2461327.384074074
   9
 $TDUCREATE
  40
@@ -605,7 +605,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461316.4461689815
+2461327.384074074
   9
 $TDUUPDATE
  40
@@ -657,7 +657,7 @@ $SPLINESEGS
   9
 $HANDSEED
   5
-6AD
+69F
   9
 $SURFTAB1
  70
@@ -1037,11 +1037,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{E630FFB1-C670-45EB-A857-E63DA2CEA6B7}
+{1CDDD9A7-FCCB-4E07-A1F3-F8C049074DA1}
   9
 $VERSIONGUID
   2
-{218CE9FA-24E0-4B40-8885-A3D03DD613D6}
+{A912B7BE-A6D5-492E-B165-D772F685BBC6}
   9
 $EXTNAMES
 290
@@ -3705,7 +3705,7 @@ KANTOR_RPG
   0
 APPID
   5
-6AA
+69C
 330
 3
 100
@@ -3719,7 +3719,7 @@ HATCHBACKGROUNDCOLOR
   0
 APPID
   5
-6AB
+69D
 330
 3
 100
@@ -5683,7 +5683,7 @@ KR-TTLB-G
   0
 BLOCK_RECORD
   5
-480
+472
 330
 9
 100
@@ -5693,7 +5693,7 @@ AcDbBlockTableRecord
   2
 *Paper_Space0
 340
-483
+475
  70
 0
 280
@@ -6541,9 +6541,9 @@ AcDbBlockEnd
   0
 BLOCK
   5
-481
+473
 330
-480
+472
 100
 AcDbEntity
   8
@@ -6567,9 +6567,9 @@ AcDbBlockBegin
   0
 VIEWPORT
   5
-484
+476
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6671,9 +6671,9 @@ AcDbViewport
   0
 LWPOLYLINE
   5
-485
+477
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6707,9 +6707,9 @@ AcDbPolyline
   0
 HATCH
   5
-486
+478
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6777,9 +6777,9 @@ SOLID
   0
 LWPOLYLINE
   5
-487
+479
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6813,9 +6813,9 @@ AcDbPolyline
   0
 TEXT
   5
-488
+47A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6855,9 +6855,9 @@ AcDbText
   0
 TEXT
   5
-489
+47B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6893,9 +6893,9 @@ AcDbText
   0
 TEXT
   5
-48A
+47C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6931,9 +6931,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-48B
+47D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -6959,9 +6959,9 @@ AcDbPolyline
   0
 HATCH
   5
-48C
+47E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7029,9 +7029,9 @@ SOLID
   0
 TEXT
   5
-48D
+47F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7069,9 +7069,9 @@ AcDbText
   0
 TEXT
   5
-48E
-330
 480
+330
+472
 100
 AcDbEntity
  67
@@ -7107,9 +7107,9 @@ AcDbText
   0
 TEXT
   5
-48F
+481
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7145,9 +7145,9 @@ AcDbText
   0
 TEXT
   5
-490
+482
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7183,9 +7183,9 @@ AcDbText
   0
 TEXT
   5
-491
+483
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7229,9 +7229,9 @@ FX-L2-001
   0
 TEXT
   5
-492
+484
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7267,9 +7267,9 @@ AcDbText
   0
 TEXT
   5
-493
+485
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7302,12 +7302,594 @@ KR-SANS
 0.0
 100
 AcDbText
+  0
+TEXT
+  5
+486
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2240554
+100
+AcDbText
+ 10
+129.5
+ 20
+384.07280000000003
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+READ
+  7
+KR-SANS
+ 41
+0.8
+ 11
+129.5
+ 21
+384.07280000000003
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+487
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+13227727
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+24.0
+ 20
+383.12280000000004
+ 10
+158.5
+ 20
+383.12280000000004
+  0
+HATCH
+  5
+488
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+ 62
+7
+420
+15857138
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+3
+ 72
+0
+ 73
+1
+ 93
+4
+ 10
+24.0
+ 20
+378.28420000000006
+ 10
+158.5
+ 20
+378.28420000000006
+ 10
+158.5
+ 20
+383.12280000000004
+ 10
+24.0
+ 20
+383.12280000000004
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
+  0
+TEXT
+  5
+489
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2051386
+100
+AcDbText
+ 10
+34.0
+ 20
+379.23420000000004
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+2
+  7
+KR-SANS
+ 41
+0.8
+ 72
+2
+ 11
+34.0
+ 21
+379.23420000000004
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+fixture
+1000
+FX-L2-002
+  0
+TEXT
+  5
+48A
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2240554
+100
+AcDbText
+ 10
+36.0
+ 20
+379.23420000000004
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+FX-L2-002
+  7
+KR-SANS
+ 41
+0.8
+ 11
+36.0
+ 21
+379.23420000000004
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+48B
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2240554
+100
+AcDbText
+ 10
+67.0
+ 20
+379.23420000000004
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+Rak buku
+  7
+KR-SANS
+ 41
+0.8
+ 11
+67.0
+ 21
+379.23420000000004
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+48C
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2240554
+100
+AcDbText
+ 10
+129.5
+ 20
+379.23420000000004
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+READ
+  7
+KR-SANS
+ 41
+0.8
+ 11
+129.5
+ 21
+379.23420000000004
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+48D
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+13227727
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+24.0
+ 20
+378.28420000000006
+ 10
+158.5
+ 20
+378.28420000000006
+  0
+TEXT
+  5
+48E
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2051386
+100
+AcDbText
+ 10
+34.0
+ 20
+374.39560000000006
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+3
+  7
+KR-SANS
+ 41
+0.8
+ 72
+2
+ 11
+34.0
+ 21
+374.39560000000006
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+fixture
+1000
+FX-L2-003
+  0
+TEXT
+  5
+48F
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2240554
+100
+AcDbText
+ 10
+36.0
+ 20
+374.39560000000006
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+FX-L2-003
+  7
+KR-SANS
+ 41
+0.8
+ 11
+36.0
+ 21
+374.39560000000006
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+490
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2240554
+100
+AcDbText
+ 10
+67.0
+ 20
+374.39560000000006
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+Rak buku
+  7
+KR-SANS
+ 41
+0.8
+ 11
+67.0
+ 21
+374.39560000000006
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+491
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+2240554
+100
+AcDbText
+ 10
+129.5
+ 20
+374.39560000000006
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+READ
+  7
+KR-SANS
+ 41
+0.8
+ 11
+129.5
+ 21
+374.39560000000006
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+492
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+420
+13227727
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+24.0
+ 20
+373.44560000000007
+ 10
+158.5
+ 20
+373.44560000000007
+  0
+HATCH
+  5
+493
+330
+472
+100
+AcDbEntity
+ 67
+1
+  8
+A-ANNO-SCHD
+ 62
+7
+420
+15857138
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+3
+ 72
+0
+ 73
+1
+ 93
+4
+ 10
+24.0
+ 20
+368.6070000000001
+ 10
+158.5
+ 20
+368.6070000000001
+ 10
+158.5
+ 20
+373.44560000000007
+ 10
+24.0
+ 20
+373.44560000000007
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
   0
 TEXT
   5
 494
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7315,37 +7897,45 @@ AcDbEntity
   8
 A-ANNO-SCHD
 420
-2240554
+2051386
 100
 AcDbText
  10
-129.5
+34.0
  20
-384.07280000000003
+369.5570000000001
  30
 0.0
  40
 2.6176111111111107
   1
-READ
+4
   7
 KR-SANS
  41
 0.8
+ 72
+2
  11
-129.5
+34.0
  21
-384.07280000000003
+369.5570000000001
  31
 0.0
 100
 AcDbText
+1001
+KANTOR_RPG
+1000
+fixture
+1000
+FX-L2-004
   0
-LWPOLYLINE
+TEXT
   5
 495
 330
-480
+472
 100
 AcDbEntity
  67
@@ -7353,627 +7943,37 @@ AcDbEntity
   8
 A-ANNO-SCHD
 420
-13227727
+2240554
 100
-AcDbPolyline
- 90
-2
- 70
-0
+AcDbText
  10
-24.0
+36.0
  20
-383.12280000000004
- 10
-158.5
- 20
-383.12280000000004
+369.5570000000001
+ 30
+0.0
+ 40
+2.6176111111111107
+  1
+FX-L2-004
+  7
+KR-SANS
+ 41
+0.8
+ 11
+36.0
+ 21
+369.5570000000001
+ 31
+0.0
+100
+AcDbText
   0
-HATCH
+TEXT
   5
 496
 330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
- 62
-7
-420
-15857138
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-24.0
- 20
-378.28420000000006
- 10
-158.5
- 20
-378.28420000000006
- 10
-158.5
- 20
-383.12280000000004
- 10
-24.0
- 20
-383.12280000000004
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-  0
-TEXT
-  5
-497
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2051386
-100
-AcDbText
- 10
-34.0
- 20
-379.23420000000004
- 30
-0.0
- 40
-2.6176111111111107
-  1
-2
-  7
-KR-SANS
- 41
-0.8
- 72
-2
- 11
-34.0
- 21
-379.23420000000004
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-fixture
-1000
-FX-L2-002
-  0
-TEXT
-  5
-498
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2240554
-100
-AcDbText
- 10
-36.0
- 20
-379.23420000000004
- 30
-0.0
- 40
-2.6176111111111107
-  1
-FX-L2-002
-  7
-KR-SANS
- 41
-0.8
- 11
-36.0
- 21
-379.23420000000004
- 31
-0.0
-100
-AcDbText
-  0
-TEXT
-  5
-499
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2240554
-100
-AcDbText
- 10
-67.0
- 20
-379.23420000000004
- 30
-0.0
- 40
-2.6176111111111107
-  1
-Rak buku
-  7
-KR-SANS
- 41
-0.8
- 11
-67.0
- 21
-379.23420000000004
- 31
-0.0
-100
-AcDbText
-  0
-TEXT
-  5
-49A
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2240554
-100
-AcDbText
- 10
-129.5
- 20
-379.23420000000004
- 30
-0.0
- 40
-2.6176111111111107
-  1
-READ
-  7
-KR-SANS
- 41
-0.8
- 11
-129.5
- 21
-379.23420000000004
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-49B
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-13227727
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-24.0
- 20
-378.28420000000006
- 10
-158.5
- 20
-378.28420000000006
-  0
-TEXT
-  5
-49C
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2051386
-100
-AcDbText
- 10
-34.0
- 20
-374.39560000000006
- 30
-0.0
- 40
-2.6176111111111107
-  1
-3
-  7
-KR-SANS
- 41
-0.8
- 72
-2
- 11
-34.0
- 21
-374.39560000000006
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-fixture
-1000
-FX-L2-003
-  0
-TEXT
-  5
-49D
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2240554
-100
-AcDbText
- 10
-36.0
- 20
-374.39560000000006
- 30
-0.0
- 40
-2.6176111111111107
-  1
-FX-L2-003
-  7
-KR-SANS
- 41
-0.8
- 11
-36.0
- 21
-374.39560000000006
- 31
-0.0
-100
-AcDbText
-  0
-TEXT
-  5
-49E
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2240554
-100
-AcDbText
- 10
-67.0
- 20
-374.39560000000006
- 30
-0.0
- 40
-2.6176111111111107
-  1
-Rak buku
-  7
-KR-SANS
- 41
-0.8
- 11
-67.0
- 21
-374.39560000000006
- 31
-0.0
-100
-AcDbText
-  0
-TEXT
-  5
-49F
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2240554
-100
-AcDbText
- 10
-129.5
- 20
-374.39560000000006
- 30
-0.0
- 40
-2.6176111111111107
-  1
-READ
-  7
-KR-SANS
- 41
-0.8
- 11
-129.5
- 21
-374.39560000000006
- 31
-0.0
-100
-AcDbText
-  0
-LWPOLYLINE
-  5
-4A0
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-13227727
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-24.0
- 20
-373.44560000000007
- 10
-158.5
- 20
-373.44560000000007
-  0
-HATCH
-  5
-4A1
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
- 62
-7
-420
-15857138
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-24.0
- 20
-368.6070000000001
- 10
-158.5
- 20
-368.6070000000001
- 10
-158.5
- 20
-373.44560000000007
- 10
-24.0
- 20
-373.44560000000007
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-  0
-TEXT
-  5
-4A2
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2051386
-100
-AcDbText
- 10
-34.0
- 20
-369.5570000000001
- 30
-0.0
- 40
-2.6176111111111107
-  1
-4
-  7
-KR-SANS
- 41
-0.8
- 72
-2
- 11
-34.0
- 21
-369.5570000000001
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-fixture
-1000
-FX-L2-004
-  0
-TEXT
-  5
-4A3
-330
-480
-100
-AcDbEntity
- 67
-1
-  8
-A-ANNO-SCHD
-420
-2240554
-100
-AcDbText
- 10
-36.0
- 20
-369.5570000000001
- 30
-0.0
- 40
-2.6176111111111107
-  1
-FX-L2-004
-  7
-KR-SANS
- 41
-0.8
- 11
-36.0
- 21
-369.5570000000001
- 31
-0.0
-100
-AcDbText
-  0
-TEXT
-  5
-4A4
-330
-480
+472
 100
 AcDbEntity
  67
@@ -8009,9 +8009,9 @@ AcDbText
   0
 TEXT
   5
-4A5
+497
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8047,9 +8047,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4A6
+498
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8075,9 +8075,9 @@ AcDbPolyline
   0
 TEXT
   5
-4A7
+499
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8121,9 +8121,9 @@ FX-L2-005
   0
 TEXT
   5
-4A8
+49A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8159,9 +8159,9 @@ AcDbText
   0
 TEXT
   5
-4A9
+49B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8197,9 +8197,9 @@ AcDbText
   0
 TEXT
   5
-4AA
+49C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8235,9 +8235,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4AB
+49D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8263,9 +8263,9 @@ AcDbPolyline
   0
 HATCH
   5
-4AC
+49E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8333,9 +8333,9 @@ SOLID
   0
 TEXT
   5
-4AD
+49F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8379,9 +8379,9 @@ FX-L2-006
   0
 TEXT
   5
-4AE
+4A0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8417,9 +8417,9 @@ AcDbText
   0
 TEXT
   5
-4AF
+4A1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8455,9 +8455,9 @@ AcDbText
   0
 TEXT
   5
-4B0
+4A2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8493,9 +8493,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4B1
+4A3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8521,9 +8521,9 @@ AcDbPolyline
   0
 TEXT
   5
-4B2
+4A4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8567,9 +8567,9 @@ FX-L2-007
   0
 TEXT
   5
-4B3
+4A5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8605,9 +8605,9 @@ AcDbText
   0
 TEXT
   5
-4B4
+4A6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8643,9 +8643,9 @@ AcDbText
   0
 TEXT
   5
-4B5
+4A7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8681,9 +8681,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4B6
+4A8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8709,9 +8709,9 @@ AcDbPolyline
   0
 HATCH
   5
-4B7
+4A9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8779,9 +8779,9 @@ SOLID
   0
 TEXT
   5
-4B8
+4AA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8825,9 +8825,9 @@ FX-L2-008
   0
 TEXT
   5
-4B9
+4AB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8863,9 +8863,9 @@ AcDbText
   0
 TEXT
   5
-4BA
+4AC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8901,9 +8901,9 @@ AcDbText
   0
 TEXT
   5
-4BB
+4AD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8939,9 +8939,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4BC
+4AE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -8967,9 +8967,9 @@ AcDbPolyline
   0
 TEXT
   5
-4BD
+4AF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9013,9 +9013,9 @@ FX-L2-009
   0
 TEXT
   5
-4BE
+4B0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9051,9 +9051,9 @@ AcDbText
   0
 TEXT
   5
-4BF
+4B1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9089,9 +9089,9 @@ AcDbText
   0
 TEXT
   5
-4C0
+4B2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9127,9 +9127,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4C1
+4B3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9155,9 +9155,9 @@ AcDbPolyline
   0
 HATCH
   5
-4C2
+4B4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9225,9 +9225,9 @@ SOLID
   0
 TEXT
   5
-4C3
+4B5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9271,9 +9271,9 @@ FX-L2-010
   0
 TEXT
   5
-4C4
+4B6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9309,9 +9309,9 @@ AcDbText
   0
 TEXT
   5
-4C5
+4B7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9347,9 +9347,9 @@ AcDbText
   0
 TEXT
   5
-4C6
+4B8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9385,9 +9385,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4C7
+4B9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9413,9 +9413,9 @@ AcDbPolyline
   0
 TEXT
   5
-4C8
+4BA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9459,9 +9459,9 @@ FX-L2-011
   0
 TEXT
   5
-4C9
+4BB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9497,9 +9497,9 @@ AcDbText
   0
 TEXT
   5
-4CA
+4BC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9535,9 +9535,9 @@ AcDbText
   0
 TEXT
   5
-4CB
+4BD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9573,9 +9573,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4CC
+4BE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9601,9 +9601,9 @@ AcDbPolyline
   0
 HATCH
   5
-4CD
+4BF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9671,9 +9671,9 @@ SOLID
   0
 TEXT
   5
-4CE
+4C0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9717,9 +9717,9 @@ FX-L2-012
   0
 TEXT
   5
-4CF
+4C1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9755,9 +9755,9 @@ AcDbText
   0
 TEXT
   5
-4D0
+4C2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9793,9 +9793,9 @@ AcDbText
   0
 TEXT
   5
-4D1
+4C3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9831,9 +9831,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4D2
+4C4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9859,9 +9859,9 @@ AcDbPolyline
   0
 TEXT
   5
-4D3
+4C5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9905,9 +9905,9 @@ FX-L2-013
   0
 TEXT
   5
-4D4
+4C6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9943,9 +9943,9 @@ AcDbText
   0
 TEXT
   5
-4D5
+4C7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -9981,9 +9981,9 @@ AcDbText
   0
 TEXT
   5
-4D6
+4C8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10019,9 +10019,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4D7
+4C9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10047,9 +10047,9 @@ AcDbPolyline
   0
 HATCH
   5
-4D8
+4CA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10117,9 +10117,9 @@ SOLID
   0
 TEXT
   5
-4D9
+4CB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10163,9 +10163,9 @@ FX-L2-014
   0
 TEXT
   5
-4DA
+4CC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10201,9 +10201,9 @@ AcDbText
   0
 TEXT
   5
-4DB
+4CD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10239,9 +10239,9 @@ AcDbText
   0
 TEXT
   5
-4DC
+4CE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10277,9 +10277,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4DD
+4CF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10305,9 +10305,9 @@ AcDbPolyline
   0
 TEXT
   5
-4DE
+4D0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10351,9 +10351,9 @@ FX-L2-015
   0
 TEXT
   5
-4DF
+4D1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10389,9 +10389,9 @@ AcDbText
   0
 TEXT
   5
-4E0
+4D2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10427,9 +10427,9 @@ AcDbText
   0
 TEXT
   5
-4E1
+4D3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10465,9 +10465,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4E2
+4D4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10493,9 +10493,9 @@ AcDbPolyline
   0
 HATCH
   5
-4E3
+4D5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10563,9 +10563,9 @@ SOLID
   0
 TEXT
   5
-4E4
+4D6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10609,9 +10609,9 @@ FX-L2-016
   0
 TEXT
   5
-4E5
+4D7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10647,9 +10647,9 @@ AcDbText
   0
 TEXT
   5
-4E6
+4D8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10685,9 +10685,9 @@ AcDbText
   0
 TEXT
   5
-4E7
+4D9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10723,9 +10723,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4E8
+4DA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10751,9 +10751,9 @@ AcDbPolyline
   0
 TEXT
   5
-4E9
+4DB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10797,9 +10797,9 @@ FX-L2-017
   0
 TEXT
   5
-4EA
+4DC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10835,9 +10835,9 @@ AcDbText
   0
 TEXT
   5
-4EB
+4DD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10873,9 +10873,9 @@ AcDbText
   0
 TEXT
   5
-4EC
+4DE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10911,9 +10911,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4ED
+4DF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -10939,9 +10939,9 @@ AcDbPolyline
   0
 HATCH
   5
-4EE
+4E0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11009,9 +11009,9 @@ SOLID
   0
 TEXT
   5
-4EF
+4E1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11055,9 +11055,9 @@ FX-L2-018
   0
 TEXT
   5
-4F0
+4E2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11093,9 +11093,9 @@ AcDbText
   0
 TEXT
   5
-4F1
+4E3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11131,9 +11131,9 @@ AcDbText
   0
 TEXT
   5
-4F2
+4E4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11169,9 +11169,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4F3
+4E5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11197,9 +11197,9 @@ AcDbPolyline
   0
 TEXT
   5
-4F4
+4E6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11243,9 +11243,9 @@ FX-L2-019
   0
 TEXT
   5
-4F5
+4E7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11281,9 +11281,9 @@ AcDbText
   0
 TEXT
   5
-4F6
+4E8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11319,9 +11319,9 @@ AcDbText
   0
 TEXT
   5
-4F7
+4E9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11357,9 +11357,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4F8
+4EA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11385,9 +11385,9 @@ AcDbPolyline
   0
 HATCH
   5
-4F9
+4EB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11455,9 +11455,9 @@ SOLID
   0
 TEXT
   5
-4FA
+4EC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11501,9 +11501,9 @@ FX-L2-020
   0
 TEXT
   5
-4FB
+4ED
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11539,9 +11539,9 @@ AcDbText
   0
 TEXT
   5
-4FC
+4EE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11577,9 +11577,9 @@ AcDbText
   0
 TEXT
   5
-4FD
+4EF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11615,9 +11615,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-4FE
+4F0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11643,9 +11643,9 @@ AcDbPolyline
   0
 TEXT
   5
-4FF
+4F1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11689,9 +11689,9 @@ FX-L2-021
   0
 TEXT
   5
-500
+4F2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11727,9 +11727,9 @@ AcDbText
   0
 TEXT
   5
-501
+4F3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11765,9 +11765,9 @@ AcDbText
   0
 TEXT
   5
-502
+4F4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11803,9 +11803,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-503
+4F5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11831,9 +11831,9 @@ AcDbPolyline
   0
 HATCH
   5
-504
+4F6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11901,9 +11901,9 @@ SOLID
   0
 TEXT
   5
-505
+4F7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11947,9 +11947,9 @@ FX-L2-022
   0
 TEXT
   5
-506
+4F8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -11985,9 +11985,9 @@ AcDbText
   0
 TEXT
   5
-507
+4F9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12023,9 +12023,9 @@ AcDbText
   0
 TEXT
   5
-508
+4FA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12061,9 +12061,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-509
+4FB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12089,9 +12089,9 @@ AcDbPolyline
   0
 TEXT
   5
-50A
+4FC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12135,9 +12135,9 @@ FX-L2-023
   0
 TEXT
   5
-50B
+4FD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12173,9 +12173,9 @@ AcDbText
   0
 TEXT
   5
-50C
+4FE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12211,9 +12211,9 @@ AcDbText
   0
 TEXT
   5
-50D
+4FF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12249,9 +12249,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-50E
+500
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12277,9 +12277,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-50F
+501
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12305,9 +12305,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-510
+502
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12333,9 +12333,9 @@ AcDbPolyline
   0
 HATCH
   5
-511
+503
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12403,9 +12403,9 @@ SOLID
   0
 TEXT
   5
-512
+504
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12443,9 +12443,9 @@ AcDbText
   0
 TEXT
   5
-513
+505
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12481,9 +12481,9 @@ AcDbText
   0
 TEXT
   5
-514
+506
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12519,9 +12519,9 @@ AcDbText
   0
 TEXT
   5
-515
+507
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12557,9 +12557,9 @@ AcDbText
   0
 TEXT
   5
-516
+508
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12603,9 +12603,9 @@ FX-L2-024
   0
 TEXT
   5
-517
+509
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12641,9 +12641,9 @@ AcDbText
   0
 TEXT
   5
-518
+50A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12679,9 +12679,9 @@ AcDbText
   0
 TEXT
   5
-519
+50B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12717,9 +12717,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-51A
+50C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12745,9 +12745,9 @@ AcDbPolyline
   0
 HATCH
   5
-51B
+50D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12815,9 +12815,9 @@ SOLID
   0
 TEXT
   5
-51C
+50E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12861,9 +12861,9 @@ FX-L2-025
   0
 TEXT
   5
-51D
+50F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12899,9 +12899,9 @@ AcDbText
   0
 TEXT
   5
-51E
+510
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12937,9 +12937,9 @@ AcDbText
   0
 TEXT
   5
-51F
+511
 330
-480
+472
 100
 AcDbEntity
  67
@@ -12975,9 +12975,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-520
+512
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13003,9 +13003,9 @@ AcDbPolyline
   0
 TEXT
   5
-521
+513
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13049,9 +13049,9 @@ FX-L2-026
   0
 TEXT
   5
-522
+514
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13087,9 +13087,9 @@ AcDbText
   0
 TEXT
   5
-523
+515
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13125,9 +13125,9 @@ AcDbText
   0
 TEXT
   5
-524
+516
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13163,9 +13163,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-525
+517
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13191,9 +13191,9 @@ AcDbPolyline
   0
 HATCH
   5
-526
+518
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13261,9 +13261,9 @@ SOLID
   0
 TEXT
   5
-527
+519
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13307,9 +13307,9 @@ FX-L2-027
   0
 TEXT
   5
-528
+51A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13345,9 +13345,9 @@ AcDbText
   0
 TEXT
   5
-529
+51B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13383,9 +13383,9 @@ AcDbText
   0
 TEXT
   5
-52A
+51C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13421,9 +13421,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-52B
+51D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13449,9 +13449,9 @@ AcDbPolyline
   0
 TEXT
   5
-52C
+51E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13495,9 +13495,9 @@ FX-L2-028
   0
 TEXT
   5
-52D
+51F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13533,9 +13533,9 @@ AcDbText
   0
 TEXT
   5
-52E
+520
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13571,9 +13571,9 @@ AcDbText
   0
 TEXT
   5
-52F
+521
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13609,9 +13609,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-530
+522
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13637,9 +13637,9 @@ AcDbPolyline
   0
 HATCH
   5
-531
+523
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13707,9 +13707,9 @@ SOLID
   0
 TEXT
   5
-532
+524
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13753,9 +13753,9 @@ FX-L2-029
   0
 TEXT
   5
-533
+525
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13791,9 +13791,9 @@ AcDbText
   0
 TEXT
   5
-534
+526
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13829,9 +13829,9 @@ AcDbText
   0
 TEXT
   5
-535
+527
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13867,9 +13867,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-536
+528
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13895,9 +13895,9 @@ AcDbPolyline
   0
 TEXT
   5
-537
+529
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13941,9 +13941,9 @@ FX-L2-030
   0
 TEXT
   5
-538
+52A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -13979,9 +13979,9 @@ AcDbText
   0
 TEXT
   5
-539
+52B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14017,9 +14017,9 @@ AcDbText
   0
 TEXT
   5
-53A
+52C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14055,9 +14055,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-53B
+52D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14083,9 +14083,9 @@ AcDbPolyline
   0
 HATCH
   5
-53C
+52E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14153,9 +14153,9 @@ SOLID
   0
 TEXT
   5
-53D
+52F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14199,9 +14199,9 @@ FX-L2-031
   0
 TEXT
   5
-53E
+530
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14237,9 +14237,9 @@ AcDbText
   0
 TEXT
   5
-53F
+531
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14275,9 +14275,9 @@ AcDbText
   0
 TEXT
   5
-540
+532
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14313,9 +14313,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-541
+533
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14341,9 +14341,9 @@ AcDbPolyline
   0
 TEXT
   5
-542
+534
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14387,9 +14387,9 @@ FX-L2-032
   0
 TEXT
   5
-543
+535
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14425,9 +14425,9 @@ AcDbText
   0
 TEXT
   5
-544
+536
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14463,9 +14463,9 @@ AcDbText
   0
 TEXT
   5
-545
+537
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14501,9 +14501,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-546
+538
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14529,9 +14529,9 @@ AcDbPolyline
   0
 HATCH
   5
-547
+539
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14599,9 +14599,9 @@ SOLID
   0
 TEXT
   5
-548
+53A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14645,9 +14645,9 @@ FX-L2-033
   0
 TEXT
   5
-549
+53B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14683,9 +14683,9 @@ AcDbText
   0
 TEXT
   5
-54A
+53C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14721,9 +14721,9 @@ AcDbText
   0
 TEXT
   5
-54B
+53D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14759,9 +14759,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-54C
+53E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14787,9 +14787,9 @@ AcDbPolyline
   0
 TEXT
   5
-54D
+53F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14833,9 +14833,9 @@ FX-L2-034
   0
 TEXT
   5
-54E
+540
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14871,9 +14871,9 @@ AcDbText
   0
 TEXT
   5
-54F
+541
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14909,9 +14909,9 @@ AcDbText
   0
 TEXT
   5
-550
+542
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14947,9 +14947,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-551
+543
 330
-480
+472
 100
 AcDbEntity
  67
@@ -14975,9 +14975,9 @@ AcDbPolyline
   0
 HATCH
   5
-552
+544
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15045,9 +15045,9 @@ SOLID
   0
 TEXT
   5
-553
+545
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15091,9 +15091,9 @@ FX-L2-035
   0
 TEXT
   5
-554
+546
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15129,9 +15129,9 @@ AcDbText
   0
 TEXT
   5
-555
+547
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15167,9 +15167,9 @@ AcDbText
   0
 TEXT
   5
-556
+548
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15205,9 +15205,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-557
+549
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15233,9 +15233,9 @@ AcDbPolyline
   0
 TEXT
   5
-558
+54A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15279,9 +15279,9 @@ FX-L2-036
   0
 TEXT
   5
-559
+54B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15317,9 +15317,9 @@ AcDbText
   0
 TEXT
   5
-55A
+54C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15355,9 +15355,9 @@ AcDbText
   0
 TEXT
   5
-55B
+54D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15393,9 +15393,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-55C
+54E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15421,9 +15421,9 @@ AcDbPolyline
   0
 HATCH
   5
-55D
+54F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15491,9 +15491,9 @@ SOLID
   0
 TEXT
   5
-55E
+550
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15537,9 +15537,9 @@ FX-L2-037
   0
 TEXT
   5
-55F
+551
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15575,9 +15575,9 @@ AcDbText
   0
 TEXT
   5
-560
+552
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15613,9 +15613,9 @@ AcDbText
   0
 TEXT
   5
-561
+553
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15651,9 +15651,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-562
+554
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15679,9 +15679,9 @@ AcDbPolyline
   0
 TEXT
   5
-563
+555
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15725,9 +15725,9 @@ FX-L2-038
   0
 TEXT
   5
-564
+556
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15763,9 +15763,9 @@ AcDbText
   0
 TEXT
   5
-565
+557
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15801,9 +15801,9 @@ AcDbText
   0
 TEXT
   5
-566
+558
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15839,9 +15839,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-567
+559
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15867,9 +15867,9 @@ AcDbPolyline
   0
 HATCH
   5
-568
+55A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15937,9 +15937,9 @@ SOLID
   0
 TEXT
   5
-569
+55B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -15983,9 +15983,9 @@ FX-L2-039
   0
 TEXT
   5
-56A
+55C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16021,9 +16021,9 @@ AcDbText
   0
 TEXT
   5
-56B
+55D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16059,9 +16059,9 @@ AcDbText
   0
 TEXT
   5
-56C
+55E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16097,9 +16097,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-56D
+55F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16125,9 +16125,9 @@ AcDbPolyline
   0
 TEXT
   5
-56E
+560
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16171,9 +16171,9 @@ FX-L2-040
   0
 TEXT
   5
-56F
+561
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16209,9 +16209,9 @@ AcDbText
   0
 TEXT
   5
-570
+562
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16247,9 +16247,9 @@ AcDbText
   0
 TEXT
   5
-571
+563
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16285,9 +16285,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-572
+564
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16313,9 +16313,9 @@ AcDbPolyline
   0
 HATCH
   5
-573
+565
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16383,9 +16383,9 @@ SOLID
   0
 TEXT
   5
-574
+566
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16429,9 +16429,9 @@ FX-L2-041
   0
 TEXT
   5
-575
+567
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16467,9 +16467,9 @@ AcDbText
   0
 TEXT
   5
-576
+568
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16505,9 +16505,9 @@ AcDbText
   0
 TEXT
   5
-577
+569
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16543,9 +16543,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-578
+56A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16571,9 +16571,9 @@ AcDbPolyline
   0
 TEXT
   5
-579
+56B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16617,9 +16617,9 @@ FX-L2-042
   0
 TEXT
   5
-57A
+56C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16655,9 +16655,9 @@ AcDbText
   0
 TEXT
   5
-57B
+56D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16693,9 +16693,9 @@ AcDbText
   0
 TEXT
   5
-57C
+56E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16731,9 +16731,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-57D
+56F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16759,9 +16759,9 @@ AcDbPolyline
   0
 HATCH
   5
-57E
+570
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16829,9 +16829,9 @@ SOLID
   0
 TEXT
   5
-57F
+571
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16875,9 +16875,9 @@ FX-L2-043
   0
 TEXT
   5
-580
+572
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16913,9 +16913,9 @@ AcDbText
   0
 TEXT
   5
-581
+573
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16951,9 +16951,9 @@ AcDbText
   0
 TEXT
   5
-582
+574
 330
-480
+472
 100
 AcDbEntity
  67
@@ -16989,9 +16989,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-583
+575
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17017,9 +17017,9 @@ AcDbPolyline
   0
 TEXT
   5
-584
+576
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17063,9 +17063,9 @@ FX-L2-044
   0
 TEXT
   5
-585
+577
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17101,9 +17101,9 @@ AcDbText
   0
 TEXT
   5
-586
+578
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17139,9 +17139,9 @@ AcDbText
   0
 TEXT
   5
-587
+579
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17177,9 +17177,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-588
+57A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17205,9 +17205,9 @@ AcDbPolyline
   0
 HATCH
   5
-589
+57B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17275,9 +17275,9 @@ SOLID
   0
 TEXT
   5
-58A
+57C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17321,9 +17321,9 @@ FX-L2-045
   0
 TEXT
   5
-58B
+57D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17359,9 +17359,9 @@ AcDbText
   0
 TEXT
   5
-58C
+57E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17397,9 +17397,9 @@ AcDbText
   0
 TEXT
   5
-58D
+57F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17435,9 +17435,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-58E
+580
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17463,9 +17463,9 @@ AcDbPolyline
   0
 TEXT
   5
-58F
+581
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17509,9 +17509,9 @@ FX-L2-046
   0
 TEXT
   5
-590
+582
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17547,9 +17547,9 @@ AcDbText
   0
 TEXT
   5
-591
+583
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17585,9 +17585,9 @@ AcDbText
   0
 TEXT
   5
-592
+584
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17623,9 +17623,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-593
+585
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17651,9 +17651,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-594
+586
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17679,9 +17679,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-595
+587
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17707,9 +17707,9 @@ AcDbPolyline
   0
 HATCH
   5
-596
+588
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17777,9 +17777,9 @@ SOLID
   0
 TEXT
   5
-597
+589
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17817,9 +17817,9 @@ AcDbText
   0
 TEXT
   5
-598
+58A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17855,9 +17855,9 @@ AcDbText
   0
 TEXT
   5
-599
+58B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17893,9 +17893,9 @@ AcDbText
   0
 TEXT
   5
-59A
+58C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17931,9 +17931,9 @@ AcDbText
   0
 TEXT
   5
-59B
+58D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -17977,9 +17977,9 @@ FX-L2-047
   0
 TEXT
   5
-59C
+58E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18015,9 +18015,9 @@ AcDbText
   0
 TEXT
   5
-59D
+58F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18053,9 +18053,9 @@ AcDbText
   0
 TEXT
   5
-59E
+590
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18091,9 +18091,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-59F
+591
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18119,9 +18119,9 @@ AcDbPolyline
   0
 HATCH
   5
-5A0
+592
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18189,9 +18189,9 @@ SOLID
   0
 TEXT
   5
-5A1
+593
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18235,9 +18235,9 @@ FX-L2-048
   0
 TEXT
   5
-5A2
+594
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18273,9 +18273,9 @@ AcDbText
   0
 TEXT
   5
-5A3
+595
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18311,9 +18311,9 @@ AcDbText
   0
 TEXT
   5
-5A4
+596
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18349,9 +18349,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5A5
+597
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18377,9 +18377,9 @@ AcDbPolyline
   0
 TEXT
   5
-5A6
+598
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18423,9 +18423,9 @@ FX-L2-049
   0
 TEXT
   5
-5A7
+599
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18461,9 +18461,9 @@ AcDbText
   0
 TEXT
   5
-5A8
+59A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18499,9 +18499,9 @@ AcDbText
   0
 TEXT
   5
-5A9
+59B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18537,9 +18537,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5AA
+59C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18565,9 +18565,9 @@ AcDbPolyline
   0
 HATCH
   5
-5AB
+59D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18635,9 +18635,9 @@ SOLID
   0
 TEXT
   5
-5AC
+59E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18681,9 +18681,9 @@ FX-L2-050
   0
 TEXT
   5
-5AD
+59F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18719,9 +18719,9 @@ AcDbText
   0
 TEXT
   5
-5AE
+5A0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18757,9 +18757,9 @@ AcDbText
   0
 TEXT
   5
-5AF
+5A1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18795,9 +18795,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5B0
+5A2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18823,9 +18823,9 @@ AcDbPolyline
   0
 TEXT
   5
-5B1
+5A3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18869,9 +18869,9 @@ FX-L2-051
   0
 TEXT
   5
-5B2
+5A4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18907,9 +18907,9 @@ AcDbText
   0
 TEXT
   5
-5B3
+5A5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18945,9 +18945,9 @@ AcDbText
   0
 TEXT
   5
-5B4
+5A6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -18983,9 +18983,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5B5
+5A7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19011,9 +19011,9 @@ AcDbPolyline
   0
 HATCH
   5
-5B6
+5A8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19081,9 +19081,9 @@ SOLID
   0
 TEXT
   5
-5B7
+5A9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19127,9 +19127,9 @@ FX-L2-052
   0
 TEXT
   5
-5B8
+5AA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19165,9 +19165,9 @@ AcDbText
   0
 TEXT
   5
-5B9
+5AB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19203,9 +19203,9 @@ AcDbText
   0
 TEXT
   5
-5BA
+5AC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19241,9 +19241,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5BB
+5AD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19269,9 +19269,9 @@ AcDbPolyline
   0
 TEXT
   5
-5BC
+5AE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19315,9 +19315,9 @@ FX-L2-053
   0
 TEXT
   5
-5BD
+5AF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19353,9 +19353,9 @@ AcDbText
   0
 TEXT
   5
-5BE
+5B0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19391,9 +19391,9 @@ AcDbText
   0
 TEXT
   5
-5BF
+5B1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19429,9 +19429,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5C0
+5B2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19457,9 +19457,9 @@ AcDbPolyline
   0
 HATCH
   5
-5C1
+5B3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19527,9 +19527,9 @@ SOLID
   0
 TEXT
   5
-5C2
+5B4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19573,9 +19573,9 @@ FX-L2-054
   0
 TEXT
   5
-5C3
+5B5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19611,9 +19611,9 @@ AcDbText
   0
 TEXT
   5
-5C4
+5B6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19649,9 +19649,9 @@ AcDbText
   0
 TEXT
   5
-5C5
+5B7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19687,9 +19687,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5C6
+5B8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19715,9 +19715,9 @@ AcDbPolyline
   0
 TEXT
   5
-5C7
+5B9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19761,9 +19761,9 @@ FX-L2-055
   0
 TEXT
   5
-5C8
+5BA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19799,9 +19799,9 @@ AcDbText
   0
 TEXT
   5
-5C9
+5BB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19837,9 +19837,9 @@ AcDbText
   0
 TEXT
   5
-5CA
+5BC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19875,9 +19875,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5CB
+5BD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19903,9 +19903,9 @@ AcDbPolyline
   0
 HATCH
   5
-5CC
+5BE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -19973,9 +19973,9 @@ SOLID
   0
 TEXT
   5
-5CD
+5BF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20019,9 +20019,9 @@ FX-L2-056
   0
 TEXT
   5
-5CE
+5C0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20057,9 +20057,9 @@ AcDbText
   0
 TEXT
   5
-5CF
+5C1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20095,9 +20095,9 @@ AcDbText
   0
 TEXT
   5
-5D0
+5C2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20133,9 +20133,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5D1
+5C3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20161,9 +20161,9 @@ AcDbPolyline
   0
 TEXT
   5
-5D2
+5C4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20207,9 +20207,9 @@ FX-L2-057
   0
 TEXT
   5
-5D3
+5C5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20245,9 +20245,9 @@ AcDbText
   0
 TEXT
   5
-5D4
+5C6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20283,9 +20283,9 @@ AcDbText
   0
 TEXT
   5
-5D5
+5C7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20321,9 +20321,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5D6
+5C8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20349,9 +20349,9 @@ AcDbPolyline
   0
 HATCH
   5
-5D7
+5C9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20419,9 +20419,9 @@ SOLID
   0
 TEXT
   5
-5D8
+5CA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20465,9 +20465,9 @@ FX-L2-058
   0
 TEXT
   5
-5D9
+5CB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20503,9 +20503,9 @@ AcDbText
   0
 TEXT
   5
-5DA
+5CC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20541,9 +20541,9 @@ AcDbText
   0
 TEXT
   5
-5DB
+5CD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20579,9 +20579,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5DC
+5CE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20607,9 +20607,9 @@ AcDbPolyline
   0
 TEXT
   5
-5DD
+5CF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20653,9 +20653,9 @@ FX-L2-059
   0
 TEXT
   5
-5DE
+5D0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20691,9 +20691,9 @@ AcDbText
   0
 TEXT
   5
-5DF
+5D1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20729,9 +20729,9 @@ AcDbText
   0
 TEXT
   5
-5E0
+5D2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20767,9 +20767,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5E1
+5D3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20795,9 +20795,9 @@ AcDbPolyline
   0
 HATCH
   5
-5E2
+5D4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20865,9 +20865,9 @@ SOLID
   0
 TEXT
   5
-5E3
+5D5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20911,9 +20911,9 @@ FX-L2-060
   0
 TEXT
   5
-5E4
+5D6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20949,9 +20949,9 @@ AcDbText
   0
 TEXT
   5
-5E5
+5D7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -20987,9 +20987,9 @@ AcDbText
   0
 TEXT
   5
-5E6
+5D8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21025,9 +21025,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5E7
+5D9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21053,9 +21053,9 @@ AcDbPolyline
   0
 TEXT
   5
-5E8
+5DA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21099,9 +21099,9 @@ FX-L2-061
   0
 TEXT
   5
-5E9
+5DB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21137,9 +21137,9 @@ AcDbText
   0
 TEXT
   5
-5EA
+5DC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21175,9 +21175,9 @@ AcDbText
   0
 TEXT
   5
-5EB
+5DD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21213,9 +21213,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5EC
+5DE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21241,9 +21241,9 @@ AcDbPolyline
   0
 HATCH
   5
-5ED
+5DF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21311,9 +21311,9 @@ SOLID
   0
 TEXT
   5
-5EE
+5E0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21357,9 +21357,9 @@ FX-L2-062
   0
 TEXT
   5
-5EF
+5E1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21395,9 +21395,9 @@ AcDbText
   0
 TEXT
   5
-5F0
+5E2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21433,9 +21433,9 @@ AcDbText
   0
 TEXT
   5
-5F1
+5E3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21471,9 +21471,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5F2
+5E4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21499,9 +21499,9 @@ AcDbPolyline
   0
 TEXT
   5
-5F3
+5E5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21545,9 +21545,9 @@ FX-L2-063
   0
 TEXT
   5
-5F4
+5E6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21583,9 +21583,9 @@ AcDbText
   0
 TEXT
   5
-5F5
+5E7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21621,9 +21621,9 @@ AcDbText
   0
 TEXT
   5
-5F6
+5E8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21659,9 +21659,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5F7
+5E9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21687,9 +21687,9 @@ AcDbPolyline
   0
 HATCH
   5
-5F8
+5EA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21757,9 +21757,9 @@ SOLID
   0
 TEXT
   5
-5F9
+5EB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21803,9 +21803,9 @@ FX-L2-064
   0
 TEXT
   5
-5FA
+5EC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21841,9 +21841,9 @@ AcDbText
   0
 TEXT
   5
-5FB
+5ED
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21879,9 +21879,9 @@ AcDbText
   0
 TEXT
   5
-5FC
+5EE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21917,9 +21917,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-5FD
+5EF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21945,9 +21945,9 @@ AcDbPolyline
   0
 TEXT
   5
-5FE
+5F0
 330
-480
+472
 100
 AcDbEntity
  67
@@ -21991,9 +21991,9 @@ FX-L2-065
   0
 TEXT
   5
-5FF
+5F1
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22029,9 +22029,9 @@ AcDbText
   0
 TEXT
   5
-600
+5F2
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22067,9 +22067,9 @@ AcDbText
   0
 TEXT
   5
-601
+5F3
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22105,9 +22105,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-602
+5F4
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22133,9 +22133,9 @@ AcDbPolyline
   0
 HATCH
   5
-603
+5F5
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22203,9 +22203,9 @@ SOLID
   0
 TEXT
   5
-604
+5F6
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22249,9 +22249,9 @@ FX-L2-066
   0
 TEXT
   5
-605
+5F7
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22287,9 +22287,9 @@ AcDbText
   0
 TEXT
   5
-606
+5F8
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22325,9 +22325,9 @@ AcDbText
   0
 TEXT
   5
-607
+5F9
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22363,9 +22363,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-608
+5FA
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22391,9 +22391,9 @@ AcDbPolyline
   0
 TEXT
   5
-609
+5FB
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22437,9 +22437,9 @@ FX-L2-067
   0
 TEXT
   5
-60A
+5FC
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22475,9 +22475,9 @@ AcDbText
   0
 TEXT
   5
-60B
+5FD
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22513,9 +22513,9 @@ AcDbText
   0
 TEXT
   5
-60C
+5FE
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22551,9 +22551,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-60D
+5FF
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22579,9 +22579,9 @@ AcDbPolyline
   0
 HATCH
   5
-60E
+600
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22649,9 +22649,9 @@ SOLID
   0
 TEXT
   5
-60F
+601
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22695,9 +22695,9 @@ FX-L2-068
   0
 TEXT
   5
-610
+602
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22733,9 +22733,9 @@ AcDbText
   0
 TEXT
   5
-611
+603
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22771,9 +22771,9 @@ AcDbText
   0
 TEXT
   5
-612
+604
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22809,9 +22809,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-613
+605
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22837,9 +22837,9 @@ AcDbPolyline
   0
 TEXT
   5
-614
+606
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22883,9 +22883,9 @@ FX-L2-069
   0
 TEXT
   5
-615
+607
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22921,9 +22921,9 @@ AcDbText
   0
 TEXT
   5
-616
+608
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22959,9 +22959,9 @@ AcDbText
   0
 TEXT
   5
-617
+609
 330
-480
+472
 100
 AcDbEntity
  67
@@ -22997,9 +22997,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-618
+60A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23025,9 +23025,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-619
+60B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23053,9 +23053,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-61A
+60C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23081,9 +23081,9 @@ AcDbPolyline
   0
 HATCH
   5
-61B
+60D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23151,9 +23151,9 @@ SOLID
   0
 TEXT
   5
-61C
+60E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23191,9 +23191,9 @@ AcDbText
   0
 TEXT
   5
-61D
+60F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23229,9 +23229,9 @@ AcDbText
   0
 TEXT
   5
-61E
+610
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23267,9 +23267,9 @@ AcDbText
   0
 TEXT
   5
-61F
+611
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23305,9 +23305,9 @@ AcDbText
   0
 TEXT
   5
-620
+612
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23351,9 +23351,9 @@ FX-L2-070
   0
 TEXT
   5
-621
+613
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23389,9 +23389,9 @@ AcDbText
   0
 TEXT
   5
-622
+614
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23427,9 +23427,9 @@ AcDbText
   0
 TEXT
   5
-623
+615
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23465,9 +23465,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-624
+616
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23493,9 +23493,9 @@ AcDbPolyline
   0
 HATCH
   5
-625
+617
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23563,9 +23563,9 @@ SOLID
   0
 TEXT
   5
-626
+618
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23609,9 +23609,9 @@ FX-L2-071
   0
 TEXT
   5
-627
+619
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23647,9 +23647,9 @@ AcDbText
   0
 TEXT
   5
-628
+61A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23685,9 +23685,9 @@ AcDbText
   0
 TEXT
   5
-629
+61B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23723,9 +23723,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-62A
+61C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23751,9 +23751,9 @@ AcDbPolyline
   0
 TEXT
   5
-62B
+61D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23797,9 +23797,9 @@ FX-L2-072
   0
 TEXT
   5
-62C
+61E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23835,9 +23835,9 @@ AcDbText
   0
 TEXT
   5
-62D
+61F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23873,9 +23873,9 @@ AcDbText
   0
 TEXT
   5
-62E
+620
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23911,9 +23911,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-62F
+621
 330
-480
+472
 100
 AcDbEntity
  67
@@ -23939,9 +23939,9 @@ AcDbPolyline
   0
 HATCH
   5
-630
+622
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24009,9 +24009,9 @@ SOLID
   0
 TEXT
   5
-631
+623
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24055,9 +24055,9 @@ FX-L2-073
   0
 TEXT
   5
-632
+624
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24093,9 +24093,9 @@ AcDbText
   0
 TEXT
   5
-633
+625
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24131,9 +24131,9 @@ AcDbText
   0
 TEXT
   5
-634
+626
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24169,9 +24169,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-635
+627
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24197,9 +24197,9 @@ AcDbPolyline
   0
 TEXT
   5
-636
+628
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24243,9 +24243,9 @@ FX-L2-074
   0
 TEXT
   5
-637
+629
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24281,9 +24281,9 @@ AcDbText
   0
 TEXT
   5
-638
+62A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24319,9 +24319,9 @@ AcDbText
   0
 TEXT
   5
-639
+62B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24357,9 +24357,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-63A
+62C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24385,9 +24385,9 @@ AcDbPolyline
   0
 HATCH
   5
-63B
+62D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24455,9 +24455,9 @@ SOLID
   0
 TEXT
   5
-63C
+62E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24501,9 +24501,9 @@ FX-L2-075
   0
 TEXT
   5
-63D
+62F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24539,9 +24539,9 @@ AcDbText
   0
 TEXT
   5
-63E
+630
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24577,9 +24577,9 @@ AcDbText
   0
 TEXT
   5
-63F
+631
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24615,9 +24615,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-640
+632
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24643,9 +24643,9 @@ AcDbPolyline
   0
 TEXT
   5
-641
+633
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24689,9 +24689,9 @@ FX-L2-076
   0
 TEXT
   5
-642
+634
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24727,9 +24727,9 @@ AcDbText
   0
 TEXT
   5
-643
+635
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24765,9 +24765,9 @@ AcDbText
   0
 TEXT
   5
-644
+636
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24803,9 +24803,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-645
+637
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24831,9 +24831,9 @@ AcDbPolyline
   0
 HATCH
   5
-646
+638
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24901,9 +24901,9 @@ SOLID
   0
 TEXT
   5
-647
+639
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24947,9 +24947,9 @@ FX-L2-077
   0
 TEXT
   5
-648
+63A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -24985,9 +24985,9 @@ AcDbText
   0
 TEXT
   5
-649
+63B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25023,9 +25023,9 @@ AcDbText
   0
 TEXT
   5
-64A
+63C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25061,9 +25061,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-64B
+63D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25089,9 +25089,9 @@ AcDbPolyline
   0
 TEXT
   5
-64C
+63E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25135,9 +25135,9 @@ FX-L2-078
   0
 TEXT
   5
-64D
+63F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25173,9 +25173,9 @@ AcDbText
   0
 TEXT
   5
-64E
+640
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25211,9 +25211,9 @@ AcDbText
   0
 TEXT
   5
-64F
+641
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25249,9 +25249,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-650
+642
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25277,9 +25277,9 @@ AcDbPolyline
   0
 HATCH
   5
-651
+643
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25347,9 +25347,9 @@ SOLID
   0
 TEXT
   5
-652
+644
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25393,9 +25393,9 @@ FX-L2-079
   0
 TEXT
   5
-653
+645
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25431,9 +25431,9 @@ AcDbText
   0
 TEXT
   5
-654
+646
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25469,9 +25469,9 @@ AcDbText
   0
 TEXT
   5
-655
+647
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25507,9 +25507,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-656
+648
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25535,9 +25535,9 @@ AcDbPolyline
   0
 TEXT
   5
-657
+649
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25581,9 +25581,9 @@ FX-L2-080
   0
 TEXT
   5
-658
+64A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25619,9 +25619,9 @@ AcDbText
   0
 TEXT
   5
-659
+64B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25657,9 +25657,9 @@ AcDbText
   0
 TEXT
   5
-65A
+64C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25695,9 +25695,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-65B
+64D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25723,9 +25723,9 @@ AcDbPolyline
   0
 HATCH
   5
-65C
+64E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25793,9 +25793,9 @@ SOLID
   0
 TEXT
   5
-65D
+64F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25839,9 +25839,9 @@ FX-L2-081
   0
 TEXT
   5
-65E
+650
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25877,9 +25877,9 @@ AcDbText
   0
 TEXT
   5
-65F
+651
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25915,9 +25915,9 @@ AcDbText
   0
 TEXT
   5
-660
+652
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25953,9 +25953,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-661
+653
 330
-480
+472
 100
 AcDbEntity
  67
@@ -25981,9 +25981,9 @@ AcDbPolyline
   0
 TEXT
   5
-662
+654
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26027,9 +26027,9 @@ FX-L2-082
   0
 TEXT
   5
-663
+655
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26065,9 +26065,9 @@ AcDbText
   0
 TEXT
   5
-664
+656
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26103,9 +26103,9 @@ AcDbText
   0
 TEXT
   5
-665
+657
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26141,9 +26141,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-666
+658
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26169,9 +26169,9 @@ AcDbPolyline
   0
 HATCH
   5
-667
+659
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26239,9 +26239,9 @@ SOLID
   0
 TEXT
   5
-668
+65A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26285,9 +26285,9 @@ FX-L2-083
   0
 TEXT
   5
-669
+65B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26323,9 +26323,9 @@ AcDbText
   0
 TEXT
   5
-66A
+65C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26361,9 +26361,9 @@ AcDbText
   0
 TEXT
   5
-66B
+65D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26399,9 +26399,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-66C
+65E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26427,9 +26427,9 @@ AcDbPolyline
   0
 TEXT
   5
-66D
+65F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26473,9 +26473,9 @@ FX-L2-084
   0
 TEXT
   5
-66E
+660
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26511,9 +26511,9 @@ AcDbText
   0
 TEXT
   5
-66F
+661
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26549,9 +26549,9 @@ AcDbText
   0
 TEXT
   5
-670
+662
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26587,9 +26587,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-671
+663
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26615,9 +26615,9 @@ AcDbPolyline
   0
 HATCH
   5
-672
+664
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26685,9 +26685,9 @@ SOLID
   0
 TEXT
   5
-673
+665
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26731,9 +26731,9 @@ FX-L2-085
   0
 TEXT
   5
-674
+666
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26769,9 +26769,9 @@ AcDbText
   0
 TEXT
   5
-675
+667
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26807,9 +26807,9 @@ AcDbText
   0
 TEXT
   5
-676
+668
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26845,9 +26845,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-677
+669
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26873,9 +26873,9 @@ AcDbPolyline
   0
 TEXT
   5
-678
+66A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26919,9 +26919,9 @@ FX-L2-086
   0
 TEXT
   5
-679
+66B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26957,9 +26957,9 @@ AcDbText
   0
 TEXT
   5
-67A
+66C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -26995,9 +26995,9 @@ AcDbText
   0
 TEXT
   5
-67B
+66D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27033,9 +27033,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-67C
+66E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27061,9 +27061,9 @@ AcDbPolyline
   0
 HATCH
   5
-67D
+66F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27131,9 +27131,9 @@ SOLID
   0
 TEXT
   5
-67E
+670
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27177,9 +27177,9 @@ FX-L2-087
   0
 TEXT
   5
-67F
+671
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27215,9 +27215,9 @@ AcDbText
   0
 TEXT
   5
-680
+672
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27253,9 +27253,9 @@ AcDbText
   0
 TEXT
   5
-681
+673
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27291,9 +27291,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-682
+674
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27319,9 +27319,9 @@ AcDbPolyline
   0
 TEXT
   5
-683
+675
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27365,9 +27365,9 @@ FX-L2-088
   0
 TEXT
   5
-684
+676
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27403,9 +27403,9 @@ AcDbText
   0
 TEXT
   5
-685
+677
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27441,9 +27441,9 @@ AcDbText
   0
 TEXT
   5
-686
+678
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27479,9 +27479,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-687
+679
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27507,9 +27507,9 @@ AcDbPolyline
   0
 HATCH
   5
-688
+67A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27577,9 +27577,9 @@ SOLID
   0
 TEXT
   5
-689
+67B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27623,9 +27623,9 @@ FX-L2-089
   0
 TEXT
   5
-68A
+67C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27661,9 +27661,9 @@ AcDbText
   0
 TEXT
   5
-68B
+67D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27699,9 +27699,9 @@ AcDbText
   0
 TEXT
   5
-68C
+67E
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27737,9 +27737,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-68D
+67F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27765,9 +27765,9 @@ AcDbPolyline
   0
 TEXT
   5
-68E
+680
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27811,9 +27811,9 @@ FX-L2-090
   0
 TEXT
   5
-68F
+681
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27849,9 +27849,9 @@ AcDbText
   0
 TEXT
   5
-690
+682
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27887,9 +27887,9 @@ AcDbText
   0
 TEXT
   5
-691
+683
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27925,9 +27925,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-692
+684
 330
-480
+472
 100
 AcDbEntity
  67
@@ -27953,9 +27953,9 @@ AcDbPolyline
   0
 HATCH
   5
-693
+685
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28023,9 +28023,9 @@ SOLID
   0
 TEXT
   5
-694
+686
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28069,9 +28069,9 @@ FX-L2-091
   0
 TEXT
   5
-695
+687
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28107,9 +28107,9 @@ AcDbText
   0
 TEXT
   5
-696
+688
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28145,9 +28145,9 @@ AcDbText
   0
 TEXT
   5
-697
+689
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28183,9 +28183,9 @@ AcDbText
   0
 LWPOLYLINE
   5
-698
+68A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28211,9 +28211,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-699
+68B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28239,9 +28239,9 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-69A
+68C
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28267,9 +28267,9 @@ AcDbPolyline
   0
 INSERT
   5
-69B
+68D
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28291,9 +28291,9 @@ KR-TTLB-G
   0
 ATTRIB
   5
-69D
+68F
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28339,9 +28339,9 @@ KR_SHEET_ID
   0
 ATTRIB
   5
-69E
+690
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28387,9 +28387,9 @@ KR_TITLE
   0
 ATTRIB
   5
-69F
+691
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28435,9 +28435,9 @@ KR_FLOOR
   0
 ATTRIB
   5
-6A0
+692
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28483,9 +28483,9 @@ KR_SCALE
   0
 ATTRIB
   5
-6A1
+693
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28531,9 +28531,9 @@ KR_REVISION
   0
 ATTRIB
   5
-6A2
+694
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28579,9 +28579,9 @@ KR_REV_DATE
   0
 ATTRIB
   5
-6A3
+695
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28599,7 +28599,7 @@ AcDbText
  40
 2.0
   1
-2026-10-02T02:42:18Z
+2026-10-13T01:12:51Z
   7
 KR-SANS
  11
@@ -28627,9 +28627,9 @@ KR_RENDER_UTC
   0
 ATTRIB
   5
-6A4
+696
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28675,9 +28675,9 @@ KR_STATUS
   0
 ATTRIB
   5
-6A5
+697
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28723,9 +28723,9 @@ KR_NOTE
   0
 ATTRIB
   5
-6A6
+698
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28771,9 +28771,9 @@ KR_DRAWN
   0
 ATTRIB
   5
-6A7
+699
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28819,9 +28819,9 @@ KR_CHECK
   0
 ATTRIB
   5
-6A8
+69A
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28867,9 +28867,9 @@ KR_PAGE
   0
 ATTRIB
   5
-6A9
+69B
 330
-480
+472
 100
 AcDbEntity
  67
@@ -28887,7 +28887,7 @@ AcDbText
  40
 1.3
   1
-488597bb0552fbde4c67baa4ffa6f73f6cb6882cb8f02fcb10adbc3fc07e5969
+38f94d70975b0c429ccf33c71429d3b9785563661bcc46280537666767761298
   7
 KR-SANS
  11
@@ -28915,9 +28915,9 @@ KR_WORLD_SHA256
   0
 SEQEND
   5
-69C
+68E
 330
-69B
+68D
 100
 AcDbEntity
  67
@@ -28927,9 +28927,9 @@ A-ANNO-TTLB
   0
 ENDBLK
   5
-482
+474
 330
-480
+472
 100
 AcDbEntity
   8
@@ -31351,11 +31351,11 @@ SOLID
  20
 18425.0
  10
-29100.0
+30500.0
  20
 18425.0
  10
-29100.0
+30500.0
  20
 18575.0
  10
@@ -31375,7 +31375,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@18.5:26.5-29.1
+x@18.5:26.5-30.5
 1000
 exterior=0
   0
@@ -31401,11 +31401,11 @@ AcDbPolyline
  20
 18425.0
  10
-29100.0
+30500.0
  20
 18425.0
  10
-29100.0
+30500.0
  20
 18575.0
  10
@@ -31417,7 +31417,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@18.5:26.5-29.1
+x@18.5:26.5-30.5
 1000
 exterior=0
   0
@@ -31465,19 +31465,19 @@ SOLID
  93
 4
  10
-29900.0
+31500.0
  20
 18425.0
  10
-30500.0
+32075.000000000004
  20
 18425.0
  10
-30500.0
+32075.000000000004
  20
 18575.0
  10
-29900.0
+31500.0
  20
 18575.0
  97
@@ -31493,7 +31493,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@18.5:29.9-30.5
+x@18.5:31.5-32
 1000
 exterior=0
   0
@@ -31515,19 +31515,19 @@ AcDbPolyline
  70
 1
  10
-29900.0
+31500.0
  20
 18425.0
  10
-30500.0
+32075.000000000004
  20
 18425.0
  10
-30500.0
+32075.000000000004
  20
 18575.0
  10
-29900.0
+31500.0
  20
 18575.0
 1001
@@ -31535,7 +31535,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@18.5:29.9-30.5
+x@18.5:31.5-32
 1000
 exterior=0
   0
@@ -31583,21 +31583,21 @@ SOLID
  93
 4
  10
-31500.0
+5925.0
  20
-18425.0
+10425.0
  10
-32075.000000000004
+6075.0
  20
-18425.0
+10425.0
  10
-32075.000000000004
+6075.0
  20
-18575.0
+16575.0
  10
-31500.0
+5925.0
  20
-18575.0
+16575.0
  97
 0
  75
@@ -31611,7 +31611,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@18.5:31.5-32
+y@6:10.5-16.5
 1000
 exterior=0
   0
@@ -31633,27 +31633,27 @@ AcDbPolyline
  70
 1
  10
-31500.0
+5925.0
  20
-18425.0
+10425.0
  10
-32075.000000000004
+6075.0
  20
-18425.0
+10425.0
  10
-32075.000000000004
+6075.0
  20
-18575.0
+16575.0
  10
-31500.0
+5925.0
  20
-18575.0
+16575.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-x@18.5:31.5-32
+y@6:10.5-16.5
 1000
 exterior=0
   0
@@ -31701,21 +31701,21 @@ SOLID
  93
 4
  10
-28925.0
+6925.0
  20
-19925.0
+18425.0
  10
-30075.0
+7075.0
  20
-19925.0
+18425.0
  10
-30075.0
+7075.0
  20
-20075.0
+24075.0
  10
-28925.0
+6925.0
  20
-20075.0
+24075.0
  97
 0
  75
@@ -31729,7 +31729,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@20:29-30
+y@7:18.5-24
 1000
 exterior=0
   0
@@ -31751,27 +31751,27 @@ AcDbPolyline
  70
 1
  10
-28925.0
+6925.0
  20
-19925.0
+18425.0
  10
-30075.0
+7075.0
  20
-19925.0
+18425.0
  10
-30075.0
+7075.0
  20
-20075.0
+24075.0
  10
-28925.0
+6925.0
  20
-20075.0
+24075.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-x@20:29-30
+y@7:18.5-24
 1000
 exterior=0
   0
@@ -31819,21 +31819,21 @@ SOLID
  93
 4
  10
-5925.0
+7925.0
  20
-10425.0
+-75.0
  10
-6075.0
+8074.999999999999
  20
-10425.0
+-75.0
  10
-6075.0
+8074.999999999999
  20
-16575.0
+8074.999999999999
  10
-5925.0
+7925.0
  20
-16575.0
+8074.999999999999
  97
 0
  75
@@ -31847,7 +31847,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@6:10.5-16.5
+y@8:0-8
 1000
 exterior=0
   0
@@ -31869,27 +31869,27 @@ AcDbPolyline
  70
 1
  10
-5925.0
+7925.0
  20
-10425.0
+-75.0
  10
-6075.0
+8074.999999999999
  20
-10425.0
+-75.0
  10
-6075.0
+8074.999999999999
  20
-16575.0
+8074.999999999999
  10
-5925.0
+7925.0
  20
-16575.0
+8074.999999999999
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@6:10.5-16.5
+y@8:0-8
 1000
 exterior=0
   0
@@ -31937,21 +31937,21 @@ SOLID
  93
 4
  10
-6925.0
+13925.0
  20
-18425.0
+10425.0
  10
-7075.0
+14075.0
  20
-18425.0
+10425.0
  10
-7075.0
+14075.0
  20
-24075.0
+16575.0
  10
-6925.0
+13925.0
  20
-24075.0
+16575.0
  97
 0
  75
@@ -31965,7 +31965,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@7:18.5-24
+y@14:10.5-16.5
 1000
 exterior=0
   0
@@ -31987,27 +31987,27 @@ AcDbPolyline
  70
 1
  10
-6925.0
+13925.0
  20
-18425.0
+10425.0
  10
-7075.0
+14075.0
  20
-18425.0
+10425.0
  10
-7075.0
+14075.0
  20
-24075.0
+16575.0
  10
-6925.0
+13925.0
  20
-24075.0
+16575.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@7:18.5-24
+y@14:10.5-16.5
 1000
 exterior=0
   0
@@ -32055,21 +32055,21 @@ SOLID
  93
 4
  10
-7925.0
+13925.0
  20
--75.0
+18425.0
  10
-8074.999999999999
+14075.0
  20
--75.0
+18425.0
  10
-8074.999999999999
+14075.0
  20
-8074.999999999999
+24075.0
  10
-7925.0
+13925.0
  20
-8074.999999999999
+24075.0
  97
 0
  75
@@ -32083,7 +32083,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@8:0-8
+y@14:18.5-24
 1000
 exterior=0
   0
@@ -32105,27 +32105,27 @@ AcDbPolyline
  70
 1
  10
-7925.0
+13925.0
  20
--75.0
+18425.0
  10
-8074.999999999999
+14075.0
  20
--75.0
+18425.0
  10
-8074.999999999999
+14075.0
  20
-8074.999999999999
+24075.0
  10
-7925.0
+13925.0
  20
-8074.999999999999
+24075.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@8:0-8
+y@14:18.5-24
 1000
 exterior=0
   0
@@ -32173,21 +32173,21 @@ SOLID
  93
 4
  10
-13925.0
+19925.0
  20
-10425.0
+-75.0
  10
-14075.0
+20075.0
  20
-10425.0
+-75.0
  10
-14075.0
+20075.0
  20
-16575.0
+3000.0
  10
-13925.0
+19925.0
  20
-16575.0
+3000.0
  97
 0
  75
@@ -32201,7 +32201,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@14:10.5-16.5
+y@20:0-3.0
 1000
 exterior=0
   0
@@ -32223,27 +32223,27 @@ AcDbPolyline
  70
 1
  10
-13925.0
+19925.0
  20
-10425.0
+-75.0
  10
-14075.0
+20075.0
  20
-10425.0
+-75.0
  10
-14075.0
+20075.0
  20
-16575.0
+3000.0
  10
-13925.0
+19925.0
  20
-16575.0
+3000.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@14:10.5-16.5
+y@20:0-3.0
 1000
 exterior=0
   0
@@ -32291,21 +32291,21 @@ SOLID
  93
 4
  10
-13925.0
+19925.0
  20
-18425.0
+5000.0
  10
-14075.0
+20075.0
  20
-18425.0
+5000.0
  10
-14075.0
+20075.0
  20
-24075.0
+8074.999999999999
  10
-13925.0
+19925.0
  20
-24075.0
+8074.999999999999
  97
 0
  75
@@ -32319,7 +32319,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@14:18.5-24
+y@20:5.0-8
 1000
 exterior=0
   0
@@ -32341,27 +32341,27 @@ AcDbPolyline
  70
 1
  10
-13925.0
+19925.0
  20
-18425.0
+5000.0
  10
-14075.0
+20075.0
  20
-18425.0
+5000.0
  10
-14075.0
+20075.0
  20
-24075.0
+8074.999999999999
  10
-13925.0
+19925.0
  20
-24075.0
+8074.999999999999
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@14:18.5-24
+y@20:5.0-8
 1000
 exterior=0
   0
@@ -32411,19 +32411,19 @@ SOLID
  10
 19925.0
  20
--75.0
+10425.0
  10
 20075.0
  20
--75.0
+10425.0
  10
 20075.0
  20
-3000.0
+16575.0
  10
 19925.0
  20
-3000.0
+16575.0
  97
 0
  75
@@ -32437,7 +32437,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@20:0-3.0
+y@20:10.5-16.5
 1000
 exterior=0
   0
@@ -32461,25 +32461,25 @@ AcDbPolyline
  10
 19925.0
  20
--75.0
+10425.0
  10
 20075.0
  20
--75.0
+10425.0
  10
 20075.0
  20
-3000.0
+16575.0
  10
 19925.0
  20
-3000.0
+16575.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@20:0-3.0
+y@20:10.5-16.5
 1000
 exterior=0
   0
@@ -32527,21 +32527,21 @@ SOLID
  93
 4
  10
-19925.0
+22925.0
  20
-5000.0
+18425.0
  10
-20075.0
+23075.0
  20
-5000.0
+18425.0
  10
-20075.0
+23075.0
  20
-8074.999999999999
+24075.0
  10
-19925.0
+22925.0
  20
-8074.999999999999
+24075.0
  97
 0
  75
@@ -32555,7 +32555,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@20:5.0-8
+y@23:18.5-24
 1000
 exterior=0
   0
@@ -32577,27 +32577,27 @@ AcDbPolyline
  70
 1
  10
-19925.0
+22925.0
  20
-5000.0
+18425.0
  10
-20075.0
+23075.0
  20
-5000.0
+18425.0
  10
-20075.0
+23075.0
  20
-8074.999999999999
+24075.0
  10
-19925.0
+22925.0
  20
-8074.999999999999
+24075.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@20:5.0-8
+y@23:18.5-24
 1000
 exterior=0
   0
@@ -32645,21 +32645,21 @@ SOLID
  93
 4
  10
-19925.0
+25925.0
  20
-10425.0
+-75.0
  10
-20075.0
+26075.0
  20
-10425.0
+-75.0
  10
-20075.0
+26075.0
  20
-16575.0
+8074.999999999999
  10
-19925.0
+25925.0
  20
-16575.0
+8074.999999999999
  97
 0
  75
@@ -32673,7 +32673,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@20:10.5-16.5
+y@26:0-8
 1000
 exterior=0
   0
@@ -32695,27 +32695,27 @@ AcDbPolyline
  70
 1
  10
-19925.0
+25925.0
  20
-10425.0
+-75.0
  10
-20075.0
+26075.0
  20
-10425.0
+-75.0
  10
-20075.0
+26075.0
  20
-16575.0
+8074.999999999999
  10
-19925.0
+25925.0
  20
-16575.0
+8074.999999999999
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@20:10.5-16.5
+y@26:0-8
 1000
 exterior=0
   0
@@ -32763,19 +32763,19 @@ SOLID
  93
 4
  10
-22925.0
+28925.0
  20
 18425.0
  10
-23075.0
+29075.0
  20
 18425.0
  10
-23075.0
+29075.0
  20
 24075.0
  10
-22925.0
+28925.0
  20
 24075.0
  97
@@ -32791,7 +32791,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@23:18.5-24
+y@29:18.5-24
 1000
 exterior=0
   0
@@ -32813,19 +32813,19 @@ AcDbPolyline
  70
 1
  10
-22925.0
+28925.0
  20
 18425.0
  10
-23075.0
+29075.0
  20
 18425.0
  10
-23075.0
+29075.0
  20
 24075.0
  10
-22925.0
+28925.0
  20
 24075.0
 1001
@@ -32833,7 +32833,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@23:18.5-24
+y@29:18.5-24
 1000
 exterior=0
   0
@@ -32881,19 +32881,19 @@ SOLID
  93
 4
  10
-25925.0
+29425.0
  20
 -75.0
  10
-26075.0
+29575.0
  20
 -75.0
  10
-26075.0
+29575.0
  20
 8074.999999999999
  10
-25925.0
+29425.0
  20
 8074.999999999999
  97
@@ -32909,7 +32909,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@26:0-8
+y@29.5:0-8
 1000
 exterior=0
   0
@@ -32931,19 +32931,19 @@ AcDbPolyline
  70
 1
  10
-25925.0
+29425.0
  20
 -75.0
  10
-26075.0
+29575.0
  20
 -75.0
  10
-26075.0
+29575.0
  20
 8074.999999999999
  10
-25925.0
+29425.0
  20
 8074.999999999999
 1001
@@ -32951,367 +32951,13 @@ KANTOR_RPG
 1000
 wall
 1000
-y@26:0-8
+y@29.5:0-8
 1000
 exterior=0
   0
 HATCH
   5
 1C4
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
- 62
-7
-420
-5143140
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-28925.0
- 20
-18425.0
- 10
-29075.0
- 20
-18425.0
- 10
-29075.0
- 20
-24075.0
- 10
-28925.0
- 20
-24075.0
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@29:18.5-24
-1000
-exterior=0
-  0
-LWPOLYLINE
-  5
-1C5
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
-420
-5143140
-100
-AcDbPolyline
- 90
-4
- 70
-1
- 10
-28925.0
- 20
-18425.0
- 10
-29075.0
- 20
-18425.0
- 10
-29075.0
- 20
-24075.0
- 10
-28925.0
- 20
-24075.0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@29:18.5-24
-1000
-exterior=0
-  0
-HATCH
-  5
-1C6
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
- 62
-7
-420
-5143140
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-29425.0
- 20
--75.0
- 10
-29575.0
- 20
--75.0
- 10
-29575.0
- 20
-8074.999999999999
- 10
-29425.0
- 20
-8074.999999999999
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@29.5:0-8
-1000
-exterior=0
-  0
-LWPOLYLINE
-  5
-1C7
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
-420
-5143140
-100
-AcDbPolyline
- 90
-4
- 70
-1
- 10
-29425.0
- 20
--75.0
- 10
-29575.0
- 20
--75.0
- 10
-29575.0
- 20
-8074.999999999999
- 10
-29425.0
- 20
-8074.999999999999
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@29.5:0-8
-1000
-exterior=0
-  0
-HATCH
-  5
-1C8
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
- 62
-7
-420
-5143140
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-29925.0
- 20
-18425.0
- 10
-30075.0
- 20
-18425.0
- 10
-30075.0
- 20
-20075.0
- 10
-29925.0
- 20
-20075.0
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@30:18.5-20
-1000
-exterior=0
-  0
-LWPOLYLINE
-  5
-1C9
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
-420
-5143140
-100
-AcDbPolyline
- 90
-4
- 70
-1
- 10
-29925.0
- 20
-18425.0
- 10
-30075.0
- 20
-18425.0
- 10
-30075.0
- 20
-20075.0
- 10
-29925.0
- 20
-20075.0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@30:18.5-20
-1000
-exterior=0
-  0
-HATCH
-  5
-1CA
 330
 17
 100
@@ -33387,7 +33033,7 @@ exterior=1
   0
 LWPOLYLINE
   5
-1CB
+1C5
 330
 17
 100
@@ -33424,6 +33070,360 @@ KANTOR_RPG
 wall
 1000
 x@0:0-1.65
+1000
+exterior=1
+  0
+HATCH
+  5
+1C6
+330
+17
+100
+AcDbEntity
+  8
+A-WALL
+ 62
+7
+420
+2051386
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+3
+ 72
+0
+ 73
+1
+ 93
+4
+ 10
+3150.0
+ 20
+-150.0
+ 10
+4650.0
+ 20
+-150.0
+ 10
+4650.0
+ 20
+150.0
+ 10
+3150.0
+ 20
+150.0
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
+1001
+KANTOR_RPG
+1000
+wall
+1000
+x@0:3.15-4.65
+1000
+exterior=1
+  0
+LWPOLYLINE
+  5
+1C7
+330
+17
+100
+AcDbEntity
+  8
+A-WALL
+420
+2051386
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+3150.0
+ 20
+-150.0
+ 10
+4650.0
+ 20
+-150.0
+ 10
+4650.0
+ 20
+150.0
+ 10
+3150.0
+ 20
+150.0
+1001
+KANTOR_RPG
+1000
+wall
+1000
+x@0:3.15-4.65
+1000
+exterior=1
+  0
+HATCH
+  5
+1C8
+330
+17
+100
+AcDbEntity
+  8
+A-WALL
+ 62
+7
+420
+2051386
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+3
+ 72
+0
+ 73
+1
+ 93
+4
+ 10
+6150.0
+ 20
+-150.0
+ 10
+9650.0
+ 20
+-150.0
+ 10
+9650.0
+ 20
+150.0
+ 10
+6150.0
+ 20
+150.0
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
+1001
+KANTOR_RPG
+1000
+wall
+1000
+x@0:6.15-9.65
+1000
+exterior=1
+  0
+LWPOLYLINE
+  5
+1C9
+330
+17
+100
+AcDbEntity
+  8
+A-WALL
+420
+2051386
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+6150.0
+ 20
+-150.0
+ 10
+9650.0
+ 20
+-150.0
+ 10
+9650.0
+ 20
+150.0
+ 10
+6150.0
+ 20
+150.0
+1001
+KANTOR_RPG
+1000
+wall
+1000
+x@0:6.15-9.65
+1000
+exterior=1
+  0
+HATCH
+  5
+1CA
+330
+17
+100
+AcDbEntity
+  8
+A-WALL
+ 62
+7
+420
+2051386
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+3
+ 72
+0
+ 73
+1
+ 93
+4
+ 10
+11150.0
+ 20
+-150.0
+ 10
+12650.0
+ 20
+-150.0
+ 10
+12650.0
+ 20
+150.0
+ 10
+11150.0
+ 20
+150.0
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
+1001
+KANTOR_RPG
+1000
+wall
+1000
+x@0:11.15-12.65
+1000
+exterior=1
+  0
+LWPOLYLINE
+  5
+1CB
+330
+17
+100
+AcDbEntity
+  8
+A-WALL
+420
+2051386
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+11150.0
+ 20
+-150.0
+ 10
+12650.0
+ 20
+-150.0
+ 10
+12650.0
+ 20
+150.0
+ 10
+11150.0
+ 20
+150.0
+1001
+KANTOR_RPG
+1000
+wall
+1000
+x@0:11.15-12.65
 1000
 exterior=1
   0
@@ -33471,19 +33471,19 @@ SOLID
  93
 4
  10
-3150.0
+14150.0
  20
 -150.0
  10
-4650.0
+20750.0
  20
 -150.0
  10
-4650.0
+20750.0
  20
 150.0
  10
-3150.0
+14150.0
  20
 150.0
  97
@@ -33499,7 +33499,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:3.15-4.65
+x@0:14.15-20.75
 1000
 exterior=1
   0
@@ -33521,19 +33521,19 @@ AcDbPolyline
  70
 1
  10
-3150.0
+14150.0
  20
 -150.0
  10
-4650.0
+20750.0
  20
 -150.0
  10
-4650.0
+20750.0
  20
 150.0
  10
-3150.0
+14150.0
  20
 150.0
 1001
@@ -33541,7 +33541,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:3.15-4.65
+x@0:14.15-20.75
 1000
 exterior=1
   0
@@ -33589,19 +33589,19 @@ SOLID
  93
 4
  10
-6150.0
+22250.0
  20
 -150.0
  10
-9650.0
+23750.0
  20
 -150.0
  10
-9650.0
+23750.0
  20
 150.0
  10
-6150.0
+22250.0
  20
 150.0
  97
@@ -33617,7 +33617,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:6.15-9.65
+x@0:22.25-23.75
 1000
 exterior=1
   0
@@ -33639,19 +33639,19 @@ AcDbPolyline
  70
 1
  10
-6150.0
+22250.0
  20
 -150.0
  10
-9650.0
+23750.0
  20
 -150.0
  10
-9650.0
+23750.0
  20
 150.0
  10
-6150.0
+22250.0
  20
 150.0
 1001
@@ -33659,7 +33659,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:6.15-9.65
+x@0:22.25-23.75
 1000
 exterior=1
   0
@@ -33707,19 +33707,19 @@ SOLID
  93
 4
  10
-11150.0
+25250.0
  20
 -150.0
  10
-12650.0
+32150.0
  20
 -150.0
  10
-12650.0
+32150.0
  20
 150.0
  10
-11150.0
+25250.0
  20
 150.0
  97
@@ -33735,7 +33735,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:11.15-12.65
+x@0:25.25-32
 1000
 exterior=1
   0
@@ -33757,19 +33757,19 @@ AcDbPolyline
  70
 1
  10
-11150.0
+25250.0
  20
 -150.0
  10
-12650.0
+32150.0
  20
 -150.0
  10
-12650.0
+32150.0
  20
 150.0
  10
-11150.0
+25250.0
  20
 150.0
 1001
@@ -33777,7 +33777,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:11.15-12.65
+x@0:25.25-32
 1000
 exterior=1
   0
@@ -33825,21 +33825,21 @@ SOLID
  93
 4
  10
-14150.0
- 20
 -150.0
- 10
-20750.0
  20
+23850.0
+ 10
+8250.0
+ 20
+23850.0
+ 10
+8250.0
+ 20
+24150.0
+ 10
 -150.0
- 10
-20750.0
  20
-150.0
- 10
-14150.0
- 20
-150.0
+24150.0
  97
 0
  75
@@ -33853,7 +33853,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:14.15-20.75
+x@24:0-8.25
 1000
 exterior=1
   0
@@ -33875,27 +33875,27 @@ AcDbPolyline
  70
 1
  10
-14150.0
- 20
 -150.0
- 10
-20750.0
  20
+23850.0
+ 10
+8250.0
+ 20
+23850.0
+ 10
+8250.0
+ 20
+24150.0
+ 10
 -150.0
- 10
-20750.0
  20
-150.0
- 10
-14150.0
- 20
-150.0
+24150.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-x@0:14.15-20.75
+x@24:0-8.25
 1000
 exterior=1
   0
@@ -33943,21 +33943,21 @@ SOLID
  93
 4
  10
-22250.0
+9750.0
  20
--150.0
+23850.0
  10
-23750.0
+11250.0
  20
--150.0
+23850.0
  10
-23750.0
+11250.0
  20
-150.0
+24150.0
  10
-22250.0
+9750.0
  20
-150.0
+24150.0
  97
 0
  75
@@ -33971,7 +33971,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:22.25-23.75
+x@24:9.75-11.25
 1000
 exterior=1
   0
@@ -33993,27 +33993,27 @@ AcDbPolyline
  70
 1
  10
-22250.0
+9750.0
  20
--150.0
+23850.0
  10
-23750.0
+11250.0
  20
--150.0
+23850.0
  10
-23750.0
+11250.0
  20
-150.0
+24150.0
  10
-22250.0
+9750.0
  20
-150.0
+24150.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-x@0:22.25-23.75
+x@24:9.75-11.25
 1000
 exterior=1
   0
@@ -34061,21 +34061,21 @@ SOLID
  93
 4
  10
-25250.0
+12750.0
  20
--150.0
+23850.0
  10
-32150.0
+19750.0
  20
--150.0
+23850.0
  10
-32150.0
+19750.0
  20
-150.0
+24150.0
  10
-25250.0
+12750.0
  20
-150.0
+24150.0
  97
 0
  75
@@ -34089,7 +34089,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@0:25.25-32
+x@24:12.75-19.75
 1000
 exterior=1
   0
@@ -34111,27 +34111,27 @@ AcDbPolyline
  70
 1
  10
-25250.0
+12750.0
  20
--150.0
+23850.0
  10
-32150.0
+19750.0
  20
--150.0
+23850.0
  10
-32150.0
+19750.0
  20
-150.0
+24150.0
  10
-25250.0
+12750.0
  20
-150.0
+24150.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-x@0:25.25-32
+x@24:12.75-19.75
 1000
 exterior=1
   0
@@ -34179,19 +34179,19 @@ SOLID
  93
 4
  10
--150.0
+21250.0
  20
 23850.0
  10
-8250.0
+23850.0
  20
 23850.0
  10
-8250.0
+23850.0
  20
 24150.0
  10
--150.0
+21250.0
  20
 24150.0
  97
@@ -34207,7 +34207,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:0-8.25
+x@24:21.25-23.85
 1000
 exterior=1
   0
@@ -34229,19 +34229,19 @@ AcDbPolyline
  70
 1
  10
--150.0
+21250.0
  20
 23850.0
  10
-8250.0
+23850.0
  20
 23850.0
  10
-8250.0
+23850.0
  20
 24150.0
  10
--150.0
+21250.0
  20
 24150.0
 1001
@@ -34249,7 +34249,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:0-8.25
+x@24:21.25-23.85
 1000
 exterior=1
   0
@@ -34297,19 +34297,19 @@ SOLID
  93
 4
  10
-9750.0
+24750.0
  20
 23850.0
  10
-11250.0
+27250.0
  20
 23850.0
  10
-11250.0
+27250.0
  20
 24150.0
  10
-9750.0
+24750.0
  20
 24150.0
  97
@@ -34325,7 +34325,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:9.75-11.25
+x@24:24.75-27.25
 1000
 exterior=1
   0
@@ -34347,19 +34347,19 @@ AcDbPolyline
  70
 1
  10
-9750.0
+24750.0
  20
 23850.0
  10
-11250.0
+27250.0
  20
 23850.0
  10
-11250.0
+27250.0
  20
 24150.0
  10
-9750.0
+24750.0
  20
 24150.0
 1001
@@ -34367,7 +34367,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:9.75-11.25
+x@24:24.75-27.25
 1000
 exterior=1
   0
@@ -34415,19 +34415,19 @@ SOLID
  93
 4
  10
-12750.0
+28150.0
  20
 23850.0
  10
-19750.0
+32150.0
  20
 23850.0
  10
-19750.0
+32150.0
  20
 24150.0
  10
-12750.0
+28150.0
  20
 24150.0
  97
@@ -34443,7 +34443,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:12.75-19.75
+x@24:28.15-32
 1000
 exterior=1
   0
@@ -34465,19 +34465,19 @@ AcDbPolyline
  70
 1
  10
-12750.0
+28150.0
  20
 23850.0
  10
-19750.0
+32150.0
  20
 23850.0
  10
-19750.0
+32150.0
  20
 24150.0
  10
-12750.0
+28150.0
  20
 24150.0
 1001
@@ -34485,7 +34485,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:12.75-19.75
+x@24:28.15-32
 1000
 exterior=1
   0
@@ -34533,21 +34533,21 @@ SOLID
  93
 4
  10
-21250.0
+-150.0
  20
-23850.0
+-150.0
  10
-23850.0
+150.0
  20
-23850.0
+-150.0
  10
-23850.0
+150.0
  20
-24150.0
+11350.0
  10
-21250.0
+-150.0
  20
-24150.0
+11350.0
  97
 0
  75
@@ -34561,7 +34561,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:21.25-23.85
+y@0:0-11.35
 1000
 exterior=1
   0
@@ -34583,27 +34583,27 @@ AcDbPolyline
  70
 1
  10
-21250.0
+-150.0
  20
-23850.0
+-150.0
  10
-23850.0
+150.0
  20
-23850.0
+-150.0
  10
-23850.0
+150.0
  20
-24150.0
+11350.0
  10
-21250.0
+-150.0
  20
-24150.0
+11350.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-x@24:21.25-23.85
+y@0:0-11.35
 1000
 exterior=1
   0
@@ -34651,21 +34651,21 @@ SOLID
  93
 4
  10
-24750.0
+-150.0
  20
-23850.0
+12850.0
  10
-27250.0
+150.0
  20
-23850.0
+12850.0
  10
-27250.0
+150.0
  20
-24150.0
+14350.0
  10
-24750.0
+-150.0
  20
-24150.0
+14350.0
  97
 0
  75
@@ -34679,7 +34679,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:24.75-27.25
+y@0:12.85-14.35
 1000
 exterior=1
   0
@@ -34701,27 +34701,27 @@ AcDbPolyline
  70
 1
  10
-24750.0
+-150.0
  20
-23850.0
+12850.0
  10
-27250.0
+150.0
  20
-23850.0
+12850.0
  10
-27250.0
+150.0
  20
-24150.0
+14350.0
  10
-24750.0
+-150.0
  20
-24150.0
+14350.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-x@24:24.75-27.25
+y@0:12.85-14.35
 1000
 exterior=1
   0
@@ -34769,19 +34769,19 @@ SOLID
  93
 4
  10
-28150.0
+-150.0
  20
-23850.0
+15850.0
  10
-32150.0
+150.0
  20
-23850.0
+15850.0
  10
-32150.0
+150.0
  20
 24150.0
  10
-28150.0
+-150.0
  20
 24150.0
  97
@@ -34797,7 +34797,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:28.15-32
+y@0:15.85-24
 1000
 exterior=1
   0
@@ -34819,19 +34819,19 @@ AcDbPolyline
  70
 1
  10
-28150.0
+-150.0
  20
-23850.0
+15850.0
  10
-32150.0
+150.0
  20
-23850.0
+15850.0
  10
-32150.0
+150.0
  20
 24150.0
  10
-28150.0
+-150.0
  20
 24150.0
 1001
@@ -34839,7 +34839,7 @@ KANTOR_RPG
 1000
 wall
 1000
-x@24:28.15-32
+y@0:15.85-24
 1000
 exterior=1
   0
@@ -34887,21 +34887,21 @@ SOLID
  93
 4
  10
--150.0
+31850.0
  20
 -150.0
  10
-150.0
+32150.0
  20
 -150.0
  10
-150.0
+32150.0
  20
-11350.0
+1788.0
  10
--150.0
+31850.0
  20
-11350.0
+1788.0
  97
 0
  75
@@ -34915,7 +34915,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@0:0-11.35
+y@32:0-1.788
 1000
 exterior=1
   0
@@ -34937,27 +34937,27 @@ AcDbPolyline
  70
 1
  10
--150.0
+31850.0
  20
 -150.0
  10
-150.0
+32150.0
  20
 -150.0
  10
-150.0
+32150.0
  20
-11350.0
+1788.0
  10
--150.0
+31850.0
  20
-11350.0
+1788.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@0:0-11.35
+y@32:0-1.788
 1000
 exterior=1
   0
@@ -35005,21 +35005,21 @@ SOLID
  93
 4
  10
--150.0
+31850.0
  20
-12850.0
+2688.0
  10
-150.0
+32150.0
  20
-12850.0
+2688.0
  10
-150.0
+32150.0
  20
-14350.0
+4188.0
  10
--150.0
+31850.0
  20
-14350.0
+4188.0
  97
 0
  75
@@ -35033,7 +35033,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@0:12.85-14.35
+y@32:2.688-4.188
 1000
 exterior=1
   0
@@ -35055,27 +35055,27 @@ AcDbPolyline
  70
 1
  10
--150.0
+31850.0
  20
-12850.0
+2688.0
  10
-150.0
+32150.0
  20
-12850.0
+2688.0
  10
-150.0
+32150.0
  20
-14350.0
+4188.0
  10
--150.0
+31850.0
  20
-14350.0
+4188.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@0:12.85-14.35
+y@32:2.688-4.188
 1000
 exterior=1
   0
@@ -35123,21 +35123,21 @@ SOLID
  93
 4
  10
--150.0
+31850.0
  20
-15850.0
+5088.0
  10
-150.0
+32150.0
  20
-15850.0
+5088.0
  10
-150.0
+32150.0
  20
-24150.0
+6013.0
  10
--150.0
+31850.0
  20
-24150.0
+6013.0
  97
 0
  75
@@ -35151,7 +35151,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@0:15.85-24
+y@32:5.088-6.013
 1000
 exterior=1
   0
@@ -35173,27 +35173,27 @@ AcDbPolyline
  70
 1
  10
--150.0
+31850.0
  20
-15850.0
+5088.0
  10
-150.0
+32150.0
  20
-15850.0
+5088.0
  10
-150.0
+32150.0
  20
-24150.0
+6013.0
  10
--150.0
+31850.0
  20
-24150.0
+6013.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@0:15.85-24
+y@32:5.088-6.013
 1000
 exterior=1
   0
@@ -35243,19 +35243,19 @@ SOLID
  10
 31850.0
  20
--150.0
+6913.0
  10
 32150.0
  20
--150.0
+6913.0
  10
 32150.0
  20
-1788.0
+8650.0
  10
 31850.0
  20
-1788.0
+8650.0
  97
 0
  75
@@ -35269,7 +35269,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@32:0-1.788
+y@32:6.913-8.65
 1000
 exterior=1
   0
@@ -35293,25 +35293,25 @@ AcDbPolyline
  10
 31850.0
  20
--150.0
+6913.0
  10
 32150.0
  20
--150.0
+6913.0
  10
 32150.0
  20
-1788.0
+8650.0
  10
 31850.0
  20
-1788.0
+8650.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@32:0-1.788
+y@32:6.913-8.65
 1000
 exterior=1
   0
@@ -35361,19 +35361,19 @@ SOLID
  10
 31850.0
  20
-2688.0
+9850.0
  10
 32150.0
  20
-2688.0
+9850.0
  10
 32150.0
  20
-4188.0
+13688.0
  10
 31850.0
  20
-4188.0
+13688.0
  97
 0
  75
@@ -35387,7 +35387,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@32:2.688-4.188
+y@32:9.85-13.688
 1000
 exterior=1
   0
@@ -35411,25 +35411,25 @@ AcDbPolyline
  10
 31850.0
  20
-2688.0
+9850.0
  10
 32150.0
  20
-2688.0
+9850.0
  10
 32150.0
  20
-4188.0
+13688.0
  10
 31850.0
  20
-4188.0
+13688.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@32:2.688-4.188
+y@32:9.85-13.688
 1000
 exterior=1
   0
@@ -35479,19 +35479,19 @@ SOLID
  10
 31850.0
  20
-5088.0
+15188.0
  10
 32150.0
  20
-5088.0
+15188.0
  10
 32150.0
  20
-6013.0
+19600.0
  10
 31850.0
  20
-6013.0
+19600.0
  97
 0
  75
@@ -35505,7 +35505,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@32:5.088-6.013
+y@32:15.188-19.6
 1000
 exterior=1
   0
@@ -35529,25 +35529,25 @@ AcDbPolyline
  10
 31850.0
  20
-5088.0
+15188.0
  10
 32150.0
  20
-5088.0
+15188.0
  10
 32150.0
  20
-6013.0
+19600.0
  10
 31850.0
  20
-6013.0
+19600.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@32:5.088-6.013
+y@32:15.188-19.6
 1000
 exterior=1
   0
@@ -35597,19 +35597,19 @@ SOLID
  10
 31850.0
  20
-6913.0
+20500.0
  10
 32150.0
  20
-6913.0
+20500.0
  10
 32150.0
  20
-8650.0
+22000.0
  10
 31850.0
  20
-8650.0
+22000.0
  97
 0
  75
@@ -35623,7 +35623,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@32:6.913-8.65
+y@32:20.5-22.0
 1000
 exterior=1
   0
@@ -35647,25 +35647,25 @@ AcDbPolyline
  10
 31850.0
  20
-6913.0
+20500.0
  10
 32150.0
  20
-6913.0
+20500.0
  10
 32150.0
  20
-8650.0
+22000.0
  10
 31850.0
  20
-8650.0
+22000.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@32:6.913-8.65
+y@32:20.5-22.0
 1000
 exterior=1
   0
@@ -35715,19 +35715,19 @@ SOLID
  10
 31850.0
  20
-9850.0
+22900.0
  10
 32150.0
  20
-9850.0
+22900.0
  10
 32150.0
  20
-13688.0
+24150.0
  10
 31850.0
  20
-13688.0
+24150.0
  97
 0
  75
@@ -35741,7 +35741,7 @@ KANTOR_RPG
 1000
 wall
 1000
-y@32:9.85-13.688
+y@32:22.9-24
 1000
 exterior=1
   0
@@ -35765,385 +35765,31 @@ AcDbPolyline
  10
 31850.0
  20
-9850.0
+22900.0
  10
 32150.0
  20
-9850.0
+22900.0
  10
 32150.0
  20
-13688.0
+24150.0
  10
 31850.0
  20
-13688.0
+24150.0
 1001
 KANTOR_RPG
 1000
 wall
 1000
-y@32:9.85-13.688
+y@32:22.9-24
 1000
 exterior=1
   0
-HATCH
+LWPOLYLINE
   5
 1F4
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
- 62
-7
-420
-2051386
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-31850.0
- 20
-15188.0
- 10
-32150.0
- 20
-15188.0
- 10
-32150.0
- 20
-19600.0
- 10
-31850.0
- 20
-19600.0
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@32:15.188-19.6
-1000
-exterior=1
-  0
-LWPOLYLINE
-  5
-1F5
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
-420
-2051386
-100
-AcDbPolyline
- 90
-4
- 70
-1
- 10
-31850.0
- 20
-15188.0
- 10
-32150.0
- 20
-15188.0
- 10
-32150.0
- 20
-19600.0
- 10
-31850.0
- 20
-19600.0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@32:15.188-19.6
-1000
-exterior=1
-  0
-HATCH
-  5
-1F6
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
- 62
-7
-420
-2051386
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-31850.0
- 20
-20500.0
- 10
-32150.0
- 20
-20500.0
- 10
-32150.0
- 20
-22000.0
- 10
-31850.0
- 20
-22000.0
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@32:20.5-22.0
-1000
-exterior=1
-  0
-LWPOLYLINE
-  5
-1F7
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
-420
-2051386
-100
-AcDbPolyline
- 90
-4
- 70
-1
- 10
-31850.0
- 20
-20500.0
- 10
-32150.0
- 20
-20500.0
- 10
-32150.0
- 20
-22000.0
- 10
-31850.0
- 20
-22000.0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@32:20.5-22.0
-1000
-exterior=1
-  0
-HATCH
-  5
-1F8
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
- 62
-7
-420
-2051386
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-31850.0
- 20
-22900.0
- 10
-32150.0
- 20
-22900.0
- 10
-32150.0
- 20
-24150.0
- 10
-31850.0
- 20
-24150.0
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@32:22.9-24
-1000
-exterior=1
-  0
-LWPOLYLINE
-  5
-1F9
-330
-17
-100
-AcDbEntity
-  8
-A-WALL
-420
-2051386
-100
-AcDbPolyline
- 90
-4
- 70
-1
- 10
-31850.0
- 20
-22900.0
- 10
-32150.0
- 20
-22900.0
- 10
-32150.0
- 20
-24150.0
- 10
-31850.0
- 20
-24150.0
-1001
-KANTOR_RPG
-1000
-wall
-1000
-y@32:22.9-24
-1000
-exterior=1
-  0
-LWPOLYLINE
-  5
-1FA
 330
 17
 100
@@ -36183,7 +35829,7 @@ L2-READ
   0
 LWPOLYLINE
   5
-1FB
+1F5
 330
 17
 100
@@ -36223,7 +35869,7 @@ L2-LOUNGE
   0
 LWPOLYLINE
   5
-1FC
+1F6
 330
 17
 100
@@ -36263,7 +35909,7 @@ L2-DINE
   0
 LWPOLYLINE
   5
-1FD
+1F7
 330
 17
 100
@@ -36303,7 +35949,7 @@ L2-SHOWER
   0
 LWPOLYLINE
   5
-1FE
+1F8
 330
 17
 100
@@ -36343,7 +35989,7 @@ L2-SHAFT-W
   0
 LWPOLYLINE
   5
-1FF
+1F9
 330
 17
 100
@@ -36383,7 +36029,7 @@ L2-WC
   0
 LWPOLYLINE
   5
-200
+1FA
 330
 17
 100
@@ -36423,7 +36069,7 @@ L2-CORR
   0
 LWPOLYLINE
   5
-201
+1FB
 330
 17
 100
@@ -36463,7 +36109,7 @@ L2-CHAT
   0
 LWPOLYLINE
   5
-202
+1FC
 330
 17
 100
@@ -36503,7 +36149,7 @@ L2-GARDEN
   0
 LWPOLYLINE
   5
-203
+1FD
 330
 17
 100
@@ -36543,7 +36189,7 @@ L2-CORE
   0
 LWPOLYLINE
   5
-204
+1FE
 330
 17
 100
@@ -36583,7 +36229,7 @@ L2-GAME
   0
 LWPOLYLINE
   5
-205
+1FF
 330
 17
 100
@@ -36623,7 +36269,7 @@ L2-NCORR
   0
 LWPOLYLINE
   5
-206
+200
 330
 17
 100
@@ -36663,7 +36309,7 @@ L2-BALCONY
   0
 LWPOLYLINE
   5
-207
+201
 330
 17
 100
@@ -36703,7 +36349,7 @@ L2-BILLIARD
   0
 LWPOLYLINE
   5
-208
+202
 330
 17
 100
@@ -36743,7 +36389,7 @@ L2-GYM
   0
 LWPOLYLINE
   5
-209
+203
 330
 17
 100
@@ -36783,7 +36429,7 @@ L2-STORE
   0
 LWPOLYLINE
   5
-20A
+204
 330
 17
 100
@@ -36800,54 +36446,6 @@ AcDbPolyline
 1
  10
 29000.0
- 20
-18500.0
- 10
-30000.0
- 20
-18500.0
- 10
-30000.0
- 20
-20000.0
- 10
-29000.0
- 20
-20000.0
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-RISER
-  0
-LWPOLYLINE
-  5
-20B
-330
-17
-100
-AcDbEntity
-  8
-A-AREA
-420
-10532010
-100
-AcDbPolyline
- 90
-6
- 70
-1
- 10
-29000.0
- 20
-20000.0
- 10
-30000.0
- 20
-20000.0
- 10
-30000.0
  20
 18500.0
  10
@@ -36871,7 +36469,7 @@ L2-SERVICE
   0
 LWPOLYLINE
   5
-20C
+205
 330
 17
 100
@@ -36909,7 +36507,7 @@ type=opening
   0
 LWPOLYLINE
   5
-20D
+206
 330
 17
 100
@@ -36947,7 +36545,7 @@ type=opening
   0
 LWPOLYLINE
   5
-20E
+207
 330
 17
 100
@@ -36981,7 +36579,7 @@ type=single
   0
 ARC
   5
-20F
+208
 330
 17
 100
@@ -37017,7 +36615,7 @@ type=single
   0
 LWPOLYLINE
   5
-210
+209
 330
 17
 100
@@ -37051,7 +36649,7 @@ type=single
   0
 ARC
   5
-211
+20A
 330
 17
 100
@@ -37087,7 +36685,7 @@ type=single
   0
 LWPOLYLINE
   5
-212
+20B
 330
 17
 100
@@ -37125,7 +36723,7 @@ type=opening
   0
 LWPOLYLINE
   5
-213
+20C
 330
 17
 100
@@ -37163,7 +36761,7 @@ type=opening
   0
 LWPOLYLINE
   5
-214
+20D
 330
 17
 100
@@ -37197,7 +36795,7 @@ type=single
   0
 ARC
   5
-215
+20E
 330
 17
 100
@@ -37233,7 +36831,7 @@ type=single
   0
 LWPOLYLINE
   5
-216
+20F
 330
 17
 100
@@ -37267,7 +36865,7 @@ type=single
   0
 ARC
   5
-217
+210
 330
 17
 100
@@ -37303,7 +36901,7 @@ type=single
   0
 HATCH
   5
-218
+211
 330
 17
 100
@@ -37379,7 +36977,7 @@ type=hatch
   0
 LWPOLYLINE
   5
-219
+212
 330
 17
 100
@@ -37421,7 +37019,7 @@ type=hatch
   0
 LWPOLYLINE
   5
-21A
+213
 330
 17
 100
@@ -37455,7 +37053,7 @@ type=hatch
   0
 LWPOLYLINE
   5
-21B
+214
 330
 17
 100
@@ -37489,7 +37087,7 @@ type=hatch
   0
 LWPOLYLINE
   5
-21C
+215
 330
 17
 100
@@ -37523,7 +37121,7 @@ type=single
   0
 ARC
   5
-21D
+216
 330
 17
 100
@@ -37559,7 +37157,7 @@ type=single
   0
 LWPOLYLINE
   5
-21E
+217
 330
 17
 100
@@ -37593,7 +37191,7 @@ type=single
   0
 ARC
   5
-21F
+218
 330
 17
 100
@@ -37629,7 +37227,7 @@ type=single
   0
 LWPOLYLINE
   5
-220
+219
 330
 17
 100
@@ -37667,7 +37265,7 @@ type=opening
   0
 LWPOLYLINE
   5
-221
+21A
 330
 17
 100
@@ -37705,7 +37303,7 @@ type=opening
   0
 LWPOLYLINE
   5
-222
+21B
 330
 17
 100
@@ -37743,7 +37341,7 @@ type=opening
   0
 LWPOLYLINE
   5
-223
+21C
 330
 17
 100
@@ -37781,7 +37379,7 @@ type=opening
   0
 LWPOLYLINE
   5
-224
+21D
 330
 17
 100
@@ -37815,7 +37413,7 @@ type=double
   0
 LWPOLYLINE
   5
-225
+21E
 330
 17
 100
@@ -37849,7 +37447,7 @@ type=double
   0
 ARC
   5
-226
+21F
 330
 17
 100
@@ -37885,7 +37483,7 @@ type=double
   0
 ARC
   5
-227
+220
 330
 17
 100
@@ -37921,7 +37519,7 @@ type=double
   0
 LWPOLYLINE
   5
-228
+221
 330
 17
 100
@@ -37955,7 +37553,7 @@ type=single
   0
 ARC
   5
-229
+222
 330
 17
 100
@@ -37991,7 +37589,7 @@ type=single
   0
 LWPOLYLINE
   5
-22A
+223
 330
 17
 100
@@ -38025,7 +37623,7 @@ type=single
   0
 ARC
   5
-22B
+224
 330
 17
 100
@@ -38061,7 +37659,7 @@ type=single
   0
 HATCH
   5
-22C
+225
 330
 17
 100
@@ -38137,7 +37735,7 @@ type=sliding
   0
 LWPOLYLINE
   5
-22D
+226
 330
 17
 100
@@ -38179,7 +37777,7 @@ type=sliding
   0
 HATCH
   5
-22E
+227
 330
 17
 100
@@ -38255,7 +37853,7 @@ type=sliding
   0
 LWPOLYLINE
   5
-22F
+228
 330
 17
 100
@@ -38297,7 +37895,7 @@ type=sliding
   0
 LWPOLYLINE
   5
-230
+229
 330
 17
 100
@@ -38331,7 +37929,7 @@ type=single
   0
 ARC
   5
-231
+22A
 330
 17
 100
@@ -38367,7 +37965,7 @@ type=single
   0
 LWPOLYLINE
   5
-232
+22B
 330
 17
 100
@@ -38401,7 +37999,7 @@ type=double
   0
 LWPOLYLINE
   5
-233
+22C
 330
 17
 100
@@ -38435,7 +38033,7 @@ type=double
   0
 ARC
   5
-234
+22D
 330
 17
 100
@@ -38471,7 +38069,7 @@ type=double
   0
 ARC
   5
-235
+22E
 330
 17
 100
@@ -38507,7 +38105,7 @@ type=double
   0
 LWPOLYLINE
   5
-236
+22F
 330
 17
 100
@@ -38540,6 +38138,280 @@ D-L2-16
 type=single
   0
 ARC
+  5
+230
+330
+17
+100
+AcDbEntity
+  8
+A-DOOR
+420
+2051386
+100
+AcDbCircle
+ 10
+25500.0
+ 20
+18575.0
+ 30
+0.0
+ 40
+1000.0
+100
+AcDbArc
+ 50
+0.0
+ 51
+90.0
+1001
+KANTOR_RPG
+1000
+door
+1000
+D-L2-16
+1000
+type=single
+  0
+LWPOLYLINE
+  5
+231
+330
+17
+100
+AcDbEntity
+  8
+A-DOOR
+420
+2051386
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+31500.0
+ 20
+18575.0
+ 10
+31500.0
+ 20
+19575.0
+1001
+KANTOR_RPG
+1000
+door
+1000
+D-L2-18
+1000
+type=single
+  0
+ARC
+  5
+232
+330
+17
+100
+AcDbEntity
+  8
+A-DOOR
+420
+2051386
+100
+AcDbCircle
+ 10
+31500.0
+ 20
+18575.0
+ 30
+0.0
+ 40
+1000.0
+100
+AcDbArc
+ 50
+90.0
+ 51
+180.0
+1001
+KANTOR_RPG
+1000
+door
+1000
+D-L2-18
+1000
+type=single
+  0
+LWPOLYLINE
+  5
+233
+330
+17
+100
+AcDbEntity
+  8
+A-GLAZ
+420
+2051386
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+1650.0
+ 20
+-150.0
+ 10
+3150.0
+ 20
+-150.0
+1001
+KANTOR_RPG
+1000
+window
+1000
+W-L2-021
+1000
+glazing=clear
+1000
+room=L2-READ
+1000
+sill=0.9
+1000
+head=2.4
+1000
+width=1.5
+  0
+LWPOLYLINE
+  5
+234
+330
+17
+100
+AcDbEntity
+  8
+A-GLAZ
+420
+2051386
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+1650.0
+ 20
+150.0
+ 10
+3150.0
+ 20
+150.0
+1001
+KANTOR_RPG
+1000
+window
+1000
+W-L2-021
+1000
+glazing=clear
+1000
+room=L2-READ
+1000
+sill=0.9
+1000
+head=2.4
+1000
+width=1.5
+  0
+LWPOLYLINE
+  5
+235
+330
+17
+100
+AcDbEntity
+  8
+A-GLAZ
+420
+2051386
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+1650.0
+ 20
+-25.0
+ 10
+3150.0
+ 20
+-25.0
+1001
+KANTOR_RPG
+1000
+window
+1000
+W-L2-021
+1000
+glazing=clear
+1000
+room=L2-READ
+1000
+sill=0.9
+1000
+head=2.4
+1000
+width=1.5
+  0
+LWPOLYLINE
+  5
+236
+330
+17
+100
+AcDbEntity
+  8
+A-GLAZ
+420
+2051386
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+1650.0
+ 20
+25.0
+ 10
+3150.0
+ 20
+25.0
+1001
+KANTOR_RPG
+1000
+window
+1000
+W-L2-021
+1000
+glazing=clear
+1000
+room=L2-READ
+1000
+sill=0.9
+1000
+head=2.4
+1000
+width=1.5
+  0
+LWPOLYLINE
   5
 237
 330
@@ -38547,511 +38419,51 @@ ARC
 100
 AcDbEntity
   8
-A-DOOR
+A-GLAZ
 420
 2051386
 100
-AcDbCircle
+AcDbPolyline
+ 90
+4
+ 70
+0
  10
-25500.0
+1599.9999999999998
  20
-18575.0
- 30
-0.0
- 40
-1000.0
-100
-AcDbArc
- 50
-0.0
- 51
-90.0
+150.0
+ 10
+1599.9999999999998
+ 20
+200.0
+ 10
+3199.9999999999995
+ 20
+200.0
+ 10
+3199.9999999999995
+ 20
+150.0
 1001
 KANTOR_RPG
 1000
-door
+window
 1000
-D-L2-16
+W-L2-021
 1000
-type=single
+glazing=clear
+1000
+room=L2-READ
+1000
+sill=0.9
+1000
+head=2.4
+1000
+width=1.5
   0
 HATCH
   5
 238
-330
-17
-100
-AcDbEntity
-  8
-A-DOOR
- 62
-7
-420
-16777215
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-3
- 72
-0
- 73
-1
- 93
-4
- 10
-29100.0
- 20
-18425.0
- 10
-29900.0
- 20
-18425.0
- 10
-29900.0
- 20
-18575.0
- 10
-29100.0
- 20
-18575.0
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-1001
-KANTOR_RPG
-1000
-door
-1000
-D-L2-17
-1000
-type=hatch
-  0
-LWPOLYLINE
-  5
-239
-330
-17
-100
-AcDbEntity
-  8
-A-DOOR
-420
-2051386
-100
-AcDbPolyline
- 90
-4
- 70
-1
- 10
-29100.0
- 20
-18425.0
- 10
-29900.0
- 20
-18425.0
- 10
-29900.0
- 20
-18575.0
- 10
-29100.0
- 20
-18575.0
-1001
-KANTOR_RPG
-1000
-door
-1000
-D-L2-17
-1000
-type=hatch
-  0
-LWPOLYLINE
-  5
-23A
-330
-17
-100
-AcDbEntity
-  8
-A-DOOR
-420
-2051386
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-29100.0
- 20
-18425.0
- 10
-29900.0
- 20
-18575.0
-1001
-KANTOR_RPG
-1000
-door
-1000
-D-L2-17
-1000
-type=hatch
-  0
-LWPOLYLINE
-  5
-23B
-330
-17
-100
-AcDbEntity
-  8
-A-DOOR
-420
-2051386
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-29900.0
- 20
-18425.0
- 10
-29100.0
- 20
-18575.0
-1001
-KANTOR_RPG
-1000
-door
-1000
-D-L2-17
-1000
-type=hatch
-  0
-LWPOLYLINE
-  5
-23C
-330
-17
-100
-AcDbEntity
-  8
-A-DOOR
-420
-2051386
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-30500.0
- 20
-18575.0
- 10
-30500.0
- 20
-19575.0
-1001
-KANTOR_RPG
-1000
-door
-1000
-D-L2-18
-1000
-type=single
-  0
-ARC
-  5
-23D
-330
-17
-100
-AcDbEntity
-  8
-A-DOOR
-420
-2051386
-100
-AcDbCircle
- 10
-30500.0
- 20
-18575.0
- 30
-0.0
- 40
-1000.0
-100
-AcDbArc
- 50
-0.0
- 51
-90.0
-1001
-KANTOR_RPG
-1000
-door
-1000
-D-L2-18
-1000
-type=single
-  0
-LWPOLYLINE
-  5
-23E
-330
-17
-100
-AcDbEntity
-  8
-A-GLAZ
-420
-2051386
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-1650.0
- 20
--150.0
- 10
-3150.0
- 20
--150.0
-1001
-KANTOR_RPG
-1000
-window
-1000
-W-L2-021
-1000
-glazing=clear
-1000
-room=L2-READ
-1000
-sill=0.9
-1000
-head=2.4
-1000
-width=1.5
-  0
-LWPOLYLINE
-  5
-23F
-330
-17
-100
-AcDbEntity
-  8
-A-GLAZ
-420
-2051386
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-1650.0
- 20
-150.0
- 10
-3150.0
- 20
-150.0
-1001
-KANTOR_RPG
-1000
-window
-1000
-W-L2-021
-1000
-glazing=clear
-1000
-room=L2-READ
-1000
-sill=0.9
-1000
-head=2.4
-1000
-width=1.5
-  0
-LWPOLYLINE
-  5
-240
-330
-17
-100
-AcDbEntity
-  8
-A-GLAZ
-420
-2051386
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-1650.0
- 20
--25.0
- 10
-3150.0
- 20
--25.0
-1001
-KANTOR_RPG
-1000
-window
-1000
-W-L2-021
-1000
-glazing=clear
-1000
-room=L2-READ
-1000
-sill=0.9
-1000
-head=2.4
-1000
-width=1.5
-  0
-LWPOLYLINE
-  5
-241
-330
-17
-100
-AcDbEntity
-  8
-A-GLAZ
-420
-2051386
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-1650.0
- 20
-25.0
- 10
-3150.0
- 20
-25.0
-1001
-KANTOR_RPG
-1000
-window
-1000
-W-L2-021
-1000
-glazing=clear
-1000
-room=L2-READ
-1000
-sill=0.9
-1000
-head=2.4
-1000
-width=1.5
-  0
-LWPOLYLINE
-  5
-242
-330
-17
-100
-AcDbEntity
-  8
-A-GLAZ
-420
-2051386
-100
-AcDbPolyline
- 90
-4
- 70
-0
- 10
-1599.9999999999998
- 20
-150.0
- 10
-1599.9999999999998
- 20
-200.0
- 10
-3199.9999999999995
- 20
-200.0
- 10
-3199.9999999999995
- 20
-150.0
-1001
-KANTOR_RPG
-1000
-window
-1000
-W-L2-021
-1000
-glazing=clear
-1000
-room=L2-READ
-1000
-sill=0.9
-1000
-head=2.4
-1000
-width=1.5
-  0
-HATCH
-  5
-243
 330
 17
 100
@@ -39135,7 +38547,7 @@ tag=W21
   0
 LWPOLYLINE
   5
-244
+239
 330
 17
 100
@@ -39185,7 +38597,7 @@ tag=W21
   0
 TEXT
   5
-245
+23A
 330
 17
 100
@@ -39231,7 +38643,7 @@ tag=W21
   0
 LWPOLYLINE
   5
-246
+23B
 330
 17
 100
@@ -39273,7 +38685,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-247
+23C
 330
 17
 100
@@ -39315,7 +38727,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-248
+23D
 330
 17
 100
@@ -39357,7 +38769,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-249
+23E
 330
 17
 100
@@ -39399,7 +38811,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-24A
+23F
 330
 17
 100
@@ -39449,7 +38861,7 @@ width=1.5
   0
 HATCH
   5
-24B
+240
 330
 17
 100
@@ -39533,7 +38945,7 @@ tag=W22
   0
 LWPOLYLINE
   5
-24C
+241
 330
 17
 100
@@ -39583,7 +38995,7 @@ tag=W22
   0
 TEXT
   5
-24D
+242
 330
 17
 100
@@ -39629,7 +39041,7 @@ tag=W22
   0
 LWPOLYLINE
   5
-24E
+243
 330
 17
 100
@@ -39671,7 +39083,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-24F
+244
 330
 17
 100
@@ -39713,7 +39125,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-250
+245
 330
 17
 100
@@ -39755,7 +39167,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-251
+246
 330
 17
 100
@@ -39797,7 +39209,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-252
+247
 330
 17
 100
@@ -39847,7 +39259,7 @@ width=1.5
   0
 HATCH
   5
-253
+248
 330
 17
 100
@@ -39931,7 +39343,7 @@ tag=W23
   0
 LWPOLYLINE
   5
-254
+249
 330
 17
 100
@@ -39981,7 +39393,7 @@ tag=W23
   0
 TEXT
   5
-255
+24A
 330
 17
 100
@@ -40027,7 +39439,7 @@ tag=W23
   0
 LWPOLYLINE
   5
-256
+24B
 330
 17
 100
@@ -40069,7 +39481,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-257
+24C
 330
 17
 100
@@ -40111,7 +39523,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-258
+24D
 330
 17
 100
@@ -40153,7 +39565,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-259
+24E
 330
 17
 100
@@ -40195,7 +39607,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-25A
+24F
 330
 17
 100
@@ -40245,7 +39657,7 @@ width=1.5
   0
 HATCH
   5
-25B
+250
 330
 17
 100
@@ -40329,7 +39741,7 @@ tag=W24
   0
 LWPOLYLINE
   5
-25C
+251
 330
 17
 100
@@ -40379,7 +39791,7 @@ tag=W24
   0
 TEXT
   5
-25D
+252
 330
 17
 100
@@ -40425,7 +39837,7 @@ tag=W24
   0
 LWPOLYLINE
   5
-25E
+253
 330
 17
 100
@@ -40467,7 +39879,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-25F
+254
 330
 17
 100
@@ -40509,7 +39921,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-260
+255
 330
 17
 100
@@ -40551,7 +39963,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-261
+256
 330
 17
 100
@@ -40593,7 +40005,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-262
+257
 330
 17
 100
@@ -40643,7 +40055,7 @@ width=1.5
   0
 HATCH
   5
-263
+258
 330
 17
 100
@@ -40727,7 +40139,7 @@ tag=W25
   0
 LWPOLYLINE
   5
-264
+259
 330
 17
 100
@@ -40777,7 +40189,7 @@ tag=W25
   0
 TEXT
   5
-265
+25A
 330
 17
 100
@@ -40823,7 +40235,7 @@ tag=W25
   0
 LWPOLYLINE
   5
-266
+25B
 330
 17
 100
@@ -40865,7 +40277,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-267
+25C
 330
 17
 100
@@ -40907,7 +40319,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-268
+25D
 330
 17
 100
@@ -40949,7 +40361,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-269
+25E
 330
 17
 100
@@ -40991,7 +40403,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-26A
+25F
 330
 17
 100
@@ -41041,7 +40453,7 @@ width=1.5
   0
 HATCH
   5
-26B
+260
 330
 17
 100
@@ -41125,7 +40537,7 @@ tag=W26
   0
 LWPOLYLINE
   5
-26C
+261
 330
 17
 100
@@ -41175,7 +40587,7 @@ tag=W26
   0
 TEXT
   5
-26D
+262
 330
 17
 100
@@ -41221,7 +40633,7 @@ tag=W26
   0
 LWPOLYLINE
   5
-26E
+263
 330
 17
 100
@@ -41263,7 +40675,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-26F
+264
 330
 17
 100
@@ -41305,7 +40717,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-270
+265
 330
 17
 100
@@ -41347,7 +40759,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-271
+266
 330
 17
 100
@@ -41389,7 +40801,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-272
+267
 330
 17
 100
@@ -41439,7 +40851,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-273
+268
 330
 17
 100
@@ -41481,7 +40893,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-274
+269
 330
 17
 100
@@ -41523,7 +40935,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-275
+26A
 330
 17
 100
@@ -41565,7 +40977,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-276
+26B
 330
 17
 100
@@ -41607,7 +41019,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-277
+26C
 330
 17
 100
@@ -41649,7 +41061,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-278
+26D
 330
 17
 100
@@ -41691,7 +41103,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-279
+26E
 330
 17
 100
@@ -41733,7 +41145,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-27A
+26F
 330
 17
 100
@@ -41775,7 +41187,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-27B
+270
 330
 17
 100
@@ -41817,7 +41229,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-27C
+271
 330
 17
 100
@@ -41859,7 +41271,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-27D
+272
 330
 17
 100
@@ -41901,7 +41313,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-27E
+273
 330
 17
 100
@@ -41943,7 +41355,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-27F
+274
 330
 17
 100
@@ -41985,7 +41397,7 @@ width=0.9
   0
 HATCH
   5
-280
+275
 330
 17
 100
@@ -42069,7 +41481,7 @@ tag=W27
   0
 LWPOLYLINE
   5
-281
+276
 330
 17
 100
@@ -42119,7 +41531,7 @@ tag=W27
   0
 TEXT
   5
-282
+277
 330
 17
 100
@@ -42167,7 +41579,7 @@ tag=W27
   0
 LWPOLYLINE
   5
-283
+278
 330
 17
 100
@@ -42209,7 +41621,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-284
+279
 330
 17
 100
@@ -42251,7 +41663,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-285
+27A
 330
 17
 100
@@ -42293,7 +41705,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-286
+27B
 330
 17
 100
@@ -42335,7 +41747,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-287
+27C
 330
 17
 100
@@ -42385,7 +41797,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-288
+27D
 330
 17
 100
@@ -42427,7 +41839,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-289
+27E
 330
 17
 100
@@ -42469,7 +41881,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-28A
+27F
 330
 17
 100
@@ -42511,7 +41923,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-28B
+280
 330
 17
 100
@@ -42553,7 +41965,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-28C
+281
 330
 17
 100
@@ -42595,7 +42007,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-28D
+282
 330
 17
 100
@@ -42637,7 +42049,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-28E
+283
 330
 17
 100
@@ -42679,7 +42091,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-28F
+284
 330
 17
 100
@@ -42721,7 +42133,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-290
+285
 330
 17
 100
@@ -42763,7 +42175,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-291
+286
 330
 17
 100
@@ -42805,7 +42217,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-292
+287
 330
 17
 100
@@ -42847,7 +42259,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-293
+288
 330
 17
 100
@@ -42889,7 +42301,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-294
+289
 330
 17
 100
@@ -42931,7 +42343,7 @@ width=0.9
   0
 HATCH
   5
-295
+28A
 330
 17
 100
@@ -43015,7 +42427,7 @@ tag=W28
   0
 LWPOLYLINE
   5
-296
+28B
 330
 17
 100
@@ -43065,7 +42477,7 @@ tag=W28
   0
 TEXT
   5
-297
+28C
 330
 17
 100
@@ -43113,7 +42525,7 @@ tag=W28
   0
 LWPOLYLINE
   5
-298
+28D
 330
 17
 100
@@ -43155,7 +42567,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-299
+28E
 330
 17
 100
@@ -43197,7 +42609,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-29A
+28F
 330
 17
 100
@@ -43239,7 +42651,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-29B
+290
 330
 17
 100
@@ -43281,7 +42693,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-29C
+291
 330
 17
 100
@@ -43331,7 +42743,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-29D
+292
 330
 17
 100
@@ -43373,7 +42785,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-29E
+293
 330
 17
 100
@@ -43415,7 +42827,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-29F
+294
 330
 17
 100
@@ -43457,7 +42869,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A0
+295
 330
 17
 100
@@ -43499,7 +42911,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A1
+296
 330
 17
 100
@@ -43541,7 +42953,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A2
+297
 330
 17
 100
@@ -43583,7 +42995,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A3
+298
 330
 17
 100
@@ -43625,7 +43037,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A4
+299
 330
 17
 100
@@ -43667,7 +43079,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A5
+29A
 330
 17
 100
@@ -43709,7 +43121,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A6
+29B
 330
 17
 100
@@ -43751,7 +43163,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A7
+29C
 330
 17
 100
@@ -43793,7 +43205,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A8
+29D
 330
 17
 100
@@ -43835,7 +43247,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2A9
+29E
 330
 17
 100
@@ -43877,7 +43289,7 @@ width=0.9
   0
 HATCH
   5
-2AA
+29F
 330
 17
 100
@@ -43961,7 +43373,7 @@ tag=W29
   0
 LWPOLYLINE
   5
-2AB
+2A0
 330
 17
 100
@@ -44011,7 +43423,7 @@ tag=W29
   0
 TEXT
   5
-2AC
+2A1
 330
 17
 100
@@ -44059,7 +43471,7 @@ tag=W29
   0
 LWPOLYLINE
   5
-2AD
+2A2
 330
 17
 100
@@ -44101,7 +43513,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2AE
+2A3
 330
 17
 100
@@ -44143,7 +43555,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2AF
+2A4
 330
 17
 100
@@ -44185,7 +43597,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2B0
+2A5
 330
 17
 100
@@ -44227,7 +43639,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2B1
+2A6
 330
 17
 100
@@ -44277,7 +43689,7 @@ width=1.5
   0
 HATCH
   5
-2B2
+2A7
 330
 17
 100
@@ -44361,7 +43773,7 @@ tag=W30
   0
 LWPOLYLINE
   5
-2B3
+2A8
 330
 17
 100
@@ -44411,7 +43823,7 @@ tag=W30
   0
 TEXT
   5
-2B4
+2A9
 330
 17
 100
@@ -44459,7 +43871,7 @@ tag=W30
   0
 LWPOLYLINE
   5
-2B5
+2AA
 330
 17
 100
@@ -44501,7 +43913,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2B6
+2AB
 330
 17
 100
@@ -44543,7 +43955,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2B7
+2AC
 330
 17
 100
@@ -44585,7 +43997,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2B8
+2AD
 330
 17
 100
@@ -44627,7 +44039,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2B9
+2AE
 330
 17
 100
@@ -44677,7 +44089,7 @@ width=1.5
   0
 HATCH
   5
-2BA
+2AF
 330
 17
 100
@@ -44761,7 +44173,7 @@ tag=W31
   0
 LWPOLYLINE
   5
-2BB
+2B0
 330
 17
 100
@@ -44811,7 +44223,7 @@ tag=W31
   0
 TEXT
   5
-2BC
+2B1
 330
 17
 100
@@ -44859,7 +44271,7 @@ tag=W31
   0
 LWPOLYLINE
   5
-2BD
+2B2
 330
 17
 100
@@ -44901,7 +44313,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2BE
+2B3
 330
 17
 100
@@ -44943,7 +44355,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2BF
+2B4
 330
 17
 100
@@ -44985,7 +44397,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2C0
+2B5
 330
 17
 100
@@ -45027,7 +44439,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2C1
+2B6
 330
 17
 100
@@ -45077,7 +44489,7 @@ width=1.5
   0
 HATCH
   5
-2C2
+2B7
 330
 17
 100
@@ -45161,7 +44573,7 @@ tag=W32
   0
 LWPOLYLINE
   5
-2C3
+2B8
 330
 17
 100
@@ -45211,7 +44623,7 @@ tag=W32
   0
 TEXT
   5
-2C4
+2B9
 330
 17
 100
@@ -45259,7 +44671,7 @@ tag=W32
   0
 LWPOLYLINE
   5
-2C5
+2BA
 330
 17
 100
@@ -45301,7 +44713,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2C6
+2BB
 330
 17
 100
@@ -45343,7 +44755,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2C7
+2BC
 330
 17
 100
@@ -45385,7 +44797,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2C8
+2BD
 330
 17
 100
@@ -45427,7 +44839,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2C9
+2BE
 330
 17
 100
@@ -45477,7 +44889,7 @@ width=1.5
   0
 HATCH
   5
-2CA
+2BF
 330
 17
 100
@@ -45561,7 +44973,7 @@ tag=W33
   0
 LWPOLYLINE
   5
-2CB
+2C0
 330
 17
 100
@@ -45611,7 +45023,7 @@ tag=W33
   0
 TEXT
   5
-2CC
+2C1
 330
 17
 100
@@ -45657,7 +45069,7 @@ tag=W33
   0
 LWPOLYLINE
   5
-2CD
+2C2
 330
 17
 100
@@ -45699,7 +45111,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2CE
+2C3
 330
 17
 100
@@ -45741,7 +45153,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2CF
+2C4
 330
 17
 100
@@ -45783,7 +45195,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2D0
+2C5
 330
 17
 100
@@ -45825,7 +45237,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2D1
+2C6
 330
 17
 100
@@ -45875,7 +45287,7 @@ width=1.5
   0
 HATCH
   5
-2D2
+2C7
 330
 17
 100
@@ -45959,7 +45371,7 @@ tag=W34
   0
 LWPOLYLINE
   5
-2D3
+2C8
 330
 17
 100
@@ -46009,7 +45421,7 @@ tag=W34
   0
 TEXT
   5
-2D4
+2C9
 330
 17
 100
@@ -46055,7 +45467,7 @@ tag=W34
   0
 LWPOLYLINE
   5
-2D5
+2CA
 330
 17
 100
@@ -46097,7 +45509,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2D6
+2CB
 330
 17
 100
@@ -46139,7 +45551,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2D7
+2CC
 330
 17
 100
@@ -46181,7 +45593,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2D8
+2CD
 330
 17
 100
@@ -46223,7 +45635,7 @@ width=1.5
   0
 LWPOLYLINE
   5
-2D9
+2CE
 330
 17
 100
@@ -46273,7 +45685,7 @@ width=1.5
   0
 HATCH
   5
-2DA
+2CF
 330
 17
 100
@@ -46357,7 +45769,7 @@ tag=W35
   0
 LWPOLYLINE
   5
-2DB
+2D0
 330
 17
 100
@@ -46407,7 +45819,7 @@ tag=W35
   0
 TEXT
   5
-2DC
+2D1
 330
 17
 100
@@ -46453,7 +45865,7 @@ tag=W35
   0
 LWPOLYLINE
   5
-2DD
+2D2
 330
 17
 100
@@ -46495,7 +45907,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2DE
+2D3
 330
 17
 100
@@ -46537,7 +45949,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2DF
+2D4
 330
 17
 100
@@ -46579,7 +45991,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E0
+2D5
 330
 17
 100
@@ -46621,7 +46033,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E1
+2D6
 330
 17
 100
@@ -46671,7 +46083,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E2
+2D7
 330
 17
 100
@@ -46713,7 +46125,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E3
+2D8
 330
 17
 100
@@ -46755,7 +46167,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E4
+2D9
 330
 17
 100
@@ -46797,7 +46209,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E5
+2DA
 330
 17
 100
@@ -46839,7 +46251,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E6
+2DB
 330
 17
 100
@@ -46881,7 +46293,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E7
+2DC
 330
 17
 100
@@ -46923,7 +46335,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E8
+2DD
 330
 17
 100
@@ -46965,7 +46377,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2E9
+2DE
 330
 17
 100
@@ -47007,7 +46419,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2EA
+2DF
 330
 17
 100
@@ -47049,7 +46461,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2EB
+2E0
 330
 17
 100
@@ -47091,7 +46503,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2EC
+2E1
 330
 17
 100
@@ -47133,7 +46545,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2ED
+2E2
 330
 17
 100
@@ -47175,7 +46587,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2EE
+2E3
 330
 17
 100
@@ -47217,7 +46629,7 @@ width=0.9
   0
 HATCH
   5
-2EF
+2E4
 330
 17
 100
@@ -47301,7 +46713,7 @@ tag=W36
   0
 LWPOLYLINE
   5
-2F0
+2E5
 330
 17
 100
@@ -47351,7 +46763,7 @@ tag=W36
   0
 TEXT
   5
-2F1
+2E6
 330
 17
 100
@@ -47397,7 +46809,7 @@ tag=W36
   0
 LWPOLYLINE
   5
-2F2
+2E7
 330
 17
 100
@@ -47439,7 +46851,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2F3
+2E8
 330
 17
 100
@@ -47481,7 +46893,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2F4
+2E9
 330
 17
 100
@@ -47523,7 +46935,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2F5
+2EA
 330
 17
 100
@@ -47565,7 +46977,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2F6
+2EB
 330
 17
 100
@@ -47615,7 +47027,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2F7
+2EC
 330
 17
 100
@@ -47657,7 +47069,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2F8
+2ED
 330
 17
 100
@@ -47699,7 +47111,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2F9
+2EE
 330
 17
 100
@@ -47741,7 +47153,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2FA
+2EF
 330
 17
 100
@@ -47783,7 +47195,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2FB
+2F0
 330
 17
 100
@@ -47825,7 +47237,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2FC
+2F1
 330
 17
 100
@@ -47867,7 +47279,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2FD
+2F2
 330
 17
 100
@@ -47909,7 +47321,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2FE
+2F3
 330
 17
 100
@@ -47951,7 +47363,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-2FF
+2F4
 330
 17
 100
@@ -47993,7 +47405,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-300
+2F5
 330
 17
 100
@@ -48035,7 +47447,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-301
+2F6
 330
 17
 100
@@ -48077,7 +47489,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-302
+2F7
 330
 17
 100
@@ -48119,7 +47531,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-303
+2F8
 330
 17
 100
@@ -48161,7 +47573,7 @@ width=0.9
   0
 HATCH
   5
-304
+2F9
 330
 17
 100
@@ -48245,7 +47657,7 @@ tag=W37
   0
 LWPOLYLINE
   5
-305
+2FA
 330
 17
 100
@@ -48295,7 +47707,7 @@ tag=W37
   0
 TEXT
   5
-306
+2FB
 330
 17
 100
@@ -48341,7 +47753,7 @@ tag=W37
   0
 LWPOLYLINE
   5
-307
+2FC
 330
 17
 100
@@ -48383,7 +47795,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-308
+2FD
 330
 17
 100
@@ -48425,7 +47837,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-309
+2FE
 330
 17
 100
@@ -48467,7 +47879,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-30A
+2FF
 330
 17
 100
@@ -48509,7 +47921,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-30B
+300
 330
 17
 100
@@ -48559,7 +47971,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-30C
+301
 330
 17
 100
@@ -48601,7 +48013,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-30D
+302
 330
 17
 100
@@ -48643,7 +48055,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-30E
+303
 330
 17
 100
@@ -48685,7 +48097,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-30F
+304
 330
 17
 100
@@ -48727,7 +48139,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-310
+305
 330
 17
 100
@@ -48769,7 +48181,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-311
+306
 330
 17
 100
@@ -48811,7 +48223,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-312
+307
 330
 17
 100
@@ -48853,7 +48265,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-313
+308
 330
 17
 100
@@ -48895,7 +48307,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-314
+309
 330
 17
 100
@@ -48937,7 +48349,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-315
+30A
 330
 17
 100
@@ -48979,7 +48391,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-316
+30B
 330
 17
 100
@@ -49021,7 +48433,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-317
+30C
 330
 17
 100
@@ -49063,7 +48475,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-318
+30D
 330
 17
 100
@@ -49105,7 +48517,7 @@ width=0.9
   0
 HATCH
   5
-319
+30E
 330
 17
 100
@@ -49189,7 +48601,7 @@ tag=W38
   0
 LWPOLYLINE
   5
-31A
+30F
 330
 17
 100
@@ -49239,7 +48651,7 @@ tag=W38
   0
 TEXT
   5
-31B
+310
 330
 17
 100
@@ -49287,7 +48699,7 @@ tag=W38
   0
 LWPOLYLINE
   5
-31C
+311
 330
 17
 100
@@ -49329,7 +48741,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-31D
+312
 330
 17
 100
@@ -49371,7 +48783,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-31E
+313
 330
 17
 100
@@ -49413,7 +48825,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-31F
+314
 330
 17
 100
@@ -49455,7 +48867,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-320
+315
 330
 17
 100
@@ -49505,7 +48917,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-321
+316
 330
 17
 100
@@ -49547,7 +48959,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-322
+317
 330
 17
 100
@@ -49589,7 +49001,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-323
+318
 330
 17
 100
@@ -49631,7 +49043,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-324
+319
 330
 17
 100
@@ -49673,7 +49085,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-325
+31A
 330
 17
 100
@@ -49715,7 +49127,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-326
+31B
 330
 17
 100
@@ -49757,7 +49169,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-327
+31C
 330
 17
 100
@@ -49799,7 +49211,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-328
+31D
 330
 17
 100
@@ -49841,7 +49253,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-329
+31E
 330
 17
 100
@@ -49883,7 +49295,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-32A
+31F
 330
 17
 100
@@ -49925,7 +49337,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-32B
+320
 330
 17
 100
@@ -49967,7 +49379,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-32C
+321
 330
 17
 100
@@ -50009,7 +49421,7 @@ width=0.9
   0
 LWPOLYLINE
   5
-32D
+322
 330
 17
 100
@@ -50051,7 +49463,7 @@ width=0.9
   0
 HATCH
   5
-32E
+323
 330
 17
 100
@@ -50135,7 +49547,7 @@ tag=W39
   0
 LWPOLYLINE
   5
-32F
+324
 330
 17
 100
@@ -50185,7 +49597,7 @@ tag=W39
   0
 TEXT
   5
-330
+325
 330
 17
 100
@@ -50233,7 +49645,7 @@ tag=W39
   0
 LWPOLYLINE
   5
-331
+326
 330
 17
 100
@@ -50277,7 +49689,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-332
+327
 330
 17
 100
@@ -50321,7 +49733,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-333
+328
 330
 17
 100
@@ -50365,7 +49777,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-334
+329
 330
 17
 100
@@ -50381,14 +49793,6 @@ AcDbPolyline
  70
 1
  10
-2150.0
- 20
-2950.0
- 10
-2150.0
- 20
-2050.0
- 10
 3050.0000000000005
  20
 2050.0
@@ -50396,6 +49800,14 @@ AcDbPolyline
 3050.0000000000005
  20
 2950.0
+ 10
+2150.0
+ 20
+2950.0
+ 10
+2150.0
+ 20
+2050.0
 1001
 KANTOR_RPG
 1000
@@ -50409,7 +49821,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-335
+32A
 330
 17
 100
@@ -50425,14 +49837,6 @@ AcDbPolyline
  70
 1
  10
-2150.0
- 20
-5950.0
- 10
-2150.0
- 20
-5050.0
- 10
 3050.0000000000005
  20
 5050.0
@@ -50440,6 +49844,14 @@ AcDbPolyline
 3050.0000000000005
  20
 5950.0
+ 10
+2150.0
+ 20
+5950.0
+ 10
+2150.0
+ 20
+5050.0
 1001
 KANTOR_RPG
 1000
@@ -50453,7 +49865,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-336
+32B
 330
 17
 100
@@ -50497,7 +49909,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-337
+32C
 330
 17
 100
@@ -50541,7 +49953,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-338
+32D
 330
 17
 100
@@ -50585,7 +49997,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-339
+32E
 330
 17
 100
@@ -50629,7 +50041,7 @@ room=L2-READ
   0
 LWPOLYLINE
   5
-33A
+32F
 330
 17
 100
@@ -50673,7 +50085,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-33B
+330
 330
 17
 100
@@ -50689,14 +50101,6 @@ AcDbPolyline
  70
 1
  10
-8150.0
- 20
-4000.0
- 10
-8150.0
- 20
-2000.0
- 10
 9049.999999999998
  20
 2000.0
@@ -50704,6 +50108,14 @@ AcDbPolyline
 9049.999999999998
  20
 4000.0
+ 10
+8150.0
+ 20
+4000.0
+ 10
+8150.0
+ 20
+2000.0
 1001
 KANTOR_RPG
 1000
@@ -50717,7 +50129,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-33C
+331
 330
 17
 100
@@ -50761,7 +50173,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-33D
+332
 330
 17
 100
@@ -50777,14 +50189,6 @@ AcDbPolyline
  70
 1
  10
-13250.0
- 20
-2949.9999999999995
- 10
-13250.0
- 20
-3850.0
- 10
 12350.000000000002
  20
 3850.0
@@ -50792,6 +50196,14 @@ AcDbPolyline
 12350.000000000002
  20
 2949.9999999999995
+ 10
+13250.0
+ 20
+2949.9999999999995
+ 10
+13250.0
+ 20
+3850.0
 1001
 KANTOR_RPG
 1000
@@ -50805,7 +50217,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-33E
+333
 330
 17
 100
@@ -50849,7 +50261,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-33F
+334
 330
 17
 100
@@ -50893,7 +50305,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-340
+335
 330
 17
 100
@@ -50937,7 +50349,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-341
+336
 330
 17
 100
@@ -50981,7 +50393,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-342
+337
 330
 17
 100
@@ -51025,7 +50437,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-343
+338
 330
 17
 100
@@ -51069,7 +50481,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-344
+339
 330
 17
 100
@@ -51113,7 +50525,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-345
+33A
 330
 17
 100
@@ -51157,7 +50569,7 @@ room=L2-LOUNGE
   0
 LWPOLYLINE
   5
-346
+33B
 330
 17
 100
@@ -51201,7 +50613,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-347
+33C
 330
 17
 100
@@ -51245,7 +50657,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-348
+33D
 330
 17
 100
@@ -51289,7 +50701,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-349
+33E
 330
 17
 100
@@ -51333,7 +50745,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-34A
+33F
 330
 17
 100
@@ -51377,7 +50789,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-34B
+340
 330
 17
 100
@@ -51421,7 +50833,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-34C
+341
 330
 17
 100
@@ -51465,7 +50877,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-34D
+342
 330
 17
 100
@@ -51509,7 +50921,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-34E
+343
 330
 17
 100
@@ -51553,7 +50965,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-34F
+344
 330
 17
 100
@@ -51597,7 +51009,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-350
+345
 330
 17
 100
@@ -51641,7 +51053,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-351
+346
 330
 17
 100
@@ -51685,7 +51097,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-352
+347
 330
 17
 100
@@ -51729,7 +51141,7 @@ room=L2-DINE
   0
 LWPOLYLINE
   5
-353
+348
 330
 17
 100
@@ -51773,7 +51185,7 @@ room=L2-SHOWER
   0
 LWPOLYLINE
   5
-354
+349
 330
 17
 100
@@ -51817,7 +51229,7 @@ room=L2-SHOWER
   0
 LWPOLYLINE
   5
-355
+34A
 330
 17
 100
@@ -51861,7 +51273,7 @@ room=L2-SHOWER
   0
 LWPOLYLINE
   5
-356
+34B
 330
 17
 100
@@ -51905,7 +51317,7 @@ room=L2-SHOWER
   0
 LWPOLYLINE
   5
-357
+34C
 330
 17
 100
@@ -51949,7 +51361,7 @@ room=L2-SHOWER
   0
 LWPOLYLINE
   5
-358
+34D
 330
 17
 100
@@ -51993,7 +51405,7 @@ room=L2-WC
   0
 LWPOLYLINE
   5
-359
+34E
 330
 17
 100
@@ -52037,7 +51449,7 @@ room=L2-WC
   0
 LWPOLYLINE
   5
-35A
+34F
 330
 17
 100
@@ -52081,7 +51493,7 @@ room=L2-WC
   0
 LWPOLYLINE
   5
-35B
+350
 330
 17
 100
@@ -52125,7 +51537,7 @@ room=L2-WC
   0
 LWPOLYLINE
   5
-35C
+351
 330
 17
 100
@@ -52169,7 +51581,7 @@ room=L2-CORR
   0
 LWPOLYLINE
   5
-35D
+352
 330
 17
 100
@@ -52213,7 +51625,7 @@ room=L2-CORR
   0
 LWPOLYLINE
   5
-35E
+353
 330
 17
 100
@@ -52257,7 +51669,7 @@ room=L2-CHAT
   0
 LWPOLYLINE
   5
-35F
+354
 330
 17
 100
@@ -52301,7 +51713,7 @@ room=L2-CHAT
   0
 LWPOLYLINE
   5
-360
+355
 330
 17
 100
@@ -52345,7 +51757,7 @@ room=L2-CHAT
   0
 LWPOLYLINE
   5
-361
+356
 330
 17
 100
@@ -52389,7 +51801,7 @@ room=L2-CHAT
   0
 LWPOLYLINE
   5
-362
+357
 330
 17
 100
@@ -52433,7 +51845,7 @@ room=L2-CHAT
   0
 LWPOLYLINE
   5
-363
+358
 330
 17
 100
@@ -52477,7 +51889,7 @@ room=L2-GARDEN
   0
 LWPOLYLINE
   5
-364
+359
 330
 17
 100
@@ -52521,7 +51933,7 @@ room=L2-GARDEN
   0
 LWPOLYLINE
   5
-365
+35A
 330
 17
 100
@@ -52565,7 +51977,7 @@ room=L2-GARDEN
   0
 LWPOLYLINE
   5
-366
+35B
 330
 17
 100
@@ -52609,7 +52021,7 @@ room=L2-GARDEN
   0
 LWPOLYLINE
   5
-367
+35C
 330
 17
 100
@@ -52653,7 +52065,7 @@ room=L2-GARDEN
   0
 LWPOLYLINE
   5
-368
+35D
 330
 17
 100
@@ -52697,7 +52109,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-369
+35E
 330
 17
 100
@@ -52741,7 +52153,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-36A
+35F
 330
 17
 100
@@ -52785,7 +52197,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-36B
+360
 330
 17
 100
@@ -52829,7 +52241,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-36C
+361
 330
 17
 100
@@ -52873,7 +52285,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-36D
+362
 330
 17
 100
@@ -52917,7 +52329,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-36E
+363
 330
 17
 100
@@ -52961,7 +52373,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-36F
+364
 330
 17
 100
@@ -53005,7 +52417,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-370
+365
 330
 17
 100
@@ -53049,7 +52461,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-371
+366
 330
 17
 100
@@ -53093,7 +52505,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-372
+367
 330
 17
 100
@@ -53137,7 +52549,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-373
+368
 330
 17
 100
@@ -53181,7 +52593,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-374
+369
 330
 17
 100
@@ -53225,7 +52637,7 @@ room=L2-GAME
   0
 LWPOLYLINE
   5
-375
+36A
 330
 17
 100
@@ -53269,7 +52681,7 @@ room=L2-NCORR
   0
 LWPOLYLINE
   5
-376
+36B
 330
 17
 100
@@ -53313,7 +52725,7 @@ room=L2-BALCONY
   0
 LWPOLYLINE
   5
-377
+36C
 330
 17
 100
@@ -53357,7 +52769,7 @@ room=L2-BALCONY
   0
 LWPOLYLINE
   5
-378
+36D
 330
 17
 100
@@ -53401,7 +52813,7 @@ room=L2-BALCONY
   0
 LWPOLYLINE
   5
-379
+36E
 330
 17
 100
@@ -53445,7 +52857,7 @@ room=L2-BALCONY
   0
 LWPOLYLINE
   5
-37A
+36F
 330
 17
 100
@@ -53489,7 +52901,7 @@ room=L2-BALCONY
   0
 LWPOLYLINE
   5
-37B
+370
 330
 17
 100
@@ -53533,7 +52945,7 @@ room=L2-BILLIARD
   0
 LWPOLYLINE
   5
-37C
+371
 330
 17
 100
@@ -53577,7 +52989,7 @@ room=L2-BILLIARD
   0
 LWPOLYLINE
   5
-37D
+372
 330
 17
 100
@@ -53621,7 +53033,7 @@ room=L2-BILLIARD
   0
 LWPOLYLINE
   5
-37E
+373
 330
 17
 100
@@ -53665,7 +53077,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-37F
+374
 330
 17
 100
@@ -53709,7 +53121,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-380
+375
 330
 17
 100
@@ -53753,7 +53165,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-381
+376
 330
 17
 100
@@ -53797,7 +53209,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-382
+377
 330
 17
 100
@@ -53841,7 +53253,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-383
+378
 330
 17
 100
@@ -53885,7 +53297,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-384
+379
 330
 17
 100
@@ -53929,7 +53341,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-385
+37A
 330
 17
 100
@@ -53973,7 +53385,7 @@ room=L2-GYM
   0
 LWPOLYLINE
   5
-386
+37B
 330
 17
 100
@@ -54017,7 +53429,7 @@ room=L2-STORE
   0
 LWPOLYLINE
   5
-387
+37C
 330
 17
 100
@@ -54061,7 +53473,7 @@ room=L2-STORE
   0
 LWPOLYLINE
   5
-388
+37D
 330
 17
 100
@@ -54105,7 +53517,7 @@ room=L2-SERVICE
   0
 LWPOLYLINE
   5
-389
+37E
 330
 17
 100
@@ -54149,7 +53561,7 @@ room=L2-SERVICE
   0
 LWPOLYLINE
   5
-38A
+37F
 330
 17
 100
@@ -54193,7 +53605,7 @@ link=VL-STAIR-A
   0
 LWPOLYLINE
   5
-38B
+380
 330
 17
 100
@@ -54216,6 +53628,292 @@ AcDbPolyline
 15400.0
  20
 11899.999999999998
+  0
+LWPOLYLINE
+  5
+381
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+12180.0
+ 10
+15400.0
+ 20
+12180.0
+  0
+LWPOLYLINE
+  5
+382
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+12459.999999999998
+ 10
+15400.0
+ 20
+12459.999999999998
+  0
+LWPOLYLINE
+  5
+383
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+12740.0
+ 10
+15400.0
+ 20
+12740.0
+  0
+LWPOLYLINE
+  5
+384
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+13020.0
+ 10
+15400.0
+ 20
+13020.0
+  0
+LWPOLYLINE
+  5
+385
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+13299.999999999998
+ 10
+15400.0
+ 20
+13299.999999999998
+  0
+LWPOLYLINE
+  5
+386
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+13580.0
+ 10
+15400.0
+ 20
+13580.0
+  0
+LWPOLYLINE
+  5
+387
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+13860.0
+ 10
+15400.0
+ 20
+13860.0
+  0
+LWPOLYLINE
+  5
+388
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+14140.0
+ 10
+15400.0
+ 20
+14140.0
+  0
+LWPOLYLINE
+  5
+389
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+14420.0
+ 10
+15400.0
+ 20
+14420.0
+  0
+LWPOLYLINE
+  5
+38A
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+14700.0
+ 10
+15400.0
+ 20
+14700.0
+  0
+LWPOLYLINE
+  5
+38B
+330
+17
+100
+AcDbEntity
+  8
+A-STRS
+420
+11883311
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14200.0
+ 20
+14980.0
+ 10
+15400.0
+ 20
+14980.0
   0
 LWPOLYLINE
   5
@@ -54235,13 +53933,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-12180.0
+11899.999999999998
  10
-15400.0
+16800.0
  20
-12180.0
+11899.999999999998
   0
 LWPOLYLINE
   5
@@ -54261,13 +53959,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-12459.999999999998
+12180.0
  10
-15400.0
+16800.0
  20
-12459.999999999998
+12180.0
   0
 LWPOLYLINE
   5
@@ -54287,13 +53985,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-12740.0
+12459.999999999998
  10
-15400.0
+16800.0
  20
-12740.0
+12459.999999999998
   0
 LWPOLYLINE
   5
@@ -54313,13 +54011,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-13020.0
+12740.0
  10
-15400.0
+16800.0
  20
-13020.0
+12740.0
   0
 LWPOLYLINE
   5
@@ -54339,13 +54037,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-13299.999999999998
+13020.0
  10
-15400.0
+16800.0
  20
-13299.999999999998
+13020.0
   0
 LWPOLYLINE
   5
@@ -54365,13 +54063,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-13580.0
+13299.999999999998
  10
-15400.0
+16800.0
  20
-13580.0
+13299.999999999998
   0
 LWPOLYLINE
   5
@@ -54391,13 +54089,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-13860.0
+13580.0
  10
-15400.0
+16800.0
  20
-13860.0
+13580.0
   0
 LWPOLYLINE
   5
@@ -54417,13 +54115,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-14140.0
+13860.0
  10
-15400.0
+16800.0
  20
-14140.0
+13860.0
   0
 LWPOLYLINE
   5
@@ -54443,13 +54141,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-14420.0
+14140.0
  10
-15400.0
+16800.0
  20
-14420.0
+14140.0
   0
 LWPOLYLINE
   5
@@ -54469,13 +54167,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-14700.0
+14420.0
  10
-15400.0
+16800.0
  20
-14700.0
+14420.0
   0
 LWPOLYLINE
   5
@@ -54495,13 +54193,13 @@ AcDbPolyline
  70
 0
  10
-14200.0
+15600.0
  20
-14980.0
+14700.0
  10
-15400.0
+16800.0
  20
-14980.0
+14700.0
   0
 LWPOLYLINE
   5
@@ -54523,11 +54221,11 @@ AcDbPolyline
  10
 15600.0
  20
-11899.999999999998
+14980.0
  10
 16800.0
  20
-11899.999999999998
+14980.0
   0
 LWPOLYLINE
   5
@@ -54547,292 +54245,6 @@ AcDbPolyline
  70
 0
  10
-15600.0
- 20
-12180.0
- 10
-16800.0
- 20
-12180.0
-  0
-LWPOLYLINE
-  5
-399
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-12459.999999999998
- 10
-16800.0
- 20
-12459.999999999998
-  0
-LWPOLYLINE
-  5
-39A
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-12740.0
- 10
-16800.0
- 20
-12740.0
-  0
-LWPOLYLINE
-  5
-39B
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-13020.0
- 10
-16800.0
- 20
-13020.0
-  0
-LWPOLYLINE
-  5
-39C
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-13299.999999999998
- 10
-16800.0
- 20
-13299.999999999998
-  0
-LWPOLYLINE
-  5
-39D
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-13580.0
- 10
-16800.0
- 20
-13580.0
-  0
-LWPOLYLINE
-  5
-39E
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-13860.0
- 10
-16800.0
- 20
-13860.0
-  0
-LWPOLYLINE
-  5
-39F
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-14140.0
- 10
-16800.0
- 20
-14140.0
-  0
-LWPOLYLINE
-  5
-3A0
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-14420.0
- 10
-16800.0
- 20
-14420.0
-  0
-LWPOLYLINE
-  5
-3A1
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-14700.0
- 10
-16800.0
- 20
-14700.0
-  0
-LWPOLYLINE
-  5
-3A2
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-15600.0
- 20
-14980.0
- 10
-16800.0
- 20
-14980.0
-  0
-LWPOLYLINE
-  5
-3A3
-330
-17
-100
-AcDbEntity
-  8
-A-STRS
-420
-11883311
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
 15400.0
  20
 11899.999999999998
@@ -54843,7 +54255,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3A4
+399
 330
 17
 100
@@ -54869,7 +54281,7 @@ AcDbPolyline
   0
 TEXT
   5
-3A5
+39A
 330
 17
 100
@@ -54907,7 +54319,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3A6
+39B
 330
 17
 100
@@ -54951,7 +54363,7 @@ link=VL-LIFT-A
   0
 LWPOLYLINE
   5
-3A7
+39C
 330
 17
 100
@@ -54977,7 +54389,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3A8
+39D
 330
 17
 100
@@ -55003,7 +54415,7 @@ AcDbPolyline
   0
 LWPOLYLINE
   5
-3A9
+39E
 330
 17
 100
@@ -55037,7 +54449,7 @@ AcDbPolyline
   0
 TEXT
   5
-3AA
+39F
 330
 17
 100
@@ -55075,7 +54487,7 @@ AcDbText
   0
 LWPOLYLINE
   5
-3AB
+3A0
 330
 17
 100
@@ -55111,7 +54523,7 @@ grid
   0
 HATCH
   5
-3AC
+3A1
 330
 17
 100
@@ -55173,7 +54585,7 @@ SOLID
   0
 CIRCLE
   5
-3AD
+3A2
 330
 17
 100
@@ -55195,7 +54607,7 @@ AcDbCircle
   0
 TEXT
   5
-3AE
+3A3
 330
 17
 100
@@ -55230,6 +54642,444 @@ KR-SANS
 0.0
 100
 AcDbText
+  0
+HATCH
+  5
+3A4
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+ 62
+7
+420
+16777215
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+1
+ 93
+1
+ 72
+2
+ 10
+0.0
+ 20
+25435.247222222224
+ 40
+355.24722222222215
+ 50
+0
+ 51
+360
+ 73
+1
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
+  0
+CIRCLE
+  5
+3A5
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+420
+3097144
+100
+AcDbCircle
+ 10
+0.0
+ 20
+25435.247222222224
+ 30
+0.0
+ 40
+355.24722222222215
+  0
+TEXT
+  5
+3A6
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+420
+2240554
+100
+AcDbText
+ 10
+0.0
+ 20
+25304.366666666665
+ 30
+0.0
+ 40
+261.761111111111
+  1
+1
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+0.0
+ 21
+25304.366666666665
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+3A7
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+14000.0
+ 20
+-1080.0
+ 10
+14000.0
+ 20
+25080.000000000004
+1001
+KANTOR_RPG
+1000
+grid
+1000
+2
+  0
+HATCH
+  5
+3A8
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+ 62
+7
+420
+16777215
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+1
+ 93
+1
+ 72
+2
+ 10
+14000.0
+ 20
+-1435.247222222222
+ 40
+355.24722222222215
+ 50
+0
+ 51
+360
+ 73
+1
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
+  0
+CIRCLE
+  5
+3A9
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+420
+3097144
+100
+AcDbCircle
+ 10
+14000.0
+ 20
+-1435.247222222222
+ 30
+0.0
+ 40
+355.24722222222215
+  0
+TEXT
+  5
+3AA
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+420
+2240554
+100
+AcDbText
+ 10
+14000.0
+ 20
+-1566.1277777777775
+ 30
+0.0
+ 40
+261.761111111111
+  1
+2
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+14000.0
+ 21
+-1566.1277777777775
+ 31
+0.0
+100
+AcDbText
+  0
+HATCH
+  5
+3AB
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+ 62
+7
+420
+16777215
+100
+AcDbHatch
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+210
+0.0
+220
+0.0
+230
+1.0
+  2
+SOLID
+ 70
+1
+ 71
+0
+ 91
+1
+ 92
+1
+ 93
+1
+ 72
+2
+ 10
+14000.0
+ 20
+25435.247222222224
+ 40
+355.24722222222215
+ 50
+0
+ 51
+360
+ 73
+1
+ 97
+0
+ 75
+1
+ 76
+1
+ 98
+0
+  0
+CIRCLE
+  5
+3AC
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+420
+3097144
+100
+AcDbCircle
+ 10
+14000.0
+ 20
+25435.247222222224
+ 30
+0.0
+ 40
+355.24722222222215
+  0
+TEXT
+  5
+3AD
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+420
+2240554
+100
+AcDbText
+ 10
+14000.0
+ 20
+25304.366666666665
+ 30
+0.0
+ 40
+261.761111111111
+  1
+2
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+14000.0
+ 21
+25304.366666666665
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+3AE
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+20000.0
+ 20
+-1080.0
+ 10
+20000.0
+ 20
+25080.000000000004
+1001
+KANTOR_RPG
+1000
+grid
+1000
+3
   0
 HATCH
   5
@@ -55273,9 +55123,9 @@ SOLID
  72
 2
  10
-0.0
+20000.0
  20
-25435.247222222224
+-1435.247222222222
  40
 355.24722222222215
  50
@@ -55307,9 +55157,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-0.0
+20000.0
  20
-25435.247222222224
+-1435.247222222222
  30
 0.0
  40
@@ -55329,15 +55179,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-0.0
+20000.0
  20
-25304.366666666665
+-1566.1277777777775
  30
 0.0
  40
 261.761111111111
   1
-1
+3
   7
 KR-SANS
  41
@@ -55345,53 +55195,17 @@ KR-SANS
  72
 1
  11
-0.0
+20000.0
  21
-25304.366666666665
+-1566.1277777777775
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3B2
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-14000.0
- 20
--1080.0
- 10
-14000.0
- 20
-25080.000000000004
-1001
-KANTOR_RPG
-1000
-grid
-1000
-2
-  0
 HATCH
   5
-3B3
+3B2
 330
 17
 100
@@ -55431,9 +55245,9 @@ SOLID
  72
 2
  10
-14000.0
+20000.0
  20
--1435.247222222222
+25435.247222222224
  40
 355.24722222222215
  50
@@ -55453,7 +55267,7 @@ SOLID
   0
 CIRCLE
   5
-3B4
+3B3
 330
 17
 100
@@ -55465,9 +55279,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-14000.0
+20000.0
  20
--1435.247222222222
+25435.247222222224
  30
 0.0
  40
@@ -55475,7 +55289,7 @@ AcDbCircle
   0
 TEXT
   5
-3B5
+3B4
 330
 17
 100
@@ -55487,15 +55301,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-14000.0
+20000.0
  20
--1566.1277777777775
+25304.366666666665
  30
 0.0
  40
 261.761111111111
   1
-2
+3
   7
 KR-SANS
  41
@@ -55503,13 +55317,49 @@ KR-SANS
  72
 1
  11
-14000.0
+20000.0
  21
--1566.1277777777775
+25304.366666666665
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3B5
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+26000.0
+ 20
+-1080.0
+ 10
+26000.0
+ 20
+25080.000000000004
+1001
+KANTOR_RPG
+1000
+grid
+1000
+4
   0
 HATCH
   5
@@ -55553,9 +55403,9 @@ SOLID
  72
 2
  10
-14000.0
+26000.0
  20
-25435.247222222224
+-1435.247222222222
  40
 355.24722222222215
  50
@@ -55587,9 +55437,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-14000.0
+26000.0
  20
-25435.247222222224
+-1435.247222222222
  30
 0.0
  40
@@ -55609,15 +55459,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-14000.0
+26000.0
  20
-25304.366666666665
+-1566.1277777777775
  30
 0.0
  40
 261.761111111111
   1
-2
+4
   7
 KR-SANS
  41
@@ -55625,53 +55475,17 @@ KR-SANS
  72
 1
  11
-14000.0
+26000.0
  21
-25304.366666666665
+-1566.1277777777775
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3B9
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-20000.0
- 20
--1080.0
- 10
-20000.0
- 20
-25080.000000000004
-1001
-KANTOR_RPG
-1000
-grid
-1000
-3
-  0
 HATCH
   5
-3BA
+3B9
 330
 17
 100
@@ -55711,9 +55525,9 @@ SOLID
  72
 2
  10
-20000.0
+26000.0
  20
--1435.247222222222
+25435.247222222224
  40
 355.24722222222215
  50
@@ -55733,7 +55547,7 @@ SOLID
   0
 CIRCLE
   5
-3BB
+3BA
 330
 17
 100
@@ -55745,9 +55559,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-20000.0
+26000.0
  20
--1435.247222222222
+25435.247222222224
  30
 0.0
  40
@@ -55755,7 +55569,7 @@ AcDbCircle
   0
 TEXT
   5
-3BC
+3BB
 330
 17
 100
@@ -55767,15 +55581,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-20000.0
+26000.0
  20
--1566.1277777777775
+25304.366666666665
  30
 0.0
  40
 261.761111111111
   1
-3
+4
   7
 KR-SANS
  41
@@ -55783,13 +55597,49 @@ KR-SANS
  72
 1
  11
-20000.0
+26000.0
  21
--1566.1277777777775
+25304.366666666665
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3BC
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+32000.0
+ 20
+-1080.0
+ 10
+32000.0
+ 20
+25080.000000000004
+1001
+KANTOR_RPG
+1000
+grid
+1000
+5
   0
 HATCH
   5
@@ -55833,9 +55683,9 @@ SOLID
  72
 2
  10
-20000.0
+32000.0
  20
-25435.247222222224
+-1435.247222222222
  40
 355.24722222222215
  50
@@ -55867,9 +55717,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-20000.0
+32000.0
  20
-25435.247222222224
+-1435.247222222222
  30
 0.0
  40
@@ -55889,15 +55739,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-20000.0
+32000.0
  20
-25304.366666666665
+-1566.1277777777775
  30
 0.0
  40
 261.761111111111
   1
-3
+5
   7
 KR-SANS
  41
@@ -55905,53 +55755,17 @@ KR-SANS
  72
 1
  11
-20000.0
+32000.0
  21
-25304.366666666665
+-1566.1277777777775
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3C0
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-26000.0
- 20
--1080.0
- 10
-26000.0
- 20
-25080.000000000004
-1001
-KANTOR_RPG
-1000
-grid
-1000
-4
-  0
 HATCH
   5
-3C1
+3C0
 330
 17
 100
@@ -55991,9 +55805,9 @@ SOLID
  72
 2
  10
-26000.0
+32000.0
  20
--1435.247222222222
+25435.247222222224
  40
 355.24722222222215
  50
@@ -56013,7 +55827,7 @@ SOLID
   0
 CIRCLE
   5
-3C2
+3C1
 330
 17
 100
@@ -56025,9 +55839,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-26000.0
+32000.0
  20
--1435.247222222222
+25435.247222222224
  30
 0.0
  40
@@ -56035,7 +55849,7 @@ AcDbCircle
   0
 TEXT
   5
-3C3
+3C2
 330
 17
 100
@@ -56047,15 +55861,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-26000.0
+32000.0
  20
--1566.1277777777775
+25304.366666666665
  30
 0.0
  40
 261.761111111111
   1
-4
+5
   7
 KR-SANS
  41
@@ -56063,13 +55877,49 @@ KR-SANS
  72
 1
  11
-26000.0
+32000.0
  21
--1566.1277777777775
+25304.366666666665
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3C3
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+-1080.0
+ 20
+0.0
+ 10
+33080.0
+ 20
+0.0
+1001
+KANTOR_RPG
+1000
+grid
+1000
+A
   0
 HATCH
   5
@@ -56113,9 +55963,9 @@ SOLID
  72
 2
  10
-26000.0
+-1435.247222222222
  20
-25435.247222222224
+0.0
  40
 355.24722222222215
  50
@@ -56147,9 +55997,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-26000.0
+-1435.247222222222
  20
-25435.247222222224
+0.0
  30
 0.0
  40
@@ -56169,15 +56019,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-26000.0
+-1435.247222222222
  20
-25304.366666666665
+-130.88055555555553
  30
 0.0
  40
 261.761111111111
   1
-4
+A
   7
 KR-SANS
  41
@@ -56185,53 +56035,17 @@ KR-SANS
  72
 1
  11
-26000.0
+-1435.247222222222
  21
-25304.366666666665
+-130.88055555555553
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3C7
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-32000.0
- 20
--1080.0
- 10
-32000.0
- 20
-25080.000000000004
-1001
-KANTOR_RPG
-1000
-grid
-1000
-5
-  0
 HATCH
   5
-3C8
+3C7
 330
 17
 100
@@ -56271,9 +56085,9 @@ SOLID
  72
 2
  10
-32000.0
+33435.24722222222
  20
--1435.247222222222
+0.0
  40
 355.24722222222215
  50
@@ -56293,7 +56107,7 @@ SOLID
   0
 CIRCLE
   5
-3C9
+3C8
 330
 17
 100
@@ -56305,9 +56119,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-32000.0
+33435.24722222222
  20
--1435.247222222222
+0.0
  30
 0.0
  40
@@ -56315,7 +56129,7 @@ AcDbCircle
   0
 TEXT
   5
-3CA
+3C9
 330
 17
 100
@@ -56327,15 +56141,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-32000.0
+33435.24722222222
  20
--1566.1277777777775
+-130.88055555555553
  30
 0.0
  40
 261.761111111111
   1
-5
+A
   7
 KR-SANS
  41
@@ -56343,13 +56157,49 @@ KR-SANS
  72
 1
  11
-32000.0
+33435.24722222222
  21
--1566.1277777777775
+-130.88055555555553
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3CA
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+-1080.0
+ 20
+8000.0
+ 10
+33080.0
+ 20
+8000.0
+1001
+KANTOR_RPG
+1000
+grid
+1000
+B
   0
 HATCH
   5
@@ -56393,9 +56243,9 @@ SOLID
  72
 2
  10
-32000.0
+-1435.247222222222
  20
-25435.247222222224
+8000.0
  40
 355.24722222222215
  50
@@ -56427,9 +56277,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-32000.0
+-1435.247222222222
  20
-25435.247222222224
+8000.0
  30
 0.0
  40
@@ -56449,15 +56299,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-32000.0
+-1435.247222222222
  20
-25304.366666666665
+7869.1194444444445
  30
 0.0
  40
 261.761111111111
   1
-5
+B
   7
 KR-SANS
  41
@@ -56465,53 +56315,17 @@ KR-SANS
  72
 1
  11
-32000.0
+-1435.247222222222
  21
-25304.366666666665
+7869.1194444444445
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3CE
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
--1080.0
- 20
-0.0
- 10
-33080.0
- 20
-0.0
-1001
-KANTOR_RPG
-1000
-grid
-1000
-A
-  0
 HATCH
   5
-3CF
+3CE
 330
 17
 100
@@ -56551,9 +56365,9 @@ SOLID
  72
 2
  10
--1435.247222222222
+33435.24722222222
  20
-0.0
+8000.0
  40
 355.24722222222215
  50
@@ -56573,7 +56387,7 @@ SOLID
   0
 CIRCLE
   5
-3D0
+3CF
 330
 17
 100
@@ -56585,9 +56399,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
--1435.247222222222
+33435.24722222222
  20
-0.0
+8000.0
  30
 0.0
  40
@@ -56595,7 +56409,7 @@ AcDbCircle
   0
 TEXT
   5
-3D1
+3D0
 330
 17
 100
@@ -56607,15 +56421,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
--1435.247222222222
+33435.24722222222
  20
--130.88055555555553
+7869.1194444444445
  30
 0.0
  40
 261.761111111111
   1
-A
+B
   7
 KR-SANS
  41
@@ -56623,13 +56437,49 @@ KR-SANS
  72
 1
  11
--1435.247222222222
+33435.24722222222
  21
--130.88055555555553
+7869.1194444444445
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3D1
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+-1080.0
+ 20
+10500.0
+ 10
+33080.0
+ 20
+10500.0
+1001
+KANTOR_RPG
+1000
+grid
+1000
+C
   0
 HATCH
   5
@@ -56673,9 +56523,9 @@ SOLID
  72
 2
  10
-33435.24722222222
+-1435.247222222222
  20
-0.0
+10500.0
  40
 355.24722222222215
  50
@@ -56707,9 +56557,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-33435.24722222222
+-1435.247222222222
  20
-0.0
+10500.0
  30
 0.0
  40
@@ -56729,15 +56579,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-33435.24722222222
+-1435.247222222222
  20
--130.88055555555553
+10369.119444444445
  30
 0.0
  40
 261.761111111111
   1
-A
+C
   7
 KR-SANS
  41
@@ -56745,53 +56595,17 @@ KR-SANS
  72
 1
  11
-33435.24722222222
+-1435.247222222222
  21
--130.88055555555553
+10369.119444444445
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3D5
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
--1080.0
- 20
-8000.0
- 10
-33080.0
- 20
-8000.0
-1001
-KANTOR_RPG
-1000
-grid
-1000
-B
-  0
 HATCH
   5
-3D6
+3D5
 330
 17
 100
@@ -56831,9 +56645,9 @@ SOLID
  72
 2
  10
--1435.247222222222
+33435.24722222222
  20
-8000.0
+10500.0
  40
 355.24722222222215
  50
@@ -56853,7 +56667,7 @@ SOLID
   0
 CIRCLE
   5
-3D7
+3D6
 330
 17
 100
@@ -56865,9 +56679,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
--1435.247222222222
+33435.24722222222
  20
-8000.0
+10500.0
  30
 0.0
  40
@@ -56875,7 +56689,7 @@ AcDbCircle
   0
 TEXT
   5
-3D8
+3D7
 330
 17
 100
@@ -56887,15 +56701,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
--1435.247222222222
+33435.24722222222
  20
-7869.1194444444445
+10369.119444444445
  30
 0.0
  40
 261.761111111111
   1
-B
+C
   7
 KR-SANS
  41
@@ -56903,13 +56717,49 @@ KR-SANS
  72
 1
  11
--1435.247222222222
+33435.24722222222
  21
-7869.1194444444445
+10369.119444444445
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3D8
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+-1080.0
+ 20
+16500.0
+ 10
+33080.0
+ 20
+16500.0
+1001
+KANTOR_RPG
+1000
+grid
+1000
+D
   0
 HATCH
   5
@@ -56953,9 +56803,9 @@ SOLID
  72
 2
  10
-33435.24722222222
+-1435.247222222222
  20
-8000.0
+16500.0
  40
 355.24722222222215
  50
@@ -56987,9 +56837,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-33435.24722222222
+-1435.247222222222
  20
-8000.0
+16500.0
  30
 0.0
  40
@@ -57009,15 +56859,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-33435.24722222222
+-1435.247222222222
  20
-7869.1194444444445
+16369.119444444443
  30
 0.0
  40
 261.761111111111
   1
-B
+D
   7
 KR-SANS
  41
@@ -57025,53 +56875,17 @@ KR-SANS
  72
 1
  11
-33435.24722222222
+-1435.247222222222
  21
-7869.1194444444445
+16369.119444444443
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3DC
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
--1080.0
- 20
-10500.0
- 10
-33080.0
- 20
-10500.0
-1001
-KANTOR_RPG
-1000
-grid
-1000
-C
-  0
 HATCH
   5
-3DD
+3DC
 330
 17
 100
@@ -57111,9 +56925,9 @@ SOLID
  72
 2
  10
--1435.247222222222
+33435.24722222222
  20
-10500.0
+16500.0
  40
 355.24722222222215
  50
@@ -57133,7 +56947,7 @@ SOLID
   0
 CIRCLE
   5
-3DE
+3DD
 330
 17
 100
@@ -57145,9 +56959,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
--1435.247222222222
+33435.24722222222
  20
-10500.0
+16500.0
  30
 0.0
  40
@@ -57155,7 +56969,7 @@ AcDbCircle
   0
 TEXT
   5
-3DF
+3DE
 330
 17
 100
@@ -57167,15 +56981,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
--1435.247222222222
+33435.24722222222
  20
-10369.119444444445
+16369.119444444443
  30
 0.0
  40
 261.761111111111
   1
-C
+D
   7
 KR-SANS
  41
@@ -57183,13 +56997,49 @@ KR-SANS
  72
 1
  11
--1435.247222222222
+33435.24722222222
  21
-10369.119444444445
+16369.119444444443
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3DF
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+-1080.0
+ 20
+18500.0
+ 10
+33080.0
+ 20
+18500.0
+1001
+KANTOR_RPG
+1000
+grid
+1000
+E
   0
 HATCH
   5
@@ -57233,9 +57083,9 @@ SOLID
  72
 2
  10
-33435.24722222222
+-1435.247222222222
  20
-10500.0
+18500.0
  40
 355.24722222222215
  50
@@ -57267,9 +57117,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-33435.24722222222
+-1435.247222222222
  20
-10500.0
+18500.0
  30
 0.0
  40
@@ -57289,15 +57139,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-33435.24722222222
+-1435.247222222222
  20
-10369.119444444445
+18369.119444444445
  30
 0.0
  40
 261.761111111111
   1
-C
+E
   7
 KR-SANS
  41
@@ -57305,53 +57155,17 @@ KR-SANS
  72
 1
  11
-33435.24722222222
+-1435.247222222222
  21
-10369.119444444445
+18369.119444444445
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3E3
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
--1080.0
- 20
-16500.0
- 10
-33080.0
- 20
-16500.0
-1001
-KANTOR_RPG
-1000
-grid
-1000
-D
-  0
 HATCH
   5
-3E4
+3E3
 330
 17
 100
@@ -57391,9 +57205,9 @@ SOLID
  72
 2
  10
--1435.247222222222
+33435.24722222222
  20
-16500.0
+18500.0
  40
 355.24722222222215
  50
@@ -57413,7 +57227,7 @@ SOLID
   0
 CIRCLE
   5
-3E5
+3E4
 330
 17
 100
@@ -57425,9 +57239,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
--1435.247222222222
+33435.24722222222
  20
-16500.0
+18500.0
  30
 0.0
  40
@@ -57435,7 +57249,7 @@ AcDbCircle
   0
 TEXT
   5
-3E6
+3E5
 330
 17
 100
@@ -57447,15 +57261,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
--1435.247222222222
+33435.24722222222
  20
-16369.119444444443
+18369.119444444445
  30
 0.0
  40
 261.761111111111
   1
-D
+E
   7
 KR-SANS
  41
@@ -57463,13 +57277,49 @@ KR-SANS
  72
 1
  11
--1435.247222222222
+33435.24722222222
  21
-16369.119444444443
+18369.119444444445
  31
 0.0
 100
 AcDbText
+  0
+LWPOLYLINE
+  5
+3E6
+330
+17
+100
+AcDbEntity
+  8
+A-GRID
+  6
+DASHED
+ 48
+17.638888888888886
+420
+9415067
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+-1080.0
+ 20
+24000.0
+ 10
+33080.0
+ 20
+24000.0
+1001
+KANTOR_RPG
+1000
+grid
+1000
+F
   0
 HATCH
   5
@@ -57513,9 +57363,9 @@ SOLID
  72
 2
  10
-33435.24722222222
+-1435.247222222222
  20
-16500.0
+24000.0
  40
 355.24722222222215
  50
@@ -57547,9 +57397,9 @@ A-GRID-IDEN
 100
 AcDbCircle
  10
-33435.24722222222
+-1435.247222222222
  20
-16500.0
+24000.0
  30
 0.0
  40
@@ -57569,15 +57419,15 @@ A-GRID-IDEN
 100
 AcDbText
  10
-33435.24722222222
+-1435.247222222222
  20
-16369.119444444443
+23869.119444444445
  30
 0.0
  40
 261.761111111111
   1
-D
+F
   7
 KR-SANS
  41
@@ -57585,53 +57435,17 @@ KR-SANS
  72
 1
  11
-33435.24722222222
+-1435.247222222222
  21
-16369.119444444443
+23869.119444444445
  31
 0.0
 100
 AcDbText
   0
-LWPOLYLINE
-  5
-3EA
-330
-17
-100
-AcDbEntity
-  8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
-420
-9415067
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
--1080.0
- 20
-18500.0
- 10
-33080.0
- 20
-18500.0
-1001
-KANTOR_RPG
-1000
-grid
-1000
-E
-  0
 HATCH
   5
-3EB
+3EA
 330
 17
 100
@@ -57671,9 +57485,9 @@ SOLID
  72
 2
  10
--1435.247222222222
+33435.24722222222
  20
-18500.0
+24000.0
  40
 355.24722222222215
  50
@@ -57692,6 +57506,28 @@ SOLID
 0
   0
 CIRCLE
+  5
+3EB
+330
+17
+100
+AcDbEntity
+  8
+A-GRID-IDEN
+420
+3097144
+100
+AcDbCircle
+ 10
+33435.24722222222
+ 20
+24000.0
+ 30
+0.0
+ 40
+355.24722222222215
+  0
+TEXT
   5
 3EC
 330
@@ -57701,17 +57537,33 @@ AcDbEntity
   8
 A-GRID-IDEN
 420
-3097144
+2240554
 100
-AcDbCircle
+AcDbText
  10
--1435.247222222222
+33435.24722222222
  20
-18500.0
+23869.119444444445
  30
 0.0
  40
-355.24722222222215
+261.761111111111
+  1
+F
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+33435.24722222222
+ 21
+23869.119444444445
+ 31
+0.0
+100
+AcDbText
   0
 TEXT
   5
@@ -57721,21 +57573,21 @@ TEXT
 100
 AcDbEntity
   8
-A-GRID-IDEN
+A-ANNO-RMNM
 420
-2240554
+2051386
 100
 AcDbText
  10
--1435.247222222222
+4000.0
  20
-18369.119444444445
+3065.38
  30
 0.0
  40
 261.761111111111
   1
-E
+L2-READ
   7
 KR-SANS
  41
@@ -57743,15 +57595,21 @@ KR-SANS
  72
 1
  11
--1435.247222222222
+4000.0
  21
-18369.119444444445
+3065.38
  31
 0.0
 100
 AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-READ
   0
-HATCH
+TEXT
   5
 3EE
 330
@@ -57759,61 +57617,43 @@ HATCH
 100
 AcDbEntity
   8
-A-GRID-IDEN
- 62
-7
+A-ANNO-RMNM
 420
-16777215
+2051386
 100
-AcDbHatch
+AcDbText
  10
-0.0
+14000.0
  20
-0.0
+4265.38
  30
 0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-1
- 93
-1
- 72
-2
- 10
-33435.24722222222
- 20
-18500.0
  40
-355.24722222222215
- 50
-0
- 51
-360
- 73
+261.761111111111
+  1
+L2-LOUNGE
+  7
+KR-SANS
+ 41
+0.8
+ 72
 1
- 97
-0
- 75
-1
- 76
-1
- 98
-0
+ 11
+14000.0
+ 21
+4265.38
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-LOUNGE
   0
-CIRCLE
+TEXT
   5
 3EF
 330
@@ -57821,19 +57661,41 @@ CIRCLE
 100
 AcDbEntity
   8
-A-GRID-IDEN
+A-ANNO-RMNM
 420
-3097144
+2051386
 100
-AcDbCircle
+AcDbText
  10
-33435.24722222222
+23000.0
  20
-18500.0
+3865.38
  30
 0.0
  40
-355.24722222222215
+261.761111111111
+  1
+L2-DINE
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+23000.0
+ 21
+3865.38
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-DINE
   0
 TEXT
   5
@@ -57843,21 +57705,21 @@ TEXT
 100
 AcDbEntity
   8
-A-GRID-IDEN
+A-ANNO-RMNM
 420
-2240554
+2051386
 100
 AcDbText
  10
-33435.24722222222
+27800.0
  20
-18369.119444444445
+4065.38
  30
 0.0
  40
 261.761111111111
   1
-E
+L2-SHOWER
   7
 KR-SANS
  41
@@ -57865,15 +57727,21 @@ KR-SANS
  72
 1
  11
-33435.24722222222
+27800.0
  21
-18369.119444444445
+4065.38
  31
 0.0
 100
 AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-SHOWER
   0
-LWPOLYLINE
+TEXT
   5
 3F1
 330
@@ -57881,35 +57749,43 @@ LWPOLYLINE
 100
 AcDbEntity
   8
-A-GRID
-  6
-DASHED
- 48
-17.638888888888886
+A-ANNO-RMNM
 420
-9415067
+2051386
 100
-AcDbPolyline
- 90
-2
- 70
-0
+AcDbText
  10
--1080.0
+30900.0
  20
-24000.0
- 10
-33080.0
- 20
-24000.0
+4265.38
+ 30
+0.0
+ 40
+261.761111111111
+  1
+L2-WC
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+30900.0
+ 21
+4265.38
+ 31
+0.0
+100
+AcDbText
 1001
 KANTOR_RPG
 1000
-grid
+room
 1000
-F
+L2-WC
   0
-HATCH
+TEXT
   5
 3F2
 330
@@ -57917,61 +57793,43 @@ HATCH
 100
 AcDbEntity
   8
-A-GRID-IDEN
- 62
-7
+A-ANNO-RMNM
 420
-16777215
+2051386
 100
-AcDbHatch
+AcDbText
  10
-0.0
+16000.0
  20
-0.0
+9065.38
  30
 0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-1
- 93
-1
- 72
-2
- 10
--1435.247222222222
- 20
-24000.0
  40
-355.24722222222215
- 50
-0
- 51
-360
- 73
+261.761111111111
+  1
+L2-CORR
+  7
+KR-SANS
+ 41
+0.8
+ 72
 1
- 97
-0
- 75
-1
- 76
-1
- 98
-0
+ 11
+16000.0
+ 21
+9065.38
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-CORR
   0
-CIRCLE
+TEXT
   5
 3F3
 330
@@ -57979,19 +57837,41 @@ CIRCLE
 100
 AcDbEntity
   8
-A-GRID-IDEN
+A-ANNO-RMNM
 420
-3097144
+2051386
 100
-AcDbCircle
+AcDbText
  10
--1435.247222222222
+3000.0
  20
-24000.0
+13365.38
  30
 0.0
  40
-355.24722222222215
+261.761111111111
+  1
+L2-CHAT
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+3000.0
+ 21
+13365.38
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-CHAT
   0
 TEXT
   5
@@ -58001,21 +57881,21 @@ TEXT
 100
 AcDbEntity
   8
-A-GRID-IDEN
+A-ANNO-RMNM
 420
-2240554
+2051386
 100
 AcDbText
  10
--1435.247222222222
+10000.0
  20
-23869.119444444445
+12965.38
  30
 0.0
  40
 261.761111111111
   1
-F
+L2-GARDEN
   7
 KR-SANS
  41
@@ -58023,15 +57903,21 @@ KR-SANS
  72
 1
  11
--1435.247222222222
+10000.0
  21
-23869.119444444445
+12965.38
  31
 0.0
 100
 AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-GARDEN
   0
-HATCH
+TEXT
   5
 3F5
 330
@@ -58039,61 +57925,43 @@ HATCH
 100
 AcDbEntity
   8
-A-GRID-IDEN
- 62
-7
+A-ANNO-RMNM
 420
-16777215
+2051386
 100
-AcDbHatch
+AcDbText
  10
-0.0
+17000.0
  20
-0.0
+13365.38
  30
 0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-1
- 93
-1
- 72
-2
- 10
-33435.24722222222
- 20
-24000.0
  40
-355.24722222222215
- 50
-0
- 51
-360
- 73
+261.761111111111
+  1
+L2-CORE
+  7
+KR-SANS
+ 41
+0.8
+ 72
 1
- 97
-0
- 75
-1
- 76
-1
- 98
-0
+ 11
+17000.0
+ 21
+13365.38
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-CORE
   0
-CIRCLE
+TEXT
   5
 3F6
 330
@@ -58101,19 +57969,41 @@ CIRCLE
 100
 AcDbEntity
   8
-A-GRID-IDEN
+A-ANNO-RMNM
 420
-3097144
+2051386
 100
-AcDbCircle
+AcDbText
  10
-33435.24722222222
+26000.0
  20
-24000.0
+13965.38
  30
 0.0
  40
-355.24722222222215
+261.761111111111
+  1
+L2-GAME
+  7
+KR-SANS
+ 41
+0.8
+ 72
+1
+ 11
+26000.0
+ 21
+13965.38
+ 31
+0.0
+100
+AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-GAME
   0
 TEXT
   5
@@ -58123,21 +58013,21 @@ TEXT
 100
 AcDbEntity
   8
-A-GRID-IDEN
+A-ANNO-RMNM
 420
-2240554
+2051386
 100
 AcDbText
  10
-33435.24722222222
+16000.0
  20
-23869.119444444445
+17365.379999999997
  30
 0.0
  40
 261.761111111111
   1
-F
+L2-NCORR
   7
 KR-SANS
  41
@@ -58145,13 +58035,19 @@ KR-SANS
  72
 1
  11
-33435.24722222222
+16000.0
  21
-23869.119444444445
+17365.379999999997
  31
 0.0
 100
 AcDbText
+1001
+KANTOR_RPG
+1000
+room
+1000
+L2-NCORR
   0
 TEXT
   5
@@ -58167,15 +58063,15 @@ A-ANNO-RMNM
 100
 AcDbText
  10
-4000.0
+3200.0
  20
-3065.38
+20965.38
  30
 0.0
  40
 261.761111111111
   1
-L2-READ
+L2-BALCONY
   7
 KR-SANS
  41
@@ -58183,9 +58079,9 @@ KR-SANS
  72
 1
  11
-4000.0
+3200.0
  21
-3065.38
+20965.38
  31
 0.0
 100
@@ -58195,7 +58091,7 @@ KANTOR_RPG
 1000
 room
 1000
-L2-READ
+L2-BALCONY
   0
 TEXT
   5
@@ -58211,15 +58107,15 @@ A-ANNO-RMNM
 100
 AcDbText
  10
-14000.0
+10400.0
  20
-4265.38
+20165.379999999997
  30
 0.0
  40
 261.761111111111
   1
-L2-LOUNGE
+L2-BILLIARD
   7
 KR-SANS
  41
@@ -58227,9 +58123,9 @@ KR-SANS
  72
 1
  11
-14000.0
+10400.0
  21
-4265.38
+20165.379999999997
  31
 0.0
 100
@@ -58239,7 +58135,7 @@ KANTOR_RPG
 1000
 room
 1000
-L2-LOUNGE
+L2-BILLIARD
   0
 TEXT
   5
@@ -58255,15 +58151,15 @@ A-ANNO-RMNM
 100
 AcDbText
  10
-23000.0
+18400.0
  20
-3865.38
+21165.379999999997
  30
 0.0
  40
 261.761111111111
   1
-L2-DINE
+L2-GYM
   7
 KR-SANS
  41
@@ -58271,9 +58167,9 @@ KR-SANS
  72
 1
  11
-23000.0
+18400.0
  21
-3865.38
+21165.379999999997
  31
 0.0
 100
@@ -58283,7 +58179,7 @@ KANTOR_RPG
 1000
 room
 1000
-L2-DINE
+L2-GYM
   0
 TEXT
   5
@@ -58299,15 +58195,15 @@ A-ANNO-RMNM
 100
 AcDbText
  10
-27800.0
+26000.0
  20
-4065.38
+21165.379999999997
  30
 0.0
  40
 261.761111111111
   1
-L2-SHOWER
+L2-STORE
   7
 KR-SANS
  41
@@ -58315,9 +58211,9 @@ KR-SANS
  72
 1
  11
-27800.0
+26000.0
  21
-4065.38
+21165.379999999997
  31
 0.0
 100
@@ -58327,7 +58223,7 @@ KANTOR_RPG
 1000
 room
 1000
-L2-SHOWER
+L2-STORE
   0
 TEXT
   5
@@ -58343,493 +58239,9 @@ A-ANNO-RMNM
 100
 AcDbText
  10
-30900.0
- 20
-4265.38
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-WC
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-30900.0
- 21
-4265.38
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-WC
-  0
-TEXT
-  5
-3FD
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-16000.0
- 20
-9065.38
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-CORR
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-16000.0
- 21
-9065.38
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-CORR
-  0
-TEXT
-  5
-3FE
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-3000.0
- 20
-13365.38
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-CHAT
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-3000.0
- 21
-13365.38
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-CHAT
-  0
-TEXT
-  5
-3FF
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-10000.0
- 20
-12965.38
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-GARDEN
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-10000.0
- 21
-12965.38
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-GARDEN
-  0
-TEXT
-  5
-400
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-17000.0
- 20
-13365.38
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-CORE
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-17000.0
- 21
-13365.38
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-CORE
-  0
-TEXT
-  5
-401
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-26000.0
- 20
-13965.38
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-GAME
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-26000.0
- 21
-13965.38
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-GAME
-  0
-TEXT
-  5
-402
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-16000.0
- 20
-17365.379999999997
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-NCORR
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-16000.0
- 21
-17365.379999999997
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-NCORR
-  0
-TEXT
-  5
-403
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-3200.0
- 20
-20965.38
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-BALCONY
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-3200.0
- 21
-20965.38
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-BALCONY
-  0
-TEXT
-  5
-404
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-10400.0
- 20
-20165.379999999997
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-BILLIARD
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-10400.0
- 21
-20165.379999999997
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-BILLIARD
-  0
-TEXT
-  5
-405
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-18400.0
- 20
-21165.379999999997
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-GYM
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-18400.0
- 21
-21165.379999999997
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-GYM
-  0
-TEXT
-  5
-406
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-26000.0
- 20
-21165.379999999997
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-STORE
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-26000.0
- 21
-21165.379999999997
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-STORE
-  0
-TEXT
-  5
-407
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
 30400.0
  20
-20765.379999999997
+21165.379999999997
  30
 0.0
  40
@@ -58845,7 +58257,7 @@ KR-SANS
  11
 30400.0
  21
-20765.379999999997
+21165.379999999997
  31
 0.0
 100
@@ -58859,7 +58271,7 @@ L2-SERVICE
   0
 LWPOLYLINE
   5
-408
+3FD
 330
 17
 100
@@ -58885,7 +58297,7 @@ AcDbPolyline
   0
 HATCH
   5
-409
+3FE
 330
 17
 100
@@ -58947,7 +58359,7 @@ SOLID
   0
 TEXT
   5
-40A
+3FF
 330
 17
 100
@@ -58989,141 +58401,9 @@ room
 1000
 L2-SHAFT-W
   0
-LWPOLYLINE
-  5
-40B
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-5919307
-100
-AcDbPolyline
- 90
-2
- 70
-0
- 10
-29500.0
- 20
-19250.0
- 10
-29500.0
- 20
-20078.165088063884
-  0
-HATCH
-  5
-40C
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
- 62
-7
-420
-5919307
-100
-AcDbHatch
- 10
-0.0
- 20
-0.0
- 30
-0.0
-210
-0.0
-220
-0.0
-230
-1.0
-  2
-SOLID
- 70
-1
- 71
-0
- 91
-1
- 92
-1
- 93
-1
- 72
-2
- 10
-29500.0
- 20
-19250.0
- 40
-60.0
- 50
-0
- 51
-360
- 73
-1
- 97
-0
- 75
-1
- 76
-1
- 98
-0
-  0
 TEXT
   5
-40D
-330
-17
-100
-AcDbEntity
-  8
-A-ANNO-RMNM
-420
-2051386
-100
-AcDbText
- 10
-30125.0
- 20
-20197.911754730547
- 30
-0.0
- 40
-261.761111111111
-  1
-L2-RISER
-  7
-KR-SANS
- 41
-0.8
- 72
-1
- 11
-30125.0
- 21
-20197.911754730547
- 31
-0.0
-100
-AcDbText
-1001
-KANTOR_RPG
-1000
-room
-1000
-L2-RISER
-  0
-TEXT
-  5
-40E
+400
 330
 17
 100
@@ -59167,7 +58447,7 @@ FX-L2-001
   0
 TEXT
   5
-40F
+401
 330
 17
 100
@@ -59211,7 +58491,7 @@ FX-L2-002
   0
 TEXT
   5
-410
+402
 330
 17
 100
@@ -59255,7 +58535,7 @@ FX-L2-003
   0
 TEXT
   5
-411
+403
 330
 17
 100
@@ -59299,7 +58579,7 @@ FX-L2-004
   0
 TEXT
   5
-412
+404
 330
 17
 100
@@ -59343,7 +58623,7 @@ FX-L2-005
   0
 TEXT
   5
-413
+405
 330
 17
 100
@@ -59387,7 +58667,7 @@ FX-L2-006
   0
 TEXT
   5
-414
+406
 330
 17
 100
@@ -59431,7 +58711,7 @@ FX-L2-007
   0
 TEXT
   5
-415
+407
 330
 17
 100
@@ -59475,7 +58755,7 @@ FX-L2-008
   0
 TEXT
   5
-416
+408
 330
 17
 100
@@ -59519,7 +58799,7 @@ FX-L2-009
   0
 TEXT
   5
-417
+409
 330
 17
 100
@@ -59563,7 +58843,7 @@ FX-L2-010
   0
 TEXT
   5
-418
+40A
 330
 17
 100
@@ -59607,7 +58887,7 @@ FX-L2-011
   0
 TEXT
   5
-419
+40B
 330
 17
 100
@@ -59651,7 +58931,7 @@ FX-L2-012
   0
 TEXT
   5
-41A
+40C
 330
 17
 100
@@ -59695,7 +58975,7 @@ FX-L2-013
   0
 TEXT
   5
-41B
+40D
 330
 17
 100
@@ -59739,7 +59019,7 @@ FX-L2-014
   0
 TEXT
   5
-41C
+40E
 330
 17
 100
@@ -59783,7 +59063,7 @@ FX-L2-015
   0
 TEXT
   5
-41D
+40F
 330
 17
 100
@@ -59827,7 +59107,7 @@ FX-L2-016
   0
 TEXT
   5
-41E
+410
 330
 17
 100
@@ -59871,7 +59151,7 @@ FX-L2-017
   0
 TEXT
   5
-41F
+411
 330
 17
 100
@@ -59915,7 +59195,7 @@ FX-L2-018
   0
 TEXT
   5
-420
+412
 330
 17
 100
@@ -59959,7 +59239,7 @@ FX-L2-019
   0
 TEXT
   5
-421
+413
 330
 17
 100
@@ -60003,7 +59283,7 @@ FX-L2-020
   0
 LWPOLYLINE
   5
-422
+414
 330
 17
 100
@@ -60029,7 +59309,7 @@ AcDbPolyline
   0
 TEXT
   5
-423
+415
 330
 17
 100
@@ -60073,7 +59353,7 @@ FX-L2-021
   0
 TEXT
   5
-424
+416
 330
 17
 100
@@ -60117,7 +59397,7 @@ FX-L2-022
   0
 TEXT
   5
-425
+417
 330
 17
 100
@@ -60161,7 +59441,7 @@ FX-L2-023
   0
 TEXT
   5
-426
+418
 330
 17
 100
@@ -60205,7 +59485,7 @@ FX-L2-024
   0
 TEXT
   5
-427
+419
 330
 17
 100
@@ -60249,7 +59529,7 @@ FX-L2-025
   0
 TEXT
   5
-428
+41A
 330
 17
 100
@@ -60293,7 +59573,7 @@ FX-L2-026
   0
 TEXT
   5
-429
+41B
 330
 17
 100
@@ -60337,7 +59617,7 @@ FX-L2-027
   0
 TEXT
   5
-42A
+41C
 330
 17
 100
@@ -60381,7 +59661,7 @@ FX-L2-028
   0
 TEXT
   5
-42B
+41D
 330
 17
 100
@@ -60425,7 +59705,7 @@ FX-L2-029
   0
 TEXT
   5
-42C
+41E
 330
 17
 100
@@ -60469,7 +59749,7 @@ FX-L2-030
   0
 TEXT
   5
-42D
+41F
 330
 17
 100
@@ -60513,7 +59793,7 @@ FX-L2-031
   0
 TEXT
   5
-42E
+420
 330
 17
 100
@@ -60557,7 +59837,7 @@ FX-L2-032
   0
 TEXT
   5
-42F
+421
 330
 17
 100
@@ -60601,7 +59881,7 @@ FX-L2-033
   0
 LWPOLYLINE
   5
-430
+422
 330
 17
 100
@@ -60627,7 +59907,7 @@ AcDbPolyline
   0
 TEXT
   5
-431
+423
 330
 17
 100
@@ -60671,7 +59951,7 @@ FX-L2-034
   0
 TEXT
   5
-432
+424
 330
 17
 100
@@ -60715,7 +59995,7 @@ FX-L2-035
   0
 TEXT
   5
-433
+425
 330
 17
 100
@@ -60759,7 +60039,7 @@ FX-L2-036
   0
 TEXT
   5
-434
+426
 330
 17
 100
@@ -60803,7 +60083,7 @@ FX-L2-037
   0
 TEXT
   5
-435
+427
 330
 17
 100
@@ -60847,7 +60127,7 @@ FX-L2-038
   0
 TEXT
   5
-436
+428
 330
 17
 100
@@ -60891,7 +60171,7 @@ FX-L2-039
   0
 TEXT
   5
-437
+429
 330
 17
 100
@@ -60935,7 +60215,7 @@ FX-L2-040
   0
 TEXT
   5
-438
+42A
 330
 17
 100
@@ -60979,7 +60259,7 @@ FX-L2-041
   0
 TEXT
   5
-439
+42B
 330
 17
 100
@@ -61023,7 +60303,7 @@ FX-L2-042
   0
 TEXT
   5
-43A
+42C
 330
 17
 100
@@ -61067,7 +60347,7 @@ FX-L2-043
   0
 TEXT
   5
-43B
+42D
 330
 17
 100
@@ -61111,7 +60391,7 @@ FX-L2-044
   0
 LWPOLYLINE
   5
-43C
+42E
 330
 17
 100
@@ -61137,7 +60417,7 @@ AcDbPolyline
   0
 TEXT
   5
-43D
+42F
 330
 17
 100
@@ -61181,7 +60461,7 @@ FX-L2-045
   0
 TEXT
   5
-43E
+430
 330
 17
 100
@@ -61225,7 +60505,7 @@ FX-L2-046
   0
 TEXT
   5
-43F
+431
 330
 17
 100
@@ -61269,7 +60549,7 @@ FX-L2-047
   0
 TEXT
   5
-440
+432
 330
 17
 100
@@ -61313,7 +60593,7 @@ FX-L2-048
   0
 TEXT
   5
-441
+433
 330
 17
 100
@@ -61357,7 +60637,7 @@ FX-L2-049
   0
 TEXT
   5
-442
+434
 330
 17
 100
@@ -61401,7 +60681,7 @@ FX-L2-050
   0
 TEXT
   5
-443
+435
 330
 17
 100
@@ -61445,7 +60725,7 @@ FX-L2-051
   0
 TEXT
   5
-444
+436
 330
 17
 100
@@ -61489,7 +60769,7 @@ FX-L2-052
   0
 TEXT
   5
-445
+437
 330
 17
 100
@@ -61533,7 +60813,7 @@ FX-L2-053
   0
 TEXT
   5
-446
+438
 330
 17
 100
@@ -61577,7 +60857,7 @@ FX-L2-054
   0
 TEXT
   5
-447
+439
 330
 17
 100
@@ -61621,7 +60901,7 @@ FX-L2-055
   0
 TEXT
   5
-448
+43A
 330
 17
 100
@@ -61665,7 +60945,7 @@ FX-L2-056
   0
 LWPOLYLINE
   5
-449
+43B
 330
 17
 100
@@ -61691,7 +60971,7 @@ AcDbPolyline
   0
 TEXT
   5
-44A
+43C
 330
 17
 100
@@ -61735,7 +61015,7 @@ FX-L2-057
   0
 TEXT
   5
-44B
+43D
 330
 17
 100
@@ -61779,7 +61059,7 @@ FX-L2-058
   0
 TEXT
   5
-44C
+43E
 330
 17
 100
@@ -61823,7 +61103,7 @@ FX-L2-059
   0
 TEXT
   5
-44D
+43F
 330
 17
 100
@@ -61867,7 +61147,7 @@ FX-L2-060
   0
 TEXT
   5
-44E
+440
 330
 17
 100
@@ -61911,7 +61191,7 @@ FX-L2-061
   0
 TEXT
   5
-44F
+441
 330
 17
 100
@@ -61955,7 +61235,7 @@ FX-L2-062
   0
 TEXT
   5
-450
+442
 330
 17
 100
@@ -61999,7 +61279,7 @@ FX-L2-063
   0
 TEXT
   5
-451
+443
 330
 17
 100
@@ -62043,7 +61323,7 @@ FX-L2-064
   0
 TEXT
   5
-452
+444
 330
 17
 100
@@ -62087,7 +61367,7 @@ FX-L2-065
   0
 TEXT
   5
-453
+445
 330
 17
 100
@@ -62131,7 +61411,7 @@ FX-L2-066
   0
 TEXT
   5
-454
+446
 330
 17
 100
@@ -62175,7 +61455,7 @@ FX-L2-067
   0
 TEXT
   5
-455
+447
 330
 17
 100
@@ -62219,7 +61499,7 @@ FX-L2-068
   0
 TEXT
   5
-456
+448
 330
 17
 100
@@ -62263,7 +61543,7 @@ FX-L2-069
   0
 TEXT
   5
-457
+449
 330
 17
 100
@@ -62307,7 +61587,7 @@ FX-L2-070
   0
 TEXT
   5
-458
+44A
 330
 17
 100
@@ -62351,7 +61631,7 @@ FX-L2-071
   0
 TEXT
   5
-459
+44B
 330
 17
 100
@@ -62395,7 +61675,7 @@ FX-L2-072
   0
 TEXT
   5
-45A
+44C
 330
 17
 100
@@ -62439,7 +61719,7 @@ FX-L2-073
   0
 TEXT
   5
-45B
+44D
 330
 17
 100
@@ -62483,7 +61763,7 @@ FX-L2-074
   0
 TEXT
   5
-45C
+44E
 330
 17
 100
@@ -62527,7 +61807,7 @@ FX-L2-075
   0
 TEXT
   5
-45D
+44F
 330
 17
 100
@@ -62571,7 +61851,7 @@ FX-L2-076
   0
 TEXT
   5
-45E
+450
 330
 17
 100
@@ -62615,7 +61895,7 @@ FX-L2-077
   0
 LWPOLYLINE
   5
-45F
+451
 330
 17
 100
@@ -62641,7 +61921,7 @@ AcDbPolyline
   0
 TEXT
   5
-460
+452
 330
 17
 100
@@ -62685,7 +61965,7 @@ FX-L2-078
   0
 LWPOLYLINE
   5
-461
+453
 330
 17
 100
@@ -62711,7 +61991,7 @@ AcDbPolyline
   0
 TEXT
   5
-462
+454
 330
 17
 100
@@ -62755,7 +62035,7 @@ FX-L2-079
   0
 TEXT
   5
-463
+455
 330
 17
 100
@@ -62799,7 +62079,7 @@ FX-L2-080
   0
 TEXT
   5
-464
+456
 330
 17
 100
@@ -62843,7 +62123,7 @@ FX-L2-081
   0
 TEXT
   5
-465
+457
 330
 17
 100
@@ -62887,7 +62167,7 @@ FX-L2-082
   0
 TEXT
   5
-466
+458
 330
 17
 100
@@ -62931,7 +62211,7 @@ FX-L2-083
   0
 TEXT
   5
-467
+459
 330
 17
 100
@@ -62975,7 +62255,7 @@ FX-L2-084
   0
 TEXT
   5
-468
+45A
 330
 17
 100
@@ -63019,7 +62299,7 @@ FX-L2-085
   0
 TEXT
   5
-469
+45B
 330
 17
 100
@@ -63063,7 +62343,7 @@ FX-L2-086
   0
 LWPOLYLINE
   5
-46A
+45C
 330
 17
 100
@@ -63089,7 +62369,7 @@ AcDbPolyline
   0
 TEXT
   5
-46B
+45D
 330
 17
 100
@@ -63133,7 +62413,7 @@ FX-L2-087
   0
 TEXT
   5
-46C
+45E
 330
 17
 100
@@ -63177,7 +62457,7 @@ FX-L2-088
   0
 TEXT
   5
-46D
+45F
 330
 17
 100
@@ -63221,7 +62501,7 @@ FX-L2-089
   0
 TEXT
   5
-46E
+460
 330
 17
 100
@@ -63265,7 +62545,7 @@ FX-L2-090
   0
 TEXT
   5
-46F
+461
 330
 17
 100
@@ -71743,7 +71023,7 @@ AcDbText
   0
 VIEWPORT
   5
-470
+462
 330
 1B
 100
@@ -71847,7 +71127,7 @@ AcDbViewport
   0
 INSERT
   5
-471
+463
 330
 1B
 100
@@ -71871,7 +71151,7 @@ KR-TTLB-G
   0
 ATTRIB
   5
-473
+465
 330
 1B
 100
@@ -71919,7 +71199,7 @@ KR_SHEET_ID
   0
 ATTRIB
   5
-474
+466
 330
 1B
 100
@@ -71967,7 +71247,7 @@ KR_TITLE
   0
 ATTRIB
   5
-475
+467
 330
 1B
 100
@@ -72015,7 +71295,7 @@ KR_FLOOR
   0
 ATTRIB
   5
-476
+468
 330
 1B
 100
@@ -72063,7 +71343,7 @@ KR_SCALE
   0
 ATTRIB
   5
-477
+469
 330
 1B
 100
@@ -72111,7 +71391,7 @@ KR_REVISION
   0
 ATTRIB
   5
-478
+46A
 330
 1B
 100
@@ -72159,7 +71439,7 @@ KR_REV_DATE
   0
 ATTRIB
   5
-479
+46B
 330
 1B
 100
@@ -72179,7 +71459,7 @@ AcDbText
  40
 2.0
   1
-2026-10-02T02:42:18Z
+2026-10-13T01:12:51Z
   7
 KR-SANS
  11
@@ -72207,7 +71487,7 @@ KR_RENDER_UTC
   0
 ATTRIB
   5
-47A
+46C
 330
 1B
 100
@@ -72255,7 +71535,7 @@ KR_STATUS
   0
 ATTRIB
   5
-47B
+46D
 330
 1B
 100
@@ -72303,7 +71583,7 @@ KR_NOTE
   0
 ATTRIB
   5
-47C
+46E
 330
 1B
 100
@@ -72351,7 +71631,7 @@ KR_DRAWN
   0
 ATTRIB
   5
-47D
+46F
 330
 1B
 100
@@ -72399,7 +71679,7 @@ KR_CHECK
   0
 ATTRIB
   5
-47E
+470
 330
 1B
 100
@@ -72447,7 +71727,7 @@ KR_PAGE
   0
 ATTRIB
   5
-47F
+471
 330
 1B
 100
@@ -72467,7 +71747,7 @@ AcDbText
  40
 1.3
   1
-488597bb0552fbde4c67baa4ffa6f73f6cb6882cb8f02fcb10adbc3fc07e5969
+38f94d70975b0c429ccf33c71429d3b9785563661bcc46280537666767761298
   7
 KR-SANS
  11
@@ -72495,9 +71775,9 @@ KR_WORLD_SHA256
   0
 SEQEND
   5
-472
+464
 330
-471
+463
 100
 AcDbEntity
  67
@@ -72609,7 +71889,7 @@ A-202-1
   3
 A-202-2
 350
-483
+475
   0
 DICTIONARY
   5
@@ -73603,7 +72883,7 @@ CREATED_BY_EZDXF
   3
 WRITTEN_BY_EZDXF
 350
-6AC
+69E
   0
 DICTIONARYVAR
   5
@@ -73615,7 +72895,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-02T02:42:29.128313+00:00
+1.4.4 @ 2026-10-13T01:13:04.301655+00:00
   0
 VISUALSTYLE
   5
@@ -80169,7 +79449,7 @@ strokes_ogs.tif
   0
 LAYOUT
   5
-483
+475
 330
 D
 100
@@ -80291,13 +79571,13 @@ A-202-2
  76
 1
 330
-480
+472
 331
-484
+476
   0
 DICTIONARYVAR
   5
-6AC
+69E
 330
 2D
 100
@@ -80305,7 +79585,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-02T02:42:29.158951+00:00
+1.4.4 @ 2026-10-13T01:13:04.332828+00:00
   0
 ENDSEC
   0
