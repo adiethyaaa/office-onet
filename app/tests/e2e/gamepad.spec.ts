@@ -90,6 +90,40 @@ test.describe('gamepad', () => {
     // Stick motion is ignored while a dialog is open, so nothing moved meanwhile.
   });
 
+  test('Settings: three controller profiles, DualSense picture lights the pressed button, Left-handed swaps the sticks', async ({ page }, info) => {
+    await boot(page);
+    await connect(page);
+    await page.locator('#btn-settings').click();
+    const dlg = page.locator('#dlg-settings');
+    await expect(dlg.locator('input[name="padProfile"]')).toHaveCount(3);
+    await expect(dlg.locator('input[name="padProfile"][value="standar"]')).toBeChecked();
+    await expect(dlg.locator('.pad-svg')).toBeVisible();
+    await expect(dlg.locator('.pad-status')).toContainText('Test pad');
+    // A held Cross lights up in the drawing.
+    await hold(page, B.A, true);
+    await expect(dlg.locator('.pad-svg [data-part="cross"]')).toHaveClass(/pad-on/);
+    await hold(page, B.A, false);
+    await expect(dlg.locator('.pad-svg [data-part="cross"]')).not.toHaveClass(/pad-on/);
+    await dlg.locator('label', { hasText: 'Kidal' }).click();
+    await expect(dlg.locator('.pad-about')).toContainText('Stik ditukar');
+    await expect(dlg.locator('.pad-map li[data-part="rs"]')).toContainText('Berjalan');
+    await shot(page, info, 'gamepad-profile-kidal');
+    await dlg.locator('label', { hasText: 'Santai' }).click();
+    await expect(dlg.locator('.pad-about')).toContainText('Kamera lebih pelan');
+    await dlg.locator('label', { hasText: 'Kidal' }).click();
+    await dlg.locator('button[value="close"]').click();
+    await expect(dlg).toBeHidden();
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem('kantor-rpg.settings.v1') ?? '{}').padProfile)).toBe('kidal');
+    // Left-handed: the right stick walks, the left stick turns the camera.
+    const start = (await state(page)).pos;
+    const c0 = await cam(page);
+    await axes(page, [0, 0, 0, -1]);
+    await expect.poll(async () => { const p = (await state(page)).pos; return Math.hypot(p[0] - start[0], p[1] - start[1]); }, { timeout: 15_000 }).toBeGreaterThan(0.8);
+    await axes(page, [1, 0, 0, 0]);
+    await expect.poll(async () => Math.abs((await cam(page)).yaw - c0.yaw), { timeout: 15_000 }).toBeGreaterThan(0.3);
+    await axes(page, [0, 0, 0, 0]);
+  });
+
   test('D-pad reaches the HUD menu and A opens the map with Select', async ({ page }) => {
     await boot(page);
     await connect(page);

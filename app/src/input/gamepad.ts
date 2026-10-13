@@ -8,8 +8,11 @@
 // Menus and dialogs: the D-pad (or a left stick flick inside a dialog) moves
 // focus to the nearest control in that direction, A activates it, B closes.
 // Studio: the D-pad navigates its controls; the right stick moves the selected fixture.
+// The profile picked in Settings (pad-profiles.ts) can swap the sticks, widen the
+// dead zone, slow the camera and turn off running at full tilt.
 import { toast } from '../ui/dom';
 import { t } from '../i18n';
+import { PAD_PROFILES, stickAxes, type PadProfileId } from './pad-profiles';
 
 /** What the pad drives in the 3D world. Absent in the no-WebGL fallback. */
 export interface PadWorld {
@@ -31,10 +34,10 @@ const REPEAT_NEXT = 130;
 const FOCUSABLE = 'button, a[href], input:not([type="hidden"]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
 
 /** Radial dead zone, rescaled so motion starts at 0 just past the zone. */
-export function stick(x: number, y: number): [number, number] {
+export function stick(x: number, y: number, dead = DEAD): [number, number] {
   const m = Math.hypot(x, y);
-  if (m < DEAD) return [0, 0];
-  const k = Math.min(1, (m - DEAD) / (1 - DEAD)) / m;
+  if (m < dead) return [0, 0];
+  const k = Math.min(1, (m - dead) / (1 - dead)) / m;
   return [x * k, y * k];
 }
 
@@ -122,7 +125,7 @@ export class GamepadControl {
   private navigating = false;
   private nudgeAt = 0;
 
-  constructor(private target: () => PadWorld | null) {
+  constructor(private target: () => PadWorld | null, private profile: () => PadProfileId = () => 'standar') {
     track();
     window.addEventListener('gamepadconnected', () => this.connected());
     window.addEventListener('gamepaddisconnected', () => { if (!this.pad()) { this.target()?.setMove(null); toast(t('Stik terputus.')); } });
@@ -159,16 +162,18 @@ export class GamepadControl {
     const hit = (i: number) => !!down[i] && !this.prev[i];
     const dialog = topDialog();
     const ui = !!dialog || (this.navigating && document.activeElement !== document.body);
-    const [lx, ly] = stick(p.axes[0] ?? 0, p.axes[1] ?? 0);
-    const [rx, ry] = stick(p.axes[2] ?? 0, p.axes[3] ?? 0);
+    const prof = PAD_PROFILES[this.profile()] ?? PAD_PROFILES.standar;
+    const ax = stickAxes(prof);
+    const [lx, ly] = stick(p.axes[ax.move[0]] ?? 0, p.axes[ax.move[1]] ?? 0, prof.dead);
+    const [rx, ry] = stick(p.axes[ax.look[0]] ?? 0, p.axes[ax.look[1]] ?? 0, prof.dead);
 
     const world = this.target();
     const studio = !!world?.studioOpen();
     // World motion. The Input layer already zeroes it while a dialog is open.
     if (world) {
-      world.setMove(dialog || studio ? null : { x: lx, y: -ly, run: Math.hypot(lx, ly) > 0.97 });
+      world.setMove(dialog || studio ? null : { x: lx, y: -ly, run: prof.autoRun && Math.hypot(lx, ly) > 0.97 });
       if (!dialog && !studio) {
-        if (rx || ry) world.look(rx * dt * 2.4, -ry * dt * 1.2);
+        if (rx || ry) world.look(rx * dt * prof.lookYaw, -ry * dt * prof.lookPitch);
         if (down[BTN.LB]) world.zoom(Math.pow(1.9, dt));
         if (down[BTN.RB]) world.zoom(Math.pow(1.9, -dt));
       }
@@ -182,9 +187,9 @@ export class GamepadControl {
     // Direction: D-pad anywhere; a left stick flick only inside a dialog.
     let dir: Dir | null = down[BTN.UP] ? 'up' : down[BTN.DOWN] ? 'down' : down[BTN.LEFT] ? 'left' : down[BTN.RIGHT] ? 'right' : null;
     if (!dir && dialog) {
-      const ax = p.axes[0] ?? 0;
-      const ay = p.axes[1] ?? 0;
-      if (Math.hypot(ax, ay) > 0.6) dir = Math.abs(ax) > Math.abs(ay) ? (ax > 0 ? 'right' : 'left') : (ay > 0 ? 'down' : 'up');
+      const sx = p.axes[ax.move[0]] ?? 0;
+      const sy = p.axes[ax.move[1]] ?? 0;
+      if (Math.hypot(sx, sy) > 0.6) dir = Math.abs(sx) > Math.abs(sy) ? (sx > 0 ? 'right' : 'left') : (sy > 0 ? 'down' : 'up');
     }
     if (dir) {
       const fresh = !this.held || this.held.dir !== dir;
@@ -292,6 +297,6 @@ export class GamepadControl {
   }
 }
 
-export function startGamepad(target: () => PadWorld | null) {
-  return new GamepadControl(target);
+export function startGamepad(target: () => PadWorld | null, profile?: () => PadProfileId) {
+  return new GamepadControl(target, profile);
 }

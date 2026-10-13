@@ -118,6 +118,19 @@ Xbox, PlayStation, and Bluetooth gamepads with the standard mapping work in the 
 
 While a dialog is open, the avatar stays still and the left stick also moves focus. Left/right change dropdown values. In the Studio, the D-pad moves the selected fixture. Typing text still needs a keyboard or the on-screen keyboard.
 
+**Controller profiles (Settings > Controller)**
+
+There are three profiles. The choice is saved in the browser and applies right away, without a reload.
+
+| Profile | For whom | Difference from Standard |
+|---|---|---|
+| Standard | Most players | Left stick walks, right stick camera, 22% dead zone, full tilt runs |
+| Left-handed (sticks swapped) | Left-handed players, or anyone who prefers steering the camera with the left hand | Right stick walks, left stick camera. Inside dialogs the right stick moves focus. All other buttons stay the same |
+| Relaxed (slow camera) | Players who get dizzy with a fast camera, or an older pad whose sticks drift | Camera at 58% of normal speed, 32% dead zone, full tilt does not run (run with Square/X or by pressing the left stick) |
+
+Below the profile choice is a DualSense-style controller drawing with what each button does in that profile. While a pad is connected, pressed buttons light up and the drawn sticks move, so players can check their pad is read. Pointing at or focusing a row in the button list highlights that button in the drawing. The body, grips and touchpad follow Leo's controller drawing (mockup39), with no logo or brand name.
+
+
 The avatar cannot pass through walls, furniture, or NPCs. If the avatar's position becomes invalid (for example after furniture is moved), the avatar is returned to the nearest safe point.
 
 ## 4. Interaction and activities

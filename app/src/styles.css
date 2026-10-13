@@ -246,6 +246,25 @@ html[data-input='pad'] :focus { outline: 3px solid var(--focus); outline-offset:
 .settings label { display: flex; align-items: center; gap: 10px; min-height: 44px; }
 .settings input { width: 22px; height: 22px; accent-color: var(--green); }
 .settings select { font: inherit; min-height: 44px; border-radius: 10px; border: 2px solid var(--control-border); background: var(--surface); color: var(--ink); padding: 4px 8px; }
+/* Settings > Controller. The pad drawing keeps its own product colours in both
+   themes; only the highlight uses the app accent, so a lit button reads as state. */
+.pad-choices { display: flex; flex-wrap: wrap; gap: 0 16px; }
+.pad-settings { display: grid; gap: 8px; margin-top: 6px; }
+.pad-about p { margin: 0 0 6px; }
+.pad-facts { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0 0 6px; font-size: 0.92rem; }
+.pad-facts dt { font-weight: 700; }
+.pad-facts dd { margin: 0; }
+.pad-figure { background: var(--surface-2); border-radius: 12px; padding: 10px; }
+.pad-svg { display: block; width: min(100%, 360px); height: auto; margin: 0 auto; }
+.pad-svg .pad-knob { transition: transform 60ms linear; }
+.pad-svg .pad-on .pad-hit, .pad-svg .pad-hit.pad-on, .pad-svg .pad-focus .pad-hit, .pad-svg .pad-hit.pad-focus { fill: var(--accent); }
+.pad-svg [data-part="dpad"].pad-focus .pad-hit { fill: var(--accent); }
+.pad-status { margin: 0; }
+.pad-map { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2px 12px; }
+.pad-map li { display: grid; grid-template-columns: 9em 1fr; gap: 8px; align-items: baseline; min-height: 32px; padding: 4px 6px; border-radius: 8px; font-size: 0.92rem; }
+.pad-map li:hover, .pad-map li:focus { background: var(--surface-2); }
+@media (prefers-reduced-motion: reduce) { .pad-svg .pad-knob { transition: none; } }
+html[data-reduced-motion='true'] .pad-svg .pad-knob { transition: none; }
 .row { display: flex; gap: 8px; justify-content: flex-end; }
 .info-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0 0 12px; }
 .info-grid dt { color: var(--ink-2); }

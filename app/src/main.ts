@@ -122,7 +122,7 @@ function wireGamepad(world: import('./input/gamepad').PadWorld | null) {
   const start = () => {
     if (padStarted) return;
     padStarted = true;
-    void import('./input/gamepad').then((m) => m.startGamepad(() => padWorld)).catch(() => { padStarted = false; });
+    void import('./input/gamepad').then((m) => m.startGamepad(() => padWorld, () => settings.padProfile)).catch(() => { padStarted = false; });
   };
   window.addEventListener('gamepadconnected', start, { once: true });
   if ([...(navigator.getGamepads?.() ?? [])].some((p) => p && p.connected)) start();
@@ -137,9 +137,15 @@ function wireSettings(game: Game | null, s: Settings) {
     (form.elements.namedItem('lang') as RadioNodeList).value = lang;
     (form.elements.namedItem('reducedMotion') as HTMLInputElement).checked = s.reducedMotion;
     (form.elements.namedItem('visitor') as HTMLInputElement).checked = s.visitor;
+    (form.elements.namedItem('padProfile') as RadioNodeList).value = s.padProfile;
+    void padLoad().then((v) => { v.setProfile(s.padProfile); v.start(); });
     $('settings-renderer').textContent = game ? t('Renderer: {name}. Kualitas aktif: {quality}. Perubahan kualitas berlaku setelah muat ulang.', { name: game.rendererName, quality: game.lowQuality ? t('ringan') : t('tinggi') }) : t('Mode direktori: renderer 3D tidak aktif.');
     openDialog(dlg, e.currentTarget as HTMLElement);
   });
+  // The controller picture is its own chunk, fetched the first time Settings opens.
+  let padView: import('./ui/pad-settings').PadSettings | null = null;
+  const padLoad = () => import('./ui/pad-settings').then((m) => (padView ??= new m.PadSettings($('pad-settings'), s.padProfile)));
+  dlg.addEventListener('close', () => padView?.stop());
   form.addEventListener('change', () => {
     const l = (form.elements.namedItem('lang') as RadioNodeList).value;
     if (l !== lang && (l === 'id' || l === 'en')) return setLang(l);
@@ -150,6 +156,8 @@ function wireSettings(game: Game | null, s: Settings) {
     applyTheme(s);
     if (game && visitor !== s.visitor) game.setVisitor(visitor);
     s.visitor = visitor;
+    const pad = (form.elements.namedItem('padProfile') as RadioNodeList).value;
+    if (pad === 'standar' || pad === 'kidal' || pad === 'santai') { s.padProfile = pad; padView?.setProfile(pad); }
     saveSettings(s);
   });
 }
