@@ -19,14 +19,13 @@ Luas diukur pada garis as dinding (AS-DIM-02). Kursi = slot duduk dari fixture (
 | L1-CORE | Inti tangga & lift L1 | circulation | public | moderate | 36.0 | 0 | D-L1-11, D-L1-14 | L1-CORR, L1-NCORR | 0/0 | vinyl motif kayu |
 | L1-NOVA | Area Nova (spesifikasi ICT) | work | staff | quiet | 36.0 | 2 | D-L1-12 | L1-CORR | 2/4 | karpet tile matte |
 | L1-LAB | Lab ICT | work | staff | moderate | 36.0 | 1 | D-L1-13, D-L1-22 | L1-CORR, L1-NCORR | 4/14 | vinyl anti-statik (target) |
-| L1-NCORR | Koridor utara L1 | circulation | staff | moderate | 64.0 | 0 | D-L1-14, D-L1-22, D-L1-EXN, D-L1-15, D-L1-16, D-L1-17, D-L1-18, D-L1-20, D-L1-21 | EXT, L1-BRUNO, L1-CEO, L1-CORE, L1-HUGO, L1-KEVIN, L1-LAB, L1-RISER, L1-STORE | 2/2 | vinyl motif kayu |
+| L1-NCORR | Koridor utara L1 | circulation | staff | moderate | 64.0 | 0 | D-L1-14, D-L1-22, D-L1-EXN, D-L1-15, D-L1-16, D-L1-17, D-L1-18, D-L1-21 | EXT, L1-BRUNO, L1-CEO, L1-CORE, L1-HUGO, L1-KEVIN, L1-LAB, L1-STORE | 2/2 | vinyl motif kayu |
 | L1-CEO | Ruang CEO | quiet | staff | quiet | 38.5 | 5 | D-L1-15 | L1-NCORR | 1/2 | karpet tile matte |
 | L1-HUGO | Studio Hugo | work | staff | quiet | 38.5 | 2 | D-L1-16 | L1-NCORR | 2/4 | vinyl motif kayu |
 | L1-KEVIN | Studio Kevin | work | staff | quiet | 33.0 | 2 | D-L1-17 | L1-NCORR | 2/4 | vinyl motif kayu |
 | L1-BRUNO | Area Bruno | work | staff | moderate | 27.5 | 1 | D-L1-18, D-L1-19 | L1-NCORR, L1-SERVER | 2/3 | vinyl anti-statik (target) |
 | L1-SERVER | Ruang server | restricted | restricted | moderate | 22.0 | 0 | D-L1-19 | L1-BRUNO | 0/0 | vinyl anti-statik (target) |
-| L1-RISER | Riser ICT | shaft | restricted | quiet | 1.5 | 0 | D-L1-20 | L1-NCORR | 0/0 | - |
-| L1-STORE | Gudang & utilitas | service | staff | quiet | 15.0 | 0 | D-L1-21 | L1-NCORR | 0/0 | epoxy |
+| L1-STORE | Gudang & utilitas | service | staff | quiet | 16.5 | 0 | D-L1-21 | L1-NCORR | 0/0 | epoxy |
 
 ## Lantai 2 (rekreasi)
 
@@ -43,13 +42,12 @@ Luas diukur pada garis as dinding (AS-DIM-02). Kursi = slot duduk dari fixture (
 | L2-GARDEN | Taman dalam | recreation | staff | quiet | 48.0 | 2 | D-L2-09 | L2-CORR | 0/0 | deck komposit |
 | L2-CORE | Inti tangga & lift L2 | circulation | staff | moderate | 36.0 | 0 | D-L2-10, D-L2-12 | L2-CORR, L2-NCORR | 0/0 | vinyl motif kayu |
 | L2-GAME | Ruang game | recreation | staff | loud | 72.0 | 8 | D-L2-11, D-L2-19 | L2-CORR, L2-NCORR | 5/7 | vinyl motif kayu |
-| L2-NCORR | Koridor utara L2 | circulation | staff | moderate | 64.0 | 0 | D-L2-12, D-L2-19, D-L2-13, D-L2-14, D-L2-15, D-L2-16, D-L2-17, D-L2-18 | L2-BALCONY, L2-BILLIARD, L2-CORE, L2-GAME, L2-GYM, L2-RISER, L2-SERVICE, L2-STORE | 2/2 | vinyl motif kayu |
+| L2-NCORR | Koridor utara L2 | circulation | staff | moderate | 64.0 | 0 | D-L2-12, D-L2-19, D-L2-13, D-L2-14, D-L2-15, D-L2-16, D-L2-18 | L2-BALCONY, L2-BILLIARD, L2-CORE, L2-GAME, L2-GYM, L2-SERVICE, L2-STORE | 2/2 | vinyl motif kayu |
 | L2-BALCONY | Balkon taman | outdoor | staff | moderate | 38.5 | 2 | D-L2-13 | L2-NCORR | 0/0 | deck komposit |
 | L2-BILLIARD | Ruang biliar | recreation | staff | loud | 38.5 | 0 | D-L2-14 | L2-NCORR | 1/1 | karpet tile matte |
 | L2-GYM | Ruang olahraga | recreation | staff | loud | 49.5 | 3 | D-L2-15 | L2-NCORR | 2/2 | lantai karet olahraga |
 | L2-STORE | Gudang L2 | service | staff | quiet | 33.0 | 0 | D-L2-16 | L2-NCORR | 0/0 | epoxy |
-| L2-RISER | Riser ICT L2 | shaft | restricted | quiet | 1.5 | 0 | D-L2-17 | L2-NCORR | 0/0 | - |
-| L2-SERVICE | Area servis L2 | service | staff | quiet | 15.0 | 0 | D-L2-18 | L2-NCORR | 0/0 | epoxy |
+| L2-SERVICE | Area servis L2 | service | staff | quiet | 16.5 | 0 | D-L2-18 | L2-NCORR | 0/0 | epoxy |
 
 ## Furnishing per ruang
 
@@ -93,7 +91,7 @@ Luas diukur pada garis as dinding (AS-DIM-02). Kursi = slot duduk dari fixture (
 | ID | Aturan | Hasil | Detail |
 |---|---|---|---|
 | ADJ-01 | Resepsi dekat entrance | lolos | "D-L1-ENT" |
-| ADJ-02 | Rapat dicapai visitor tanpa melewati server | lolos | "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER', 'L1-RISER']" |
+| ADJ-02 | Rapat dicapai visitor tanpa melewati server | lolos | "path L1-LOBBY->L1-MEET avoiding ['L1-SERVER']" |
 | ADJ-03 | Bruno dekat rack, akses rack terbatas | lolos | {"path_m": 0.0, "max_m": 6.0} |
 | ADJ-04 | Bruno dekat lab ICT | lolos | {"path_m": 6.39, "max_m": 12.0} |
 | ADJ-05 | Ruang basah jauh dari rack | lolos | {"min_m": 10.5, "required": 8.0} |

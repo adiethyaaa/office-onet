@@ -2,11 +2,11 @@
  "file": "ICT-301.dxf",
  "modelspace": {
   "A-WALL": {
-   "HATCH": 131,
-   "LWPOLYLINE": 131
+   "HATCH": 125,
+   "LWPOLYLINE": 125
   },
   "A-AREA": {
-   "LWPOLYLINE": 38
+   "LWPOLYLINE": 36
   },
   "A-GLAZ": {
    "LWPOLYLINE": 364
@@ -19,7 +19,7 @@
    "LWPOLYLINE": 6
   },
   "ICT-ROUT": {
-   "LWPOLYLINE": 89
+   "LWPOLYLINE": 91
   },
   "ICT-RISR": {
    "HATCH": 2,
@@ -31,7 +31,7 @@
    "LWPOLYLINE": 2
   },
   "ICT-OUTL": {
-   "HATCH": 45
+   "HATCH": 46
   }
  },
  "paperspace": {
@@ -49,9 +49,9 @@
     "TEXT": 1
    },
    "A-ANNO-NOTE": {
-    "TEXT": 9,
+    "TEXT": 10,
     "LWPOLYLINE": 3,
-    "HATCH": 2
+    "HATCH": 3
    },
    "A-ANNO-SCHD": {
     "HATCH": 2,
@@ -69,8 +69,8 @@
   }
  },
  "totals": {
-  "modelspace": 880,
-  "paperspace": 78
+  "modelspace": 869,
+  "paperspace": 80
  },
  "layers": [
   "0",

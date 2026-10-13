@@ -48,7 +48,7 @@ Fitur pemilik membutuhkan backend privat (`server/`). Tanpa backend, app tetap b
 ![Lantai 1 dari atas](img/hero-l1.jpg)
 
 - Dua lantai: **Lantai 1 (kerja dan kunjungan)** dan **Lantai 2 (rekreasi)**, total 38 ruang, 46 pintu, 39 jendela, dan 201 perabot serta perangkat.
-- Lantai 1 berisi lobby dan resepsi (titik awal), ruang rapat besar, galeri, pantry, ruang diskusi, ruang implementasi, area kerja per peran, lab, ruang server, riser, dan gudang.
+- Lantai 1 berisi lobby dan resepsi (titik awal), ruang rapat besar, galeri, pantry, ruang diskusi, ruang implementasi, area kerja per peran, lab, ruang server, dan gudang (riser ICT dihapus 2026-10-13 atas perintah Budi, area bekasnya masuk gudang).
 - Lantai 2 berisi perpustakaan, lounge dan coffee bar, ruang makan, shower, ruang game, ruang biliar, ruang olahraga, taman dalam, dan balkon.
 - Pindah lantai lewat **tangga U** atau **lift** di inti bangunan. Tangga darurat luar hanya penanda konsep dan tidak bisa dipakai.
 - Dinding dalam dibuat rendah (1,25 m) agar kamera 3/4 melihat ke dalam ruang. Efek dinding tembus pandang di sekitar avatar sudah dihapus atas perintah Budi (2026-10-12); dinding, jendela, dan daun pintu kini selalu utuh.
@@ -338,7 +338,7 @@ Pesan yang cocok ditahan dengan status `Menunggu persetujuan`. Panel memperlihat
 | Tema | Ikuti sistem, terang, gelap |
 | Kualitas grafis | Otomatis, ringan (tanpa bayangan), tinggi. Otomatis memilih ringan bila browser memakai renderer software |
 | Kurangi gerak | Mematikan animasi sekunder. Bawaannya mengikuti pengaturan sistem |
-| Mode visitor | Mengunci ruang berakses terbatas (ruang server, riser, shaft). Avatar dipindah ke titik aman bila sedang berada di sana |
+| Mode visitor | Mengunci ruang berakses terbatas (ruang server, shaft). Avatar dipindah ke titik aman bila sedang berada di sana |
 | Bahasa | Bahasa Indonesia atau English. Bawaannya mengikuti bahasa browser: browser berbahasa Indonesia mendapat Bahasa Indonesia, selain itu English. Mengganti bahasa memuat ulang halaman |
 
 Pengaturan disimpan di browser.
@@ -370,7 +370,7 @@ Semua artefak dibuat dari satu sumber, `design/world.json`. Bila dataset berubah
 | ICT-001 | Topologi jaringan |
 | ICT-101, ICT-102 | Outlet, access point, dan kamera per lantai |
 | ICT-201 | Elevasi rack |
-| ICT-301 | Pathway dan riser |
+| ICT-301 | Pathway dan backbone vertikal |
 | ICT-401 | Port dan device schedule |
 
 - PDF per sheet dan gabungan ada di `drawings/pdf/`; DXF dan DWG di `cad/out/`.

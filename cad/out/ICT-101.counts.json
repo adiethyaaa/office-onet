@@ -2,22 +2,22 @@
  "file": "ICT-101.dxf",
  "modelspace": {
   "A-WALL": {
-   "HATCH": 70,
-   "LWPOLYLINE": 70
+   "HATCH": 67,
+   "LWPOLYLINE": 67
   },
   "A-AREA": {
-   "LWPOLYLINE": 20
+   "LWPOLYLINE": 19
   },
   "A-DOOR": {
-   "LWPOLYLINE": 35,
+   "LWPOLYLINE": 32,
    "ARC": 23,
-   "HATCH": 2
+   "HATCH": 1
   },
   "A-GLAZ": {
    "LWPOLYLINE": 178
   },
   "A-FURN": {
-   "LWPOLYLINE": 106
+   "LWPOLYLINE": 108
   },
   "A-STRS": {
    "LWPOLYLINE": 31,
@@ -32,7 +32,7 @@
    "TEXT": 22
   },
   "ICT-TRAY": {
-   "LWPOLYLINE": 10,
+   "LWPOLYLINE": 9,
    "TEXT": 3
   },
   "ICT-RISR": {
@@ -46,11 +46,11 @@
    "TEXT": 2
   },
   "ICT-OUTL": {
-   "HATCH": 30,
-   "LWPOLYLINE": 30
+   "HATCH": 31,
+   "LWPOLYLINE": 31
   },
   "ICT-OUTL-IDEN": {
-   "TEXT": 30,
+   "TEXT": 31,
    "LWPOLYLINE": 8
   },
   "ICT-AP": {
@@ -67,9 +67,9 @@
    "TEXT": 3
   },
   "A-ANNO-RMNM": {
-   "TEXT": 20,
-   "LWPOLYLINE": 2,
-   "HATCH": 2
+   "TEXT": 19,
+   "LWPOLYLINE": 1,
+   "HATCH": 1
   }
  },
  "paperspace": {
@@ -113,9 +113,9 @@
     "LWPOLYLINE": 1
    },
    "A-ANNO-SCHD": {
-    "HATCH": 21,
-    "TEXT": 182,
-    "LWPOLYLINE": 44
+    "HATCH": 22,
+    "TEXT": 186,
+    "LWPOLYLINE": 45
    },
    "A-ANNO-VPRT": {
     "VIEWPORT": 1
@@ -123,8 +123,8 @@
   }
  },
  "totals": {
-  "modelspace": 790,
-  "paperspace": 307
+  "modelspace": 780,
+  "paperspace": 313
  },
  "layers": [
   "0",

@@ -146,7 +146,6 @@ ROOM_META = {
     "L1-KEVIN": ("Studio Kevin", "work", "staff", "quiet", "Pamflet, signage, artwork", "business", "vinyl_wood"),
     "L1-BRUNO": ("Area Bruno", "work", "staff", "moderate", "Instalasi jaringan/server/workstation", "business", "vinyl_esd"),
     "L1-SERVER": ("Ruang server", "restricted", "restricted", "moderate", "Rack virtual; akses terbatas, bukan jalur umum", "storage", "vinyl_esd"),
-    "L1-RISER": ("Riser ICT", "shaft", "restricted", "quiet", "Riser kabel vertikal L1-L2", None, "none"),
     "L1-STORE": ("Gudang & utilitas", "service", "staff", "quiet", "Gudang, panel utilitas (konsep)", "storage", "epoxy"),
     "L2-READ": ("Perpustakaan / reading nook", "quiet", "staff", "quiet", "Baca tenang", "library", "carpet"),
     "L2-LOUNGE": ("Lounge & coffee bar", "recreation", "staff", "moderate", "Santai, kopi, ngobrol", "assembly_tables", "vinyl_wood"),
@@ -164,7 +163,6 @@ ROOM_META = {
     "L2-BILLIARD": ("Ruang biliar", "recreation", "staff", "loud", "Meja biliar 9 ft + clearance stik", "assembly_tables", "carpet"),
     "L2-GYM": ("Ruang olahraga", "recreation", "staff", "loud", "Treadmill, sepeda, matras", "exercise", "rubber"),
     "L2-STORE": ("Gudang L2", "service", "staff", "quiet", "Perlengkapan rekreasi", "storage", "epoxy"),
-    "L2-RISER": ("Riser ICT L2", "shaft", "restricted", "quiet", "Lanjutan riser", None, "none"),
     "L2-SERVICE": ("Area servis L2", "service", "staff", "quiet", "Kebersihan, utilitas", "storage", "epoxy"),
 }
 
@@ -201,8 +199,10 @@ ROOMS_GEOM = {
     "L1-NOVA": rect(20, 10.5, 26, 16.5), "L1-LAB": rect(26, 10.5, 32, 16.5),
     "L1-NCORR": rect(0, 16.5, 32, 18.5),
     "L1-CEO": rect(0, 18.5, 7, 24), "L1-HUGO": rect(7, 18.5, 14, 24), "L1-KEVIN": rect(14, 18.5, 20, 24),
-    "L1-BRUNO": rect(20, 18.5, 25, 24), "L1-SERVER": rect(25, 18.5, 29, 24), "L1-RISER": rect(29, 18.5, 30, 20),
-    "L1-STORE": [[29, 20], [30, 20], [30, 18.5], [32, 18.5], [32, 24], [29, 24]],
+    "L1-BRUNO": rect(20, 18.5, 25, 24), "L1-SERVER": rect(25, 18.5, 29, 24),
+    # Riser ICT (29..30 x 18.5..20) dihapus atas perintah Budi 2026-10-13: shaft
+    # sempit itu bisa dimasuki avatar. Area bekasnya digabung ke gudang.
+    "L1-STORE": rect(29, 18.5, 32, 24),
     # Floor 2 (rekreasi)
     "L2-READ": rect(0, 0, 8, 8), "L2-LOUNGE": rect(8, 0, 20, 8), "L2-DINE": rect(20, 0, 26, 8),
     "L2-SHOWER": rect(26, 0, 29.5, 8), "L2-SHAFT-W": rect(29.5, 0, 32, 1), "L2-WC": rect(29.5, 1, 32, 8),
@@ -211,8 +211,8 @@ ROOMS_GEOM = {
     "L2-GAME": rect(20, 10.5, 32, 16.5),
     "L2-NCORR": rect(0, 16.5, 32, 18.5),
     "L2-BALCONY": rect(0, 18.5, 7, 24), "L2-BILLIARD": rect(7, 18.5, 14, 24), "L2-GYM": rect(14, 18.5, 23, 24),
-    "L2-STORE": rect(23, 18.5, 29, 24), "L2-RISER": rect(29, 18.5, 30, 20),
-    "L2-SERVICE": [[29, 20], [30, 20], [30, 18.5], [32, 18.5], [32, 24], [29, 24]],
+    "L2-STORE": rect(23, 18.5, 29, 24),
+    "L2-SERVICE": rect(29, 18.5, 32, 24),  # termasuk bekas Riser ICT L2 (2026-10-13)
 }
 
 ICT_PROFILE = {
@@ -221,16 +221,16 @@ ICT_PROFILE = {
     "L1-NOVA": ["2 port per workstation"], "L1-LAB": ["4 port per bench", "rack lab terbuka (bukan produksi)"],
     "L1-CEO": ["2 port meja CEO"], "L1-HUGO": ["2 port per workstation"], "L1-KEVIN": ["2 port per workstation"],
     "L1-BRUNO": ["2 port workstation"], "L1-SERVER": ["2 rack 42U target", "UPS (rating TBD)", "patch panel"],
-    "L1-RISER": ["riser kabel ke L2"], "L1-CORR": ["AP", "kamera konsep koridor"], "L1-NCORR": ["AP", "kamera konsep pintu server"],
+    "L1-CORR": ["AP", "kamera konsep koridor"], "L1-NCORR": ["AP", "kamera konsep pintu server"],
     "L2-LOUNGE": ["AP"], "L2-DINE": ["AP", "signage display"], "L2-GAME": ["2 port per konsol", "1 port per arcade", "AP"],
     "L2-GYM": ["AP", "layar olahraga"], "L2-BILLIARD": ["layar skor"], "L2-CORR": ["AP", "kamera konsep koridor"],
-    "L2-NCORR": ["AP"], "L2-RISER": ["riser kabel dari L1"],
+    "L2-NCORR": ["AP"],
     "L2-SHOWER": ["tidak ada kamera (privasi)"], "L2-WC": ["tidak ada kamera (privasi)"], "L1-WC": ["tidak ada kamera (privasi)"],
 }
 
 ADJACENCY_RULES = [
     {"id": "ADJ-01", "rule": "near", "a": "L1-LOBBY", "b": "EXT-ENTRANCE", "text": "Resepsi dekat entrance"},
-    {"id": "ADJ-02", "rule": "visitor_path_avoids", "a": "L1-LOBBY", "b": "L1-MEET", "avoid": ["L1-SERVER", "L1-RISER"], "text": "Rapat dicapai visitor tanpa melewati server"},
+    {"id": "ADJ-02", "rule": "visitor_path_avoids", "a": "L1-LOBBY", "b": "L1-MEET", "avoid": ["L1-SERVER"], "text": "Rapat dicapai visitor tanpa melewati server"},
     {"id": "ADJ-03", "rule": "max_path", "a": "L1-BRUNO", "b": "L1-SERVER", "max_m": 6.0, "text": "Bruno dekat rack, akses rack terbatas"},
     {"id": "ADJ-04", "rule": "max_path", "a": "L1-BRUNO", "b": "L1-LAB", "max_m": 12.0, "text": "Bruno dekat lab ICT"},
     {"id": "ADJ-05", "rule": "min_distance", "a": "L1-SERVER", "b_category": "wet", "min_m": 8.0, "text": "Ruang basah jauh dari rack"},
@@ -259,7 +259,7 @@ ASSUMPTIONS = [
     {"id": "AS-ICT-05", "topic": "ict", "text": "Harga dan pengadaan belum ditentukan; tidak ada harga dalam paket ini. Rating UPS dan panas ICT memakai model referensi konsep (AS-ICT-07/08); sizing AC/listrik oleh MEP."},
     {"id": "AS-ICT-06", "topic": "ict", "text": "Clearance rack depan 1,2 m / belakang 0,9 m adalah target konsep; verifikasi ke standar/panduan yang dipilih."},
     {"id": "AS-ICT-07", "topic": "ict", "text": "Model referensi (USW-Pro-48-POE, USW-Pro-Aggregation, UDM-Pro-Max, R760xs PSU 600 W, RS2423+, OL3000ERTXL2U) dipilih untuk menutup gate PoE/UPS/panas konsep dari datasheet vendor bertanggal 2026-10-04. Bukan keputusan pengadaan; revisi hardware dan konfigurasi final wajib dicek ulang."},
-    {"id": "AS-ICT-08", "topic": "ict", "text": "Metode daya: switch dengan PD memakai plafon vendor termasuk PoE, tanpa switch memakai maksimum vendor tanpa PoE; server = rating PSU aktif / efisiensi 0,90 (asumsi); PF beban 0,90 (asumsi); margin 1,25; allowance aksesori 30 W (asumsi). Panas ruang server = input AC − daya PD yang keluar ruang + disipasi UPS vendor; rugi kabel PoE dihitung di ruang server (konservatif). Runtime UPS dan sizing AC belum dievaluasi."},
+    {"id": "AS-ICT-08", "topic": "ict", "text": "Metode daya: switch dengan PD memakai plafon vendor termasuk PoE, tanpa switch memakai maksimum vendor tanpa PoE; server = rating PSU aktif / efisiensi 0,90 (asumsi); PF beban 0,90 (asumsi); margin 1,25; allowance aksesori 30 W (asumsi). Panas ruang server = input AC dikurangi daya PD yang keluar ruang + disipasi UPS vendor; rugi kabel PoE dihitung di ruang server (konservatif). Runtime UPS dan sizing AC belum dievaluasi."},
     {"id": "AS-ICT-09", "topic": "ict", "text": "Target otonomi UPS 10 menit pada beban terhubung (Budi, 2026-10-05). Runtime dibaca dari kurva vendor (baterai baru) dengan interpolasi linier, lalu dikali 0,8 untuk penuaan baterai (asumsi). Baterai internal saja tidak cukup; 1 EBM BPE72V60ART2U ditambahkan sebagai model referensi, bukan keputusan pengadaan."},
     {"id": "AS-NET-01", "topic": "ict", "text": "Domain jaringan office/demo/guest/lab/server adalah ID abstrak; bukan subnet, VLAN atau perangkat produksi."},
     {"id": "AS-PERF-01", "topic": "performa", "text": "Target FPS/transfer/triangle adalah target PRD; angka hanya disebut terukur setelah benchmark tercatat."},
@@ -537,7 +537,6 @@ DOORS = [
     ("D-L1-17", "L1", ["L1-NCORR", "L1-KEVIN"], [17, 18.5], 1.0, "single", "staff", False),
     ("D-L1-18", "L1", ["L1-NCORR", "L1-BRUNO"], [22.5, 18.5], 1.0, "single", "staff", False),
     ("D-L1-19", "L1", ["L1-BRUNO", "L1-SERVER"], [25, 20.25], 1.0, "single", "restricted", False),
-    ("D-L1-20", "L1", ["L1-NCORR", "L1-RISER"], [29.5, 18.5], 0.8, "hatch", "restricted", False),
     ("D-L1-21", "L1", ["L1-NCORR", "L1-STORE"], [31, 18.5], 1.0, "single", "staff", False),
     ("D-L2-01", "L2", ["L2-LOUNGE", "L2-CORR"], [17, 8], 3.0, "opening", "staff", False),
     ("D-L2-02", "L2", ["L2-READ", "L2-CORR"], [4, 8], 1.0, "single", "staff", False),
@@ -557,7 +556,6 @@ DOORS = [
     ("D-L2-14", "L2", ["L2-NCORR", "L2-BILLIARD"], [10.5, 18.5], 1.2, "single", "staff", False),
     ("D-L2-15", "L2", ["L2-NCORR", "L2-GYM"], [18.5, 18.5], 1.6, "double", "staff", False),
     ("D-L2-16", "L2", ["L2-NCORR", "L2-STORE"], [26, 18.5], 1.0, "single", "staff", False),
-    ("D-L2-17", "L2", ["L2-NCORR", "L2-RISER"], [29.5, 18.5], 0.8, "hatch", "restricted", False),
     ("D-L2-18", "L2", ["L2-NCORR", "L2-SERVICE"], [31, 18.5], 1.0, "single", "staff", False),
 ]
 
@@ -892,20 +890,21 @@ def seed_ict(fixtures):
         "nodes": [
             {"id": "PN-L1-RK", "floor": "L1", "pos": [26.7, 21.4], "note": "di atas depan rack"},
             {"id": "PN-L1-SRV-S", "floor": "L1", "pos": [27.0, 18.5], "note": "penetrasi dinding server ke koridor utara"},
-            {"id": "PN-L1-SRV-E", "floor": "L1", "pos": [29.0, 19.25], "note": "penetrasi server ke riser"},
-            {"id": "PN-L1-RISER", "floor": "L1", "pos": [29.5, 19.25], "note": "riser L1"},
-            {"id": "PN-L2-RISER", "floor": "L2", "pos": [29.5, 19.25], "note": "riser L2"},
-            {"id": "PN-L2-RISER-S", "floor": "L2", "pos": [29.5, 18.5]},
+            # Backbone L1-L2 naik lewat sleeve pelat di pojok timur laut ruang
+            # server (riser ICT terpisah dihapus 2026-10-13, perintah Budi).
+            {"id": "PN-L1-SRV-UP", "floor": "L1", "pos": [28.5, 19.25], "note": "sleeve backbone di ruang server"},
+            {"id": "PN-L2-SRV-UP", "floor": "L2", "pos": [28.5, 19.25], "note": "sleeve backbone tiba di gudang L2"},
+            {"id": "PN-L2-SRV-UP-S", "floor": "L2", "pos": [28.5, 18.5]},
         ],
         "edges": [
-            ["PN-L1-RK", "PN-L1-SRV-S"], ["PN-L1-RK", "PN-L1-SRV-E"], ["PN-L1-SRV-E", "PN-L1-RISER"],
-            ["PN-L1-RISER", "PN-L2-RISER"], ["PN-L2-RISER", "PN-L2-RISER-S"],
+            ["PN-L1-RK", "PN-L1-SRV-S"], ["PN-L1-RK", "PN-L1-SRV-UP"],
+            ["PN-L1-SRV-UP", "PN-L2-SRV-UP"], ["PN-L2-SRV-UP", "PN-L2-SRV-UP-S"],
         ],
         "trays": [
             {"id": "TR-L1-N", "floor": "L1", "from": [0.5, 17.5], "to": [31.5, 17.5], "joins": [["PN-L1-SRV-S", [27.0, 17.5]]]},
             {"id": "TR-L1-CORE", "floor": "L1", "from": [17.0, 17.5], "to": [17.0, 9.25], "joins": []},
             {"id": "TR-L1-S", "floor": "L1", "from": [0.5, 9.25], "to": [31.5, 9.25], "joins": []},
-            {"id": "TR-L2-N", "floor": "L2", "from": [0.5, 17.5], "to": [31.5, 17.5], "joins": [["PN-L2-RISER-S", [29.5, 17.5]]]},
+            {"id": "TR-L2-N", "floor": "L2", "from": [0.5, 17.5], "to": [31.5, 17.5], "joins": [["PN-L2-SRV-UP-S", [28.5, 17.5]]]},
             {"id": "TR-L2-CORE", "floor": "L2", "from": [17.0, 17.5], "to": [17.0, 9.25], "joins": []},
             {"id": "TR-L2-S", "floor": "L2", "from": [0.5, 9.25], "to": [31.5, 9.25], "joins": []},
         ],

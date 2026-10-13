@@ -9,7 +9,7 @@ Status v0.2: dataset dunia, room schedule, adjacency, perhitungan kapasitas, por
 ## 0. Perubahan dari v0.1
 
 - Dataset satu sumber `design/world.json` (revisi P03: P02 ditambah arah bukaan pintu, 39 jendela konsep dan aturan ADJ-11) dan schema `design/world.schema.json` dibuat; CAD, Blender, runtime dan ICT wajib membacanya.
-- Program ruang dua lantai dikunci sebagai proposal: 20 ruang di L1, 18 ruang di L2, termasuk sirkulasi, shaft dan riser, total 1536 m2 gross.
+- Program ruang dua lantai dikunci sebagai proposal: 19 ruang di L1, 17 ruang di L2, termasuk sirkulasi dan shaft basah, total 1536 m2 gross (riser ICT dihapus 2026-10-13 atas perintah Budi, area bekasnya digabung ke gudang; lihat PRD v1.1 bagian 0D).
 - Validator `tools/validate_world.py` menjalankan 46 pemeriksaan (schema, overlap, coverage, pintu, arah bukaan, jendela, fixture, clearance, navigasi staff/visitor, adjacency, foreign key ICT). Test negatif membuktikan validator menolak data rusak.
 - Kapasitas dihitung oleh `tools/capacity.py`; temuan baru: target cold start 8 s pada 10 Mbps hanya mengizinkan sekitar 10 MB awal, bukan 25 MB.
 - ICT diturunkan oleh `tools/ict_derive.py`: 46 outlet, 74 port, panjang kabel dari route tray, tiga access switch agar spare tetap di atas 20 persen.
@@ -44,7 +44,7 @@ Pokopia memberi referensi dunia yang dibangun bersama dan suasana santai [7]. St
 
 ## 4. Pengguna, peran, batas wewenang
 
-CEO: mengendalikan avatar Budi, melihat demo dan membuka panel. Visitor: tur publik dan simulasi; ruang server, riser dan shaft terkunci (dibuktikan oleh test navigasi mode visitor). Designer: menyunting layout dan avatar dalam draft lokal; publish ke dataset membutuhkan review. Supervisor: Max memeriksa laporan, commit, PR dan hasil uji. Worker cloud: Claude membuat dokumentasi, model, app dan tes dalam repo ini; tidak merge, deploy, menambah biaya atau menyentuh sistem lain.
+CEO: mengendalikan avatar Budi, melihat demo dan membuka panel. Visitor: tur publik dan simulasi; ruang server dan shaft terkunci (dibuktikan oleh test navigasi mode visitor). Designer: menyunting layout dan avatar dalam draft lokal; publish ke dataset membutuhkan review. Supervisor: Max memeriksa laporan, commit, PR dan hasil uji. Worker cloud: Claude membuat dokumentasi, model, app dan tes dalam repo ini; tidak merge, deploy, menambah biaya atau menyentuh sistem lain.
 
 Persona dalam dataset: Budi (CEO, pemain), Max (supervisor), Hugo (karakter, aset, arsitektur), Nova (spesifikasi ICT), Bruno (instalasi jaringan dan server), Kevin (pamflet dan materi visual), Rex (review dan QA). Semua adalah representasi virtual original dengan flag simulated, bukan likeness manusia dan bukan klaim mereka sudah membuat output.
 
@@ -52,9 +52,9 @@ Persona dalam dataset: Budi (CEO, pemain), Max (supervisor), Hugo (karakter, ase
 
 Proposal (AS-DIM-01): footprint 32 m x 24 m tiap lantai, tinggi antar lantai 4,0 m, plafon 3,0 m, slab 0,30 m, dinding luar 0,30 m dan dalam 0,15 m (AS-DIM-03). Unit sumber meter; DXF memakai milimeter (x1000). Origin (0,0,0) di sudut barat daya lantai jadi L1, X timur, Y utara, Z atas. Runtime Three.js memakai mapping three = (x, z, -y); exporter glTF Blender melakukan konversi yang sama.
 
-Struktur denah kedua lantai sama agar shaft, riser dan inti tangga menumpuk: pita selatan (Y 0 sampai 8), koridor utama (Y 8 sampai 10,5), pita tengah (Y 10,5 sampai 16,5) dengan inti tangga U dan lift di X 14 sampai 20, koridor utara (Y 16,5 sampai 18,5), pita utara (Y 18,5 sampai 24). Sirkulasi 23,4 persen dari gross per lantai.
+Struktur denah kedua lantai sama agar shaft basah dan inti tangga menumpuk: pita selatan (Y 0 sampai 8), koridor utama (Y 8 sampai 10,5), pita tengah (Y 10,5 sampai 16,5) dengan inti tangga U dan lift di X 14 sampai 20, koridor utara (Y 16,5 sampai 18,5), pita utara (Y 18,5 sampai 24). Sirkulasi 23,4 persen dari gross per lantai.
 
-Lantai 1 (kerja dan kunjungan): lobby dan resepsi dengan entrance selatan, galeri portofolio, ruang rapat besar yang dicapai visitor dari lobby tanpa melewati server, pantry kerja, toilet dan shaft basah di sisi tenggara, ruang diskusi, ruang implementasi dan review, area Nova, lab ICT, ruang CEO, studio Hugo, studio Kevin, area Bruno, ruang server yang hanya berpintu dari area Bruno, riser ICT, gudang. Empat pintu keluar konsep: entrance, ujung barat dan timur koridor utama, ujung barat koridor utara.
+Lantai 1 (kerja dan kunjungan): lobby dan resepsi dengan entrance selatan, galeri portofolio, ruang rapat besar yang dicapai visitor dari lobby tanpa melewati server, pantry kerja, toilet dan shaft basah di sisi tenggara, ruang diskusi, ruang implementasi dan review, area Nova, lab ICT, ruang CEO, studio Hugo, studio Kevin, area Bruno, ruang server yang hanya berpintu dari area Bruno, gudang (riser ICT dihapus 2026-10-13; backbone L1-L2 lewat sleeve di ruang server). Empat pintu keluar konsep: entrance, ujung barat dan timur koridor utama, ujung barat koridor utara.
 
 Lantai 2 (rekreasi): reading nook, lounge dengan coffee bar, ruang makan dan pantry, shower dan ruang ganti di atas pantry L1, toilet di atas toilet L1, diskusi santai, taman dalam sebagai penyangga akustik, ruang game, balkon taman, ruang biliar dengan clearance stik, ruang olahraga, gudang dan area servis. Ruang bising (game, biliar, gym) tidak berbagi dinding dengan ruang tenang; validator ADJ-06 membuktikan aturan ini.
 
@@ -102,7 +102,7 @@ Drawing register (target, `design/sheets.json`): A-001 cover/index/catatan (A3);
 
 ## 11. ICT sebagai rancangan virtual
 
-Hasil derivasi P03: 46 outlet, 74 port (desk 2 port, bench lab 4 port, AP dan kamera 1 port), 4 patch panel 24 port (96 port, 74 terpakai), 3 access switch 48 port PoE dengan 4 uplink dicadangkan per switch (spare minimal 43,2 persen per switch), 11 AP placeholder (AS-ICT-01), 5 kamera konsep opsional tanpa kamera di toilet/shower. Panjang kabel = route tray + naik rack 1,2 m + riser 4,0 m untuk L2 + drop ke outlet + slack 3,3 m (AS-ICT-02); total 2126,6 m, terpanjang 50,6 m, semua di bawah target 90 m (AS-ICT-03). PoE worst-case 407 W dari kelas IEEE (AS-ICT-04); budget PoE switch belum divalidasi karena datasheet belum dipilih. Tidak ada harga (AS-ICT-05).
+Hasil derivasi P03: 46 outlet, 74 port (desk 2 port, bench lab 4 port, AP dan kamera 1 port), 4 patch panel 24 port (96 port, 74 terpakai), 3 access switch 48 port PoE dengan 4 uplink dicadangkan per switch (spare minimal 43,2 persen per switch), 11 AP placeholder (AS-ICT-01), 5 kamera konsep opsional tanpa kamera di toilet/shower. Panjang kabel = route tray + naik rack 1,2 m + backbone vertikal 4,0 m untuk L2 + drop ke outlet + slack 3,3 m (AS-ICT-02); total 2102,3 m, terpanjang 50,6 m, semua di bawah target 90 m (AS-ICT-03). PoE worst-case 407 W dari kelas IEEE (AS-ICT-04); budget PoE switch belum divalidasi karena datasheet belum dipilih. Tidak ada harga (AS-ICT-05).
 
 Domain jaringan office/demo/guest/lab/server adalah ID abstrak (AS-NET-01), bukan subnet atau VLAN produksi. Port map, label dua ujung dan BOM ada di `design/derived/ict-portmap.json` dan `.csv`.
 

@@ -2,19 +2,19 @@
  "file": "I-101.dxf",
  "modelspace": {
   "I-FLOR-PATT": {
-   "HATCH": 38
+   "HATCH": 36
   },
   "A-WALL": {
-   "HATCH": 131,
-   "LWPOLYLINE": 131
+   "HATCH": 125,
+   "LWPOLYLINE": 125
   },
   "A-AREA": {
-   "LWPOLYLINE": 38
+   "LWPOLYLINE": 36
   },
   "A-DOOR": {
-   "LWPOLYLINE": 66,
+   "LWPOLYLINE": 60,
    "ARC": 38,
-   "HATCH": 6
+   "HATCH": 4
   },
   "A-GLAZ": {
    "LWPOLYLINE": 364
@@ -24,9 +24,9 @@
    "TEXT": 4
   },
   "A-ANNO-RMNM": {
-   "TEXT": 38,
-   "LWPOLYLINE": 4,
-   "HATCH": 4
+   "TEXT": 36,
+   "LWPOLYLINE": 2,
+   "HATCH": 2
   }
  },
  "paperspace": {
@@ -64,7 +64,7 @@
   }
  },
  "totals": {
-  "modelspace": 924,
+  "modelspace": 894,
   "paperspace": 118
  },
  "layers": [

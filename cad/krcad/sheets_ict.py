@@ -23,6 +23,16 @@ VIRTUAL = "RANCANGAN VIRTUAL, BUKAN TOPOLOGI PRODUKSI"
 U_M = 0.04445
 
 
+def is_vertical_node(n):
+    """Pathway node where the L1-L2 backbone passes the slab (sleeve in the server room).
+
+    The separate ICT riser room was removed on 2026-10-13; the old RISER ids are
+    still accepted so older datasets keep drawing.
+    """
+    nid = n["id"]
+    return ("RISER" in nid or nid.endswith("-UP")) and not nid.endswith("-S")
+
+
 def portmap_check(world, portmap):
     rows_total = round(sum(c["length_m"] for c in portmap["cables"]), 1)
     return {"cables": len(portmap["cables"]), "sum_length_m": rows_total,
@@ -233,13 +243,13 @@ def build_ict_plan(sheet, ctx):
         for node, jp in t.get("joins", []):
             v.line(next(n["pos"] for n in pw_["nodes"] if n["id"] == node), jp, "ICT-TRAY", stroke=TRAY, width=1.2)
     for n in pw_["nodes"]:
-        if n["floor"] == floor and "RISER" in n["id"] and not n["id"].endswith("-S"):
+        if n["floor"] == floor and is_vertical_node(n):
             x, y = n["pos"]
             v.rect(x - 0.3, y - 0.3, x + 0.3, y + 0.3, "ICT-RISR", stroke=TRAY, fill="#f3e6d6", width=0.8,
                    xd=("node", n["id"]))
             placer.boxes.append((x - 0.3, y - 0.3, x + 0.3, y + 0.3))
-            box, _ = placer.place((x, y), "RISER", b, "B", gap=0.35)
-            v.text(((box[0] + box[2]) / 2, box[1] + (box[3] - box[1]) * 0.2), "RISER", "ICT-RISR", size=b, font="B",
+            box, _ = placer.place((x, y), "SLEEVE", b, "B", gap=0.35)
+            v.text(((box[0] + box[2]) / 2, box[1] + (box[3] - box[1]) * 0.2), "SLEEVE", "ICT-RISR", size=b, font="B",
                    color=TRAY, align="c", knock=True)
     for e in pw_["edges"]:
         a = next(n for n in pw_["nodes"] if n["id"] == e[0])
@@ -337,7 +347,7 @@ def build_ict_plan(sheet, ctx):
     y = heading(page, px0, y, "LEGENDA", pw)
     leg = [("outlet", "Outlet data, tag Tnn"), ("ap", "AP placeholder, tag APn"),
            ("cam", "Kamera opsional + arah konsep"), ("tray", "Tray kabel +3,2 m"),
-           ("riser", "Riser ke lantai lain"), ("rack", "Rack 42U (target)")]
+           ("riser", "Sleeve backbone ke lantai lain"), ("rack", "Rack 42U (target)")]
     row_h = b * 1.3 / PT_PER_MM + 1.6
     for i, (k, t) in enumerate(leg):
         cx_ = px0 + (i % 2) * pw / 2
@@ -550,11 +560,11 @@ def build_pathways(sheet, ctx):
     for f in floors:
         v = views[f["id"]]
         for n in ict["pathways"]["nodes"]:
-            if n["floor"] == f["id"] and "RISER" in n["id"] and not n["id"].endswith("-S"):
+            if n["floor"] == f["id"] and is_vertical_node(n):
                 x, y = n["pos"]
                 v.rect(x - 0.45, y - 0.45, x + 0.45, y + 0.45, "ICT-RISR", stroke=TRAY, fill="#f3e6d6", width=0.8,
                        xd=("node", n["id"]))
-                v.text((x, y + 0.8), "RISER", "ICT-RISR", size=5, font="B", color=TRAY, align="c", knock=True)
+                v.text((x, y + 0.8), "SLEEVE", "ICT-RISR", size=5, font="B", color=TRAY, align="c", knock=True)
         for r in ict["racks"]:
             if r["floor"] == f["id"]:
                 fx = next(ff for ff in world["fixtures"] if ff["id"] == r["fixture"])
@@ -590,7 +600,7 @@ def build_pathways(sheet, ctx):
                   f"{ict['pathways']['maxLinkM']:g} m (AS-ICT-03).", 130, size=6.2)
     # Riser schematic.
     rx, ry = fx0 + 150, 70
-    page.text((rx, ry + 40), "SKEMA RISER", "ICT-RISR", size=8, font="B", color=GREEN)
+    page.text((rx, ry + 40), "SKEMA BACKBONE L1-L2", "ICT-RISR", size=8, font="B", color=GREEN)
     n_up = route_counts.get(floors[1]["id"], 0)
     page.rect(rx, ry, rx + 20, ry + 10, "ICT-RISR", stroke=ICT, fill="#cfe0d6", width=0.6)
     page.text((rx + 10, ry + 4), "RK-L1", "ICT-RISR", size=6, font="B", align="c")
@@ -604,7 +614,8 @@ def build_pathways(sheet, ctx):
               color=TRAY)
     yn = fy0 + 46
     for n_ in ["Garis hijau = kabel endpoint L1, coklat = kabel endpoint L2 (bagian di L1 ikut warna lantai tujuan).",
-               "Panjang = route tray + naik rack 1,2 m + riser 4,0 m (L2) + drop + slack 3,3 m (AS-ICT-02)."]:
+               "Panjang = route tray + naik rack 1,2 m + backbone vertikal 4,0 m (L2) + drop + slack 3,3 m (AS-ICT-02).",
+               "Riser ICT terpisah dihapus 2026-10-13 (perintah Budi); backbone naik lewat sleeve di ruang server."]:
         yn = paragraph(page, fx0 + 4, yn, n_, 140, size=6.0, bullet=True)
     scale_bar(page, fx0 + 4, fy0 + 4, den, (0, 2, 5, 10, 20))
     sd.summary = {"route_counts": route_counts, "check": chk}

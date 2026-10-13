@@ -5,41 +5,41 @@
  "floors": {
   "L1": {
    "gross_m2": 768.0,
-   "rooms": 20,
+   "rooms": 19,
    "area_by_category_m2": {
     "work": 283.0,
     "public": 144.0,
     "wet": 45.5,
-    "shaft": 4.0,
+    "shaft": 2.5,
     "circulation": 180.0,
     "quiet": 74.5,
     "restricted": 22.0,
-    "service": 15.0
+    "service": 16.5
    },
    "circulation_ratio": 0.234,
    "seats_from_fixtures": 42,
    "workstations": 14,
    "occupant_load_comparison": 110,
-   "walkable_m2_navgrid": 481.9,
+   "walkable_m2_navgrid": 482.9,
    "exits_on_floor": 4
   },
   "L2": {
    "gross_m2": 768.0,
-   "rooms": 18,
+   "rooms": 17,
    "area_by_category_m2": {
     "quiet": 100.0,
     "recreation": 352.0,
     "wet": 45.5,
-    "shaft": 4.0,
+    "shaft": 2.5,
     "circulation": 180.0,
     "outdoor": 38.5,
-    "service": 48.0
+    "service": 49.5
    },
    "circulation_ratio": 0.234,
    "seats_from_fixtures": 42,
    "workstations": 0,
    "occupant_load_comparison": 302,
-   "walkable_m2_navgrid": 498.2,
+   "walkable_m2_navgrid": 499.2,
    "exits_on_floor": 1
   }
  },
@@ -243,22 +243,11 @@
    "load_factor": "storage"
   },
   {
-   "id": "L1-RISER",
-   "floor": "L1",
-   "name": "Riser ICT",
-   "category": "shaft",
-   "area_m2": 1.5,
-   "seats_from_fixtures": 0,
-   "workstations": 0,
-   "occupant_load_comparison": 0,
-   "load_factor": null
-  },
-  {
    "id": "L1-STORE",
    "floor": "L1",
    "name": "Gudang & utilitas",
    "category": "service",
-   "area_m2": 15.0,
+   "area_m2": 16.5,
    "seats_from_fixtures": 0,
    "workstations": 0,
    "occupant_load_comparison": 1,
@@ -441,22 +430,11 @@
    "load_factor": "storage"
   },
   {
-   "id": "L2-RISER",
-   "floor": "L2",
-   "name": "Riser ICT L2",
-   "category": "shaft",
-   "area_m2": 1.5,
-   "seats_from_fixtures": 0,
-   "workstations": 0,
-   "occupant_load_comparison": 0,
-   "load_factor": null
-  },
-  {
    "id": "L2-SERVICE",
    "floor": "L2",
    "name": "Area servis L2",
    "category": "service",
-   "area_m2": 15.0,
+   "area_m2": 16.5,
    "seats_from_fixtures": 0,
    "workstations": 0,
    "occupant_load_comparison": 1,
@@ -470,7 +448,7 @@
   "world_rooms_non_shaft": 34,
   "world_fixtures": 201,
   "world_activity_slots": 118,
-  "world_walkable_m2": 980.1,
+  "world_walkable_m2": 982.1,
   "note": "Tile tidak dikonversi ke meter; perbandingan hanya untuk kompleksitas eksplorasi (D-02).",
   "rooms_vs_pixel_areas_ratio": 0.72,
   "fixtures_vs_pixel_furniture_ratio": 0.68

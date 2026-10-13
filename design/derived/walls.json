@@ -192,14 +192,6 @@
      "axis": "x",
      "at": 18.5,
      "from": 23.0,
-     "to": 29.1,
-     "thickness": 0.15,
-     "exterior": false
-    },
-    {
-     "axis": "x",
-     "at": 18.5,
-     "from": 29.9,
      "to": 30.5,
      "thickness": 0.15,
      "exterior": false
@@ -209,14 +201,6 @@
      "at": 18.5,
      "from": 31.5,
      "to": 32,
-     "thickness": 0.15,
-     "exterior": false
-    },
-    {
-     "axis": "x",
-     "at": 20,
-     "from": 29,
-     "to": 30,
      "thickness": 0.15,
      "exterior": false
     },
@@ -377,14 +361,6 @@
      "at": 29.5,
      "from": 0,
      "to": 8,
-     "thickness": 0.15,
-     "exterior": false
-    },
-    {
-     "axis": "y",
-     "at": 30,
-     "from": 18.5,
-     "to": 20,
      "thickness": 0.15,
      "exterior": false
     },
@@ -643,16 +619,6 @@
      "from": 19.75,
      "to": 20.75,
      "type": "single",
-     "access": "restricted",
-     "exit": false
-    },
-    {
-     "door": "D-L1-20",
-     "axis": "x",
-     "at": 18.5,
-     "from": 29.1,
-     "to": 29.9,
-     "type": "hatch",
      "access": "restricted",
      "exit": false
     },
@@ -1092,16 +1058,16 @@
      "into": "L1-STORE",
      "restricted": false,
      "hinge": [
-      30.5,
+      31.5,
       18.555
      ],
      "length": 1.0,
-     "closedDeg": 0.0,
+     "closedDeg": 180.0,
      "openDeg": 90.0,
      "openRect": [
-      30.48,
+      31.48,
       18.555,
-      30.52,
+      31.52,
       19.555
      ]
     }
@@ -1281,14 +1247,6 @@
      "axis": "x",
      "at": 18.5,
      "from": 26.5,
-     "to": 29.1,
-     "thickness": 0.15,
-     "exterior": false
-    },
-    {
-     "axis": "x",
-     "at": 18.5,
-     "from": 29.9,
      "to": 30.5,
      "thickness": 0.15,
      "exterior": false
@@ -1298,14 +1256,6 @@
      "at": 18.5,
      "from": 31.5,
      "to": 32,
-     "thickness": 0.15,
-     "exterior": false
-    },
-    {
-     "axis": "x",
-     "at": 20,
-     "from": 29,
-     "to": 30,
      "thickness": 0.15,
      "exterior": false
     },
@@ -1418,14 +1368,6 @@
      "at": 29.5,
      "from": 0,
      "to": 8,
-     "thickness": 0.15,
-     "exterior": false
-    },
-    {
-     "axis": "y",
-     "at": 30,
-     "from": 18.5,
-     "to": 20,
      "thickness": 0.15,
      "exterior": false
     },
@@ -1625,16 +1567,6 @@
      "to": 26.5,
      "type": "single",
      "access": "staff",
-     "exit": false
-    },
-    {
-     "door": "D-L2-17",
-     "axis": "x",
-     "at": 18.5,
-     "from": 29.1,
-     "to": 29.9,
-     "type": "hatch",
-     "access": "restricted",
      "exit": false
     },
     {
@@ -1921,16 +1853,16 @@
      "into": "L2-SERVICE",
      "restricted": false,
      "hinge": [
-      30.5,
+      31.5,
       18.555
      ],
      "length": 1.0,
-     "closedDeg": 0.0,
+     "closedDeg": 180.0,
      "openDeg": 90.0,
      "openRect": [
-      30.48,
+      31.48,
       18.555,
-      30.52,
+      31.52,
       19.555
      ]
     }

@@ -15,9 +15,9 @@
     "TEXT": 1
    },
    "ICT-TOPO": {
-    "TEXT": 74,
+    "TEXT": 77,
     "HATCH": 13,
-    "LWPOLYLINE": 23
+    "LWPOLYLINE": 26
    },
    "A-ANNO-NOTE": {
     "TEXT": 14,
@@ -32,7 +32,7 @@
  },
  "totals": {
   "modelspace": 0,
-  "paperspace": 167
+  "paperspace": 173
  },
  "layers": [
   "0",

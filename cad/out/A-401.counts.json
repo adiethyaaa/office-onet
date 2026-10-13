@@ -36,7 +36,7 @@
    "LWPOLYLINE": 3
   },
   "A-AREA": {
-   "LWPOLYLINE": 20
+   "LWPOLYLINE": 19
   },
   "A-STRS": {
    "LWPOLYLINE": 1
@@ -70,7 +70,7 @@
   }
  },
  "totals": {
-  "modelspace": 176,
+  "modelspace": 175,
   "paperspace": 24
  },
  "layers": [

@@ -6,8 +6,8 @@ Sumber: `design/world.json` revisi P03; script `tools/capacity.py`. Status: asum
 
 | Lantai | Gross m2 | Ruang | Sirkulasi | Kursi fixture | Workstation | Beban hunian pembanding | Walkable navgrid m2 | Exit |
 |---|---|---|---|---|---|---|---|---|
-| L1 | 768.0 | 20 | 23.4% | 42 | 14 | 110 | 481.9 | 4 |
-| L2 | 768.0 | 18 | 23.4% | 42 | 0 | 302 | 498.2 | 1 |
+| L1 | 768.0 | 19 | 23.4% | 42 | 14 | 110 | 482.9 | 4 |
+| L2 | 768.0 | 17 | 23.4% | 42 | 0 | 302 | 499.2 | 1 |
 
 Total gross: 1536.0 m2 (proposal AS-DIM-01).
 
@@ -35,8 +35,7 @@ Beban hunian pembanding memakai faktor IBC 2021 Table 1004.5 (AS-OCC-01); bukan 
 | L1-KEVIN | Studio Kevin | work | 33.0 | 2 | 2 | 3 |
 | L1-BRUNO | Area Bruno | work | 27.5 | 1 | 1 | 2 |
 | L1-SERVER | Ruang server | restricted | 22.0 | 0 | 0 | 1 |
-| L1-RISER | Riser ICT | shaft | 1.5 | 0 | 0 | 0 |
-| L1-STORE | Gudang & utilitas | service | 15.0 | 0 | 0 | 1 |
+| L1-STORE | Gudang & utilitas | service | 16.5 | 0 | 0 | 1 |
 | L2-READ | Perpustakaan / reading nook | quiet | 64.0 | 4 | 0 | 14 |
 | L2-LOUNGE | Lounge & coffee bar | recreation | 96.0 | 9 | 0 | 70 |
 | L2-DINE | Ruang makan & pantry | recreation | 48.0 | 8 | 0 | 35 |
@@ -53,13 +52,12 @@ Beban hunian pembanding memakai faktor IBC 2021 Table 1004.5 (AS-OCC-01); bukan 
 | L2-BILLIARD | Ruang biliar | recreation | 38.5 | 0 | 0 | 28 |
 | L2-GYM | Ruang olahraga | recreation | 49.5 | 3 | 0 | 11 |
 | L2-STORE | Gudang L2 | service | 33.0 | 0 | 0 | 2 |
-| L2-RISER | Riser ICT L2 | shaft | 1.5 | 0 | 0 | 0 |
-| L2-SERVICE | Area servis L2 | service | 15.0 | 0 | 0 | 1 |
+| L2-SERVICE | Area servis L2 | service | 16.5 | 0 | 0 | 1 |
 
 ## Kompleksitas eksplorasi vs baseline pixel
 
 - Baseline: 3388 sel tile, 47 area, 297 furniture.
-- Dunia ini: 34 ruang (tanpa shaft), 201 fixture, 118 slot aktivitas, walkable 980.1 m2.
+- Dunia ini: 34 ruang (tanpa shaft), 201 fixture, 118 slot aktivitas, walkable 982.1 m2.
 - Rasio ruang/area 0.72, fixture/furniture 0.68. Tile tidak dikonversi ke meter; perbandingan hanya untuk kompleksitas eksplorasi (D-02).
 
 ## Egress snapshot private (perencanaan, M4 disabled)

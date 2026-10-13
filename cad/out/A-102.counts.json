@@ -2,16 +2,16 @@
  "file": "A-102.dxf",
  "modelspace": {
   "A-WALL": {
-   "LWPOLYLINE": 61,
-   "HATCH": 61
+   "LWPOLYLINE": 58,
+   "HATCH": 58
   },
   "A-DOOR": {
-   "LINE": 27,
+   "LINE": 25,
    "ARC": 15,
-   "LWPOLYLINE": 4
+   "LWPOLYLINE": 3
   },
   "A-DOOR-IDEN": {
-   "TEXT": 20
+   "TEXT": 19
   },
   "A-GLAZ": {
    "LINE": 167,
@@ -22,11 +22,11 @@
    "TEXT": 19
   },
   "A-AREA": {
-   "LWPOLYLINE": 18
+   "LWPOLYLINE": 17
   },
   "A-ANNO-RMNM": {
-   "MTEXT": 18,
-   "LINE": 2
+   "MTEXT": 17,
+   "LINE": 1
   },
   "A-FURN": {
    "LWPOLYLINE": 89
@@ -77,7 +77,7 @@
   }
  },
  "totals": {
-  "modelspace": 748,
+  "modelspace": 735,
   "paperspace": 23
  },
  "layers": [
@@ -106,9 +106,9 @@
  "sheet": "A-102",
  "world_revision": "P03",
  "expected": {
-  "walls": 61,
-  "doors": 20,
-  "rooms": 18,
+  "walls": 58,
+  "doors": 19,
+  "rooms": 17,
   "windows": 19,
   "fixtures": 91,
   "dimension_segments": 27
