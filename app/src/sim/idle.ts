@@ -47,7 +47,15 @@ export interface NpcState {
   holdUntil: number;
   resumeTo: Vec2 | null;
   stats: { activities: Record<string, number>; recoveries: number; cancelled: number; distance: number };
+  /** Reprimanded (PRD v2.0 REQ-TEGUR): hurrying to the desk until this sim time. */
+  scoldedUntil?: number;
+  /** No new reprimand before this sim time. */
+  scoldCooldown?: number;
 }
+
+export const SCOLD_RUSH_SECONDS = 20;
+export const SCOLD_COOLDOWN_SECONDS = 10;
+export type ScoldResult = 'ok' | 'working' | 'cooldown' | 'missing';
 
 export interface Reservation { npc: string; expires: number }
 
@@ -347,6 +355,34 @@ export class IdleSim {
     return actor?.homeSeat ? this.slots.find((s) => s.activity === 'desk' && s.fixture === actor.homeSeat) : undefined;
   }
 
+  /**
+   * Visual reprimand only: the persona drops what it is doing and hurries to
+   * its desk (double walking speed) for SCOLD_RUSH_SECONDS. Refused while the
+   * linked agent is really working, so real status is never disturbed.
+   */
+  scold(id: string): ScoldResult {
+    const npc = this.npcs.find((n) => n.id === id);
+    if (!npc) return 'missing';
+    if (npc.workStatus === 'working' || npc.workStatus === 'waiting') return 'working';
+    if ((npc.scoldCooldown ?? 0) > this.time) return 'cooldown';
+    npc.scoldCooldown = this.time + SCOLD_COOLDOWN_SECONDS;
+    npc.scoldedUntil = this.time + SCOLD_RUSH_SECONDS;
+    this.log.push({ t: this.time, npc: id, event: 'scold', detail: 'teguran CEO (visual)' });
+    this.release(npc, 'scolded');
+    npc.group = null;
+    npc.phase = 'choose';
+    const desk = this.deskSlot(npc);
+    if (desk && this.assign(npc, desk)) {
+      npc.until = Math.max(npc.until, npc.scoldedUntil);
+    }
+    return 'ok';
+  }
+
+  /** Walking speed now: hurried while reprimanded. */
+  private pace(npc: NpcState): number {
+    return (npc.scoldedUntil ?? 0) > this.time ? npc.speed * 2 : npc.speed;
+  }
+
   /** Player started talking to this NPC: highest priority, pause in place. */
   pauseForPlayer(id: string): NpcState | null {
     const npc = this.npcs.find((n) => n.id === id);
@@ -427,6 +463,7 @@ export class IdleSim {
           if (r) r.expires = npc.until + 1;
           return;
         }
+        if ((npc.scoldedUntil ?? 0) > this.time && npc.activity === 'desk') return;
         if (this.time >= npc.until) {
           this.release(npc, 'done');
           npc.cooldown[npc.activity] = this.time + (COOLDOWN_SECONDS[npc.activity] ?? 30);
@@ -492,7 +529,7 @@ export class IdleSim {
     const dx = target[0] - npc.pos[0];
     const dy = target[1] - npc.pos[1];
     const d = Math.hypot(dx, dy);
-    const stepLen = npc.speed * dt;
+    const stepLen = this.pace(npc) * dt;
     const next: Vec2 = d <= stepLen ? [target[0], target[1]] : [npc.pos[0] + (dx / d) * stepLen, npc.pos[1] + (dy / d) * stepLen];
     const blocker = this.blockerFor(npc, next);
     if (blocker) {

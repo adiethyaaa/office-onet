@@ -12,8 +12,8 @@
  "totals": {
   "characters": {
    "files": 9,
-   "rawBytes": 8554840,
-   "shippedBytes": 4541776
+   "rawBytes": 9915012,
+   "shippedBytes": 5056476
   },
   "furniture": {
    "files": 54,
@@ -31,11 +31,11 @@
   "maxUvError": 6.675822079804661e-06,
   "maxUvErrorTexels": 0.00021362630655374915,
   "maxWeightError": 0.0019607962346544494,
-  "channelsRaw": 702,
-  "channelsShipped": 184,
+  "channelsRaw": 1296,
+  "channelsShipped": 365,
   "maxRotationErrorDeg": 0.0030829292307445397,
-  "maxTranslationErrorM": 2.1606683731079102e-07,
-  "maxScaleError": 5.125999450683594e-06,
+  "maxTranslationErrorM": 2.8312206268310547e-07,
+  "maxScaleError": 5.245208740234375e-06,
   "maxPosedErrorM": 0.00028227667839697546
  },
  "files": [
@@ -43,10 +43,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-architect.glb",
    "shipped": "app/public/assets/characters/ch-architect.glb",
-   "rawBytes": 887228,
-   "shippedBytes": 468836,
-   "rawSha256": "3a659f5c5acfe2e1cbea07776a55438890b6552ceb331c5208c77628f9528e9e",
-   "shippedSha256": "ea4dfd0fd12f2d656748b183693b2faa483b05aa6e3414b1465b7696c45e8f9a",
+   "rawBytes": 1038912,
+   "shippedBytes": 526476,
+   "rawSha256": "727cb002f16772166869446b485dcecca807392f47ea5b760ef134b1b7dd0a6a",
+   "shippedSha256": "fd969b6ad3166ba0a43a233c890c8a69eec818e8d383ce51e4ac3c516eae98d5",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.3537697282073324e-05,
@@ -80,11 +80,11 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.0030755349066232886,
     "maxTranslationErrorM": 1.7881393432617188e-07,
-    "maxScaleError": 3.4570693969726562e-06,
+    "maxScaleError": 3.516674041748047e-06,
     "maxPosedErrorM": 0.00025328128518897763
    },
    "checks": [
@@ -311,20 +311,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -336,6 +360,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -353,6 +390,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -362,6 +412,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -392,6 +455,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -401,6 +477,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -431,6 +520,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -440,6 +555,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -457,6 +585,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -466,6 +607,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -508,7 +662,7 @@
     {
      "check": "joint scales within 0.0001",
      "ok": true,
-     "detail": 3.4570693969726562e-06
+     "detail": 3.516674041748047e-06
     },
     {
      "check": "skinned vertices in every key pose within 1 mm",
@@ -521,10 +675,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-assistant.glb",
    "shipped": "app/public/assets/characters/ch-assistant.glb",
-   "rawBytes": 939064,
-   "shippedBytes": 498604,
-   "rawSha256": "cf66f2141469191d6bbb1cef10626c62d51ac0baa7077545bc59f87f1255a006",
-   "shippedSha256": "56499ec614a04416d4a9ad14c5756e40502946dd33282fb1ffceddfa1d7040de",
+   "rawBytes": 1089084,
+   "shippedBytes": 555736,
+   "rawSha256": "b8e634cdb79fddbdc35219888171a3726a61df88e86f2738fc4e18404b1e79c1",
+   "shippedSha256": "1e548416be15102b8ff065d4b98c68ac310015edf049b5ad0659899a3bd788eb",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.2839576124079599e-05,
@@ -558,10 +712,10 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.0030755462830340365,
-    "maxTranslationErrorM": 2.086162567138672e-07,
+    "maxTranslationErrorM": 2.682209014892578e-07,
     "maxScaleError": 3.039836883544922e-06,
     "maxPosedErrorM": 0.0002466105576151012
    },
@@ -827,20 +981,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -852,6 +1030,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -869,6 +1060,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -878,6 +1082,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -908,6 +1125,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -917,6 +1147,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -947,6 +1190,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -956,6 +1225,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -973,6 +1255,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -982,6 +1277,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1019,7 +1327,7 @@
     {
      "check": "joint translations within 1 mm",
      "ok": true,
-     "detail": 2.086162567138672e-07
+     "detail": 2.682209014892578e-07
     },
     {
      "check": "joint scales within 0.0001",
@@ -1037,10 +1345,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-ceo.glb",
    "shipped": "app/public/assets/characters/ch-ceo.glb",
-   "rawBytes": 1157336,
-   "shippedBytes": 620612,
-   "rawSha256": "bf640008d1efba7c21f1582bd961afc9b39d597c4a5c3297ebf56f8c7eae06e7",
-   "shippedSha256": "1512c491365ed1a7badfca6c642091d7db64291524fc8de17c0faa598ba77b92",
+   "rawBytes": 1309884,
+   "shippedBytes": 677744,
+   "rawSha256": "31d6a310e915b46c66c993af20ab131d3ae79239e122cd59920e1a6e3b59cff7",
+   "shippedSha256": "8dfba9997e209e60e79267dd7a3c061b34df5cabeb14322cef4c0a95350dd1e5",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.363539548537851e-05,
@@ -1074,10 +1382,10 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.003076592732860623,
-    "maxTranslationErrorM": 2.1606683731079102e-07,
+    "maxTranslationErrorM": 2.8312206268310547e-07,
     "maxScaleError": 4.410743713378906e-06,
     "maxPosedErrorM": 0.0002610260060595948
    },
@@ -1381,20 +1689,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -1406,6 +1738,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1423,6 +1768,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -1432,6 +1790,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1462,6 +1833,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -1471,6 +1855,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1501,6 +1898,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -1510,6 +1933,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1527,6 +1963,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -1536,6 +1985,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1573,7 +2035,7 @@
     {
      "check": "joint translations within 1 mm",
      "ok": true,
-     "detail": 2.1606683731079102e-07
+     "detail": 2.8312206268310547e-07
     },
     {
      "check": "joint scales within 0.0001",
@@ -1591,10 +2053,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-designer.glb",
    "shipped": "app/public/assets/characters/ch-designer.glb",
-   "rawBytes": 928276,
-   "shippedBytes": 492268,
-   "rawSha256": "08300d3e50b4b36340d08951836a14ccc9e3eaf83b93da6289a43866e21326ee",
-   "shippedSha256": "d65e2d0407b32fd169519b71a2e6af1cd182b565aceae348c9e9e6f86a85e9eb",
+   "rawBytes": 1078884,
+   "shippedBytes": 549400,
+   "rawSha256": "bf6df69ccb55f2d00e16dd40ab8923ee64caa01517401e4cc16f9074762ad075",
+   "shippedSha256": "359acb26713dc2bbc2a13b6e67a7829d0c71e0c072be31f2bd8a69c5b5ddce81",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.3297030527326115e-05,
@@ -1628,11 +2090,11 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.0030674617387244267,
     "maxTranslationErrorM": 2.086162567138672e-07,
-    "maxScaleError": 3.6954879760742188e-06,
+    "maxScaleError": 3.7550926208496094e-06,
     "maxPosedErrorM": 0.000250673525940881
    },
    "checks": [
@@ -1897,20 +2359,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -1922,6 +2408,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1939,6 +2438,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -1948,6 +2460,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -1978,6 +2503,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -1987,6 +2525,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2017,6 +2568,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -2026,6 +2603,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2043,6 +2633,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -2052,6 +2655,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2094,7 +2710,7 @@
     {
      "check": "joint scales within 0.0001",
      "ok": true,
-     "detail": 3.6954879760742188e-06
+     "detail": 3.7550926208496094e-06
     },
     {
      "check": "skinned vertices in every key pose within 1 mm",
@@ -2107,10 +2723,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-ictspec.glb",
    "shipped": "app/public/assets/characters/ch-ictspec.glb",
-   "rawBytes": 921020,
-   "shippedBytes": 488336,
-   "rawSha256": "090868c909704e9cfc38d5b1586661f8020de2a94fba79612f23deebb0d6dca3",
-   "shippedSha256": "3acdbdeb71981288da9d9dc7cccff9a72ca47e323181c5bd10a3837e5559f59d",
+   "rawBytes": 1072592,
+   "shippedBytes": 545468,
+   "rawSha256": "04d203793fc7fc79e285adc94ba3e176599412378706ad1b5785b861d50beb8e",
+   "shippedSha256": "77317f6dcc58f87fe85bd68014eb25f8f0bc20d539e5999452bb04546ec2cfc3",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.2459429232836161e-05,
@@ -2144,8 +2760,8 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.0030825352956435005,
     "maxTranslationErrorM": 1.7881393432617188e-07,
     "maxScaleError": 3.039836883544922e-06,
@@ -2413,20 +3029,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -2438,6 +3078,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2455,6 +3108,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -2464,6 +3130,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2494,6 +3173,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -2503,6 +3195,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2533,6 +3238,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -2542,6 +3273,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2559,6 +3303,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -2568,6 +3325,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2623,10 +3393,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-netinstall.glb",
    "shipped": "app/public/assets/characters/ch-netinstall.glb",
-   "rawBytes": 907540,
-   "shippedBytes": 479504,
-   "rawSha256": "0dea42946035e16096de753d2a5d857b7150fc617095360c7b06619958f7d2e9",
-   "shippedSha256": "a86c247846ec399ff6b9b3239ad328b9ff6f58e93101da2bf531c18225ae75c6",
+   "rawBytes": 1058408,
+   "shippedBytes": 536636,
+   "rawSha256": "0757c7d6b6a371d9ce9a0e16ad225c76012682102c4f11f7eb0ec791f070c936",
+   "shippedSha256": "1a2b6875f3bc51bafcd2dd66f85c67c6dc4415299bf8f66bd581dbd3dc052a15",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.3002230232220247e-05,
@@ -2660,11 +3430,11 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.0030807792365854267,
-    "maxTranslationErrorM": 1.7881393432617188e-07,
-    "maxScaleError": 5.125999450683594e-06,
+    "maxTranslationErrorM": 2.086162567138672e-07,
+    "maxScaleError": 5.245208740234375e-06,
     "maxPosedErrorM": 0.00028227667839697546
    },
    "checks": [
@@ -2891,20 +3661,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -2916,6 +3710,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2933,6 +3740,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -2942,6 +3762,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -2972,6 +3805,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -2981,6 +3827,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3011,6 +3870,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -3020,6 +3905,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3037,6 +3935,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -3046,6 +3957,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3083,12 +4007,12 @@
     {
      "check": "joint translations within 1 mm",
      "ok": true,
-     "detail": 1.7881393432617188e-07
+     "detail": 2.086162567138672e-07
     },
     {
      "check": "joint scales within 0.0001",
      "ok": true,
-     "detail": 5.125999450683594e-06
+     "detail": 5.245208740234375e-06
     },
     {
      "check": "skinned vertices in every key pose within 1 mm",
@@ -3101,10 +4025,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-qa.glb",
    "shipped": "app/public/assets/characters/ch-qa.glb",
-   "rawBytes": 943744,
-   "shippedBytes": 501396,
-   "rawSha256": "d9d6c12f9b1cd01d72dd9b24fa8b94c410b17f9f8eab392997fc131e449cbd3f",
-   "shippedSha256": "e2b97330a7880cfa8b45c584e87c5d58c3b55e581ba18fa23b7d958aed573a8b",
+   "rawBytes": 1094332,
+   "shippedBytes": 558528,
+   "rawSha256": "54208002f26e9d889b142c220654e95417e98002e87d35e3d420395e88c08a4a",
+   "shippedSha256": "92bd28e32ec6a3f7e41f2bb9990322c7e478a29682eb51b6ce2dfc0075bb743b",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.2938732895984018e-05,
@@ -3138,11 +4062,11 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.0030829292307445397,
-    "maxTranslationErrorM": 1.4901161193847656e-07,
-    "maxScaleError": 3.933906555175781e-06,
+    "maxTranslationErrorM": 1.9371509552001953e-07,
+    "maxScaleError": 4.172325134277344e-06,
     "maxPosedErrorM": 0.00025463968713368423
    },
    "checks": [
@@ -3407,20 +4331,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -3432,6 +4380,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3449,6 +4410,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -3458,6 +4432,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3488,6 +4475,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -3497,6 +4497,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3527,6 +4540,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -3536,6 +4575,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3553,6 +4605,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -3562,6 +4627,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3599,12 +4677,12 @@
     {
      "check": "joint translations within 1 mm",
      "ok": true,
-     "detail": 1.4901161193847656e-07
+     "detail": 1.9371509552001953e-07
     },
     {
      "check": "joint scales within 0.0001",
      "ok": true,
-     "detail": 3.933906555175781e-06
+     "detail": 4.172325134277344e-06
     },
     {
      "check": "skinned vertices in every key pose within 1 mm",
@@ -3617,10 +4695,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-supervisor.glb",
    "shipped": "app/public/assets/characters/ch-supervisor.glb",
-   "rawBytes": 939408,
-   "shippedBytes": 498320,
-   "rawSha256": "fa8e204cfff35a8e43563184d4cd8b4e804f00efebced0e3aff698a7890f2a6f",
-   "shippedSha256": "6639a4219686715f07438c1116eb6636ee3a823854986f1dd74003edfe4734c0",
+   "rawBytes": 1090828,
+   "shippedBytes": 555452,
+   "rawSha256": "28853652c6b00e2ba3ab2b0c07447ed63622afe4ecdaf1c531f7eb6bb1c6a59d",
+   "shippedSha256": "a534e1e46426b5cd6d2c4ca58a2da950f0f8587bcf6b2d1cbd9fb620f25b6e96",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.3198877848230595e-05,
@@ -3654,11 +4732,11 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.003080107676864468,
-    "maxTranslationErrorM": 1.7881393432617188e-07,
-    "maxScaleError": 3.814697265625e-06,
+    "maxTranslationErrorM": 2.384185791015625e-07,
+    "maxScaleError": 3.933906555175781e-06,
     "maxPosedErrorM": 0.00025467000718371047
    },
    "checks": [
@@ -3885,20 +4963,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -3910,6 +5012,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3927,6 +5042,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -3936,6 +5064,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -3966,6 +5107,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -3975,6 +5129,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4005,6 +5172,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -4014,6 +5207,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4031,6 +5237,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -4040,6 +5259,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4077,12 +5309,12 @@
     {
      "check": "joint translations within 1 mm",
      "ok": true,
-     "detail": 1.7881393432617188e-07
+     "detail": 2.384185791015625e-07
     },
     {
      "check": "joint scales within 0.0001",
      "ok": true,
-     "detail": 3.814697265625e-06
+     "detail": 3.933906555175781e-06
     },
     {
      "check": "skinned vertices in every key pose within 1 mm",
@@ -4095,10 +5327,10 @@
    "kind": "characters",
    "raw": "blender/out/raw-glb/characters/ch-visual.glb",
    "shipped": "app/public/assets/characters/ch-visual.glb",
-   "rawBytes": 931224,
-   "shippedBytes": 493900,
-   "rawSha256": "937092c5e924fc29a21b7b3db133aef1730f979721aaf0a3c64c15a6cd4ff29d",
-   "shippedSha256": "271cfd175e64aa9710f87e76f82f0c8e9e1d52f9bbd68275dc60496510da309b",
+   "rawBytes": 1082088,
+   "shippedBytes": 551036,
+   "rawSha256": "e87c0389e78c93044a0b1d6baaab6cae49415053e4536a02fd32b57997baa670",
+   "shippedSha256": "17ccc5c24c329bfdf00ba8705d1c3dd4a1713e876cb3bbe40fd27fa05014793c",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 1.2988137163688629e-05,
@@ -4132,11 +5364,11 @@
     "maxUvError": 6.675822079804661e-06,
     "maxUvErrorTexels": 0.00021362630655374915,
     "maxWeightError": 0.0019607962346544494,
-    "channelsRaw": 702,
-    "channelsShipped": 184,
+    "channelsRaw": 1296,
+    "channelsShipped": 365,
     "maxRotationErrorDeg": 0.003076204621127833,
     "maxTranslationErrorM": 1.7881393432617188e-07,
-    "maxScaleError": 4.291534423828125e-06,
+    "maxScaleError": 4.410743713378906e-06,
     "maxPosedErrorM": 0.0002427111378626723
    },
    "checks": [
@@ -4401,20 +5633,44 @@
      "check": "clip names identical",
      "ok": true,
      "detail": [
+      "bike",
       "billiards",
+      "cable",
       "coffee",
+      "draw",
       "exercise",
+      "flee",
       "game",
       "idle",
+      "lift",
       "read",
+      "rub_head",
       "run",
       "sit",
+      "start",
+      "stop",
       "stretch",
+      "surprised",
       "talk",
+      "turn",
       "type",
+      "type_fast",
       "walk",
       "wave"
      ]
+    },
+    {
+     "check": "clip bike: duration identical",
+     "ok": true,
+     "detail": [
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "check": "clip bike: no channel added",
+     "ok": true,
+     "detail": []
     },
     {
      "check": "clip billiards: duration identical",
@@ -4426,6 +5682,19 @@
     },
     {
      "check": "clip billiards: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip cable: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip cable: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4443,6 +5712,19 @@
      "detail": []
     },
     {
+     "check": "clip draw: duration identical",
+     "ok": true,
+     "detail": [
+      2.0,
+      2.0
+     ]
+    },
+    {
+     "check": "clip draw: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip exercise: duration identical",
      "ok": true,
      "detail": [
@@ -4452,6 +5734,19 @@
     },
     {
      "check": "clip exercise: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip flee: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip flee: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4482,6 +5777,19 @@
      "detail": []
     },
     {
+     "check": "clip lift: duration identical",
+     "ok": true,
+     "detail": [
+      1.600000023841858,
+      1.600000023841858
+     ]
+    },
+    {
+     "check": "clip lift: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip read: duration identical",
      "ok": true,
      "detail": [
@@ -4491,6 +5799,19 @@
     },
     {
      "check": "clip read: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip rub_head: duration identical",
+     "ok": true,
+     "detail": [
+      1.2000000476837158,
+      1.2000000476837158
+     ]
+    },
+    {
+     "check": "clip rub_head: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4521,6 +5842,32 @@
      "detail": []
     },
     {
+     "check": "clip start: duration identical",
+     "ok": true,
+     "detail": [
+      0.2666666805744171,
+      0.2666666805744171
+     ]
+    },
+    {
+     "check": "clip start: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip stop: duration identical",
+     "ok": true,
+     "detail": [
+      0.30000001192092896,
+      0.30000001192092896
+     ]
+    },
+    {
+     "check": "clip stop: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip stretch: duration identical",
      "ok": true,
      "detail": [
@@ -4530,6 +5877,19 @@
     },
     {
      "check": "clip stretch: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip surprised: duration identical",
+     "ok": true,
+     "detail": [
+      0.6000000238418579,
+      0.6000000238418579
+     ]
+    },
+    {
+     "check": "clip surprised: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4547,6 +5907,19 @@
      "detail": []
     },
     {
+     "check": "clip turn: duration identical",
+     "ok": true,
+     "detail": [
+      0.3333333432674408,
+      0.3333333432674408
+     ]
+    },
+    {
+     "check": "clip turn: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
      "check": "clip type: duration identical",
      "ok": true,
      "detail": [
@@ -4556,6 +5929,19 @@
     },
     {
      "check": "clip type: no channel added",
+     "ok": true,
+     "detail": []
+    },
+    {
+     "check": "clip type_fast: duration identical",
+     "ok": true,
+     "detail": [
+      0.5,
+      0.5
+     ]
+    },
+    {
+     "check": "clip type_fast: no channel added",
      "ok": true,
      "detail": []
     },
@@ -4598,7 +5984,7 @@
     {
      "check": "joint scales within 0.0001",
      "ok": true,
-     "detail": 4.291534423828125e-06
+     "detail": 4.410743713378906e-06
     },
     {
      "check": "skinned vertices in every key pose within 1 mm",

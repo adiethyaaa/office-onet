@@ -40,13 +40,18 @@ export class DoorController {
     return leaf.closedDeg + d * this.openness(leaf.id);
   }
 
+  /** Leaves that started opening in the last update (sound cues). */
+  justOpened: { floor: FloorId; centre: Vec2 }[] = [];
+
   update(dt: number, agents: Agent[], visitor: boolean, reducedMotion: boolean): void {
+    this.justOpened = [];
     const step = reducedMotion ? 1 : dt / SWING_SECONDS;
     for (const f of ['L1', 'L2'] as const) {
       for (const { leaf, centre } of this.byFloor[f]) {
         const locked = visitor && leaf.restricted;
         const near = !locked && agents.some((a) => a.floor === f && Math.hypot(a.pos[0] - centre[0], a.pos[1] - centre[1]) < OPEN_RADIUS);
         const cur = this.state.get(leaf.id)!;
+        if (near && cur === 0) this.justOpened.push({ floor: f, centre });
         this.state.set(leaf.id, near ? Math.min(1, cur + step) : Math.max(0, cur - step));
       }
     }

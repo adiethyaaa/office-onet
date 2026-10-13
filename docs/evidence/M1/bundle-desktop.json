@@ -1,17 +1,42 @@
 {
- "totalTransferBytes": 6388179,
+ "totalTransferBytes": 6924258,
  "js": [
   {
-   "file": "index-BKQLmNnh.js",
-   "decoded": 243911,
-   "transfer": 63760
+   "file": "index-szmx3hCI.js",
+   "decoded": 140514,
+   "transfer": 45942
   },
   {
-   "file": "three-CVTpx1NJ.js",
-   "decoded": 666992,
-   "transfer": 167401
+   "file": "prefs-Chz0G8GS.js",
+   "decoded": 410,
+   "transfer": 710
+  },
+  {
+   "file": "audio-jJ77bF65.js",
+   "decoded": 706,
+   "transfer": 1006
+  },
+  {
+   "file": "settings-BxPkrPIt.js",
+   "decoded": 3846,
+   "transfer": 2036
+  },
+  {
+   "file": "characters-CGi5qFAE.js",
+   "decoded": 116263,
+   "transfer": 23053
+  },
+  {
+   "file": "three-BfgDvID2.js",
+   "decoded": 667293,
+   "transfer": 167450
+  },
+  {
+   "file": "map-CB5sW5v1.js",
+   "decoded": 13421,
+   "transfer": 5344
   }
  ],
- "glbBytes": 5941176,
- "measuredAt": "2026-10-10T14:29:26.229Z"
+ "glbBytes": 6455876,
+ "measuredAt": "2026-10-13T07:35:11.412Z"
 }

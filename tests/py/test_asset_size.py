@@ -7,7 +7,7 @@ GLBs are not loaded by the runtime and are not counted.
 
 The optimiser (tools/glb_optimize.mjs) rewrites what Blender exported, so the
 character contract is re-checked on the shipped files: one material
-kantor_atlas, the five morph target names, the lod1 node, the 13 clip names,
+kantor_atlas, the five morph target names, the lod1 node, every clip name in characters.json,
 one skin over the shared skeleton, and rig extras that still equal the values
 the Blender validator measured on the .blend (registry) and, when the
 pre-optimisation export is on disk, the export itself. The comparison report
@@ -40,8 +40,23 @@ MB = 1_000_000
 # ADR-015: two more personas (Echo, Leo; ~0.5 MB each) raise the character
 # target to 4.6 MB and the GLB total to 6.0 MB. Over the wire nginx gzips GLBs
 # (about 2.0 MB for all of them, measured with gzip -6).
-BUDGET_TOTAL = 6.0 * MB
-BUDGET_CHARACTERS = 4.6 * MB
+# PRD v2.0 section 3 (REQ-ANIM): the eleven new clips may grow each character
+# GLB by at most 25 percent over its v1.1 size; the category and first-load
+# targets move by the same factor (4.6 * 1.25, 6.0 + 4.6 * 0.25).
+CHAR_GROWTH_MAX = 1.25
+V11_CHARACTER_BYTES = {
+    "ch-architect.glb": 468836,
+    "ch-assistant.glb": 498604,
+    "ch-ceo.glb": 620612,
+    "ch-designer.glb": 492268,
+    "ch-ictspec.glb": 488336,
+    "ch-netinstall.glb": 479504,
+    "ch-qa.glb": 501396,
+    "ch-supervisor.glb": 498320,
+    "ch-visual.glb": 493900,
+}
+BUDGET_TOTAL = 7.15 * MB
+BUDGET_CHARACTERS = 5.75 * MB
 BUDGET_FURNITURE = 1.5 * MB
 
 # Limits the comparison report must stay within (project targets).
@@ -68,6 +83,12 @@ def test_character_glbs_within_budget():
     files = glbs("characters")
     assert len(files) == len(IDS)
     assert total("characters") <= BUDGET_CHARACTERS, {p.name: p.stat().st_size for p in files}
+
+
+@pytest.mark.parametrize("name", sorted(V11_CHARACTER_BYTES))
+def test_character_growth_since_v11_within_prd_v2_limit(name):
+    size = (ASSETS / "characters" / name).stat().st_size
+    assert size <= V11_CHARACTER_BYTES[name] * CHAR_GROWTH_MAX, (name, size, V11_CHARACTER_BYTES[name])
 
 
 def test_furniture_glbs_within_budget():

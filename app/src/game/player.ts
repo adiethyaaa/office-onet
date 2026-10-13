@@ -19,6 +19,8 @@ export class Player {
   floor: FloorId;
   facing: number; // plan degrees
   speed = 0;
+  /** Facing change rate (deg/s, + = left), smoothed; drives body lean. */
+  turnRate = 0;
   readonly avatar: Avatar;
   stuckRecoveries = 0;
   /** Seconds spent pressing against a persona without getting past. */
@@ -58,12 +60,17 @@ export class Player {
 
   private move(dt: number, dir: Vec2, mag: number, run: boolean, nav: NavGrid, others: Vec2[]): number {
     const target = mag > 0.05 ? (run ? RUN_SPEED : WALK_SPEED) * Math.min(1, mag) : 0;
-    this.speed += (target - this.speed) * Math.min(1, dt * 10);
+    // Speeding up takes ~0.3 s, slowing down ~0.2 s (REQ-ANIM-02): visible
+    // start and stop without making the controls feel heavy.
+    this.speed += (target - this.speed) * Math.min(1, dt * (target > this.speed ? 7 : 11));
+    let turned = 0;
     if (mag > 0.05) {
       const want = THREE.MathUtils.radToDeg(Math.atan2(dir[1], dir[0]));
       const diff = ((want - this.facing + 540) % 360) - 180;
-      this.facing += diff * Math.min(1, dt * 14);
+      turned = diff * Math.min(1, dt * 14);
+      this.facing += turned;
     }
+    this.turnRate += (turned / Math.max(dt, 1e-4) - this.turnRate) * Math.min(1, dt * 12);
     if (this.speed < 0.01 || mag < 0.05) {
       this.avatar.setFacing(this.facing);
       return 0;

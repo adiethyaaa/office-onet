@@ -160,6 +160,9 @@ export class GamepadControl {
   private poll(p: Gamepad, now: number, dt: number) {
     const prof = PAD_PROFILES[this.profile()] ?? PAD_PROFILES.standar;
     const raw = p.buttons.map((b) => b.pressed || b.value > 0.5);
+    // A mini game reads the pad itself (minigames/host.ts); the world and the
+    // menus must not also react to the same presses.
+    if (document.documentElement.hasAttribute('data-minigame')) { this.target()?.setMove(null); this.prev = raw; return; }
     // Logical A/B/X/Y read from the physical buttons the profile assigns to them.
     // Edges are taken on the physical button, so switching profile while a
     // button is held does not fire the action it now maps to.

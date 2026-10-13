@@ -547,3 +547,12 @@ p.warn { color: var(--accent-ink); font-weight: 600; }
 .notify-settings { margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--control-border); display: grid; gap: 8px; }
 .notify-settings .mute-list { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 4px 12px; }
 .notify-settings .mute-list label { display: flex; gap: 6px; align-items: center; min-height: 32px; }
+
+/* Audio controls in Settings */
+.audio-row { display: grid; grid-template-columns: 5em 1fr 3.5em; align-items: center; gap: 8px; margin: 6px 0; }
+.audio-row input[type='range'] { min-height: 44px; }
+
+/* Tegur (reprimand) row in the persona card */
+.scold { margin: 12px 0 0; padding: 8px 10px; border: 1px dashed var(--control-border); border-radius: 10px; }
+.scold legend { padding: 0 4px; font-weight: 700; }
+.scold .row { display: flex; flex-wrap: wrap; gap: 6px; }

@@ -64,7 +64,54 @@ export class NpcLayer {
     return toThree(x, y, elev);
   }
 
+  /** Reaction overlays after a reprimand: clip name until sim time. */
+  private reactions = new Map<string, { clip: string; until: number }[]>();
+  private stars = new Map<string, THREE.Group>();
+
+  /**
+   * Cartoon reaction (REQ-TEGUR-02): surprised hop, spinning stars over the
+   * head, a rub of the head, then the hurried walk back to the desk. Clips
+   * missing from older GLBs fall back to talk/walk, so the sequence still reads.
+   */
+  react(id: string, reducedMotion: boolean): void {
+    const now = this.sim.time;
+    const v = this.views.get(id);
+    if (!v) return;
+    const has = (c: string) => v.avatar.has(c);
+    this.reactions.set(id, [
+      { clip: has('surprised') ? 'surprised' : 'wave', until: now + 0.7 },
+      { clip: has('rub_head') ? 'rub_head' : 'talk', until: now + 2.0 },
+    ]);
+    if (reducedMotion) return;
+    let g = this.stars.get(id);
+    if (!g) {
+      g = new THREE.Group();
+      const mat = new THREE.MeshBasicMaterial({ color: 0xf2c14e });
+      const geo = new THREE.OctahedronGeometry(0.07, 0);
+      for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(geo, mat); m.position.set(Math.cos((i / 4) * Math.PI * 2) * 0.32, 0, Math.sin((i / 4) * Math.PI * 2) * 0.32); g.add(m); }
+      g.position.y = 1.95;
+      v.avatar.root.add(g);
+      this.stars.set(id, g);
+    }
+    g.visible = true;
+    g.userData.until = now + 2.2;
+  }
+
+  /** Reaction clip right now, if any (tests read it through clipFor). */
+  private reactionClip(npc: NpcState): string | null {
+    const list = this.reactions.get(npc.id);
+    if (!list) return null;
+    while (list.length && list[0].until <= this.sim.time) list.shift();
+    if (!list.length) { this.reactions.delete(npc.id); return null; }
+    return list[0].clip;
+  }
+
   clipFor(npc: NpcState): string {
+    const r = this.reactionClip(npc);
+    if (r) return r;
+    if ((npc.phase === 'travel' || npc.phase === 'recover') && (npc.scoldedUntil ?? 0) > this.sim.time) {
+      return this.views.get(npc.id)?.avatar.has('flee') ? 'flee' : 'run';
+    }
     if (npc.phase === 'travel' || npc.phase === 'recover') return 'walk';
     if (npc.phase === 'paused') return 'talk';
     if (npc.phase !== 'perform') return 'idle';
@@ -117,7 +164,17 @@ export class NpcLayer {
       }
       v.avatar.talking = npc.phase === 'paused';
       v.avatar.play(this.clipFor(npc));
+      const st = this.stars.get(npc.id);
+      if (st?.visible) {
+        if (this.sim.time > (st.userData.until as number)) st.visible = false;
+        else st.rotation.y += dt * 6;
+      }
       v.avatar.update(dt, npc.phase === 'travel' ? 1 : 0, reducedMotion);
+      // Personas glance at the CEO walking past (REQ-ANIM-05); seated workers keep their eyes on the screen.
+      if (visible && playerPos && !(npc.phase === 'perform' && npc.workStatus === 'working')) {
+        const d = Math.hypot(npc.pos[0] - playerPos[0], npc.pos[1] - playerPos[1]);
+        v.avatar.lookAt(d < 2.5 ? new THREE.Vector3(playerPos[0], v.next.y + 1.4, -playerPos[1]) : null, dt, reducedMotion);
+      } else v.avatar.lookAt(null, dt, reducedMotion);
       if (!visible) { v.label.style.opacity = '0'; continue; }
       const s = v.avatar.root.position.clone().add(new THREE.Vector3(0, 1.9, 0)).project(camera);
       const screenY = ((1 - s.y) / 2) * h;

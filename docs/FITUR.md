@@ -144,13 +144,46 @@ Saat avatar dekat dengan sesuatu yang bisa dipakai, muncul petunjuk di bawah lay
 | Papan direktori | Membuka direktori |
 | Papan di dinding | Membuka Papan Handoff, Daftar Pekerjaan, atau Log Aktivitas |
 | Karya di galeri | Melihat karya |
-| Mesin kopi | Bikin kopi |
-| Meja biliar | Main biliar: tiap pukulan acak, skor hanya selama sesi |
-| Konsol game | Main game per ronde, tanpa skor tersimpan |
-| Alat olahraga | Olahraga |
-| Karakter NPC | Menyapa, lalu membuka profil dan dialog |
+| Fasilitas (lihat 4a) | Membuka mini game |
+| Karakter NPC | Menyapa, lalu membuka profil, dialog, dan **Tegur** |
 
-Aktivitas di atas adalah aktivitas virtual. Aktivitas itu tidak mengubah status kerja siapa pun. Bila tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya. Tombol **Selesai** atau E mengakhiri aktivitas.
+Mini game dan aktivitas tidak mengubah status kerja siapa pun. Bila tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya; selama kamu main, NPC melihat tempat itu terpakai.
+
+## 4a. Mini game (v2.0)
+
+Tiap fasilitas membuka game 2D sendiri. Game baru diunduh saat dibuka, jadi kantor tetap ringan. Kontrol sama untuk semua: keyboard (panah/WASD, Spasi atau J = A, K = B, L = X, I = Y), tombol sentuh di HP, dan stik game. Esc atau P untuk jeda. Skor 10 besar disimpan di browser.
+
+| Tempat | Game | Isinya |
+|---|---|---|
+| Treadmill (Gym) | Lari Pagi | Tekan kiri dan kanan bergantian mengikuti ketukan selama 60 detik |
+| Rak dumbel (Gym) | Angkat Beban | Pilih 5/10/15 kg, tekan saat penanda di zona hijau, 10 repetisi |
+| Matras (Gym) | Peregangan | Ulangi urutan gerakan yang makin panjang |
+| Meja biliar | Biliar 8-Ball | Aturan 8-ball melawan NPC, tongkat dengan garis bidik |
+| Mesin kopi (Lounge) | Barista | Giling, ekstraksi, steam susu, latte art untuk 5 pesanan |
+| Rak server | Server Down | Tancap kabel ke port yang benar, label dari peta port ICT asli |
+| Meja gambar Hugo | Susun Denah | Susun ruang kantor asli ke posisinya sebelum waktu habis |
+| Easel Kevin | Desain Poster | Pilih latar, judul, ikon, warna; dinilai kontras dan kecocokan brief |
+| Rak buku (Perpustakaan) | Kuis Perpustakaan | 5 soal tentang kantor ini dan ICT |
+| Kabinet arcade dan TV (Ruang game) | Game Station | Menu 10 slot, 5 terisi |
+
+Game Station:
+
+| Slot | Game | Isinya |
+|---|---|---|
+| 1 | Balap Drone | Balap tampak atas di 3 lintasan melawan 3 CPU, turbo 3 kali |
+| 2 | Tarung Kantor | Duel 2D satu lawan satu, 9 karakter dengan jurus khas sesuai peran |
+| 3 | Lompat Lantai | Platformer 6 level dari lobi sampai atap |
+| 4 | Sambung Kabel | Putar ubin kabel sampai semua rumah tersambung ke OLT, 20 level |
+| 5 | Arena Bom | Taruh bom, hancurkan lemari arsip, kalahkan 3 CPU, best of 3 |
+| 6 sampai 10 | Segera hadir | Slot kosong untuk game berikutnya |
+
+## 4b. Suara
+
+Langkah kaki, pintu, lift, dan musik latar yang berganti per area. Efek di sekitar terdengar makin keras saat didekati. Semua suara dibuat langsung di browser, tanpa berkas audio. Atur di **Pengaturan > Suara** (utama, musik, efek, bisu). Tombol **V** membisukan suara di kantor, **M** di dalam mini game.
+
+## 4c. Tegur
+
+Di kartu profil NPC ada tiga pilihan: tepuk gulungan kertas, ketuk palu mainan, atau lempar bola kertas. NPC kaget, bintang berputar di atas kepalanya, ia mengusap kepala, lalu bergegas ke mejanya selama 20 detik. Ini hanya animasi: tidak ada yang dikirim ke agen atau Telegram. NPC yang agennya sedang bekerja tidak bisa ditegur.
 
 ## 5. Karakter NPC
 
