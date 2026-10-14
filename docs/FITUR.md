@@ -2,7 +2,7 @@
 
 # Fitur Kantor RPG
 
-Dokumen ini menjelaskan setiap fitur dari sisi pemakai: apa yang terlihat, cara memakainya, dan batasnya. Untuk pemasangan lihat [INSTALL.md](../INSTALL.md).
+Dokumen ini menjelaskan setiap fitur dari sisi pemakai: apa yang terlihat, cara memakainya, dan batasnya. Untuk pemasangan lihat [INSTALL.md](../INSTALL.md). Perubahan per versi ada di [CHANGELOG.md](../CHANGELOG.md). Dokumen ini sesuai dengan **v2.1.1** (14 Oktober 2026).
 
 Daftar isi
 
@@ -10,6 +10,10 @@ Daftar isi
 2. [Dunia 3D](#2-dunia-3d)
 3. [Bergerak dan kamera](#3-bergerak-dan-kamera)
 4. [Interaksi dan aktivitas](#4-interaksi-dan-aktivitas)
+   - [Mini game](#4a-mini-game)
+   - [Suara dan musik](#4b-suara)
+   - [Tegur](#4c-tegur)
+   - [Animasi karakter](#4d-animasi-karakter)
 5. [Karakter NPC](#5-karakter-npc)
 6. [Direktori](#6-direktori)
    - [Peta dan minimap](#6a-peta-dan-minimap)
@@ -96,7 +100,7 @@ Tekan **H** atau tombol **Kontrol** untuk melihat daftar ini di dalam app.
 - Tombol **Lari** menyalakan atau mematikan lari.
 - Tombol **Aksi** sama dengan E.
 - Seret sisi kanan layar untuk memutar kamera.
-- Menu atas berupa satu baris ikon (dua baris di layar di bawah 356 px). Nama tombol tetap dibacakan pembaca layar.
+- Menu atas berupa satu baris ikon (dua baris di layar di bawah 356 px). Di lebar 600 sampai 959 px (HP landscape, tablet kecil) menu juga menjadi ikon saja, dan nama tombol muncul saat kursor diarahkan. Nama tombol tetap dibacakan pembaca layar.
 - Tombol **☰** di samping nama ruangan melipat atau membuka menu. Tombol **✕** di pojok minimap melipatnya menjadi ikon peta. Pilihan lipat tersimpan setelah halaman dimuat ulang.
 
 **Dengan stik game**
@@ -145,17 +149,29 @@ Saat avatar dekat dengan sesuatu yang bisa dipakai, muncul petunjuk di bawah lay
 | Papan di dinding | Membuka Papan Handoff, Daftar Pekerjaan, atau Log Aktivitas |
 | Karya di galeri | Melihat karya |
 | Fasilitas (lihat 4a) | Membuka mini game |
+| Meja board game dan bangkunya | Duduk dan main Catur Kantor |
 | Karakter NPC | Menyapa, lalu membuka profil, dialog, dan **Tegur** |
 
-Mini game dan aktivitas tidak mengubah status kerja siapa pun. Bila tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya; selama kamu main, NPC melihat tempat itu terpakai.
+Mini game dan aktivitas tidak mengubah status kerja siapa pun. Bila tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya; selama kamu main, NPC melihat tempat itu terpakai. Bila fasilitas punya beberapa tempat (misalnya empat bangku di meja catur), avatar memakai tempat kosong yang paling dekat.
 
-## 4a. Mini game (v2.0)
+## 4a. Mini game
 
-Tiap fasilitas membuka game 2D sendiri. Game baru diunduh saat dibuka, jadi kantor tetap ringan. Kontrol sama untuk semua: keyboard (panah/WASD, Spasi atau J = A, K = B, L = X, I = Y), tombol sentuh di HP, dan stik game. Esc atau P untuk jeda. Skor 10 besar disimpan di browser.
+Ada 15 mini game: 10 di fasilitas kantor dan 5 di Game Station. Tiap game 2D tampil layar penuh dan baru diunduh saat dibuka, jadi kantor tetap ringan. Skor 10 besar disimpan di browser.
+
+**Kontrol.** Sama untuk semua game:
+
+- Keyboard: panah atau WASD, Spasi/Enter/J = A, K/Shift = B, L/X = X, I/C = Y.
+- Layar sentuh: tombol arah dan tombol A/B di layar. Ketukan sesingkat apa pun tetap terhitung.
+- Stik game: stik kiri atau D-pad, tombol A/B/X/Y mengikuti profil kontroler (termasuk Tombol terbalik).
+- Esc, P, atau Start menjeda. Kartu jeda berisi **Lanjut**, **Ulang**, dan **Keluar**. **M** membisukan suara.
+
+**Tutorial.** Kartu pembuka setiap game menjelaskan arti tiap tombol untuk perangkat yang sedang dipakai (Keyboard, Stik game, atau Layar sentuh), dengan nama tombol yang benar. Game yang bisa diseret atau diketuk juga memberi petunjuk untuk jari atau mouse.
+
+**Responsif.** Setiap tekanan diantrekan dan diberikan ke game satu per satu, jadi tidak ada yang hilang, termasuk di layar 120 dan 144 Hz. Tombol yang masih ditahan dari kantor atau Game Station tidak ikut menekan **Mulai** di game berikutnya; lepas dulu, lalu tekan lagi. Esc saat layar "Memuat permainan..." menutup game. Setelah game ditutup, fokus kembali ke tombol yang membukanya.
 
 | Tempat | Game | Isinya |
 |---|---|---|
-| Treadmill (Gym) | Lari Pagi | Tekan kiri dan kanan bergantian mengikuti ketukan selama 60 detik |
+| Treadmill dan sepeda statis (Gym) | Lari Pagi | Tekan kiri dan kanan bergantian mengikuti ketukan selama 60 detik |
 | Rak dumbel (Gym) | Angkat Beban | Pilih 5/10/15 kg, tekan saat penanda di zona hijau, 10 repetisi |
 | Matras (Gym) | Peregangan | Ulangi urutan gerakan yang makin panjang |
 | Meja biliar | Biliar 8-Ball | Aturan 8-ball melawan NPC, tongkat dengan garis bidik |
@@ -164,7 +180,7 @@ Tiap fasilitas membuka game 2D sendiri. Game baru diunduh saat dibuka, jadi kant
 | Meja gambar Hugo | Susun Denah | Susun ruang kantor asli ke posisinya sebelum waktu habis |
 | Easel Kevin | Desain Poster | Pilih latar, judul, ikon, warna; dinilai kontras dan kecocokan brief |
 | Rak buku (Perpustakaan) | Kuis Perpustakaan | 5 soal tentang kantor ini dan ICT |
-| Meja board game dan bangkunya (Ruang game) | Catur Kantor | Catur melawan rekan tim, 3 tingkat; CEO duduk di bangku terdekat (v2.1) |
+| Meja board game dan 4 bangkunya (Ruang game) | Catur Kantor | Catur aturan lengkap melawan rekan tim, 3 tingkat kesulitan. Avatar duduk di bangku kosong terdekat |
 | Kabinet arcade dan TV (Ruang game) | Game Station | Menu 10 slot, 5 terisi |
 
 Game Station:
@@ -178,20 +194,38 @@ Game Station:
 | 5 | Arena Bom | Taruh bom, hancurkan lemari arsip, kalahkan 3 CPU, best of 3 |
 | 6 sampai 10 | Segera hadir | Slot kosong untuk game berikutnya |
 
+Di Game Station, panah atau D-pad memilih mesin, Enter atau A membuka, Esc atau B kembali ke kantor. Keluar dari game membawa kembali ke Game Station.
+
+**Catur Kantor.** Dekati meja board game di Ruang game (Lantai 2); di atas meja ada papan catur 8x8. Muncul petunjuk `E: Main Catur Kantor`. Pilih tingkat kesulitan, lalu main dengan bidak putih. Aturannya lengkap: rokade, en passant, promosi pion (pilih bidaknya), skak mat, dan remis (pat, tiga kali posisi sama, aturan 50 langkah, bidak tidak cukup). Bidak bisa digerakkan dengan kursor dan A, diketuk lalu ketuk petak tujuan, atau diseret dengan jari atau mouse.
+
+**Biliar 8-Ball.** Bola meluncur lalu menggelinding seperti aslinya. Tombol Y mengganti efek bola: efek atas membuat bola putih ikut maju setelah kena, efek bawah membuatnya mundur, dan efek tengah membuatnya berhenti. Dengan jari atau mouse, ketuk satu titik untuk membidik ke situ, seret menjauhi arah tembak untuk menarik tongkat (makin jauh makin kuat), lalu lepas untuk memukul.
+
 ## 4b. Suara
 
-Langkah kaki, pintu, lift, dan musik latar yang berganti per area. Efek di sekitar terdengar makin keras saat didekati. Semua suara dibuat langsung di browser, tanpa berkas audio. Atur di **Pengaturan > Suara** (utama, musik, efek, bisu). Tombol **V** membisukan suara di kantor, **M** di dalam mini game.
+Langkah kaki, pintu, lift, dan musik latar yang berganti per area. Efek di sekitar terdengar makin keras saat didekati. Semua suara dibuat langsung di browser, tanpa berkas audio.
+
+Musik latarnya 12 lagu original bergaya game santai: suling, okarina, gitar petik, marimba, dan kalimba. Enam lagu untuk area kantor (tema utama, lobby, Lantai 2, pantry, ruang baca dan taman, ruang olahraga) dan enam untuk mini game (Game Station, balap, tarung, platformer, puzzle, arena bom). Musik berganti saat avatar pindah area dan kembali ke lagu ruangan setelah mini game ditutup. Atur di **Pengaturan > Suara** (utama, musik, efek, bisu). Tombol **V** membisukan suara di kantor, **M** di dalam mini game.
 
 ## 4c. Tegur
 
-Di kartu profil NPC ada tiga pilihan: tepuk gulungan kertas, ketuk palu mainan, atau lempar bola kertas. NPC kaget, bintang berputar di atas kepalanya, ia mengusap kepala, lalu bergegas ke mejanya selama 20 detik. Ini hanya animasi: tidak ada yang dikirim ke agen atau Telegram. NPC yang agennya sedang bekerja tidak bisa ditegur.
+Di kartu profil NPC ada tiga pilihan: tepuk gulungan kertas, ketuk palu mainan, atau lempar bola kertas. CEO mengangkat alatnya, ancang-ancang ke belakang bahu, lalu mengayun cepat dengan jejak gerak. Saat kena ada jeda sesaat, kilat, tulisan kartun ("PLAK!", "TUK!", "POK!"), dan layar sedikit bergetar. Bola kertas dilempar melengkung, memantul dua kali di lantai, lalu hilang. NPC kaget, bintang berputar di atas kepalanya, ia mengusap kepala, lalu bergegas ke mejanya selama 20 detik. Ini hanya animasi: tidak ada yang dikirim ke agen atau Telegram. NPC yang agennya sedang bekerja tidak bisa ditegur.
+
+## 4d. Animasi karakter
+
+- **Jalan dan lari menyatu.** Diam, jalan, dan lari dicampur sesuai kecepatan, bukan berganti mendadak. Joystick setengah memberi jalan cepat, dan langkah kaki tidak meluncur di lantai.
+- **Mulai, berhenti, berbalik.** Ada gerakan khusus saat mulai berjalan, berhenti dari lari, dan berbalik cepat. Badan condong ke depan saat berlari dan ke samping saat berbelok.
+- **Menoleh.** NPC menoleh ke CEO yang lewat dalam jarak 2,5 m. NPC yang sedang bekerja tetap menatap layarnya.
+- **Animasi per aktivitas.** Mengetik, membaca, minum kopi, ngobrol, main game, biliar, menggambar, memasang kabel, peregangan, dan angkat beban.
+- **Olahraga di atas mesinnya.** NPC yang memakai treadmill berlari di atas sabuk treadmill sambil menghadap panelnya. NPC yang memakai sepeda statis duduk di sadel, mengayuh pedal, dan memegang setang. Model sepeda dibuat dengan sadel 0,45 m dan pedal yang pas dengan kaki karakter.
+- **Reaksi ditegur.** Kaget, mengusap kepala, lalu kabur ke meja.
+- Mode **Kurangi gerak** mematikan condong badan, guncangan, dan efek sekunder lainnya.
 
 ## 5. Karakter NPC
 
 ![Sembilan karakter](img/cast.jpg)
 
 - Ada sembilan karakter original: satu avatar pemain (CEO) dan delapan persona NPC dengan peran berbeda, misalnya supervisor, desain, spesifikasi ICT, instalasi jaringan, materi visual, review dan QA.
-- NPC memilih kegiatan sendiri: kerja di meja, bikin kopi, ngobrol, membaca, peregangan, main game, biliar, olahraga, atau istirahat. Pilihan diambil dari 118 slot aktivitas di dunia.
+- NPC memilih kegiatan sendiri: kerja di meja, bikin kopi, ngobrol, membaca, peregangan, main game, biliar, olahraga di treadmill atau sepeda statis, atau istirahat. Pilihan diambil dari 118 slot aktivitas di dunia.
 - Simulasi memakai seed tetap (`?seed=20261001` secara bawaan). Seed yang sama menghasilkan urutan kegiatan yang sama, jadi demo bisa diulang.
 - NPC saling memberi jalan dan memesan kursi sebelum duduk sehingga tidak saling tumpang tindih. NPC yang tersangkut memilih tujuan lain.
 - Jam di HUD (`08:53`) adalah jam simulasi, bukan jam sebenarnya.

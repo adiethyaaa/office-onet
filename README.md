@@ -11,6 +11,7 @@ Kantor virtual dua lantai yang berjalan di browser. Gedungnya bisa dijelajahi, a
 <p align="center">
 <a href="https://employee-rpg.air-buddy.site"><b>Coba demo</b></a> ·
 <a href="docs/FITUR.md">Semua fitur</a> ·
+<a href="CHANGELOG.md">Catatan perubahan</a> ·
 <a href="INSTALL.md">Pasang sendiri</a> ·
 <a href="LICENSE">Lisensi MIT</a>
 </p>
@@ -23,6 +24,17 @@ Delapan karakter NPC menjalani hari mereka sendiri: kerja di meja, bikin kopi, m
 
 Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap pengunjung melihat hari yang sama.
 
+## Baru di v2.1
+
+Versi terbaru: **v2.1.1** (14 Oktober 2026). Rinciannya ada di [catatan perubahan](CHANGELOG.md).
+
+- **15 mini game.** Treadmill, dumbel, matras, biliar, mesin kopi, rak server, meja gambar, easel, rak buku, dan meja catur di kantor bisa dimainkan. Kabinet arcade membuka **Game Station** berisi 5 game.
+- **Catur di meja papan catur.** Dekati meja board game di Ruang game, duduk di bangkunya, lalu main catur melawan rekan tim.
+- **Tombol responsif di semua layar.** Tidak ada tekan yang hilang, termasuk di layar 120 dan 144 Hz. Tombol yang masih ditahan tidak lagi tembus ke menu berikutnya.
+- **Karakter benar-benar berolahraga.** NPC berlari di atas treadmill dan mengayuh sepeda statis sambil duduk di sadelnya.
+- **Musik dan suara.** 12 lagu original bergaya game santai, efek langkah, pintu, dan lift, semuanya dibuat di browser tanpa berkas audio.
+- **Animasi baru dan tegur.** Jalan dan lari menyatu mulus, karakter menoleh ke CEO, dan tegur ala kartun yang hanya animasi.
+
 ## Angka
 
 | | |
@@ -31,18 +43,22 @@ Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap
 | Isi | 201 perabot dan perangkat, 54 model GLB perabot, 118 slot aktivitas NPC |
 | Karakter | 9 karakter original (1 avatar pemain, 8 NPC), dimodelkan di Blender |
 | Gambar kerja | 15 sheet arsitektur, interior, dan ICT dalam DWG, DXF, dan PDF |
-| Unduhan JavaScript | three.js 169 kB + app 65 kB (gzip) |
-| Tes | 147 tes unit, 261 skenario E2E (desktop, tablet, HP), 423 tes Python, 32 tes server |
-| Keputusan tercatat | 17 ADR di [docs/decisions.md](docs/decisions.md) |
+| Mini game | 15 game: 10 di fasilitas kantor, 5 di Game Station, diunduh saat dibuka |
+| Musik | 12 lagu original, dibuat di browser |
+| Unduhan JavaScript awal | three.js 168 kB + app 48 kB (gzip) |
+| Tes | 362 tes unit, 309 skenario E2E (desktop, tablet, HP), 432 tes Python, 32 tes server |
+| Keputusan tercatat | 18 ADR di [docs/decisions.md](docs/decisions.md) |
 
 ## Fitur utama
 
 | Fitur | Ringkasnya |
 |---|---|
 | [Dunia 3D dua lantai](docs/FITUR.md#2-dunia-3d) | 36 ruang, pintu yang membuka sendiri, tangga dan lift antarlantai |
-| [Karakter NPC](docs/FITUR.md#5-karakter-npc) | 8 karakter dengan jadwal harian, bisa diajak bicara dan ditegur (animasi saja) |
-| [Mini game](docs/FITUR.md#4a-mini-game-v20) | 10 game di fasilitas kantor (termasuk catur di meja board game) dan Game Station 5 game: balap, tarung, platformer, puzzle kabel, arena bom |
-| [Suara](docs/FITUR.md#4b-suara) | Langkah, pintu, musik per area; dibuat di browser tanpa berkas audio |
+| [Karakter NPC](docs/FITUR.md#5-karakter-npc) | 8 karakter dengan jadwal harian, bisa diajak bicara, ikut berolahraga di treadmill dan sepeda statis |
+| [Mini game](docs/FITUR.md#4a-mini-game) | 10 game di fasilitas kantor, termasuk catur di meja board game, dan Game Station 5 game: balap, tarung, platformer, puzzle kabel, arena bom |
+| [Animasi](docs/FITUR.md#4d-animasi-karakter) | Jalan dan lari menyatu sesuai kecepatan, mulai, berhenti, berbalik, menoleh; animasi khusus tiap aktivitas |
+| [Tegur](docs/FITUR.md#4c-tegur) | Tiga gaya tegur kartun di 3D; hanya animasi, tidak dikirim ke agen |
+| [Suara](docs/FITUR.md#4b-suara) | 12 lagu original, langkah, pintu, lift; dibuat di browser tanpa berkas audio |
 | [Chat agen dan papan kerja](docs/FITUR.md#10-chat-agen) | Beri tugas ke agen AI, sinkron dengan Telegram (butuh backend privat) |
 | [Peta dan minimap](docs/FITUR.md#6a-peta-dan-minimap) | Lokasi semua orang per lantai, **Temui** untuk pindah ke sebelahnya |
 | [Office Studio](docs/FITUR.md#8-office-studio-menata-ulang-perabot) | Tata ulang perabot, simpan draft, publish, rollback |
@@ -89,7 +105,13 @@ Dinding dalam dibuat rendah (1,25 m), jadi kamera tetap melihat ke dalam ruang t
 
 <img src="docs/img/peta.jpg" alt="Peta kantor dengan daftar persona per lantai">
 
-Kamu juga bisa ikut bersantai. Mesin kopi, meja biliar, konsol game, dan alat olahraga bisa dipakai. Kalau tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya.
+- **Olahraga sungguhan.** NPC yang memilih olahraga berlari di atas sabuk treadmill atau duduk mengayuh sepeda statis, bukan berdiri di sampingnya.
+
+Kamu juga bisa ikut bersantai. Setiap fasilitas membuka mini game: lari di treadmill, angkat beban, biliar 8-ball, meracik kopi, memperbaiki rak server, catur di meja board game, dan lainnya. Kabinet arcade membuka Game Station berisi 5 game. Kalau tempatnya sedang dipakai NPC, app memberi tahu siapa yang memakainya.
+
+| Game Station | Catur di meja | Olahraga |
+|---|---|---|
+| ![Game Station](docs/img/game-station.jpg) | ![Catur](docs/img/catur.jpg) | ![Treadmill dan sepeda statis](docs/img/gym-anim.jpg) |
 
 ## Chat dengan agen
 
@@ -143,9 +165,10 @@ Chat dan papan kerja hanya aktif untuk pemilik yang login dengan sandi dan kode 
 <img src="docs/img/hp.jpg" alt="Tampilan HP: menu ikon satu baris, minimap di kanan atas, joystick dan tombol aksi" width="180" align="right"> <img src="docs/img/hp-lipat.jpg" alt="Tampilan HP dengan menu dan minimap dilipat" width="180" align="right">
 
 - **Desktop.** WASD atau panah untuk berjalan, Shift lari, Q/Z putar kamera, R luruskan kamera, +/- zoom, E interaksi, P peta, C chat agen, H daftar kontrol.
-- **HP dan tablet.** Joystick di kiri bawah, tombol Lari dan Aksi, seret layar untuk memutar kamera. Di HP, menu atas berupa satu baris ikon. Menu bisa dilipat lewat tombol ☰, minimap lewat tombol ✕ di pojoknya, dan pilihan itu tersimpan.
+- **HP dan tablet.** Joystick di kiri bawah, tombol Lari dan Aksi, seret layar untuk memutar kamera. Di HP, dan di HP landscape atau tablet kecil, menu atas berupa satu baris ikon. Menu bisa dilipat lewat tombol ☰, minimap lewat tombol ✕ di pojoknya, dan pilihan itu tersimpan.
 - **Dua bahasa.** Tampilan tersedia dalam Bahasa Indonesia dan English, mengikuti bahasa browser. Bisa diganti di Pengaturan atau lewat `?lang=en`.
 - **Stik game.** Stik Xbox, PlayStation, atau stik Bluetooth langsung terbaca di browser, tanpa instal apa pun. Stik kiri berjalan (dorong penuh untuk lari), stik kanan kamera, A interaksi, B kembali, X lari, Y luruskan kamera, LB/RB zoom, Select peta, Start Pengaturan. D-pad berpindah tombol di semua menu dan dialog, termasuk Studio. Kode stik baru diunduh saat stik tersambung. Di Pengaturan → Kontroler ada empat profil (Standar, Kidal, Santai, Tombol terbalik gaya Jepang) dan gambar stik yang menyalakan tombol yang sedang ditekan.
+- **Mini game.** Keyboard (panah/WASD, Spasi atau J = A, K = B), tombol sentuh, atau stik. Esc atau P untuk jeda. Tutorial di awal setiap game menyesuaikan perangkat yang dipakai.
 - **Tanpa WebGL.** App berpindah ke mode direktori yang tetap menampilkan ruang dan karakter.
 - **Aksesibilitas.** Tema terang dan gelap, mode kurangi gerak, kualitas grafis ringan untuk perangkat lama, label pembaca layar, dan semua dialog bisa dipakai dengan keyboard. Kontras warna diperiksa otomatis, dan halaman diuji dengan axe.
 
@@ -182,7 +205,7 @@ Itu sudah cukup untuk dunia 3D, NPC, Studio, dan semua fitur pengunjung. Build p
 | `blender/` | Skrip dan berkas `.blend` untuk gedung, karakter, perabot |
 | `cad/`, `drawings/` | Generator DXF/DWG dan PDF gambar kerja |
 | `tools/` | Build desain, validator dunia, audit GLB, probe kedip 3D |
-| `PRD/` | Kebutuhan produk, versi terbaru [PRD v1.1](PRD/PRD-v1.1.md) |
+| `PRD/` | Kebutuhan produk, versi terbaru [PRD v2.0](PRD/PRD-v2.0.md) (bagian 12: perubahan v2.1) |
 | `docs/` | Fitur, keputusan (ADR), laporan QA, bukti uji, runbook |
 
 ## Tes
@@ -206,9 +229,10 @@ python3 -m pytest tests/py -q
 ## Dokumen
 
 - [Semua fitur, dijelaskan satu per satu](docs/FITUR.md)
+- [Catatan perubahan per versi](CHANGELOG.md)
 - [Panduan pemasangan](INSTALL.md)
 - [Cara berkontribusi](CONTRIBUTING.md)
-- [Keputusan arsitektur](docs/decisions.md), ADR-001 sampai ADR-017
+- [Keputusan arsitektur](docs/decisions.md), ADR-001 sampai ADR-018
 - [Laporan QA](docs/QA-REPORT.md) dan [daftar tes yang dilewati](docs/SKIP-LEDGER.md)
 - [Audit 3D: z-fighting dan kedip](docs/evidence/AUDIT-3D/LAPORAN.md)
 - [Validasi perangkat](docs/DEVICE-VALIDATION.md)
