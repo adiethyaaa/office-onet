@@ -2,7 +2,7 @@
 
 # Kantor RPG Features
 
-This document describes each feature from the user's side: what you see, how to use it, and its limits. For installation, see [INSTALL.en.md](../INSTALL.en.md).
+This document describes each feature from the user's side: what you see, how to use it, and its limits. For installation, see [INSTALL.en.md](../INSTALL.en.md). Changes per version are in [CHANGELOG.en.md](../CHANGELOG.en.md). This document matches **v2.1.1** (14 October 2026).
 
 Table of contents
 
@@ -10,6 +10,10 @@ Table of contents
 2. [3D world](#2-3d-world)
 3. [Movement and camera](#3-movement-and-camera)
 4. [Interaction and activities](#4-interaction-and-activities)
+   - [Mini games](#4a-mini-games)
+   - [Sound and music](#4b-sound)
+   - [Reprimand](#4c-reprimand)
+   - [Character animation](#4d-character-animation)
 5. [NPC characters](#5-npc-characters)
 6. [Directory](#6-directory)
    - [Map and minimap](#6a-map-and-minimap)
@@ -96,7 +100,7 @@ Press **H** or the **Kontrol** (Controls) button to see this list inside the app
 - The **Lari** (Run) button turns running on or off.
 - The **Aksi** (Action) button is the same as E.
 - Drag the right side of the screen to rotate the camera.
-- The top menu is one row of icons (two rows on screens narrower than 356 px). Screen readers still read each button name.
+- The top menu is one row of icons (two rows on screens narrower than 356 px). At 600 to 959 px wide (phones in landscape, small tablets) the menu also shows icons only, and the button name appears on hover. Screen readers still read each button name.
 - The **☰** button next to the room name folds or opens the menu. The **✕** button on the minimap corner folds it into a map icon. The fold choice survives a page reload.
 
 **With a gamepad**
@@ -146,17 +150,29 @@ When the avatar is near something usable, a hint appears at the bottom of the sc
 | Wall boards | Open the Handoff Board, Task List, or Activity Log |
 | Gallery works | View the work |
 | Facilities (see 4a) | Open a mini game |
+| Board game table and its stools | Sit down and play Office Chess |
 | NPC character | Greet, then open the profile, dialog and **Reprimand** |
 
-Mini games and activities do not change anyone's work status. If a spot is in use by an NPC, the app tells you who is using it; while you play, NPCs see the spot as taken.
+Mini games and activities do not change anyone's work status. If a spot is in use by an NPC, the app tells you who is using it; while you play, NPCs see the spot as taken. When a facility has several spots (for example the four stools at the chess table), the avatar takes the nearest free one.
 
-## 4a. Mini games (v2.0)
+## 4a. Mini games
 
-Each facility opens its own 2D game. A game downloads only when opened, so the office stays light. Controls are the same everywhere: keyboard (arrows/WASD, Space or J = A, K = B, L = X, I = Y), touch buttons on phones, and gamepads. Esc or P pauses. The top 10 scores are kept in the browser.
+There are 15 mini games: 10 at office facilities and 5 in the Game Station. Each 2D game runs full screen and downloads only when opened, so the office stays light. The top 10 scores are kept in the browser.
+
+**Controls.** The same in every game:
+
+- Keyboard: arrows or WASD, Space/Enter/J = A, K/Shift = B, L/X = X, I/C = Y.
+- Touch screen: on-screen arrows and A/B buttons. Even the shortest tap counts.
+- Gamepad: left stick or D-pad; A/B/X/Y follow the controller profile (Reversed buttons included).
+- Esc, P, or Start pauses. The pause card has **Resume**, **Restart**, and **Exit**. **M** mutes the sound.
+
+**Tutorial.** Each game's opening card explains every button for the device in use (Keyboard, Gamepad, or Touch screen) with the right button names. Games that support dragging or tapping also give a hint for fingers or the mouse.
+
+**Responsive.** Every press is queued and handed to the game one at a time, so none get lost, including on 120 and 144 Hz screens. A button still held from the office or the Game Station does not press **Start** in the next game; release it and press again. Esc on the "Loading game..." screen closes the game. After a game closes, focus returns to the button that opened it.
 
 | Place | Game | What you do |
 |---|---|---|
-| Treadmill (Gym) | Morning Run | Alternate left and right on the beat for 60 seconds |
+| Treadmill and exercise bike (Gym) | Morning Run | Alternate left and right on the beat for 60 seconds |
 | Dumbbell rack (Gym) | Weightlifting | Pick 5/10/15 kg, press when the marker is in the green zone, 10 reps |
 | Mat (Gym) | Stretching | Repeat a move sequence that keeps growing |
 | Billiard table | 8-Ball Pool | 8-ball rules against an NPC, cue with an aim line |
@@ -165,7 +181,7 @@ Each facility opens its own 2D game. A game downloads only when opened, so the o
 | Hugo's drafting table | Floor Plan Puzzle | Put the real office rooms in place before time runs out |
 | Kevin's easel | Poster Design | Pick background, title, icon, colours; scored on contrast and fit to the brief |
 | Bookshelf (Library) | Library Quiz | 5 questions about this office and ICT |
-| Board game table and its stools (Game room) | Office Chess | Chess against a teammate, 3 levels; the CEO sits on the nearest stool (v2.1) |
+| Board game table and its 4 stools (Game room) | Office Chess | Full-rules chess against a teammate, 3 difficulty levels. The avatar takes the nearest free stool |
 | Arcade cabinets and TV (Game room) | Game Station | 10-slot menu, 5 filled |
 
 Game Station:
@@ -179,13 +195,31 @@ Game Station:
 | 5 | Bomb Arena | Drop bombs, break filing cabinets, beat 3 CPUs, best of 3 |
 | 6 to 10 | Coming soon | Empty slots for future games |
 
+In the Game Station, arrows or the D-pad pick a machine, Enter or A opens it, Esc or B returns to the office. Quitting a game brings you back to the Game Station.
+
+**Office Chess.** Walk up to the board game table in the Game room (floor 2); an 8x8 chessboard sits on it. The hint `E: Main Catur Kantor` (Play Office Chess) appears. Pick a difficulty, then play white. The rules are complete: castling, en passant, pawn promotion (you pick the piece), checkmate, and draws (stalemate, threefold repetition, the 50-move rule, insufficient material). Move pieces with the cursor and A, tap a piece then its target square, or drag it with a finger or the mouse.
+
+**8-Ball Pool.** Balls slide, then roll like the real thing. The Y button changes the spin: topspin makes the cue ball follow through after contact, backspin draws it back, and a centre hit stops it dead. With a finger or the mouse, tap a point to aim there, drag away from the shot to pull the cue back (further is harder), then release to shoot.
+
 ## 4b. Sound
 
-Footsteps, doors, the lift and background music that changes per area. Nearby effects get louder as you approach. All sound is generated in the browser, with no audio files. Adjust it in **Pengaturan > Suara** (Settings > Sound: master, music, effects, mute). **V** mutes sound in the office, **M** inside a mini game.
+Footsteps, doors, the lift and background music that changes per area. Nearby effects get louder as you approach. All sound is generated in the browser, with no audio files.
+
+The background music is 12 original songs in a cozy game style: flute, ocarina, picked guitar, marimba, and kalimba. Six songs for office areas (main theme, lobby, floor 2, pantry, reading room and garden, gym) and six for mini games (Game Station, racing, fighting, platformer, puzzle, bomb arena). The music changes when the avatar enters another area and returns to the room's song after a mini game closes. Adjust it in **Pengaturan > Suara** (Settings > Sound: master, music, effects, mute). **V** mutes sound in the office, **M** inside a mini game.
 
 ## 4c. Reprimand
 
-The NPC profile card offers three props: swat with a paper roll, bonk with a toy hammer, or throw a paper ball. The NPC jumps, stars spin over its head, it rubs its head and hurries to its desk for 20 seconds. It is animation only: nothing is sent to the agent or Telegram. An NPC whose agent is working cannot be reprimanded.
+The NPC profile card offers three props: swat with a paper roll, bonk with a toy hammer, or throw a paper ball. The CEO raises the prop, winds up behind the shoulder, then swings fast with a motion trail. On impact there is a short pause, a flash, a cartoon word ("PLAK!", "TUK!", "POK!"), and a small screen shake. The paper ball flies in an arc, bounces twice on the floor, and disappears. The NPC jumps, stars spin over its head, it rubs its head and hurries to its desk for 20 seconds. It is animation only: nothing is sent to the agent or Telegram. An NPC whose agent is working cannot be reprimanded.
+
+## 4d. Character animation
+
+- **Walking and running blend.** Idle, walk, and run mix by speed instead of switching abruptly. Half stick gives a brisk walk, and feet do not slide on the floor.
+- **Start, stop, turn.** Dedicated moves for starting to walk, stopping from a run, and quick turns. The body leans forward when running and sideways into turns.
+- **Glancing.** NPCs glance at the CEO walking past within 2.5 m. NPCs who are working keep their eyes on the screen.
+- **A clip per activity.** Typing, reading, coffee, chatting, gaming, billiards, drawing, laying cable, stretching, and lifting weights.
+- **Workouts on the machine.** NPCs on a treadmill run on the belt facing the console. NPCs on the exercise bike sit on the saddle, pedal, and hold the handlebar. The bike model has a 0.45 m saddle and pedals that fit the characters' legs.
+- **Reprimand reactions.** Surprised, rubbing the head, then running to the desk.
+- **Reduced motion** turns off the lean, shakes, and other secondary effects.
 
 ## 5. NPC characters
 

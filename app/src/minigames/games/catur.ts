@@ -1,4 +1,4 @@
-// Catur Kantor (Game Station). Full chess with legal rules against a
+// Catur Kantor (board game table, L2-GAME). Full chess with legal rules against a
 // teammate AI. The engine below is self contained (mailbox board, make/unmake)
 // so tests can run perft and rule checks without the canvas.
 import type { Btn, CastMember, GameCtx, GameInstance, GameModule, InputState } from '../types';
