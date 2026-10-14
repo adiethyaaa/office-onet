@@ -74,3 +74,10 @@
 .arcade-slot[aria-disabled='true'] { border-style: dashed; cursor: default; }
 .arcade-slot .num { font-variant-numeric: tabular-nums; color: var(--accent-ink); font-weight: 700; }
 
+
+/* Local multiplayer lobby on the intro card */
+.mg-lobby { margin-top: 10px; border-top: 1px solid var(--control-border); padding-top: 8px; }
+.mg-lobby-list { list-style: none; margin: 4px 0; padding: 0; display: grid; gap: 4px; }
+.mg-lobby-list li { display: flex; gap: 10px; align-items: baseline; padding: 6px 10px; border-radius: 8px; border-left: 6px solid var(--pc, var(--accent)); background: var(--surface-2, rgba(0, 0, 0, 0.04)); }
+.mg-lobby-list b { min-width: 5.5em; }
+.mg-lobby-note { font-size: 0.92rem; color: var(--ink-2) !important; }

@@ -51,4 +51,11 @@ export const EN_MG_HOST: Record<string, string> = {
   'Tombol B': 'Button B',
   'Tombol X': 'Button X',
   'Tombol Y': 'Button Y',
+  'Pemain': 'Players',
+  'Pemain {n}': 'Player {n}',
+  'Keyboard, layar sentuh, atau stik 1': 'Keyboard, touch screen, or pad 1',
+  'Keyboard atau layar sentuh': 'Keyboard or touch screen',
+  'Stik {n} · B untuk batal': 'Pad {n} · B to leave',
+  'Mau main bareng? Sambungkan stik lain lalu tekan A untuk ikut (sampai {n} pemain).': 'Playing together? Connect another pad and press A to join (up to {n} players).',
+  'Semua tempat pemain sudah terisi.': 'All player seats are taken.',
 };

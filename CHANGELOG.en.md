@@ -4,6 +4,23 @@
 
 All notable changes to kantor-rpg, newest first. Each release goes to the [public demo](https://employee-rpg.air-buddy.site) after the tests and CI pass. The release code is the commit on `main`.
 
+## v2.2, 14 October 2026
+
+**Play together with several gamepads (local multiplayer)**
+
+- Three mini games can be played together on one screen, for example on the office TV with several gamepads:
+  - **Office Brawl:** Player 1 against Player 2. Each picks a fighter, then one match, first to 2 rounds.
+  - **Bomb Arena:** up to 4 players. Empty corners go to the computer, and the last one standing wins the round.
+  - **Office Chess:** Player 1 is white, Player 2 is black, taking turns on the same board.
+- To join: on the game's opening card, connect another gamepad and press **A**. The player list grows at once. Press **B** on that pad to leave.
+- Player 1 can still use the keyboard, touch screen, or the first gamepad. Every player has their own press queue, so no press gets lost.
+- A two-player result names the winner and is not added to the leaderboard.
+- With only one gamepad connected, the game runs as before against the computer.
+
+**Fixes**
+
+- The gamepad A that presses **Start** no longer reaches the game too. Before, in Office Brawl that press picked a fighter before you could choose.
+
 ## v2.1.1, 14 October 2026 (release `84a8678`)
 
 **Gym animations**

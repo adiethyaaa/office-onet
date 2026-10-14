@@ -21,4 +21,10 @@ export const EN_ARENA_BOM: Record<string, string> = {
   'Skor {s}': 'Score {s}',
   'Jalan (tahan untuk terus jalan)': 'Walk (hold to keep walking)',
   'Pasang bom': 'Drop a bomb',
+  'Ronde {r} · {list}': 'Round {r} · {list}',
+  'Pemain {n} ({name}) menang {w} ronde': 'Player {n} ({name}) won {w} rounds',
+  'Seri, tidak ada pemenang': 'Draw, no winner',
+  'Pemain {n} menang ronde!': 'Player {n} wins the round!',
+  'Komputer bertahan terakhir': 'A computer player lasted longest',
+  'Bareng: sampai 4 pemain, sudut yang kosong diisi komputer. Yang terakhir bertahan menang ronde.': 'Together: up to 4 players, empty corners go to the computer. Last one standing wins the round.',
 };

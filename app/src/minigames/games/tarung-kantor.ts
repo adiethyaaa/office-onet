@@ -1,7 +1,10 @@
 // Tarung Kantor (Game Station slot 2). Side-view one-on-one fighter in arcade
 // mode: pick a teammate, then beat three CPU rivals in a row, best of three
 // rounds each. Losing a match ends the run with the points earned so far.
-import type { CastMember, GameCtx, GameInstance, GameModule } from '../types';
+// With a second gamepad joined (local multiplayer) it is one match, Pemain 1
+// against Pemain 2, best of three rounds.
+import type { CastMember, GameCtx, GameInstance, GameModule, InputState } from '../types';
+import { PLAYER_COLORS } from '../local-players';
 import { PAL, drawChar, roundRect, text } from '../cast';
 
 const meta: GameModule['meta'] = {
@@ -26,7 +29,19 @@ const meta: GameModule['meta'] = {
     y: 'Blok',
   },
   pointerHint: 'Ketuk kartu karakter untuk memilih, ketuk lagi untuk mulai',
+  players: 2,
+  playersHint: 'Berdua: Pemain 2 bertarung di sisi kanan dengan stik kedua. Satu pertandingan, menang 2 ronde.',
 };
+
+/** Controls from one player's input. */
+function ctlOf(inp: InputState): Ctl {
+  return {
+    l: inp.down.left || inp.ax < -0.4, r: inp.down.right || inp.ax > 0.4,
+    u: inp.down.up || inp.ay < -0.55, d: inp.down.down || inp.ay > 0.55,
+    a: inp.hit.a, b: inp.hit.b, x: inp.hit.x, g: inp.down.y || inp.hit.y,
+    speed: inp.down.left || inp.down.right ? 1 : Math.abs(inp.ax),
+  };
+}
 
 const GROUND = 322;
 const XMIN = 26;
@@ -109,7 +124,10 @@ function create(ctx: GameCtx): GameInstance {
   };
 
   let phase: 'select' | 'intro' | 'fight' | 'roundEnd' | 'matchEnd' | 'over' = 'select';
+  const versus = ctx.players >= 2;
   let sel = Math.max(0, cast.findIndex((c) => c.id === ctx.playerId));
+  let sel2 = (sel + 1) % cast.length;
+  const ready = [false, false];
   let time = 0;
   let timer = 0;
   let clock = ROUND_TIME;
@@ -142,7 +160,9 @@ function create(ctx: GameCtx): GameInstance {
     };
   }
 
-  const hud = () => ctx.setHud(phase === 'select' ? ctx.t('Pilih karakter') : ctx.t('Lawan {n}/3 · {s} poin', { n: opIdx + 1, s: score }));
+  const hud = () => ctx.setHud(phase === 'select' ? ctx.t('Pilih karakter')
+    : versus ? ctx.t('Pemain 1 {a} · Pemain 2 {b}', { a: pWins, b: cWins })
+      : ctx.t('Lawan {n}/3 · {s} poin', { n: opIdx + 1, s: score }));
   hud();
 
   function startMatch() {
@@ -167,6 +187,14 @@ function create(ctx: GameCtx): GameInstance {
   }
 
   function confirmSelect() {
+    if (versus) {
+      opponents = [cast[sel2]];
+      P = mkFighter(cast[sel], 170, 1);
+      opIdx = 0;
+      ctx.sfx('confirm');
+      startMatch();
+      return;
+    }
     const pool = cast.filter((_, i) => i !== sel);
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(ctx.rand() * (i + 1));
@@ -306,7 +334,7 @@ function create(ctx: GameCtx): GameInstance {
     if (ctl.b) f.buf.b = BUFFER; else f.buf.b = Math.max(0, f.buf.b - dt);
     if (ctl.x) {
       f.buf.x = BUFFER;
-      if (f.meter < 100 && f === P && phase === 'fight') pop(f.x, f.y - 128, ctx.t('Meter belum penuh'), PAL.ink2, 13);
+      if (f.meter < 100 && (f === P || versus) && phase === 'fight') pop(f.x, f.y - 128, ctx.t('Meter belum penuh'), PAL.ink2, 13);
     } else f.buf.x = Math.max(0, f.buf.x - dt);
     if (f.ko || f.win) {
       f.guard = false;
@@ -532,6 +560,12 @@ function create(ctx: GameCtx): GameInstance {
   }
 
   function afterMatch() {
+    if (versus) {
+      phase = 'over';
+      const win = matchWon ? P : C;
+      ctx.end({ score: 0, versus: true, won: true, summary: ctx.t('{name} (Pemain {n}) menang {a}-{b}', { name: win.c.name, n: matchWon ? 1 : 2, a: Math.max(pWins, cWins), b: Math.min(pWins, cWins) }) });
+      return;
+    }
     if (!matchWon) {
       phase = 'over';
       ctx.end({ score, won: false, summary: ctx.t('Mengalahkan {n} dari 3 lawan', { n: opIdx }) });
@@ -552,6 +586,18 @@ function create(ctx: GameCtx): GameInstance {
       time += dt;
       stepFeedback(dt);
       if (phase === 'over') return;
+      if (phase === 'select' && versus) {
+        const ins = [inp, inp.players?.[1]];
+        ins.forEach((pi, k) => {
+          if (!pi || ready[k]) { if (pi && ready[k] && pi.hit.b) { ready[k] = false; ctx.sfx('back'); } return; }
+          const d = pi.hit.left ? -1 : pi.hit.right ? 1 : 0;
+          if (d) { if (k === 0) sel = (sel + cast.length + d) % cast.length; else sel2 = (sel2 + cast.length + d) % cast.length; ctx.sfx('ui'); }
+          if (pi.hit.a) { ready[k] = true; ctx.sfx('confirm'); }
+        });
+        if (inp.tap) { const i = slotAt(inp.tap.x, inp.tap.y); if (i >= 0) { sel = i; ctx.sfx('ui'); } }
+        if (ready[0] && ready[1]) confirmSelect();
+        return;
+      }
       if (phase === 'select') {
         if (inp.hit.left) { sel = (sel + cast.length - 1) % cast.length; ctx.sfx('ui'); }
         if (inp.hit.right) { sel = (sel + 1) % cast.length; ctx.sfx('ui'); }
@@ -582,16 +628,16 @@ function create(ctx: GameCtx): GameInstance {
         if (inp.hit.a) P.buf.a = BUFFER;
         if (inp.hit.b) P.buf.b = BUFFER;
         if (inp.hit.x) P.buf.x = BUFFER;
+        const p2 = versus ? inp.players?.[1] : undefined;
+        if (p2?.hit.a) C.buf.a = BUFFER;
+        if (p2?.hit.b) C.buf.b = BUFFER;
+        if (p2?.hit.x) C.buf.x = BUFFER;
         return;
       }
       clock = Math.max(0, clock - dt);
-      const pc: Ctl = {
-        l: inp.down.left || inp.ax < -0.4, r: inp.down.right || inp.ax > 0.4,
-        u: inp.down.up || inp.ay < -0.55, d: inp.down.down || inp.ay > 0.55,
-        a: inp.hit.a, b: inp.hit.b, x: inp.hit.x, g: inp.down.y || inp.hit.y,
-        speed: inp.down.left || inp.down.right ? 1 : Math.abs(inp.ax),
-      };
-      const cc = aiCtl(dt);
+      const pc = ctlOf(inp);
+      const p2 = inp.players?.[1];
+      const cc = versus ? (p2 ? ctlOf(p2) : { ...NO_CTL }) : aiCtl(dt);
       stepFighter(P, C, pc, dt);
       stepFighter(C, P, cc, dt);
       separate();
@@ -599,7 +645,7 @@ function create(ctx: GameCtx): GameInstance {
       if (P.ko || C.ko || clock <= 0) endRound();
     },
     render() {
-      if (phase === 'select') { renderSelect(); return; }
+      if (phase === 'select') { if (versus) renderSelectVs(); else renderSelect(); return; }
       g.save();
       if (shake > 0 && !ctx.reducedMotion) {
         const k = Math.min(1, shake / 0.12);
@@ -649,7 +695,7 @@ function create(ctx: GameCtx): GameInstance {
       renderBanner();
     },
     snapshot: () => ({
-      phase, sel, selId: cast[sel]?.id, opIdx, round, pWins, cWins, clock: Math.round(clock * 100) / 100, score,
+      phase, versus, sel, sel2, ready: [...ready], selId: cast[sel]?.id, opIdx, round, pWins, cWins, clock: Math.round(clock * 100) / 100, score,
       opponents: opponents.map((o) => o.id),
       p: fsnap(P), c: fsnap(C), hitstop: hitstopF, frozen: frozenFrames, pops: pops.length, stars: stars.length,
       fx: fx.map((e) => e.kind), hits: hits.slice(-10), specials: [...specials],
@@ -888,6 +934,50 @@ function create(ctx: GameCtx): GameInstance {
     }
   }
 
+  function renderSelectVs() {
+    g.fillStyle = PAL.bg;
+    g.fillRect(0, 0, w, h);
+    g.fillStyle = PAL.green;
+    g.fillRect(0, 0, w, 50);
+    text(g, ctx.t('Pilih Karakter · Berdua'), w / 2, 26, 26, PAL.surface);
+    const clip = (s: string, maxW: number, size: number, weight = 600) => {
+      g.font = `${weight} ${size}px 'Alegreya Sans', system-ui, sans-serif`;
+      if (g.measureText(s).width <= maxW) return s;
+      let t = s;
+      while (t.length > 3 && g.measureText(t + '...').width > maxW) t = t.slice(0, -1);
+      return t + '...';
+    };
+    const side = (k: 0 | 1) => {
+      const c = cast[k === 0 ? sel : sel2];
+      const x0 = k === 0 ? 20 : 330;
+      g.fillStyle = PAL.sand;
+      roundRect(g, x0, 60, 290, 198, 14);
+      g.fillStyle = PLAYER_COLORS[k];
+      roundRect(g, x0 + 10, 68, 92, 24, 8);
+      text(g, ctx.t('Pemain {n}', { n: k + 1 }), x0 + 56, 81, 14, '#fffaf0', 'center', 800);
+      g.fillStyle = 'rgba(0,0,0,0.14)';
+      g.beginPath(); g.ellipse(x0 + 76, 246, 42, 8, 0, 0, Math.PI * 2); g.fill();
+      drawChar(g, c, x0 + 76, 246, 140, k === 0 ? 1 : -1, ready[k] ? 'special' : 'idle', time);
+      text(g, clip(c.name, 132, 22, 800), x0 + 150, 112, 22, PAL.ink, 'left', 800);
+      text(g, clip(ctx.t(c.role), 132, 13), x0 + 150, 136, 13, PAL.ink2, 'left', 600);
+      text(g, clip(SP[SPECIAL_OF[c.id] ?? 'dasi'].name, 132, 13, 800), x0 + 150, 162, 13, PAL.accent, 'left', 800);
+      text(g, ready[k] ? ctx.t('Siap! (B: ganti)') : ctx.t('Kiri/Kanan, lalu A'), x0 + 150, 226, 14, ready[k] ? PLAYER_COLORS[k] : PAL.ink2, 'left', 800);
+    };
+    side(0); side(1);
+    for (let i = 0; i < cast.length; i++) {
+      const x = 8 + i * 70;
+      const mine = [i === sel, i === sel2];
+      g.fillStyle = mine[0] && mine[1] ? PAL.gold : mine[0] ? PLAYER_COLORS[0] : mine[1] ? PLAYER_COLORS[1] : 'rgba(29,42,35,0.18)';
+      roundRect(g, x - 3, 265, 70, 90, 10);
+      g.fillStyle = mine[0] || mine[1] ? PAL.surface : PAL.sand;
+      roundRect(g, x, 268, 64, 84, 8);
+      drawChar(g, cast[i], x + 32, 332, 58, 1, 'idle', mine[0] || mine[1] ? time : 0);
+      text(g, cast[i].name, x + 32, 343, 11, PAL.ink, 'center', 800);
+      if (mine[0]) text(g, '1', x + 10, 278, 12, PLAYER_COLORS[0], 'center', 800);
+      if (mine[1]) text(g, '2', x + 54, 278, 12, PLAYER_COLORS[1], 'center', 800);
+    }
+  }
+
   function renderArena() {
     g.fillStyle = '#eadfc8';
     g.fillRect(-20, -20, w + 40, GROUND + 20);
@@ -954,7 +1044,7 @@ function create(ctx: GameCtx): GameInstance {
     bar(14, P, false);
     bar(366, C, true);
     if (P.meter >= 100) text(g, ctx.t('Jurus siap (X)'), 14, h - 28, 13, PAL.ink, 'left', 800);
-    if (C.meter >= 100) text(g, ctx.t('Jurus siap'), 626, h - 28, 13, PAL.ink, 'right', 800);
+    if (C.meter >= 100) text(g, versus ? ctx.t('Jurus siap (X)') : ctx.t('Jurus siap'), 626, h - 28, 13, PAL.ink, 'right', 800);
     g.fillStyle = PAL.green;
     roundRect(g, 296, 6, 48, 40, 8);
     text(g, String(Math.ceil(clock)), 320, 27, 22, PAL.surface, 'center', 800);
@@ -964,7 +1054,10 @@ function create(ctx: GameCtx): GameInstance {
       g.fillStyle = i < cWins ? PAL.gold : 'rgba(29,42,35,0.25)';
       g.beginPath(); g.arc(358 + i * 12, 42, 4.5, 0, Math.PI * 2); g.fill();
     }
-    text(g, ctx.t('Lawan {n}/3', { n: opIdx + 1 }), 320, 58, 12, PAL.ink2, 'center', 700);
+    if (versus) {
+      text(g, 'P1', 14, 58, 12, PLAYER_COLORS[0], 'left', 800);
+      text(g, 'P2', 626, 58, 12, PLAYER_COLORS[1], 'right', 800);
+    } else text(g, ctx.t('Lawan {n}/3', { n: opIdx + 1 }), 320, 58, 12, PAL.ink2, 'center', 700);
   }
 
   function renderBanner() {
@@ -975,8 +1068,13 @@ function create(ctx: GameCtx): GameInstance {
     } else if (phase === 'roundEnd') {
       big = banner;
     } else if (phase === 'matchEnd' || phase === 'over') {
-      big = matchWon ? (opIdx >= 2 ? ctx.t('Juara!') : ctx.t('Kamu menang!')) : ctx.t('Kamu kalah');
-      small = ctx.t('{s} poin', { s: score });
+      if (versus) {
+        big = ctx.t('Pemain {n} menang!', { n: matchWon ? 1 : 2 });
+        small = (matchWon ? P : C).c.name;
+      } else {
+        big = matchWon ? (opIdx >= 2 ? ctx.t('Juara!') : ctx.t('Kamu menang!')) : ctx.t('Kamu kalah');
+        small = ctx.t('{s} poin', { s: score });
+      }
     }
     if (!big) return;
     g.fillStyle = 'rgba(29,42,35,0.82)';

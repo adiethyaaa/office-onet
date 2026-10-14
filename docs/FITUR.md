@@ -2,7 +2,7 @@
 
 # Fitur Kantor RPG
 
-Dokumen ini menjelaskan setiap fitur dari sisi pemakai: apa yang terlihat, cara memakainya, dan batasnya. Untuk pemasangan lihat [INSTALL.md](../INSTALL.md). Perubahan per versi ada di [CHANGELOG.md](../CHANGELOG.md). Dokumen ini sesuai dengan **v2.1.1** (14 Oktober 2026).
+Dokumen ini menjelaskan setiap fitur dari sisi pemakai: apa yang terlihat, cara memakainya, dan batasnya. Untuk pemasangan lihat [INSTALL.md](../INSTALL.md). Perubahan per versi ada di [CHANGELOG.md](../CHANGELOG.md). Dokumen ini sesuai dengan **v2.2** (14 Oktober 2026).
 
 Daftar isi
 
@@ -195,6 +195,16 @@ Game Station:
 | 6 sampai 10 | Segera hadir | Slot kosong untuk game berikutnya |
 
 Di Game Station, panah atau D-pad memilih mesin, Enter atau A membuka, Esc atau B kembali ke kantor. Keluar dari game membawa kembali ke Game Station.
+
+**Main bareng (multiplayer lokal).** Tarung Kantor, Arena Bom, dan Catur Kantor bisa dimainkan beberapa orang di satu layar, masing-masing dengan stik sendiri.
+
+- Buka game seperti biasa. Di kartu pembuka ada bagian **Pemain**: Pemain 1 memakai keyboard, layar sentuh, atau stik pertama.
+- Pemain lain menyambungkan stiknya lalu menekan **A**, dan namanya muncul sebagai Pemain 2, 3, atau 4. Tekan **B** di stik itu untuk batal. Pemain 1 menekan **Mulai**.
+- **Tarung Kantor** (2 pemain): kedua pemain memilih karakter (kiri/kanan, lalu A; B untuk ganti), lalu satu pertandingan sampai menang 2 ronde. Pemain 2 bertarung di sisi kanan.
+- **Arena Bom** (sampai 4 pemain): setiap pemain mulai di sudut sendiri, sudut yang kosong diisi komputer. Yang terakhir bertahan menang ronde; yang pertama menang 2 ronde memenangkan pertandingan.
+- **Catur Kantor** (2 pemain): Pemain 1 putih, Pemain 2 hitam. Hanya stik pemain yang sedang giliran yang menggerakkan bidak. Ketukan dan seretan di layar berlaku untuk pihak yang sedang giliran.
+- Hasil pertandingan bersama menyebut pemenangnya dan tidak masuk papan skor. Bila hanya satu stik tersambung, game berjalan melawan komputer seperti biasa.
+- Game lain tetap untuk satu pemain dan tidak menampilkan bagian Pemain.
 
 **Catur Kantor.** Dekati meja board game di Ruang game (Lantai 2); di atas meja ada papan catur 8x8. Muncul petunjuk `E: Main Catur Kantor`. Pilih tingkat kesulitan, lalu main dengan bidak putih. Aturannya lengkap: rokade, en passant, promosi pion (pilih bidaknya), skak mat, dan remis (pat, tiga kali posisi sama, aturan 50 langkah, bidak tidak cukup). Bidak bisa digerakkan dengan kursor dan A, diketuk lalu ketuk petak tujuan, atau diseret dengan jari atau mouse.
 

@@ -2,7 +2,10 @@
 // teammates in the corners, permanent pillars in a checker pattern, filing
 // cabinets that break and sometimes drop power-ups. Best of three rounds; after
 // 120 s the arena closes in from the outside so every round ends.
-import type { CastMember, GameCtx, GameInstance, GameModule } from '../types';
+// Local multiplayer: up to four players on gamepads take the corners; the rest
+// stay CPU. Last one standing wins the round, first to two rounds wins.
+import type { CastMember, GameCtx, GameInstance, GameModule, InputState } from '../types';
+import { PLAYER_COLORS } from '../local-players';
 import { PAL, drawToken, roundRect, text } from '../cast';
 
 export const GW = 15;
@@ -70,6 +73,14 @@ const meta: GameModule['meta'] = {
   controls: ['Panah atau D-pad: jalan', 'A: pasang bom', 'Ledakan menghancurkan lemari arsip; ambil power-up yang jatuh', 'Menang 2 dari 3 ronde. Setelah 120 detik arena menyempit'],
   view: { w: GW * T, h: GH * T + TOP }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'up', 'down', 'right', 'a'],
   actions: { arah: 'Jalan (tahan untuk terus jalan)', a: 'Pasang bom' },
+  players: 4,
+  playersHint: 'Bareng: sampai 4 pemain, sudut yang kosong diisi komputer. Yang terakhir bertahan menang ronde.',
+};
+
+const NO_INPUT: InputState = {
+  down: { left: false, right: false, up: false, down: false, a: false, b: false, x: false, y: false },
+  hit: { left: false, right: false, up: false, down: false, a: false, b: false, x: false, y: false },
+  ax: 0, ay: 0, tap: null,
 };
 
 /** Seconds a press is remembered: a turn or bomb pressed slightly early still happens. */
@@ -91,6 +102,16 @@ function create(ctx: GameCtx): GameInstance {
   const rivals: CastMember[] = [];
   while (rivals.length < 3 && pool.length) rivals.push(pool.splice(Math.floor(ctx.rand() * pool.length), 1)[0]);
   const cast = [me, ...rivals];
+  const humans = Math.max(1, Math.min(4, ctx.players));
+  const versus = humans > 1;
+  /** Round wins per player (versus). */
+  const winsBy = [0, 0, 0, 0];
+  let roundWinner = -1;
+  // walking memory of each human (the globals below hold the one being stepped)
+  interface Walk { lastDir: number; lastDirT: number; prefAxis: number; prevH: boolean; prevV: boolean; bombBuf: number; squash: number }
+  const walks: Walk[] = Array.from({ length: humans }, () => ({ lastDir: -1, lastDirT: 0, prefAxis: 1, prevH: false, prevV: false, bombBuf: 0, squash: 0 }));
+  /** Index of the human being stepped right now. */
+  let HP = 0;
 
   const grid = new Uint8Array(GW * GH);
   const hidden = new Map<number, Item>();
@@ -130,7 +151,16 @@ function create(ctx: GameCtx): GameInstance {
   let squash = 0;
 
   const score = () => boxesBroken * 10 + kills * 300 + wins * 500;
-  const hud = () => ctx.setHud(ctx.t('Ronde {r} · Menang {w} · Skor {s}', { r: round, w: wins, s: score() }));
+  const hud = () => ctx.setHud(versus
+    ? ctx.t('Ronde {r} · {list}', { r: round, list: winsBy.slice(0, humans).map((n, i) => `P${i + 1} ${n}`).join(' · ') })
+    : ctx.t('Ronde {r} · Menang {w} · Skor {s}', { r: round, w: wins, s: score() }));
+  function load(i: number) {
+    const k = walks[i]; HP = i;
+    lastDir = k.lastDir; lastDirT = k.lastDirT; prefAxis = k.prefAxis; prevH = k.prevH; prevV = k.prevV; bombBuf = k.bombBuf; squash = k.squash;
+  }
+  function save(i: number) {
+    walks[i] = { lastDir, lastDirT, prefAxis, prevH, prevV, bombBuf, squash };
+  }
 
   function newRound() {
     round++;
@@ -148,7 +178,7 @@ function create(ctx: GameCtx): GameInstance {
       }
     }
     players = cast.map((c, i) => ({
-      c, x: CORNERS[i][0], y: CORNERS[i][1], alive: true, cpu: i > 0, maxBombs: 1, range: 2, speed: 3.4,
+      c, x: CORNERS[i][0], y: CORNERS[i][1], alive: true, cpu: i >= humans, maxBombs: 1, range: 2, speed: 3.4,
       target: null, wait: 0.3 + ctx.rand() * 0.4, moving: false, deathT: 0,
     }));
     bombs = [];
@@ -171,6 +201,8 @@ function create(ctx: GameCtx): GameInstance {
     lastDir = -1;
     lastDirT = 0;
     bombBuf = 0;
+    for (let i = 0; i < walks.length; i++) walks[i] = { lastDir: -1, lastDirT: 0, prefAxis: 1, prevH: false, prevV: false, bombBuf: 0, squash: 0 };
+    roundWinner = -1;
     hud();
   }
   newRound();
@@ -402,9 +434,9 @@ function create(ctx: GameCtx): GameInstance {
 
   /** Try walking `dir`; true when the player actually moved. */
   function tryMove(dir: number, dist: number, maxSlide = Infinity): boolean {
-    const P = players[0];
+    const P = players[HP];
     const bx = P.x, by = P.y;
-    move(0, dir, dist, maxSlide);
+    move(HP, dir, dist, maxSlide);
     return P.x !== bx || P.y !== by;
   }
 
@@ -416,7 +448,7 @@ function create(ctx: GameCtx): GameInstance {
    * so a quick tap is one clean step.
    */
   function playerWalk(dt: number, ax: number, ay: number) {
-    const P = players[0];
+    const P = players[HP];
     const mag = Math.min(1, Math.hypot(ax, ay));
     const hx = Math.abs(ax) > 0.3, vy = Math.abs(ay) > 0.3;
     if (vy && !prevV) prefAxis = 0;
@@ -512,11 +544,17 @@ function create(ctx: GameCtx): GameInstance {
       shake = Math.max(0, shake - dt);
       for (const p of players) if (!p.alive) p.deathT += dt;
       if (phase === 'over') return;
-      squash = Math.max(0, squash - dt);
+      const ins: InputState[] = inp.players ?? [inp];
+      const inOf = (i: number): InputState => ins[i] ?? NO_INPUT;
+      for (const k of walks) k.squash = Math.max(0, k.squash - dt);
       goT = Math.max(0, goT - dt);
       if (phase === 'intro') {
         phaseT -= dt;
-        bombBuf = inp.hit.a && phaseT < BUFFER_T ? BUFFER_T : Math.max(0, bombBuf - dt);
+        for (let i = 0; i < humans; i++) {
+          load(i);
+          bombBuf = inOf(i).hit.a && phaseT < BUFFER_T ? BUFFER_T : Math.max(0, bombBuf - dt);
+          save(i);
+        }
         if (phaseT <= 0) { phase = 'play'; goT = 0.7; ctx.sfx('start'); }
         return;
       }
@@ -524,7 +562,17 @@ function create(ctx: GameCtx): GameInstance {
         phaseT -= dt;
         for (let c = 0; c < flameT.length; c++) flameT[c] = Math.max(0, flameT[c] - dt);
         if (phaseT > 0) return;
-        if (wins >= 2 || losses >= 2 || round >= 5) {
+        if (versus && (Math.max(...winsBy) >= 2 || round >= 5)) {
+          phase = 'over';
+          const best = Math.max(...winsBy.slice(0, humans));
+          const top = winsBy.slice(0, humans).map((n, i) => (n === best && best > 0 ? i : -1)).filter((i) => i >= 0);
+          const summary = top.length === 1
+            ? ctx.t('Pemain {n} ({name}) menang {w} ronde', { n: top[0] + 1, name: cast[top[0]].name, w: best })
+            : ctx.t('Seri, tidak ada pemenang');
+          ctx.end({ score: 0, versus: true, won: top.length === 1, summary });
+          return;
+        }
+        if (!versus && (wins >= 2 || losses >= 2 || round >= 5)) {
           phase = 'over';
           const won = wins > losses;
           ctx.end({ score: score(), won, summary: ctx.t('Ronde menang {w}, lawan kalah {k}, lemari {b}', { w: wins, k: kills, b: boxesBroken }) });
@@ -536,14 +584,20 @@ function create(ctx: GameCtx): GameInstance {
       playT += dt;
       roundT += dt;
       const P = players[0];
-      P.moving = false;
-      if (P.alive) {
-        // bomb first so a press while walking lands on the cell you stand on now
-        if (inp.hit.a) bombBuf = BUFFER_T;
-        if (bombBuf > 0) {
-          if (placeBomb(0)) { bombBuf = 0; squash = 0.12; } else bombBuf = Math.max(0, bombBuf - dt);
+      for (let hi = 0; hi < humans; hi++) {
+        const H = players[hi];
+        const hin = inOf(hi);
+        load(hi);
+        H.moving = false;
+        if (H.alive) {
+          // bomb first so a press while walking lands on the cell you stand on now
+          if (hin.hit.a) bombBuf = BUFFER_T;
+          if (bombBuf > 0) {
+            if (placeBomb(hi)) { bombBuf = 0; squash = 0.12; } else bombBuf = Math.max(0, bombBuf - dt);
+          }
+          playerWalk(dt, hin.ax, hin.ay);
         }
-        playerWalk(dt, inp.ax, inp.ay);
+        save(hi);
       }
       danger = computeDanger();
       for (let i = 1; i < players.length; i++) if (players[i].alive) ai(i, dt);
@@ -584,6 +638,16 @@ function create(ctx: GameCtx): GameInstance {
           ctx.sfx('thud', { gain: 0.5 });
         }
       }
+      if (versus) {
+        const alive = players.map((p, i) => (p.alive ? i : -1)).filter((i) => i >= 0);
+        const humanAlive = alive.some((i) => i < humans);
+        if (alive.length <= 1 || !humanAlive) {
+          roundWinner = alive.length === 1 ? alive[0] : -1;
+          if (roundWinner >= 0 && roundWinner < humans) winsBy[roundWinner]++;
+          endRound(roundWinner >= 0 && roundWinner < humans ? 'win' : 'draw');
+        }
+        return;
+      }
       const cpuAlive = players.slice(1).some((p) => p.alive);
       if (!P.alive) endRound(cpuAlive ? 'lose' : 'draw');
       else if (!cpuAlive) endRound('win');
@@ -604,10 +668,11 @@ function create(ctx: GameCtx): GameInstance {
         g.globalAlpha = p.alive ? 1 : 0.4;
         drawToken(g, c, x + 17, 19, 10, time, false);
         g.globalAlpha = 1;
-        text(g, i === 0 ? ctx.t('Kamu') : c.name, x + 34, 20, 13, p.alive ? PAL.ink : PAL.ink2, 'left');
+        if (versus && i < humans) { g.fillStyle = PLAYER_COLORS[i]; roundRect(g, x, 31, 112, 4, 2); }
+        text(g, versus ? (i < humans ? `P${i + 1} ${c.name}` : c.name) : i === 0 ? ctx.t('Kamu') : c.name, x + 34, 20, 13, p.alive ? PAL.ink : PAL.ink2, 'left');
       });
       text(g, roundT >= ROUND_T ? ctx.t('Menyempit!') : `${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, '0')}`, w - 64, 13, 15, roundT >= ROUND_T ? PAL.red : PAL.ink);
-      text(g, ctx.t('Ronde {r} · {w}-{l}', { r: round, w: wins, l: losses }), w - 64, 30, 12, PAL.ink2);
+      text(g, versus ? ctx.t('Ronde {r}', { r: round }) : ctx.t('Ronde {r} · {w}-{l}', { r: round, w: wins, l: losses }), w - 64, 30, 12, PAL.ink2);
 
       g.save();
       g.translate(0, TOP);
@@ -654,17 +719,18 @@ function create(ctx: GameCtx): GameInstance {
         const p = players[i];
         if (!p.alive && p.deathT > 1.2) continue;
         g.globalAlpha = p.alive ? 1 : Math.max(0, 1 - p.deathT / 1.2);
-        if (i === 0 && squash > 0 && !ctx.reducedMotion) {
+        const sq = i < humans ? walks[i].squash : 0;
+        if (sq > 0 && !ctx.reducedMotion) {
           // squash on dropping a bomb
-          const k = Math.sin((squash / 0.12) * Math.PI) * 0.18;
+          const k = Math.sin((sq / 0.12) * Math.PI) * 0.18;
           const bx = p.x * T + T / 2, by = p.y * T + T / 2 + 10;
           g.save(); g.translate(bx, by); g.scale(1 + k, 1 - k); g.translate(-bx, -by);
           drawToken(g, p.c, p.x * T + T / 2, p.y * T + T / 2 - 4, 15, time, p.moving);
           g.restore();
         } else drawToken(g, p.c, p.x * T + T / 2, p.y * T + T / 2 - 4, 15, time, p.moving);
         g.globalAlpha = 1;
-        if (i === 0 && p.alive) {
-          g.fillStyle = PAL.accent;
+        if (i < humans && p.alive) {
+          g.fillStyle = versus ? PLAYER_COLORS[i] : PAL.accent;
           g.beginPath();
           const ax = p.x * T + T / 2, ay = p.y * T - 12;
           g.moveTo(ax - 5, ay - 6); g.lineTo(ax + 5, ay - 6); g.lineTo(ax, ay); g.closePath(); g.fill();
@@ -679,9 +745,15 @@ function create(ctx: GameCtx): GameInstance {
           text(g, ctx.t('Ronde {r}', { r: round }), w / 2, TOP + GH * T / 2 - 12, 28, PAL.green);
           text(g, ctx.t('Bersiap...'), w / 2, TOP + GH * T / 2 + 20, 18, PAL.ink2);
         } else {
-          const msg = outcome === 'win' ? ctx.t('Kamu menang ronde ini!') : outcome === 'lose' ? ctx.t('Kamu tersingkir') : ctx.t('Seri');
-          text(g, msg, w / 2, TOP + GH * T / 2 - 12, 24, outcome === 'win' ? PAL.green : PAL.red);
-          text(g, ctx.t('Skor {s}', { s: score() }), w / 2, TOP + GH * T / 2 + 20, 18, PAL.ink2);
+          if (versus) {
+            const msg = roundWinner >= 0 && roundWinner < humans ? ctx.t('Pemain {n} menang ronde!', { n: roundWinner + 1 }) : roundWinner >= 0 ? ctx.t('Komputer bertahan terakhir') : ctx.t('Seri');
+            text(g, msg, w / 2, TOP + GH * T / 2 - 12, 24, roundWinner >= 0 && roundWinner < humans ? PLAYER_COLORS[roundWinner] : PAL.red);
+            text(g, winsBy.slice(0, humans).map((n, i) => `P${i + 1}: ${n}`).join('   '), w / 2, TOP + GH * T / 2 + 20, 18, PAL.ink2);
+          } else {
+            const msg = outcome === 'win' ? ctx.t('Kamu menang ronde ini!') : outcome === 'lose' ? ctx.t('Kamu tersingkir') : ctx.t('Seri');
+            text(g, msg, w / 2, TOP + GH * T / 2 - 12, 24, outcome === 'win' ? PAL.green : PAL.red);
+            text(g, ctx.t('Skor {s}', { s: score() }), w / 2, TOP + GH * T / 2 + 20, 18, PAL.ink2);
+          }
         }
       }
       if (phase === 'play' && goT > 0) {
@@ -694,7 +766,7 @@ function create(ctx: GameCtx): GameInstance {
     },
 
     snapshot: () => ({
-      phase, round, wins, losses, score: score(), kills, boxesBroken, suicides, suicideTimes: [...suicideTimes],
+      phase, round, wins, losses, versus, humans, winsBy: winsBy.slice(0, humans), score: score(), kills, boxesBroken, suicides, suicideTimes: [...suicideTimes],
       roundT: Math.round(roundT * 100) / 100, playT: Math.round(playT * 100) / 100,
       bombs: bombs.length, myBombs: bombs.filter((b) => b.owner === 0).length, boxes: Array.from(grid).filter((v) => v === BOX).length, grid: Array.from(grid).join(''),
       players: players.map((p) => ({ id: p.c.id, x: Math.round(p.x * 1000) / 1000, y: Math.round(p.y * 1000) / 1000, alive: p.alive, maxBombs: p.maxBombs, range: p.range })),
