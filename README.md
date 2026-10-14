@@ -24,10 +24,11 @@ Delapan karakter NPC menjalani hari mereka sendiri: kerja di meja, bikin kopi, m
 
 Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap pengunjung melihat hari yang sama.
 
-## Baru di v2.1
+## Baru di v2.2
 
-Versi terbaru: **v2.1.1** (14 Oktober 2026). Rinciannya ada di [catatan perubahan](CHANGELOG.md).
+Versi terbaru: **v2.2** (14 Oktober 2026). Rinciannya ada di [catatan perubahan](CHANGELOG.md).
 
+- **Main bareng dengan beberapa stik.** Tarung Kantor (2 pemain), Arena Bom (sampai 4 pemain), dan Catur Kantor (2 pemain) bisa dimainkan bersama di satu layar. Sambungkan stik lain dan tekan A di kartu pembuka untuk ikut.
 - **15 mini game.** Treadmill, dumbel, matras, biliar, mesin kopi, rak server, meja gambar, easel, rak buku, dan meja catur di kantor bisa dimainkan. Kabinet arcade membuka **Game Station** berisi 5 game.
 - **Catur di meja papan catur.** Dekati meja board game di Ruang game, duduk di bangkunya, lalu main catur melawan rekan tim.
 - **Tombol responsif di semua layar.** Tidak ada tekan yang hilang, termasuk di layar 120 dan 144 Hz. Tombol yang masih ditahan tidak lagi tembus ke menu berikutnya.
@@ -46,7 +47,7 @@ Versi terbaru: **v2.1.1** (14 Oktober 2026). Rinciannya ada di [catatan perubaha
 | Mini game | 15 game: 10 di fasilitas kantor, 5 di Game Station, diunduh saat dibuka |
 | Musik | 12 lagu original, dibuat di browser |
 | Unduhan JavaScript awal | three.js 168 kB + app 48 kB (gzip) |
-| Tes | 362 tes unit, 309 skenario E2E (desktop, tablet, HP), 432 tes Python, 32 tes server |
+| Tes | 368 tes unit, 318 skenario E2E (desktop, tablet, HP), 432 tes Python, 32 tes server |
 | Keputusan tercatat | 18 ADR di [docs/decisions.md](docs/decisions.md) |
 
 ## Fitur utama

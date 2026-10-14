@@ -20,6 +20,11 @@ export interface InputState {
    * Optional so the headless harness and older games can ignore it.
    */
   ptr?: { x: number; y: number; down: boolean } | null;
+  /**
+   * Local multiplayer: one input per player, index 0 is Pemain 1 (the same
+   * state as the fields above). Present only when more than one player joined.
+   */
+  players?: InputState[];
 }
 
 export interface GameResult {
@@ -28,6 +33,8 @@ export interface GameResult {
   /** Short line shown on the result card, already translated. */
   summary?: string;
   won?: boolean;
+  /** A match between local players: no leaderboard entry, no score line. */
+  versus?: boolean;
 }
 
 export interface GameMeta {
@@ -55,6 +62,10 @@ export interface GameMeta {
   actions?: Partial<Record<Btn | 'arah', string>>;
   /** Extra tutorial line for touch/mouse players (drag or tap controls). */
   pointerHint?: string;
+  /** Local multiplayer: how many players may join on one screen (default 1). */
+  players?: number;
+  /** Lobby line for multiplayer games, e.g. what Pemain 2 controls (Indonesian source). */
+  playersHint?: string;
 }
 
 /** Everything the host gives a running game. */
@@ -73,6 +84,8 @@ export interface GameCtx {
   /** Player avatar colours and the cast, for drawing characters. */
   readonly cast: CastMember[];
   readonly playerId: string;
+  /** Players who joined on the intro card (1 = solo against the computer). */
+  readonly players: number;
   /** Finish the run; the host shows the result card. */
   end(r: GameResult): void;
   /** Live score shown in the host bar. */

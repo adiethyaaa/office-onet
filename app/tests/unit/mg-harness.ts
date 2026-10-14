@@ -31,6 +31,8 @@ export interface Run {
   /** Play until the game ends or `maxSeconds` pass, choosing input each frame with `policy`. */
   play(policy: (frame: number, snap: Record<string, unknown>) => { held?: Btn[]; press?: Btn[]; axis?: { x: number; y: number }; tap?: { x: number; y: number } | null }, maxSeconds: number): GameResult | null;
   snap(): Record<string, unknown>;
+  /** Multiplayer: advance n frames; `per[k]` is Pemain k+1's held/pressed buttons. */
+  stepPlayers(n: number, per: { held?: Btn[]; press?: Btn[] }[]): void;
 }
 
 export function mulberry(seed: number) {
@@ -44,7 +46,7 @@ export function mulberry(seed: number) {
   };
 }
 
-export function run(mod: GameModule, seed = 20261013): Run {
+export function run(mod: GameModule, seed = 20261013, players = 1): Run {
   const g = fakeContext();
   const rand = mulberry(seed);
   const r: Run = {
@@ -70,6 +72,18 @@ export function run(mod: GameModule, seed = 20261013): Run {
       return r.result;
     },
     snap() { return inst.snapshot?.() ?? {}; },
+    stepPlayers(n, per) {
+      const mk = (held: Btn[] = [], press: Btn[] = [], first: boolean): InputState => {
+        const down = Object.fromEntries(BTNS.map((b) => [b, held.includes(b) || press.includes(b)])) as Record<Btn, boolean>;
+        const hit = Object.fromEntries(BTNS.map((b) => [b, press.includes(b) && first])) as Record<Btn, boolean>;
+        return { down, hit, ax: (down.right ? 1 : 0) - (down.left ? 1 : 0), ay: (down.down ? 1 : 0) - (down.up ? 1 : 0), tap: null };
+      };
+      for (let i = 0; i < n && !r.result; i++) {
+        const all = Array.from({ length: players }, (_, k) => mk(per[k]?.held, per[k]?.press, i === 0));
+        inst.update(1 / 60, { ...all[0], players: all });
+        inst.render();
+      }
+    },
   };
   const canvas = { width: mod.meta.view.w, height: mod.meta.view.h } as HTMLCanvasElement;
   r.ctx = {
@@ -79,6 +93,7 @@ export function run(mod: GameModule, seed = 20261013): Run {
     reducedMotion: false,
     cast: buildCast(),
     playerId: 'CH-CEO',
+    players,
     end: (res) => { if (!r.result) r.result = res; },
     setHud: (s) => { r.hud = s; },
   };

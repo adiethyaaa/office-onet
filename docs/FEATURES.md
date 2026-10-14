@@ -2,7 +2,7 @@
 
 # Kantor RPG Features
 
-This document describes each feature from the user's side: what you see, how to use it, and its limits. For installation, see [INSTALL.en.md](../INSTALL.en.md). Changes per version are in [CHANGELOG.en.md](../CHANGELOG.en.md). This document matches **v2.1.1** (14 October 2026).
+This document describes each feature from the user's side: what you see, how to use it, and its limits. For installation, see [INSTALL.en.md](../INSTALL.en.md). Changes per version are in [CHANGELOG.en.md](../CHANGELOG.en.md). This document matches **v2.2** (14 October 2026).
 
 Table of contents
 
@@ -196,6 +196,16 @@ Game Station:
 | 6 to 10 | Coming soon | Empty slots for future games |
 
 In the Game Station, arrows or the D-pad pick a machine, Enter or A opens it, Esc or B returns to the office. Quitting a game brings you back to the Game Station.
+
+**Play together (local multiplayer).** Office Brawl, Bomb Arena, and Office Chess can be played by several people on one screen, each with their own gamepad.
+
+- Open the game as usual. The opening card has a **Players** section: Player 1 uses the keyboard, touch screen, or the first gamepad.
+- Other players connect their pad and press **A**, and they appear as Player 2, 3, or 4. Press **B** on that pad to leave. Player 1 presses **Start**.
+- **Office Brawl** (2 players): both pick a fighter (left/right, then A; B to change), then one match, first to 2 rounds. Player 2 fights on the right.
+- **Bomb Arena** (up to 4 players): each player starts in their own corner, empty corners go to the computer. Last one standing wins the round; the first to 2 rounds wins the match.
+- **Office Chess** (2 players): Player 1 is white, Player 2 is black. Only the pad of the side to move moves pieces. Taps and drags on the screen act for the side to move.
+- A shared match names the winner and is not added to the leaderboard. With only one gamepad connected, the game runs against the computer as before.
+- Other games stay single-player and show no Players section.
 
 **Office Chess.** Walk up to the board game table in the Game room (floor 2); an 8x8 chessboard sits on it. The hint `E: Main Catur Kantor` (Play Office Chess) appears. Pick a difficulty, then play white. The rules are complete: castling, en passant, pawn promotion (you pick the piece), checkmate, and draws (stalemate, threefold repetition, the 50-move rule, insufficient material). Move pieces with the cursor and A, tap a piece then its target square, or drag it with a finger or the mouse.
 

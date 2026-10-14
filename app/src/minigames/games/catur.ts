@@ -440,6 +440,8 @@ const meta: GameModule['meta'] = {
   view: { w: 640, h: 480 }, score: { unit: 'poin', higherIsBetter: true }, touch: ['left', 'up', 'down', 'right', 'a', 'b', 'y'],
   actions: { arah: 'Gerakkan kursor', a: 'Pilih / taruh bidak', b: 'Batal', y: 'Menyerah (tahan atau 2x)' },
   pointerHint: 'Ketuk bidak lalu ketuk petak tujuan, atau seret bidak ke petak tujuan',
+  players: 2,
+  playersHint: 'Berdua: Pemain 1 memegang putih, Pemain 2 memegang hitam dengan stik kedua. Bergantian di papan yang sama.',
 };
 
 type Phase = 'menu' | 'play' | 'promo' | 'over';
@@ -467,7 +469,9 @@ function create(ctx: GameCtx): GameInstance {
   const opp: CastMember = team[Math.floor(ctx.rand() * team.length)] ?? ctx.cast[0];
   const me = ctx.cast.find((c) => c.id === ctx.playerId) ?? ctx.cast[0];
 
-  let phase: Phase = 'menu';
+  // Local multiplayer: white is Pemain 1, black is Pemain 2, no computer.
+  const versus = ctx.players >= 2;
+  let phase: Phase = versus ? 'play' : 'menu';
   let level: Level = 1;
   let menuSel = 1;
   const pos = fromFEN(START_FEN);
@@ -476,6 +480,9 @@ function create(ctx: GameCtx): GameInstance {
   bump();
   let legal = legalMoves(pos);
   let cursor = sqIndex('e2');
+  /** Each side's cursor, so Pemain 2 starts on its own pieces. */
+  const cursors: Record<number, number> = { 1: sqIndex('e2'), [-1]: sqIndex('e7') };
+  const sideName = (side: number) => (side > 0 ? ctx.t('Pemain 1 (putih)') : ctx.t('Pemain 2 (hitam)'));
   let sel = -1;
   let last: Move | null = null;
   let anim: Anim | null = null;
@@ -501,6 +508,7 @@ function create(ctx: GameCtx): GameInstance {
   const targetsOf = (s: number) => legal.filter((m) => m.f === s);
   const whiteMoves = () => (pos.turn > 0 ? pos.full - 1 : pos.full);
   const hud = () => {
+    if (versus) { ctx.setHud(ctx.t('Langkah {n}/{max} · Giliran {who}', { n: Math.min(pos.full, MAX_FULL), max: MAX_FULL, who: sideName(pos.turn) })); return; }
     if (phase === 'menu') ctx.setHud(ctx.t('Pilih tingkat'));
     else ctx.setHud(ctx.t('Langkah {n}/{max} · {lvl}', { n: Math.min(pos.full, MAX_FULL), max: MAX_FULL, lvl: lvlName(level) }));
   };
@@ -527,6 +535,7 @@ function create(ctx: GameCtx): GameInstance {
 
   function applyMove(m: Move, byPlayer: boolean) {
     const piece = pos.b[m.f];
+    cursors[pos.turn] = m.t;
     const capSq = m.fl & F_EP ? m.t + (pos.turn > 0 ? 8 : -8) : m.t;
     const cap = pos.b[capSq];
     makeMove(pos, m);
@@ -554,7 +563,9 @@ function create(ctx: GameCtx): GameInstance {
     sel = -1;
     const out = outcome(pos, history);
     if (out) {
-      if (out.kind === 'mate') {
+      if (out.kind === 'mate' && versus) {
+        finish(true, false, ctx.t('Skakmat! {who} menang', { who: sideName(out.winner) }), '');
+      } else if (out.kind === 'mate') {
         const wonMe = out.winner > 0;
         finish(wonMe, false, wonMe ? ctx.t('Skakmat! Kamu menang') : ctx.t('Skakmat, {n} menang', { n: opp.name }), '');
       } else {
@@ -566,13 +577,15 @@ function create(ctx: GameCtx): GameInstance {
     if (pos.full > MAX_FULL) {
       const d = material(pos);
       const sub = ctx.t('Batas {n} langkah, dinilai dari material', { n: MAX_FULL });
-      if (d > 0) finish(true, false, ctx.t('Kamu unggul material'), sub);
+      if (versus) finish(d !== 0, d === 0, d ? ctx.t('{who} unggul material', { who: sideName(Math.sign(d)) }) : ctx.t('Remis'), sub);
+      else if (d > 0) finish(true, false, ctx.t('Kamu unggul material'), sub);
       else if (d < 0) finish(false, false, ctx.t('{n} unggul material', { n: opp.name }), sub);
       else finish(false, true, ctx.t('Remis'), sub);
       return;
     }
     if (inCheck(pos)) { ctx.sfx('beep', { rate: 0.8 }); flash = 0.25; }
     if (pos.turn < 0) aiTimer = 0.35 + ctx.rand() * 0.3;
+    if (versus) cursor = cursors[pos.turn];
     hud();
   }
 
@@ -593,10 +606,10 @@ function create(ctx: GameCtx): GameInstance {
 
   function pressSquare(s: number) {
     cursor = s;
-    if (pos.turn < 0) return;
+    if (pos.turn < 0 && !versus) return;
     if (sel >= 0 && s === sel) { sel = -1; ctx.sfx('back'); return; }
     if (sel >= 0 && tryMoveTo(s)) return;
-    if (pos.b[s] > 0) {
+    if (pos.b[s] * pos.turn > 0) {
       if (targetsOf(s).length) { sel = s; ctx.sfx('ui'); }
       else { sel = -1; ctx.sfx('wrong'); shake = ctx.reducedMotion ? 0 : 0.08; }
       return;
@@ -605,6 +618,7 @@ function create(ctx: GameCtx): GameInstance {
   }
 
   function resign() {
+    if (versus) { finish(true, false, ctx.t('{who} menyerah', { who: sideName(pos.turn) }), ctx.t('{who} menang', { who: sideName(-pos.turn) })); return; }
     finish(false, false, ctx.t('Kamu menyerah'), ctx.t('{n} menang', { n: opp.name }));
   }
 
@@ -638,7 +652,7 @@ function create(ctx: GameCtx): GameInstance {
     const s = sqAt(x, y);
     if (s < 0) return;
     // pressing the selected piece again with a pointer may start a drag, so wait for release to deselect
-    if (inp.ptr && s === sel && pos.turn > 0) { drag = { from: s, x, y, show: false, wasSel: true }; cursor = s; return; }
+    if (inp.ptr && s === sel && (versus || pos.turn > 0)) { drag = { from: s, x, y, show: false, wasSel: true }; cursor = s; return; }
     pressSquare(s);
     if (inp.ptr && sel === s) drag = { from: s, x, y, show: false, wasSel: false };
   }
@@ -658,6 +672,7 @@ function create(ctx: GameCtx): GameInstance {
   function doEnd() {
     if (ended || !result) return;
     ended = true;
+    if (versus) { ctx.end({ score: 0, versus: true, won: true, summary: result.sub ? `${result.msg}. ${result.sub}` : result.msg }); return; }
     ctx.end({ score: result.score, won: result.won, summary: result.sub ? `${result.msg}. ${result.sub}` : result.msg });
   }
 
@@ -675,7 +690,11 @@ function create(ctx: GameCtx): GameInstance {
   }
 
   return {
-    update(dt, inp) {
+    update(dt, inp0) {
+      // versus: black moves with Pemain 2's pad; taps and drags on the shared
+      // screen act for whichever side is to move
+      const p2 = inp0.players?.[1];
+      const inp: InputState = versus && pos.turn < 0 && p2 ? { ...p2, tap: inp0.tap, ptr: inp0.ptr } : inp0;
       time += dt;
       flash = Math.max(0, flash - dt);
       shake = Math.max(0, shake - dt);
@@ -748,7 +767,7 @@ function create(ctx: GameCtx): GameInstance {
       }
       if (phase !== 'play') return;
 
-      if (pos.turn < 0) {
+      if (pos.turn < 0 && !versus) {
         aiTimer -= dt;
         if (aiTimer <= 0 && !anim) {
           const m = aiMove(pos, level, ctx.rand);
@@ -771,8 +790,8 @@ function create(ctx: GameCtx): GameInstance {
     },
 
     snapshot: () => ({
-      phase, level, menuSel, opp: opp.id, turn: pos.turn, full: pos.full, fen: toFEN(pos), sel, cursor,
-      legal: pos.turn > 0 && phase === 'play' ? legal.map(uci) : [],
+      phase, versus, level, menuSel, opp: opp.id, turn: pos.turn, full: pos.full, fen: toFEN(pos), sel, cursor,
+      legal: (pos.turn > 0 || versus) && phase === 'play' ? legal.map(uci) : [],
       last: last ? uci(last) : null, result: result ? { score: result.score, won: result.won, draw: result.draw, msg: result.msg } : null,
       ended, promo: promo ? promo.moves.map(uci) : null, promoIdx: promo?.idx ?? -1, resignArm: resignArm > 0, dragging: !!drag?.show,
     }),
@@ -888,28 +907,29 @@ function create(ctx: GameCtx): GameInstance {
         g.beginPath(); g.arc(cx + 32 + i * 10, y + 26, 3.6, 0, Math.PI * 2); g.fill();
       }
     }
-    text(g, fit(opp.name, pw - 20, 20), cx, y + 122, 20, PAL.ink, 'center', 800);
-    text(g, phase === 'menu' ? ctx.t('Lawan') : lvlName(level), cx, y + 143, 16, PAL.accent, 'center', 800);
+    text(g, fit(versus ? ctx.t('Pemain 2') : opp.name, pw - 20, 20), cx, y + 122, 20, PAL.ink, 'center', 800);
+    text(g, versus ? ctx.t('Hitam') : phase === 'menu' ? ctx.t('Lawan') : lvlName(level), cx, y + 143, 16, PAL.accent, 'center', 800);
     let status: string;
     let bg = PAL.sand, fg = PAL.ink;
     if (phase === 'menu') status = ctx.t('Pilih tingkat');
     else if (phase === 'over') status = result?.won ? ctx.t('Menang!') : result?.draw ? ctx.t('Remis') : ctx.t('Kalah');
     else if (phase === 'promo') status = ctx.t('Pilih promosi');
+    else if (versus) { const chk = inCheck(pos); status = chk ? ctx.t('Skak! Giliran Pemain {n}', { n: pos.turn > 0 ? 1 : 2 }) : ctx.t('Giliran Pemain {n}', { n: pos.turn > 0 ? 1 : 2 }); bg = chk ? PAL.red : PAL.green; fg = PAL.surface; }
     else if (pos.turn > 0) { const chk = inCheck(pos); status = chk ? ctx.t('Skak! Giliranmu') : ctx.t('Giliranmu'); bg = chk ? PAL.red : PAL.green; fg = PAL.surface; }
     else status = ctx.t('{n} berpikir', { n: opp.name });
     g.fillStyle = bg;
     roundRect(g, x + 10, y + 158, pw - 20, 36, 8);
     text(g, fit(status, pw - 28, 17), cx, y + 176, 17, fg, 'center', 800);
     text(g, ctx.t('Langkah {n}/{max}', { n: Math.min(pos.full, MAX_FULL), max: MAX_FULL }), cx, y + 212, 16, PAL.ink2, 'center', 700);
-    text(g, ctx.t('Tawananmu'), x + 12, y + 236, 14, PAL.ink2, 'left', 700);
+    text(g, versus ? ctx.t('Tawanan putih') : ctx.t('Tawananmu'), x + 12, y + 236, 14, PAL.ink2, 'left', 700);
     drawCaptured(captured.black, false, x + 12, y + 256);
-    text(g, ctx.t('Tawanan lawan'), x + 12, y + 282, 14, PAL.ink2, 'left', 700);
+    text(g, versus ? ctx.t('Tawanan hitam') : ctx.t('Tawanan lawan'), x + 12, y + 282, 14, PAL.ink2, 'left', 700);
     drawCaptured(captured.white, true, x + 12, y + 302);
     const d = Math.round(material(pos) / 100);
-    if (d) text(g, d > 0 ? ctx.t('Kamu +{n}', { n: d }) : ctx.t('Lawan +{n}', { n: -d }), cx, y + 328, 15, d > 0 ? PAL.green : PAL.red, 'center', 800);
+    if (d) text(g, versus ? ctx.t('Pemain {p} +{n}', { p: d > 0 ? 1 : 2, n: Math.abs(d) }) : d > 0 ? ctx.t('Kamu +{n}', { n: d }) : ctx.t('Lawan +{n}', { n: -d }), cx, y + 328, 15, d > 0 ? PAL.green : PAL.red, 'center', 800);
     if (last) text(g, ctx.t('Terakhir: {m}', { m: `${sqName(last.f)} ${sqName(last.t)}` }), cx, y + 350, 14, PAL.ink2, 'center', 700);
     drawChar(g, me, x + 24, y + 396, 36, 1, result?.won ? 'win' : 'idle', time);
-    text(g, ctx.t('Kamu: putih'), x + 44, y + 380, 15, PAL.ink, 'left', 800);
+    text(g, versus ? ctx.t('Pemain 1: putih') : ctx.t('Kamu: putih'), x + 44, y + 380, 15, PAL.ink, 'left', 800);
     if (phase === 'play' || phase === 'promo') {
       const armed = resignArm > 0;
       const b = RESIGN_BTN;

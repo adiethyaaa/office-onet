@@ -4,6 +4,23 @@
 
 Semua perubahan penting kantor-rpg, dari yang terbaru. Setiap rilis dipasang di [demo publik](https://employee-rpg.air-buddy.site) setelah tes dan CI lulus. Kode rilis adalah commit di `main`.
 
+## v2.2, 14 Oktober 2026
+
+**Main bareng dengan beberapa stik (multiplayer lokal)**
+
+- Tiga mini game bisa dimainkan bersama di satu layar, misalnya di TV kantor dengan beberapa stik:
+  - **Tarung Kantor:** Pemain 1 lawan Pemain 2. Masing-masing memilih karakter, lalu satu pertandingan sampai menang 2 ronde.
+  - **Arena Bom:** sampai 4 pemain. Sudut yang kosong diisi komputer, dan yang terakhir bertahan menang ronde.
+  - **Catur Kantor:** Pemain 1 memegang putih, Pemain 2 memegang hitam, bergantian di papan yang sama.
+- Cara ikut: di kartu pembuka game, sambungkan stik lain lalu tekan **A**. Daftar pemain langsung bertambah. Tekan **B** di stik itu untuk batal.
+- Pemain 1 tetap bisa memakai keyboard, layar sentuh, atau stik pertama. Setiap pemain punya antrean tekan sendiri, jadi tidak ada tekan yang hilang.
+- Hasil pertandingan berdua menyebut pemenangnya dan tidak masuk papan skor.
+- Kalau hanya satu stik yang tersambung, game berjalan seperti biasa melawan komputer.
+
+**Perbaikan**
+
+- Tombol A di stik yang menekan **Mulai** tidak lagi ikut terkirim ke game. Sebelumnya, di Tarung Kantor tekan itu langsung memilih karakter tanpa sempat memilih.
+
 ## v2.1.1, 14 Oktober 2026 (rilis `84a8678`)
 
 **Animasi di ruang olahraga**

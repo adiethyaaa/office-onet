@@ -69,4 +69,11 @@ export const EN_TARUNG_KANTOR: Record<string, string> = {
   'Review & QA': 'Review & QA',
   'Asisten 9router': '9router assistant',
   'Desain': 'Design',
+  'Pemain 1 {a} · Pemain 2 {b}': 'Player 1 {a} · Player 2 {b}',
+  '{name} (Pemain {n}) menang {a}-{b}': '{name} (Player {n}) wins {a}-{b}',
+  'Pilih Karakter · Berdua': 'Choose Fighters · Two players',
+  'Siap! (B: ganti)': 'Ready! (B: change)',
+  'Kiri/Kanan, lalu A': 'Left/Right, then A',
+  'Pemain {n} menang!': 'Player {n} wins!',
+  'Berdua: Pemain 2 bertarung di sisi kanan dengan stik kedua. Satu pertandingan, menang 2 ronde.': 'Two players: Player 2 fights on the right with the second pad. One match, first to 2 rounds.',
 };

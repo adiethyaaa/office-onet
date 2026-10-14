@@ -26,10 +26,11 @@ The app runs in English or Indonesian. It follows your browser language, and you
 
 The public demo runs without login. It shows a simulation with a fixed seed, so every visitor sees the same day.
 
-## New in v2.1
+## New in v2.2
 
-Latest version: **v2.1.1** (14 October 2026). Details are in the [changelog](CHANGELOG.en.md).
+Latest version: **v2.2** (14 October 2026). Details are in the [changelog](CHANGELOG.en.md).
 
+- **Play together with several gamepads.** Office Brawl (2 players), Bomb Arena (up to 4), and Office Chess (2 players) can be played together on one screen. Connect another pad and press A on the opening card to join.
 - **15 mini games.** The treadmill, dumbbells, mat, billiards, coffee machine, server rack, drafting table, easel, bookshelf, and chess table in the office are playable. The arcade cabinet opens the **Game Station** with 5 games.
 - **Chess at the chess table.** Walk up to the board game table in the Game room, take a stool, and play chess against a teammate.
 - **Responsive buttons on every screen.** No press gets lost, including on 120 and 144 Hz screens. A button still held no longer falls through to the next menu.
@@ -48,7 +49,7 @@ Latest version: **v2.1.1** (14 October 2026). Details are in the [changelog](CHA
 | Mini games | 15 games: 10 at office facilities, 5 in the Game Station, downloaded when opened |
 | Music | 12 original songs, generated in the browser |
 | Initial JavaScript download | three.js 168 kB + app 48 kB (gzip) |
-| Tests | 362 unit tests, 309 E2E scenarios (desktop, tablet, phone), 432 Python tests, 32 server tests |
+| Tests | 368 unit tests, 318 E2E scenarios (desktop, tablet, phone), 432 Python tests, 32 server tests |
 | Recorded decisions | 18 ADRs in [docs/decisions.md](docs/decisions.md) |
 
 ## Main features

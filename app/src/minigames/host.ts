@@ -10,6 +10,7 @@ import { GAMES } from './registry';
 import { BTNS, type Btn, type GameInstance, type GameMeta, type GameModule, type GameResult, type InputState } from './types';
 import { PAD_PROFILES, faceButtons, stickAxes } from '../input/pad-profiles';
 import type { PadProfileId } from '../ui/settings';
+import { PLAYER_COLORS, PadPlayer, connectedPads } from './local-players';
 
 export interface HostOpts {
   reducedMotion: boolean;
@@ -125,6 +126,15 @@ export class MiniGameHost {
   frames = 0;
   /** Presses handed to the game per button (test hook: no press may get lost). */
   private delivered: Record<string, number> = {};
+  /** Pemain 1's pad: a Gamepad.index, null = first connected, -1 = none yet (keyboard). */
+  private p1Pad: number | null = null;
+  /** Pemain 2..4, one pad each, joined on the intro card. */
+  private extras: PadPlayer[] = [];
+  /** A held on pads that have not joined (join on a fresh press only). */
+  private lobbyPrev = new Map<number, boolean>();
+  private lobbyEl: HTMLElement | null = null;
+  /** Keyboard or touch used since the game opened: a late pad then joins as Pemain 2. */
+  private localUsed = false;
 
   constructor(readonly gameId: string, private opts: HostOpts) {
     this.seed = opts.seed ?? (Date.now() >>> 0);
@@ -187,7 +197,77 @@ export class MiniGameHost {
     const best = loadScores()[m.id]?.[0];
     const lines = [t(m.blurb)];
     if (best) lines.push(t('Skor terbaik: {score} ({name})', { score: formatScore(m, best.score), name: best.name }));
-    this.showCard(t(m.title), lines, [[t('Mulai'), () => this.start()], [t('Keluar'), () => this.close()]], this.tutorial());
+    let extra: HTMLElement = this.tutorial();
+    if ((m.players ?? 1) > 1) {
+      if (this.p1Pad === null) this.p1Pad = connectedPads()[0]?.index ?? -1;
+      this.lobbyEl = el('div', { class: 'mg-lobby', 'aria-live': 'polite' });
+      this.renderLobby();
+      const wrap = el('div');
+      wrap.append(this.lobbyEl, extra);
+      extra = wrap;
+    }
+    this.showCard(t(m.title), lines, [[t('Mulai'), () => this.start()], [t('Keluar'), () => this.close()]], extra);
+  }
+
+  /** B on a joined Pemain 2+ pad leaves the lobby (its seat opens again). */
+  private lobbyLeave() {
+    if (this.phase !== 'intro') return;
+    const before = this.extras.length;
+    this.extras = this.extras.filter((x) => { if (x.edge.b) { this.lobbyPrev.set(x.index, true); return false; } return true; });
+    if (this.extras.length !== before) { sound.sfx('back'); this.renderLobby(); }
+  }
+
+  private maxPlayers(): number { return this.mod?.meta.players ?? 1; }
+
+  /** Lobby rows: who plays, and how the next player joins. */
+  private renderLobby() {
+    const box = this.lobbyEl;
+    const m = this.mod?.meta;
+    if (!box || !m) return;
+    box.replaceChildren(el('h4', {}, t('Pemain')));
+    const list = el('ol', { class: 'mg-lobby-list' });
+    const p1 = el('li', { 'data-p': '1' });
+    p1.style.setProperty('--pc', PLAYER_COLORS[0]);
+    p1.append(el('b', {}, t('Pemain {n}', { n: 1 })), el('span', {}, this.p1Pad !== null && this.p1Pad >= 0 ? t('Keyboard, layar sentuh, atau stik 1') : t('Keyboard atau layar sentuh')));
+    list.append(p1);
+    this.extras.forEach((_x, i) => {
+      const li = el('li', { 'data-p': String(i + 2) });
+      li.style.setProperty('--pc', PLAYER_COLORS[i + 1]);
+      li.append(el('b', {}, t('Pemain {n}', { n: i + 2 })), el('span', {}, t('Stik {n} · B untuk batal', { n: i + 2 })));
+      list.append(li);
+    });
+    box.append(list);
+    const free = this.maxPlayers() - 1 - this.extras.length;
+    box.append(el('p', { class: 'mg-lobby-note' }, free > 0
+      ? t('Mau main bareng? Sambungkan stik lain lalu tekan A untuk ikut (sampai {n} pemain).', { n: this.maxPlayers() })
+      : t('Semua tempat pemain sudah terisi.')));
+    if (m.playersHint) box.append(el('p', { class: 'mg-lobby-note' }, t(m.playersHint)));
+  }
+
+  /** Intro card: pads that are not playing yet join with a fresh A; a joined Pemain 2+ leaves with B. */
+  private lobbyPoll() {
+    if (this.maxPlayers() < 2 || this.phase !== 'intro') return;
+    let changed = false;
+    for (let i = this.extras.length - 1; i >= 0; i--) {
+      const x = this.extras[i];
+      if (!x.connected) { this.extras.splice(i, 1); changed = true; }
+    }
+    const taken = new Set(this.extras.map((x) => x.index));
+    for (const p of connectedPads()) {
+      if (p.index === this.p1Pad || taken.has(p.index)) continue;
+      const prof = PAD_PROFILES[this.opts.padProfile()] ?? PAD_PROFILES.standar;
+      const a = !!p.buttons[faceButtons(prof).A]?.pressed;
+      const was = this.lobbyPrev.get(p.index) ?? true;
+      this.lobbyPrev.set(p.index, a);
+      if (!a || was) continue;
+      if (this.p1Pad === -1 && !this.localUsed) { this.p1Pad = p.index; changed = true; continue; }
+      if (this.extras.length < this.maxPlayers() - 1) {
+        this.extras.push(new PadPlayer(p.index, this.opts.padProfile));
+        sound.sfx('confirm');
+        changed = true;
+      }
+    }
+    if (changed) this.renderLobby();
   }
 
   private detectDevice(): Device {
@@ -241,7 +321,7 @@ export class MiniGameHost {
     this.inst = m.create({
       canvas: this.canvas, g: this.g, w: m.meta.view.w, h: m.meta.view.h, rand, seed,
       t: (s, v) => t(s, v), sfx: (n, o) => sound.sfx(n, o), reducedMotion: this.opts.reducedMotion,
-      cast: buildCast(), playerId: 'CH-CEO',
+      cast: buildCast(), playerId: 'CH-CEO', players: 1 + this.extras.length,
       end: (r) => { if (!this.result) { this.result = r; this.finish(r); } },
       setHud: (s) => { if (s !== this.hudText) { this.hudText = s; this.hudEl.textContent = s; } },
     });
@@ -258,9 +338,9 @@ export class MiniGameHost {
     const lines: string[] = [];
     if (r.summary) lines.push(r.summary);
     let rank = 0;
-    let list = loadScores()[m.id] ?? [];
-    if (r.score > 0) ({ rank, list } = addScore(m, { name: this.opts.playerName, score: r.score, at: new Date().toISOString() }));
-    lines.push(t('Skor: {score}', { score: formatScore(m, r.score) }));
+    let list = r.versus ? [] : loadScores()[m.id] ?? [];
+    if (r.score > 0 && !r.versus) ({ rank, list } = addScore(m, { name: this.opts.playerName, score: r.score, at: new Date().toISOString() }));
+    if (!r.versus) lines.push(t('Skor: {score}', { score: formatScore(m, r.score) }));
     if (rank) lines.push(t('Peringkat {n} di papan skor perangkat ini.', { n: rank }));
     const board = el('ol', { class: 'mg-board', 'aria-label': t('Papan skor') });
     list.slice(0, 10).forEach((row, i) => {
@@ -268,7 +348,7 @@ export class MiniGameHost {
       li.append(el('span', {}, row.name), el('span', {}, formatScore(m, row.score)));
       board.append(li);
     });
-    this.showCard(r.won === false ? t('Belum berhasil') : t('Selesai!'), lines, [[t('Main lagi'), () => this.start()], [t('Keluar'), () => this.close(r)]], list.length ? board : null);
+    this.showCard(r.won === false && !r.versus ? t('Belum berhasil') : t('Selesai!'), lines, [[t('Main lagi'), () => this.start()], [t('Keluar'), () => this.close(r)]], list.length ? board : null);
   }
 
   private togglePause() {
@@ -340,7 +420,7 @@ export class MiniGameHost {
       const k = el('button', { type: 'button', class: `mg-tb mg-tb-${b}`, 'aria-label': b }, BTN_LABEL[b]);
       // Latch the press too: a quick tap that starts and ends between two
       // frames must still count as a hit, otherwise taps feel ignored.
-      const on = (e: PointerEvent) => { e.preventDefault(); this.touchDown.add(b); this.press(b); k.classList.add('on'); k.setPointerCapture(e.pointerId); navigator.vibrate?.(8); };
+      const on = (e: PointerEvent) => { e.preventDefault(); this.localUsed = true; this.touchDown.add(b); this.press(b); k.classList.add('on'); k.setPointerCapture(e.pointerId); navigator.vibrate?.(8); };
       const off = () => { this.touchDown.delete(b); k.classList.remove('on'); };
       k.addEventListener('pointerdown', on);
       k.addEventListener('pointerup', off);
@@ -369,7 +449,7 @@ export class MiniGameHost {
     // "Mulai" too: only a fresh press may activate a card button.
     if (onButton && (k === 'enter' || k === ' ')) { e.stopPropagation(); if (e.repeat) e.preventDefault(); return; }
     e.stopPropagation();
-    if (b) { e.preventDefault(); if (!e.repeat) this.press(b); this.keys.add(b); }
+    if (b) { e.preventDefault(); if (!e.repeat) this.press(b); this.keys.add(b); this.localUsed = true; }
   };
 
   private onKeyUp = (e: KeyboardEvent) => {
@@ -383,7 +463,7 @@ export class MiniGameHost {
   /** Queue one press (capped so a mashed burst never leaves a long backlog). */
   private press(b: Btn) { if (this.queued[b] < 3) this.queued[b]++; }
 
-  private onBlur = () => { for (const b of BTNS) this.queued[b] = 0; this.keys.clear(); this.touchDown.clear(); if (this.ptr) this.ptr.down = false; if (this.phase === 'play') this.togglePause(); };
+  private onBlur = () => { for (const x of this.extras) x.clear(); for (const b of BTNS) this.queued[b] = 0; this.keys.clear(); this.touchDown.clear(); if (this.ptr) this.ptr.down = false; if (this.phase === 'play') this.togglePause(); };
 
   private gameXY(e: PointerEvent): { x: number; y: number } {
     const r = this.canvas.getBoundingClientRect();
@@ -406,8 +486,10 @@ export class MiniGameHost {
   private readPad(): { down: Partial<Record<Btn, boolean>>; ax: number; ay: number; start: boolean; select: boolean } {
     const none = { down: {}, ax: 0, ay: 0, start: false, select: false };
     let p: Gamepad | null = null;
-    for (const q of navigator.getGamepads?.() ?? []) if (q && q.connected) { p = q; break; }
-    if (!p) return none;
+    if (this.p1Pad === -1) return none;
+    if (this.p1Pad !== null) p = navigator.getGamepads?.()[this.p1Pad] ?? null;
+    else for (const q of navigator.getGamepads?.() ?? []) if (q && q.connected && !this.extras.some((x) => x.index === q.index)) { p = q; break; }
+    if (!p || !p.connected) return none;
     const prof = PAD_PROFILES[this.opts.padProfile()] ?? PAD_PROFILES.standar;
     const f = faceButtons(prof);
     const ax = stickAxes(prof);
@@ -431,6 +513,13 @@ export class MiniGameHost {
 
   private input(): InputState {
     const pad = this.readPad();
+    const playing0 = this.phase === 'play';
+    for (const x of this.extras) {
+      x.poll(playing0);
+      if (x.start && (this.phase === 'play' || this.phase === 'pause')) this.togglePause();
+    }
+    this.lobbyLeave();
+    this.lobbyPoll();
     if (pad.start) this.togglePause();
     if (pad.select && this.phase !== 'play') this.close();
     // Card open: the pad's A presses the focused card button, B the last one.
@@ -441,7 +530,9 @@ export class MiniGameHost {
     }
     const down = {} as Record<Btn, boolean>;
     const padNow = {} as Record<Btn, boolean>;
-    const playing = this.phase === 'play';
+    // The A that pressed "Mulai" on the card above must not also reach the
+    // game as its first press: queue only when play was already running.
+    const playing = playing0 && this.phase === 'play';
     for (const b of BTNS) {
       padNow[b] = !!pad.down[b];
       if (playing && padNow[b] && !this.prevDown[b]) this.press(b);
@@ -484,7 +575,9 @@ export class MiniGameHost {
         }
         const tap = this.tap;
         this.tap = null;
-        this.inst.update(1 / 60, { ...input, hit, tap });
+        const p1: InputState = { ...input, hit, tap };
+        if (this.extras.length) p1.players = [p1, ...this.extras.map((x) => x.step())];
+        this.inst.update(1 / 60, p1);
         this.acc -= 1 / 60;
         n++;
         this.frames++;
@@ -496,7 +589,7 @@ export class MiniGameHost {
   };
 
   /** Test hook: game snapshot plus host phase. */
-  state() { return { phase: this.phase, game: this.gameId, frames: this.frames, delivered: { ...this.delivered }, hud: this.hudText, result: this.result, snap: this.inst?.snapshot?.() ?? null }; }
+  state() { return { phase: this.phase, game: this.gameId, frames: this.frames, delivered: { ...this.delivered }, players: 1 + this.extras.length, pads: { p1: this.p1Pad, extra: this.extras.map((x) => x.index) }, hud: this.hudText, result: this.result, snap: this.inst?.snapshot?.() ?? null }; }
 }
 
 let current: MiniGameHost | null = null;
