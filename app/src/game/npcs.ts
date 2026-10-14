@@ -1,5 +1,6 @@
 // Renders IdleSim NPCs with their Blender GLBs and maps activity -> clip.
 // The sim runs on a fixed 0.1 s step; rendering interpolates positions.
+import { gymMount } from './gym-pose';
 import { t } from '../i18n';
 import * as THREE from 'three';
 import { labelClear, type LabelBlocker } from './label-visibility';
@@ -85,12 +86,21 @@ export class NpcLayer {
     }
   }
 
+  private gymCache = new Map<string, ReturnType<typeof gymMount>>();
+  private gymFor(fixtureId: string) {
+    if (!this.gymCache.has(fixtureId)) this.gymCache.set(fixtureId, gymMount(this.world.fixtures.find((f) => f.id === fixtureId)));
+    return this.gymCache.get(fixtureId)!;
+  }
+
   private worldPos(npc: NpcState): THREE.Vector3 {
     const elev = this.world.floors.find((f) => f.id === npc.floor)!.elevation;
     let [x, y] = npc.pos;
     if (npc.phase === 'perform' && npc.slot) {
       // Seated activities sit on the chair itself, not on the approach cell.
       const slot = this.world.activitySlots.find((s) => s.id === npc.slot)!;
+      // Gym machines: on the belt / on the saddle, not beside the machine.
+      const gym = this.gymFor(slot.fixture);
+      if (gym) return toThree(gym.pos[0], gym.pos[1], elev + gym.lift);
       if (slot.pose === 'sit') [x, y] = slot.pos;
     }
     return toThree(x, y, elev);
@@ -245,6 +255,11 @@ export class NpcLayer {
     if (npc.workStatus === 'working' && npc.activity === 'idle') return 'type';
     const slot = npc.slot ? this.world.activitySlots.find((s) => s.id === npc.slot) : undefined;
     const sit = slot?.pose === 'sit';
+    const gym = slot ? this.gymFor(slot.fixture) : null;
+    if (gym && npc.activity === 'exercise') {
+      const v = this.views.get(npc.id);
+      return !v || v.avatar.has(gym.clip) ? gym.clip : sit ? 'sit' : 'exercise';
+    }
     switch (npc.activity) {
       case 'desk': return 'type';
       case 'coffee': return 'coffee';

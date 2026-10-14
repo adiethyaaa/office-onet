@@ -1,6 +1,6 @@
 {
  "tool": "blender/furniture/validate_furniture.py",
- "blender": "4.0.2",
+ "blender": "5.2.2 LTS",
  "passed": true,
  "types": 54,
  "checks": 708,
@@ -12,7 +12,7 @@
   "bytes": 375144
  },
  "failed": {},
- "seconds": 3.1,
+ "seconds": 1.4,
  "results": {
   "desk": {
    "type": "desk",
@@ -140,8 +140,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 24164,
-   "exportBytes": 38240,
+   "bytes": 23908,
+   "exportBytes": null,
    "class": "large"
   },
   "desk_exec": {
@@ -271,8 +271,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 35264,
-   "exportBytes": 57924,
+   "bytes": 34964,
+   "exportBytes": null,
    "class": "large"
   },
   "chair": {
@@ -399,8 +399,8 @@
     "metal",
     "rubber"
    ],
-   "bytes": 26084,
-   "exportBytes": 40464,
+   "bytes": 25924,
+   "exportBytes": null,
    "class": "small"
   },
   "chair_guest": {
@@ -527,8 +527,8 @@
     "wood",
     "woodDark"
    ],
-   "bytes": 18136,
-   "exportBytes": 27668,
+   "bytes": 17972,
+   "exportBytes": null,
    "class": "small"
   },
   "stool": {
@@ -651,8 +651,8 @@
     "fabricMustard",
     "woodDark"
    ],
-   "bytes": 12088,
-   "exportBytes": 18140,
+   "bytes": 11972,
+   "exportBytes": null,
    "class": "small"
   },
   "meeting_table": {
@@ -777,8 +777,8 @@
     "wood",
     "woodDark"
    ],
-   "bytes": 18112,
-   "exportBytes": 28384,
+   "bytes": 17904,
+   "exportBytes": null,
    "class": "large"
   },
   "round_table": {
@@ -901,8 +901,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 11656,
-   "exportBytes": 16644,
+   "bytes": 11544,
+   "exportBytes": null,
    "class": "large"
   },
   "high_table": {
@@ -1026,8 +1026,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 13220,
-   "exportBytes": 19260,
+   "bytes": 13060,
+   "exportBytes": null,
    "class": "large"
   },
   "dining_table": {
@@ -1151,8 +1151,8 @@
     "wood",
     "woodDark"
    ],
-   "bytes": 11668,
-   "exportBytes": 16756,
+   "bytes": 11504,
+   "exportBytes": null,
    "class": "large"
   },
   "coffee_table": {
@@ -1278,8 +1278,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 15144,
-   "exportBytes": 24644,
+   "bytes": 14888,
+   "exportBytes": null,
    "class": "small"
   },
   "work_table": {
@@ -1402,8 +1402,8 @@
     "metal",
     "woodLight"
    ],
-   "bytes": 13456,
-   "exportBytes": 20080,
+   "bytes": 13340,
+   "exportBytes": null,
    "class": "large"
   },
   "plan_table": {
@@ -1532,8 +1532,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 30756,
-   "exportBytes": 48944,
+   "bytes": 30500,
+   "exportBytes": null,
    "class": "large"
   },
   "drafting_table": {
@@ -1661,8 +1661,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 17336,
-   "exportBytes": 27380,
+   "bytes": 17128,
+   "exportBytes": null,
    "class": "large"
   },
   "reception_desk": {
@@ -1793,8 +1793,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 30732,
-   "exportBytes": 49992,
+   "bytes": 30380,
+   "exportBytes": null,
    "class": "large"
   },
   "sofa": {
@@ -1827,7 +1827,7 @@
       "translation": [
        0,
        0.4000000059604645,
-       0
+       -1.4901161193847656e-08
       ],
       "rotation": null,
       "scale": null
@@ -1918,8 +1918,8 @@
     "fabricMustard",
     "woodDark"
    ],
-   "bytes": 23228,
-   "exportBytes": 38796,
+   "bytes": 23044,
+   "exportBytes": null,
    "class": "large"
   },
   "armchair": {
@@ -1952,13 +1952,13 @@
       "translation": [
        0,
        0.42500001192092896,
-       0
+       -1.4901161193847656e-08
       ],
       "rotation": null,
       "scale": [
-       0.44999998807907104,
-       0.44999998807907104,
-       0.44999998807907104
+       0.45000000298023224,
+       0.45000000298023224,
+       0.45000000298023224
       ]
      }
     },
@@ -2047,8 +2047,8 @@
     "fabricTerracotta",
     "woodDark"
    ],
-   "bytes": 25204,
-   "exportBytes": 36444,
+   "bytes": 25016,
+   "exportBytes": null,
    "class": "small"
   },
   "beanbag": {
@@ -2174,8 +2174,8 @@
     "fabricMustard",
     "fabricTerracotta"
    ],
-   "bytes": 11384,
-   "exportBytes": 15568,
+   "bytes": 11272,
+   "exportBytes": null,
    "class": "small"
   },
   "bench": {
@@ -2298,8 +2298,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 15240,
-   "exportBytes": 23032,
+   "bytes": 15128,
+   "exportBytes": null,
    "class": "large"
   },
   "bookshelf": {
@@ -2427,8 +2427,8 @@
     "wood",
     "woodDark"
    ],
-   "bytes": 58148,
-   "exportBytes": 95804,
+   "bytes": 57752,
+   "exportBytes": null,
    "class": "large"
   },
   "model_shelf": {
@@ -2558,8 +2558,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 41128,
-   "exportBytes": 65180,
+   "bytes": 40828,
+   "exportBytes": null,
    "class": "large"
   },
   "tool_cabinet": {
@@ -2687,8 +2687,8 @@
     "rubber",
     "woodDark"
    ],
-   "bytes": 30768,
-   "exportBytes": 49488,
+   "bytes": 30560,
+   "exportBytes": null,
    "class": "large"
   },
   "storage_shelf": {
@@ -2813,8 +2813,8 @@
     "paper",
     "woodLight"
    ],
-   "bytes": 71476,
-   "exportBytes": 118496,
+   "bytes": 71220,
+   "exportBytes": null,
    "class": "large"
   },
   "locker": {
@@ -2943,8 +2943,8 @@
     "paper",
     "woodDark"
    ],
-   "bytes": 58140,
-   "exportBytes": 104148,
+   "bytes": 57884,
+   "exportBytes": null,
    "class": "large"
   },
   "whiteboard": {
@@ -2977,7 +2977,7 @@
       "translation": [
        0,
        0.6000000238418579,
-       0
+       1.862645149230957e-09
       ],
       "rotation": null,
       "scale": [
@@ -3001,7 +3001,7 @@
      "ok": true,
      "detail": [
       0.0,
-      0.0
+      -0.0
      ]
     },
     {
@@ -3079,8 +3079,8 @@
     "metalLight",
     "white"
    ],
-   "bytes": 17652,
-   "exportBytes": 28900,
+   "bytes": 17368,
+   "exportBytes": null,
    "class": "large"
   },
   "wall_display": {
@@ -3213,8 +3213,8 @@
     "screenGlow",
     "white"
    ],
-   "bytes": 8816,
-   "exportBytes": 14232,
+   "bytes": 8608,
+   "exportBytes": null,
    "class": "large"
   },
   "gallery_panel": {
@@ -3341,8 +3341,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 13792,
-   "exportBytes": 23620,
+   "bytes": 13444,
+   "exportBytes": null,
    "class": "large"
   },
   "poster": {
@@ -3375,7 +3375,7 @@
       "translation": [
        0,
        0.5,
-       0
+       3.725290298461914e-09
       ],
       "rotation": null,
       "scale": [
@@ -3399,7 +3399,7 @@
      "ok": true,
      "detail": [
       0.0,
-      0.0
+      -0.0
      ]
     },
     {
@@ -3476,8 +3476,8 @@
     "paper",
     "woodLight"
    ],
-   "bytes": 10968,
-   "exportBytes": 17428,
+   "bytes": 10732,
+   "exportBytes": null,
    "class": "small"
   },
   "directory_sign": {
@@ -3609,8 +3609,8 @@
     "fabricCream",
     "wallCap"
    ],
-   "bytes": 18160,
-   "exportBytes": 29436,
+   "bytes": 18000,
+   "exportBytes": null,
    "class": "large"
   },
   "easel": {
@@ -3740,8 +3740,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 15328,
-   "exportBytes": 22232,
+   "bytes": 15024,
+   "exportBytes": null,
    "class": "large"
   },
   "plant_large": {
@@ -3866,8 +3866,8 @@
     "pot",
     "woodDark"
    ],
-   "bytes": 27892,
-   "exportBytes": 40112,
+   "bytes": 27684,
+   "exportBytes": null,
    "class": "large"
   },
   "plant_small": {
@@ -3992,8 +3992,8 @@
     "pot",
     "woodDark"
    ],
-   "bytes": 20496,
-   "exportBytes": 29960,
+   "bytes": 20288,
+   "exportBytes": null,
    "class": "small"
   },
   "planter_box": {
@@ -4120,8 +4120,8 @@
     "wood",
     "woodDark"
    ],
-   "bytes": 22996,
-   "exportBytes": 35848,
+   "bytes": 22692,
+   "exportBytes": null,
    "class": "large"
   },
   "tree_planter": {
@@ -4246,8 +4246,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 23176,
-   "exportBytes": 38700,
+   "bytes": 22968,
+   "exportBytes": null,
    "class": "large"
   },
   "pantry_counter": {
@@ -4378,8 +4378,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 32960,
-   "exportBytes": 51316,
+   "bytes": 32612,
+   "exportBytes": null,
    "class": "large"
   },
   "coffee_bar": {
@@ -4513,8 +4513,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 42488,
-   "exportBytes": 66704,
+   "bytes": 42000,
+   "exportBytes": null,
    "class": "large"
   },
   "fridge": {
@@ -4644,8 +4644,8 @@
     "metalLight",
     "white"
    ],
-   "bytes": 15308,
-   "exportBytes": 24828,
+   "bytes": 15004,
+   "exportBytes": null,
    "class": "large"
   },
   "sink": {
@@ -4772,8 +4772,8 @@
     "white",
     "woodLight"
    ],
-   "bytes": 10828,
-   "exportBytes": 16868,
+   "bytes": 10664,
+   "exportBytes": null,
    "class": "small"
   },
   "wc": {
@@ -4900,8 +4900,8 @@
     "rubber",
     "white"
    ],
-   "bytes": 12516,
-   "exportBytes": 17876,
+   "bytes": 12352,
+   "exportBytes": null,
    "class": "small"
   },
   "partition": {
@@ -5021,8 +5021,8 @@
     "metal",
     "metalLight"
    ],
-   "bytes": 8224,
-   "exportBytes": 13128,
+   "bytes": 8064,
+   "exportBytes": null,
    "class": "large"
   },
   "shower_stall": {
@@ -5055,7 +5055,7 @@
       "translation": [
        0,
        1.0499999523162842,
-       0
+       -1.4901161193847656e-08
       ],
       "rotation": null,
       "scale": [
@@ -5150,8 +5150,8 @@
     "metalLight",
     "white"
    ],
-   "bytes": 16412,
-   "exportBytes": 25208,
+   "bytes": 16224,
+   "exportBytes": null,
    "class": "large"
   },
   "rack_42u": {
@@ -5278,8 +5278,8 @@
     "screen",
     "screenGlow"
    ],
-   "bytes": 91072,
-   "exportBytes": 158380,
+   "bytes": 90724,
+   "exportBytes": null,
    "class": "large"
   },
   "lab_bench": {
@@ -5411,8 +5411,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 30360,
-   "exportBytes": 51264,
+   "bytes": 29964,
+   "exportBytes": null,
    "class": "large"
   },
   "lab_rack_open": {
@@ -5543,8 +5543,8 @@
     "screen",
     "screenGlow"
    ],
-   "bytes": 48356,
-   "exportBytes": 79360,
+   "bytes": 48008,
+   "exportBytes": null,
    "class": "large"
   },
   "billiard_table": {
@@ -5675,8 +5675,8 @@
     "wood",
     "woodDark"
    ],
-   "bytes": 59868,
-   "exportBytes": 94028,
+   "bytes": 59376,
+   "exportBytes": null,
    "class": "large"
   },
   "cue_rack": {
@@ -5804,8 +5804,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 18800,
-   "exportBytes": 28936,
+   "bytes": 18592,
+   "exportBytes": null,
    "class": "large"
   },
   "media_console": {
@@ -5935,8 +5935,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 23312,
-   "exportBytes": 39688,
+   "bytes": 22824,
+   "exportBytes": null,
    "class": "large"
   },
   "arcade_cabinet": {
@@ -6071,8 +6071,8 @@
     "screenGlow",
     "woodDark"
    ],
-   "bytes": 27844,
-   "exportBytes": 41532,
+   "bytes": 27308,
+   "exportBytes": null,
    "class": "large"
   },
   "board_table": {
@@ -6198,8 +6198,8 @@
     "woodDark",
     "woodLight"
    ],
-   "bytes": 30040,
-   "exportBytes": 49788,
+   "bytes": 29784,
+   "exportBytes": null,
    "class": "large"
   },
   "treadmill": {
@@ -6327,8 +6327,8 @@
     "screenGlow",
     "woodDark"
    ],
-   "bytes": 21296,
-   "exportBytes": 34516,
+   "bytes": 20900,
+   "exportBytes": null,
    "class": "large"
   },
   "exercise_bike": {
@@ -6397,7 +6397,7 @@
      "check": "triangles within large budget",
      "ok": true,
      "detail": {
-      "triangles": 1152,
+      "triangles": 1472,
       "budget": 5000
      }
     },
@@ -6448,7 +6448,7 @@
     1.2,
     1.1902
    ],
-   "triangles": 1152,
+   "triangles": 1472,
    "budget": 5000,
    "materials": [
     "accent",
@@ -6458,8 +6458,8 @@
     "screen",
     "screenGlow"
    ],
-   "bytes": 28372,
-   "exportBytes": 43216,
+   "bytes": 34264,
+   "exportBytes": 53388,
    "class": "large"
   },
   "exercise_mat": {
@@ -6582,8 +6582,8 @@
     "fabricCream",
     "fabricSage"
    ],
-   "bytes": 8328,
-   "exportBytes": 12636,
+   "bytes": 8216,
+   "exportBytes": null,
    "class": "large"
   },
   "dumbbell_rack": {
@@ -6711,8 +6711,8 @@
     "metalLight",
     "rubber"
    ],
-   "bytes": 46572,
-   "exportBytes": 83104,
+   "bytes": 46224,
+   "exportBytes": null,
    "class": "large"
   },
   "stair_u": {
@@ -6839,8 +6839,8 @@
     "wood",
     "woodDark"
    ],
-   "bytes": 21068,
-   "exportBytes": 34672,
+   "bytes": 20908,
+   "exportBytes": null,
    "class": "large"
   },
   "lift": {
@@ -6968,8 +6968,8 @@
     "metalLight",
     "wallExterior"
    ],
-   "bytes": 8392,
-   "exportBytes": 11200,
+   "bytes": 8184,
+   "exportBytes": null,
    "class": "large"
   }
  }
