@@ -326,6 +326,15 @@ function boot() {
       n.pos = [x, y];
       return true;
     },
+    // Test helper: put a persona in the middle of an activity slot for `secs`.
+    performAt: (id: string, slotId: string, secs = 120) => {
+      const n = game.npcs.sim.npcs.find((x) => x.id === id);
+      const sl = game.world.activitySlots.find((s) => s.id === slotId);
+      if (!n || !sl) return false;
+      Object.assign(n, { floor: sl.floor, pos: [...sl.pos], facing: sl.facing, phase: 'perform', activity: sl.activity, slot: sl.id, path: [], pathIndex: 0, via: null, until: game.npcs.sim.time + secs });
+      game.npcs.sim.reservations.set(sl.id, { npc: id, expires: game.npcs.sim.time + secs });
+      return true;
+    },
     // Test helper: push the CEO in a plan direction with the normal movement code.
     drive: (dx: number, dy: number, run = false) => { game.autopilot = dx || dy ? { dir: [dx, dy], run } : null; },
     // Test helper: is there a walkable route from the CEO to (x, y) right now?

@@ -17,8 +17,8 @@
   },
   "furniture": {
    "files": 54,
-   "rawBytes": 2226612,
-   "shippedBytes": 1380500
+   "rawBytes": 2237084,
+   "shippedBytes": 1386696
   }
  },
  "worst": {
@@ -9550,10 +9550,10 @@
    "kind": "furniture",
    "raw": "blender/out/raw-glb/furniture/exercise_bike.glb",
    "shipped": "app/public/assets/furniture/exercise_bike.glb",
-   "rawBytes": 42916,
-   "shippedBytes": 28068,
-   "rawSha256": "f660dbec69fc795b1873007fd5258e6b93ae43820129bebaa1e092e5c547c016",
-   "shippedSha256": "5fc5bcfbcc5f0ca462dac58b07956fc6fa1051d8a582e540ace5794f978b135e",
+   "rawBytes": 53388,
+   "shippedBytes": 34264,
+   "rawSha256": "94a669d3a948d6570353a9a966f135de742f33d91b73469cd327188c44308ae1",
+   "shippedSha256": "ec1c336a71b187d2584aa4f27856aad6559ef367863d1d449066c58d74c1bfa7",
    "ok": true,
    "measured": {
     "maxPositionErrorM": 9.155553206630085e-06,
@@ -9595,8 +9595,8 @@
      "detail": [
       "metal",
       "rubber",
-      "accent",
       "metalLight",
+      "accent",
       "screen",
       "screenGlow"
      ]
@@ -9645,8 +9645,8 @@
      "check": "FURN-exercise_bike[0]: vertex count identical",
      "ok": true,
      "detail": [
-      372,
-      372
+      600,
+      600
      ]
     },
     {
@@ -9681,8 +9681,8 @@
      "check": "FURN-exercise_bike[2]: vertex count identical",
      "ok": true,
      "detail": [
-      160,
-      160
+      176,
+      176
      ]
     },
     {
@@ -9699,8 +9699,8 @@
      "check": "FURN-exercise_bike[3]: vertex count identical",
      "ok": true,
      "detail": [
-      48,
-      48
+      160,
+      160
      ]
     },
     {

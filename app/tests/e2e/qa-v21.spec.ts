@@ -162,4 +162,14 @@ test.describe('QA v2.1 layers', () => {
     for (let i = 0; i < 12; i++) { await page.keyboard.press('j', { delay: 3 }); await page.waitForTimeout(70); }
     await expect.poll(async () => (await got()) - m0).toBe(12);
   });
+
+  test('gym: personas run on the treadmill belt and pedal on the bike saddle, not beside the machines', async ({ page }) => {
+    await boot(page);
+    const ids = await page.evaluate(() => (window.__kantor!.npcs as () => { id: string }[])().slice(0, 2).map((n) => n.id));
+    const k = (fn: string, ...a: unknown[]) => page.evaluate(([f, args]) => (window.__kantor![f as string] as (...x: unknown[]) => unknown)(...(args as unknown[])), [fn, a] as const);
+    expect(await k('performAt', ids[0], 'SL-L2-080-1', 300)).toBe(true);
+    expect(await k('performAt', ids[1], 'SL-L2-082-1', 300)).toBe(true);
+    await expect.poll(() => k('npcClip', ids[0])).toBe('run');
+    await expect.poll(() => k('npcClip', ids[1])).toBe('bike');
+  });
 });

@@ -745,18 +745,33 @@ def g_treadmill(k, w, d, h):
 
 
 def g_exercise_bike(k, w, d, h):
+    # Sized for the office personas (semi-anime legs, seat pose 0.45 m, see
+    # design/characters.json seatHeightM): saddle top 0.45 m at local y -0.25,
+    # crank 0.18 m ahead of and 0.26 m below the hip, handlebar where the
+    # "bike" clip puts the hands. The runtime seats riders on BIKE_SADDLE.
     for y in (-d / 2 + 0.04, d / 2 - 0.04):
         k.rb("metal", 0, y, 0, w, 0.08, 0.06, 0.03)
     k.rod("metal", (0, -d / 2 + 0.06, 0.05), (0, d / 2 - 0.06, 0.05), 0.03, 10)
-    k.rod("metal", (0, -0.2, 0.05), (0, -0.25, 0.72), 0.035, 10)
-    k.rb("rubber", 0, -0.27, 0.72, 0.24, 0.3, 0.07, 0.03)
-    k.rod("metal", (0, 0.12, 0.05), (0, 0.33, h - 0.18), 0.035, 10)
-    xf = K.T(0, 0.12, 0.3) @ K.R("Y", 90)
-    k.B.add(K.cyl(0.21, 0.06, 20, bevel=0.012), "accent", xf @ K.T(0, 0, -0.03))
-    k.rod("metalLight", (-0.24, 0.25, h - 0.2), (0.24, 0.25, h - 0.2), 0.02, 8)
+    # seat post and saddle
+    k.rod("metal", (0, -0.18, 0.05), (0, -0.24, 0.40), 0.032, 10)
+    k.rb("rubber", 0, -0.25, 0.39, 0.22, 0.28, 0.06, 0.028)
+    # crank housing, crank arms and pedals (a pedal at the top and bottom of the circle)
+    k.rod("metal", (0, -0.16, 0.06), (0, -0.07, 0.25), 0.03, 10)
+    xf = K.T(0, -0.07, 0.28) @ K.R("Y", 90)
+    k.B.add(K.cyl(0.07, 0.07, 16, bevel=0.01), "metalLight", xf @ K.T(0, 0, -0.035))
+    for s, dz in ((-1, 0.055), (1, -0.055)):
+        k.rod("metal", (s * 0.045, -0.07, 0.28), (s * 0.075, -0.07, 0.28 + dz), 0.012, 6)
+        k.rb("rubber", s * 0.11, -0.07, 0.28 + dz - 0.012, 0.08, 0.05, 0.024, 0.01, 1)
+    # flywheel in front
+    xf = K.T(0, 0.2, 0.27) @ K.R("Y", 90)
+    k.B.add(K.cyl(0.19, 0.06, 20, bevel=0.012), "accent", xf @ K.T(0, 0, -0.03))
+    k.rod("metal", (0, -0.07, 0.28), (0, 0.2, 0.27), 0.02, 8)
+    # console column, handlebar at hand height, screen on top
+    k.rod("metal", (0, 0.18, 0.05), (0, 0.34, h - 0.18), 0.035, 10)
+    k.rod("metal", (0, 0.24, 0.6), (0, 0.13, 0.84), 0.025, 8)
+    k.rod("metalLight", (-0.22, 0.13, 0.84), (0.22, 0.13, 0.84), 0.02, 8)
     for s in (-1, 1):
-        k.rb("rubber", s * 0.26, 0.19, h - 0.22, 0.06, 0.14, 0.04, 0.015)
-        k.rb("rubber", s * 0.13, 0.02, 0.26, 0.1, 0.05, 0.025, 0.01, 1)
+        k.rb("rubber", s * 0.24, 0.07, 0.82, 0.06, 0.14, 0.04, 0.015)
     k.rb("screen", 0, 0.36, h - 0.14, 0.22, 0.08, 0.12, 0.02)
     xf = K.T(0, 0.33, h - 0.085) @ K.R("X", 20)
     k.B.add(K.rbox(0.17, 0.006, 0.08, 0.003, 1), "screenGlow", xf)

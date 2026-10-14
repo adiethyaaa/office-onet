@@ -3271,13 +3271,13 @@
         "screenGlow"
       ],
       "triangles": {
-        "lod0Visible": 1152,
+        "lod0Visible": 1472,
         "budget": 5000,
         "class": "large"
       },
       "lod": "LOD0 only",
-      "glbBytes": 28068,
-      "glbExportBytes": 42916,
+      "glbBytes": 34264,
+      "glbExportBytes": 53388,
       "glbOptimisedBy": "tools/glb_optimize.mjs (KHR_mesh_quantization); equality with the export: tools/glb_compare.py",
       "status": "generated+validated",
       "validatedBy": "blender/furniture/validate_furniture.py",
