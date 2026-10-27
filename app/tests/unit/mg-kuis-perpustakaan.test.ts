@@ -33,9 +33,10 @@ describe('mini game: kuis-perpustakaan', () => {
     expect(ans('office-server')).toBe(`Lantai ${level(/SERVER/)}`);
     expect(ans('office-read')).toBe(`Lantai ${level(/-READ$/)}`);
     expect(ans('office-rooms-l1')).toBe(`${WORLD.rooms.filter((r) => r.floor === WORLD.floors[0].id).length} ruang`);
-    expect(ans('office-nova')).toBe(WORLD.actors.find((a) => a.displayName === 'Nova')!.role);
-    const hugo = WORLD.actors.find((a) => a.displayName === 'Hugo')!;
-    expect(ans('office-hugo-home')).toBe(WORLD.rooms.find((r) => r.id === hugo.homeRoom)!.name);
+    const citra = WORLD.actors.find((a) => a.displayName === 'Citra')!;
+    expect(ans('office-citra-home')).toBe(WORLD.rooms.find((r) => r.id === citra.homeRoom)!.name);
+    const kaksuary = WORLD.actors.find((a) => a.displayName === 'Kak Suary')!;
+    expect(ans('office-kaksuary-home')).toBe(WORLD.rooms.find((r) => r.id === kaksuary.homeRoom)!.name);
     const onL2 = bank.find((k) => k.id === 'office-on-l2')!;
     onL2.opts.forEach((o, i) => {
       const room = WORLD.rooms.find((r) => r.name === o)!;

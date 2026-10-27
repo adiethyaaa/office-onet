@@ -19,7 +19,7 @@ function sim(seed = 11) {
 describe('reprimand (REQ-TEGUR)', () => {
   it('sends the persona to its own desk at double speed and keeps it there for 20 s', () => {
     const s = sim();
-    const npc = s.npcs.find((n) => n.id === 'ACT-KEVIN')!;
+    const npc = s.npcs.find((n) => n.id === 'ACT-ER')!;
     expect(s.scold(npc.id)).toBe('ok');
     const desk = W.activitySlots.find((x) => x.activity === 'desk' && x.fixture === W.actors.find((a) => a.id === npc.id)!.homeSeat)!;
     expect(npc.slot).toBe(desk.id);
@@ -36,15 +36,15 @@ describe('reprimand (REQ-TEGUR)', () => {
 
   it('cooldown: a second reprimand within 10 s is refused, later it works', () => {
     const s = sim();
-    expect(s.scold('ACT-LEO')).toBe('ok');
-    expect(s.scold('ACT-LEO')).toBe('cooldown');
+    expect(s.scold('ACT-MJ')).toBe('ok');
+    expect(s.scold('ACT-MJ')).toBe('cooldown');
     for (let t = 0; t < SCOLD_COOLDOWN_SECONDS + 0.2; t += 0.1) s.step(0.1);
-    expect(s.scold('ACT-LEO')).toBe('ok');
+    expect(s.scold('ACT-MJ')).toBe('ok');
   });
 
   it('a persona whose agent is really working cannot be reprimanded, and its state is untouched', () => {
     const s = sim();
-    const npc = s.npcs.find((n) => n.id === 'ACT-NOVA')!;
+    const npc = s.npcs.find((n) => n.id === 'ACT-CM')!;
     npc.workStatus = 'working';
     const before = JSON.stringify({ phase: npc.phase, slot: npc.slot, activity: npc.activity });
     expect(s.scold(npc.id)).toBe('working');
@@ -54,7 +54,7 @@ describe('reprimand (REQ-TEGUR)', () => {
 
   it('is deterministic for a seed', () => {
     const a = sim(5); const b = sim(5);
-    a.scold('ACT-BRUNO'); b.scold('ACT-BRUNO');
+    a.scold('ACT-RP'); b.scold('ACT-RP');
     for (let i = 0; i < 200; i++) { a.step(0.1); b.step(0.1); }
     expect(a.npcs.map((n) => [n.id, n.pos])).toEqual(b.npcs.map((n) => [n.id, n.pos]));
   });

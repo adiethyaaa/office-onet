@@ -72,24 +72,18 @@ export function buildBank(t: T, rand: () => number): Question[] {
   const l2 = WORLD.floors.find((f) => f.level === Math.max(...levels))!.id;
   { const p = pickRoom(l2, l1); const n = levelOf(l2); raw.push({ id: 'office-on-l2', q: t('Ruang mana yang ada di lantai {n}?', { n }), ...p, why: t('{r} ada di lantai {n}, lantai rekreasi.', { r: p.right, n }) }); }
   { const p = pickRoom(l1, l2); const n = levelOf(l1); raw.push({ id: 'office-on-l1', q: t('Ruang mana yang ada di lantai {n}?', { n }), ...p, why: t('{r} ada di lantai {n}, lantai kerja.', { r: p.right, n }) }); }
-  const roleQ = (id: string, name: string, q: string) => {
+  const homeQ = (id: string, name: string) => {
     const a = actorByName(name);
-    const others = WORLD.actors.filter((x) => x.role !== a.role && x.displayName !== 'Budi').map((x) => t(x.role));
-    const wrong: string[] = [];
-    while (wrong.length < 3) wrong.push(others.splice(Math.floor(rand() * others.length), 1)[0]);
-    raw.push({ id, q, right: t(a.role), wrong, why: t('{who}: {r}.', { who: name, r: t(a.role) }) });
-  };
-  roleQ('office-nova', 'Nova', t('Apa peran Nova di tim?'));
-  roleQ('office-bruno', 'Bruno', t('Apa peran Bruno di tim?'));
-  roleQ('office-kevin', 'Kevin', t('Apa peran Kevin di tim?'));
-  {
-    const a = actorByName('Hugo');
     const home = roomById(a.homeRoom);
     const others = WORLD.rooms.filter((r) => r.floor === home.floor && r.id !== home.id && !/CORR|SHAFT|CORE/.test(r.id)).map((r) => t(r.name));
     const wrong: string[] = [];
     while (wrong.length < 3) wrong.push(others.splice(Math.floor(rand() * others.length), 1)[0]);
-    raw.push({ id: 'office-hugo-home', q: t('Di ruang mana Hugo biasa bekerja?'), right: t(home.name), wrong, why: t('Hugo bekerja di {r}, ada meja gambarnya.', { r: t(home.name) }) });
-  }
+    raw.push({ id, q: t('Di ruang mana {who} biasa bekerja?', { who: name }), right: t(home.name), wrong, why: t('{who} bekerja di {r}.', { who: name, r: t(home.name) }) });
+  };
+  homeQ('office-citra-home', 'Citra');
+  homeQ('office-rony-home', 'Rony');
+  homeQ('office-erni-home', 'Erni');
+  homeQ('office-kaksuary-home', 'Kak Suary');
   const f2f = WORLD.building.floorToFloor;
   raw.push({ id: 'office-f2f', q: t('Berapa tinggi lantai ke lantai di kantor ini?'), right: t('{n} m', { n: f2f }), wrong: nearNumbers(f2f, 0.5, rand).map((v) => t('{n} m', { n: v })), why: t('Jarak lantai ke lantai {n} m.', { n: f2f }) });
 

@@ -99,7 +99,7 @@ export const EN_WORLD: Record<string, string> = {
   "Rak stik": "Cue rack",
   "Rapat tim dan tamu, presentasi": "Team and guest meetings, presentations",
   "Review & QA": "Review & QA",
-  "Ruang Budi (CEO)": "Budi office (CEO)",
+  "Ruang Adiethya (CEO)": "Adiethya office (CEO)",
   "Ruang CEO": "CEO office",
   "Ruang biliar": "Billiard room",
   "Ruang diskusi": "Discussion room",

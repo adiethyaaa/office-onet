@@ -24,20 +24,20 @@ describe('data adapter separation (public/demo vs private M4)', () => {
 
   it('sanitizer drops unknown fields, URLs and unknown actors; bad status becomes unknown', () => {
     const now = new Date().toISOString();
-    const a = sanitizeActor({ actorId: 'ACT-NOVA', workStatus: 'done', observedAt: now, source: 'x', taskSummary: 'see https://example.invalid/secret', chatLog: 'private', email: 'a@b' }, known)!;
+    const a = sanitizeActor({ actorId: 'ACT-CM', workStatus: 'done', observedAt: now, source: 'x', taskSummary: 'see https://example.invalid/secret', chatLog: 'private', email: 'a@b' }, known)!;
     expect(Object.keys(a).sort()).toEqual(['actorId', 'observedAt', 'source', 'taskSummary', 'workStatus']);
     expect(a.taskSummary).not.toContain('http');
-    expect(sanitizeActor({ actorId: 'ACT-NOVA', workStatus: 'hacked', observedAt: now }, known)!.workStatus).toBe('unknown');
+    expect(sanitizeActor({ actorId: 'ACT-CM', workStatus: 'hacked', observedAt: now }, known)!.workStatus).toBe('unknown');
     expect(sanitizeActor({ actorId: 'ACT-EVIL', workStatus: 'working', observedAt: now }, known)).toBeNull();
     expect(sanitizeActor([1, 2], known)).toBeNull();
-    expect(sanitizeActor({ actorId: 'ACT-NOVA', workStatus: 'done' }, known)!.workStatus).toBe('unknown');
+    expect(sanitizeActor({ actorId: 'ACT-CM', workStatus: 'done' }, known)!.workStatus).toBe('unknown');
   });
 
   it('stale snapshots degrade to unknown, fresh ones keep their status', () => {
     const base = demoSnapshot(W);
     const snap = { ...base, mode: 'private' as const, freshnessTTL: 30 };
     const t0 = Date.parse('2026-10-01T10:00:00Z');
-    const a = { actorId: 'ACT-NOVA', workStatus: 'working' as const, observedAt: '2026-10-01T10:00:00Z', source: 'test' };
+    const a = { actorId: 'ACT-CM', workStatus: 'working' as const, observedAt: '2026-10-01T10:00:00Z', source: 'test' };
     expect(effectiveStatus(a, snap, t0 + 10_000)).toEqual({ status: 'working', stale: false });
     expect(effectiveStatus(a, snap, t0 + 31_000)).toEqual({ status: 'unknown', stale: true });
     expect(effectiveStatus({ ...a, observedAt: null }, snap, t0)).toEqual({ status: 'unknown', stale: true });

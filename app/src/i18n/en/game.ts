@@ -36,7 +36,7 @@ export const EN_GAME: Record<string, string> = {
   'menunggu keputusanmu': 'waiting for your decision',
 
   // Presence badge and work status
-  'tidak ada profil Hermes': 'no Hermes profile',
+  'tidak ada profil Pokja': 'no Pokja profile',
   'tidak ada adapter (demo offline)': 'no adapter (offline demo)',
   'Status kerja: nyata': 'Work status: live',
   'SIMULASI: data demo': 'SIMULATION: demo data',
@@ -92,7 +92,7 @@ export const EN_GAME: Record<string, string> = {
   'Bicara & beri tugas': 'Talk & assign a task',
   'tidak diketahui: {source}': 'unknown: {source}',
   'tidak ada tugas berjalan ({source})': 'no running task ({source})',
-  'Status kerja dari Hermes. Dialog dan aktivitas santai tetap fiksi.': 'Work status from Hermes. Dialog and leisure activities are still fiction.',
+  'Status kerja dari Pokja. Dialog dan aktivitas santai tetap fiksi.': 'Work status from Pokja. Dialog and leisure activities are still fiction.',
   'SIMULASI: persona virtual, dialog fiksi statis.': 'SIMULATION: virtual persona, static fictional dialog.',
   'Peran': 'Role',
   'Aktivitas tampilan': 'Shown activity',

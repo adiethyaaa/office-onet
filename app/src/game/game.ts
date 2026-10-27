@@ -30,10 +30,10 @@ export const BOARD_FIXTURES: Record<string, BoardTab> = {
   'FX-L1-050': 'handoffs', 'FX-L1-023': 'tasks', 'FX-L2-034': 'tasks', 'FX-L1-065': 'log',
 };
 const BOARD_LABEL: Record<BoardTab, string> = { handoffs: 'Papan Handoff', tasks: 'Daftar Pekerjaan', log: 'Log Aktivitas' };
-/** Persona -> Hermes profile that receives commands (server roster is the authority). */
+/** Persona -> profil Pokja yang menerima perintah (roster server adalah otoritasnya). */
 export const ACTOR_PROFILE: Record<string, string> = {
-  'ACT-MAX': 'default', 'ACT-ECHO': 'echo', 'ACT-LEO': 'leo', 'ACT-NOVA': 'enterprise', 'ACT-HUGO': 'sipil',
-  'ACT-BRUNO': 'infra', 'ACT-KEVIN': 'sales', 'ACT-REX': 'labs',
+  'ACT-ONET': 'ONET', 'ACT-KASUARI': 'KASUARI', 'ACT-CM': 'CM', 'ACT-RP': 'RP',
+  'ACT-ER': 'ER', 'ACT-NG': 'NG', 'ACT-SL': 'SL', 'ACT-MJ': 'MJ',
 };
 
 export interface Interactable {
@@ -94,7 +94,7 @@ export class Game {
     const map: Record<string, WorkStatus> = { working: 'working', waiting: 'waiting', idle: 'done', unknown: 'unknown' };
     for (const npc of this.npcs.sim.npcs) {
       const p = list?.find((a) => a.actorId === npc.id);
-      if (!p) this.npcs.sim.setWork(npc.id, 'unknown', list ? t('tidak ada profil Hermes') : t('tidak ada adapter (demo offline)'));
+      if (!p) this.npcs.sim.setWork(npc.id, 'unknown', list ? t('tidak ada profil Pokja') : t('tidak ada adapter (demo offline)'));
       else this.npcs.sim.setWork(npc.id, map[p.status] ?? 'unknown', p.source, p.summary);
     }
     const badge = $('sim-badge');
@@ -479,7 +479,7 @@ export class Game {
   }
 
   /** Display name used on the local leaderboards. */
-  playerName = 'Budi';
+  playerName = 'Adiethya';
 
   private areaTrack(): string {
     return trackForRoom(this.roomId, this.player.floor);
@@ -670,7 +670,7 @@ export class Game {
       : busy ? `${t(WORK_LABEL[npc.workStatus])}${npc.workSummary ? `: ${npc.workSummary}` : ''} (${npc.workStatusSource})`
       : `${t('tidak ada tugas berjalan ({source})', { source: npc.workStatusSource })}${npc.workSummary ? `, ${npc.workSummary}` : ''}`;
     const body = [
-      el('p', { class: 'sim-note' }, this.livePresence ? t('Status kerja dari Hermes. Dialog dan aktivitas santai tetap fiksi.') : t('SIMULASI: persona virtual, dialog fiksi statis.')),
+      el('p', { class: 'sim-note' }, this.livePresence ? t('Status kerja dari Pokja. Dialog dan aktivitas santai tetap fiksi.') : t('SIMULASI: persona virtual, dialog fiksi statis.')),
       quote,
       dlRows([
         [t('Peran'), npc.role],
@@ -1073,7 +1073,7 @@ export class Game {
   }
 }
 
-const PLAYER_ID = 'ACT-BUDI';
+const PLAYER_ID = 'ACT-MAS';
 
 const VERB: Record<string, string> = {
   desk: 'Pakai workstation', coffee: 'Bikin kopi', chat: 'Diskusi', read: 'Membaca', stretch: 'Peregangan',

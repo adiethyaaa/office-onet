@@ -108,7 +108,7 @@ describe('idle simulation (REQ-IDLE-01)', () => {
   it('real work: an agent marked working leaves leisure, sits at its own desk and stays typing until idle', () => {
     const sim = new IdleSim(W, nav, { seed: 5, startHour: 12.2, minutesPerSecond: 2 });
     for (let t = 0; t < 120; t += 0.1) sim.step(0.1); // lunch: everyone on leisure
-    const id = 'ACT-REX';
+    const id = 'ACT-NG';
     const desk = W.activitySlots.find((s) => s.fixture === W.actors.find((a) => a.id === id)!.homeSeat)!;
     sim.setWork(id, 'working', 'uji', 'Fitur Lokalink');
     const npc = sim.npcs.find((n) => n.id === id)!;

@@ -83,19 +83,9 @@ export function renderDirectory(world: World, hooks: DirectoryHooks): void {
     people.append(li);
   }
   body.append(people);
-  if (hooks.command) {
-    body.append(el('h3', {}, t('Agen tanpa karakter')));
-    const extra = el('ul', { class: 'dir-list' });
-    for (const [name, prof, lane] of [['Atlas', 'perumnet', 'Aplikasi PerumNet'], ['Clara', 'finance', 'Keuangan'], ['Stella', 'legal', 'Legal']]) {
-      const li = el('li', { class: 'dir-item' });
-      li.append(el('span', {}, name), el('span', { class: 'meta' }, t('{lane} · agen Hermes', { lane: t(lane) })));
-      const cmd = el('button', { type: 'button', class: 'btn', 'aria-label': t('Beri tugas ke {name}', { name }) }, t('Beri tugas'));
-      cmd.addEventListener('click', () => hooks.command!(prof));
-      li.append(cmd);
-      extra.append(li);
-    }
-    body.append(extra);
-  }
+  // Daftar "agen tanpa karakter" lama (Atlas, Clara, Stella)
+  // dihapus: profil-profil itu tidak ada di roster Pokja, dan
+  // semua anggota roster kini punya karakter di dunia.
   if (hooks.boards) {
     body.append(el('h3', {}, t('Papan kerja')));
     const bl = el('ul', { class: 'dir-list' });

@@ -50,7 +50,6 @@ export const EN_UI: Record<string, string> = {
   "Beri tugas": "Assign task",
   "Beri tugas ke {name}": "Assign a task to {name}",
   "Agen tanpa karakter": "Agents without a character",
-  "{lane} · agen Hermes": "{lane} · Hermes agent",
   "Aplikasi PerumNet": "PerumNet app",
   "Keuangan": "Finance",
   "Legal": "Legal",
