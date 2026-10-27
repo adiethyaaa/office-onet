@@ -11,6 +11,14 @@ import path from 'node:path';
 import { openStore, RETENTION } from './store.mjs';
 import { loadOwner, verifyPassword, verifyTotp, hashPassword, base32Encode, token } from './auth.mjs';
 import { boardCache, buildPresence, makeSources } from './boards.mjs';
+// [POKJA-TAHAP-1] Satu-satunya impor baru pada langkah penyambungan ini.
+// Berkas pokja.mjs hanya membaca snapshot Pokja; tidak ada impor Hermes
+// baru dan tidak ada perubahan pada impor lain di berkas ini.
+import { buatMesinKehadiran, buatPenarikSnapshot, buatPenyegarKehadiran } from './pokja.mjs';
+// [POKJA-LOG] Impor baru pada langkah penyesuaian log aktivitas.
+// Berkas pokja-log.mjs hanya membaca log aktivitas Pokja dan hanya
+// menyimpan kategori aksi dan layanan, bukan isi detail log.
+import { buatMesinLogAktivitas, buatPenarikKehadiran, keBentukPresenceLog } from './pokja-log.mjs';
 import { agentReplyTimes, lastChatLine, ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
 import { ROSTER, byProfile } from './roster.mjs';
 import { checkMessage, LIMITS } from './policy.mjs';
@@ -36,6 +44,65 @@ export function createServer(cfg) {
   const sources = makeSources(cfg.home ?? os.homedir());
   const boards = cfg.boards ?? boardCache(sources, cfg.boardTtlMs ?? 5000);
   let presenceMemo = { at: 0, value: null };
+  // [POKJA-TAHAP-1] Mesin kehadiran perkiraan Pokja dibuat di sini,
+  // tetapi hanya aktif kalau pemanggil mengirim mesin suntikan
+  // (cfg.pokja, untuk tes) atau alamat dan token Pokja
+  // (cfg.pokjaUrl, cfg.pokjaToken, dikirim main.mjs dari variabel
+  // lingkungan). Kalau keduanya tidak ada, atau pembuatan mesin
+  // gagal, mesin tetap null dan rute presence memakai jalur lama
+  // persis seperti sebelumnya. Pemetaan aktor masih kosong sampai
+  // roster.mjs diganti; sampai saat itu actorId pada daftar Pokja
+  // dibiarkan null.
+  let pokjaMesin = cfg.pokja ?? null;
+  if (!pokjaMesin && cfg.pokjaUrl && cfg.pokjaToken) {
+    try {
+      pokjaMesin = buatMesinKehadiran({
+        batasMenit: cfg.pokjaBatasMenit ?? 15,
+        penarik: buatPenarikSnapshot({
+          url: cfg.pokjaUrl,
+          token: cfg.pokjaToken,
+          ambil: cfg.pokjaFetch,
+        }),
+      });
+    } catch { pokjaMesin = null; }
+  }
+  const penyegarPokja = buatPenyegarKehadiran({
+    mesin: pokjaMesin,
+    batasCacheMs: cfg.pokjaCacheMs ?? 120000,
+    pemetaanAktor: cfg.pokjaPemetaanAktor ?? {},
+  });
+  // [POKJA-LOG] Mesin sesi dan log dibuat di sini dan menjadi
+  // sumber utama kalau aktif, dengan penyegar perkiraan di atas
+  // sebagai cadangannya. DIPERIKSA dari agent.py di VPS Tencent:
+  // sesi dan log memakai alamat dan token yang SAMA dengan
+  // ringkasan, hanya parameter action-nya yang berbeda
+  // (?action=sessions dan ?action=audit_logs), jadi mesin ini
+  // memakai cfg.pokjaUrl dan cfg.pokjaToken yang sama, bukan
+  // env log terpisah. Mesin hanya aktif kalau pemanggil
+  // mengirim mesin suntikan (cfg.pokjaLog, untuk tes) atau
+  // alamat dan token itu ada. Kalau keduanya tidak ada, atau
+  // pembuatan mesin gagal, mesin tetap null dan jalur
+  // perkiraan yang berjalan.
+  let mesinLog = cfg.pokjaLog ?? null;
+  if (!mesinLog && cfg.pokjaUrl && cfg.pokjaToken) {
+    try {
+      mesinLog = buatMesinLogAktivitas({
+        penarik: buatPenarikKehadiran({
+          url: cfg.pokjaUrl,
+          token: cfg.pokjaToken,
+          ambil: cfg.pokjaFetch,
+        }),
+        batasBekerjaMenit: cfg.pokjaLogBatasBekerjaMenit ?? 5,
+        batasIdleMenit: cfg.pokjaLogBatasIdleMenit ?? 60,
+      });
+    } catch { mesinLog = null; }
+  }
+  const penyegarLog = buatPenyegarKehadiran({
+    mesin: mesinLog,
+    batasCacheMs: cfg.pokjaLogCacheMs ?? 30000,
+    pemetaanAktor: cfg.pokjaPemetaanAktor ?? {},
+    bentukPresence: keBentukPresenceLog,
+  });
   const home = cfg.home ?? os.homedir();
   // Telegram sync (ADR-017). Tests inject `telegram` to avoid real state.db/Bot API.
   const tg = {
@@ -248,25 +315,41 @@ export function createServer(cfg) {
   });
 
   // Real per-agent status for the NPCs (owner only). Cached 4 s: polled every 10 s.
-  route('GET', /^\/api\/presence$/, {}, (req, res) => {
+  // [POKJA-TAHAP-1] Rute ini menjadi async dan mencoba jalur Pokja
+  // dulu lewat penyegar, tetapi isi jalur lama dipindahkan apa
+  // adanya ke dalam ambilLama di bawah, bukan dihapus atau diubah.
+  // Kalau tidak ada mesin Pokja, atau kalau perbaruan Pokja gagal
+  // dan belum ada cache, ambilLama yang berjalan dan jawabannya
+  // sama seperti sebelumnya. Bentuk jawaban tetap
+  // { observedAt, agents }.
+  // [POKJA-LOG] Urutan sumber pada penyesuaian ini: log aktivitas
+  // dulu, lalu perkiraan dari perubahan data, lalu jalur lama.
+  // Cadangan berlapis ini diatur di dua baris terakhir rute ini;
+  // tidak ada baris lain di rute ini yang berubah.
+  route('GET', /^\/api\/presence$/, {}, async (req, res) => {
     const t = now();
-    if (!presenceMemo.value || t - presenceMemo.at > 4000) {
-      const rpg = q("select profile, status, message from tasks where status in ('queued','working','waiting_owner') order by created_at desc").all();
-      const agents = buildPresence(sources, rpg, t).map((a) => {
-        // Agent reply times (Telegram DM, or RPG chat for bots without one) for unread badges.
-        let replies = [];
-        const sid = tgSession(a.profile);
-        let line = null;
-        if (sid) { try { replies = tg.replyTimes(a.profile, sid); line = tg.lastLine?.(a.profile, sid) ?? null; } catch { replies = []; } }
-        else replies = q("select t.created_at at from turns t join conversations c on c.id=t.conversation_id where c.profile=? and t.role='agent' order by t.created_at desc limit 50").all(a.profile).map((r) => r.at).reverse();
-        // Typing like Telegram: the bot is on an RPG task, or Budi's last Telegram line is still unanswered.
-        const rpgWorking = rpg.some((x) => x.profile === a.profile && x.status === 'working');
-        const typing = rpgWorking || (line?.role === 'owner' && t - line.at < TYPING_WINDOW_MS);
-        return { ...a, replies, typing, lastSeen: replies.length ? replies[replies.length - 1] : null };
-      });
-      presenceMemo = { at: t, value: { observedAt: new Date(t).toISOString(), agents } };
-    }
-    send(res, 200, presenceMemo.value);
+    const ambilLama = () => {
+      if (!presenceMemo.value || t - presenceMemo.at > 4000) {
+        const rpg = q("select profile, status, message from tasks where status in ('queued','working','waiting_owner') order by created_at desc").all();
+        const agents = buildPresence(sources, rpg, t).map((a) => {
+          // Agent reply times (Telegram DM, or RPG chat for bots without one) for unread badges.
+          let replies = [];
+          const sid = tgSession(a.profile);
+          let line = null;
+          if (sid) { try { replies = tg.replyTimes(a.profile, sid); line = tg.lastLine?.(a.profile, sid) ?? null; } catch { replies = []; } }
+          else replies = q("select t.created_at at from turns t join conversations c on c.id=t.conversation_id where c.profile=? and t.role='agent' order by t.created_at desc limit 50").all(a.profile).map((r) => r.at).reverse();
+          // Typing like Telegram: the bot is on an RPG task, or Budi's last Telegram line is still unanswered.
+          const rpgWorking = rpg.some((x) => x.profile === a.profile && x.status === 'working');
+          const typing = rpgWorking || (line?.role === 'owner' && t - line.at < TYPING_WINDOW_MS);
+          return { ...a, replies, typing, lastSeen: replies.length ? replies[replies.length - 1] : null };
+        });
+        presenceMemo = { at: t, value: { observedAt: new Date(t).toISOString(), agents } };
+      }
+      return presenceMemo.value;
+    };
+    const ambilPerkiraan = () => penyegarPokja(new Date(t).toISOString(), t, ambilLama);
+    const hasil = await penyegarLog(new Date(t).toISOString(), t, ambilPerkiraan);
+    send(res, 200, { observedAt: hasil.observedAt, agents: hasil.agents });
   });
 
   // Which chat opens for a bot is Budi's choice (/new, /telegram, "start new"), kept
