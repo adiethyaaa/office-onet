@@ -31,15 +31,15 @@ before(async () => {
   const home = path.join(tmp, 'home');
   fs.mkdirSync(path.join(home, '.hermes', 'logs'), { recursive: true });
   fs.writeFileSync(path.join(home, '.hermes', '.env'), 'TELEGRAM_ALLOWED_USERS=777\n');
-  const leo = path.join(home, '.hermes', 'profiles', 'SL');
+  const kas = path.join(home, '.hermes', 'profiles', 'KASUARI');
   fs.mkdirSync(leo, { recursive: true });
-  fs.writeFileSync(path.join(leo, 'config.yaml'), "model:\n  default: 'model-SL-uji'\n  provider: 'uji'\n");
+  fs.writeFileSync(path.join(kas, 'config.yaml'), "model:\n  default: 'model-KASUARI-uji'\n  provider: 'uji'\n");
   const t = Date.now() / 1000;
-  execFileSync('sqlite3', [path.join(leo, 'state.db'), `
+  execFileSync('sqlite3', [path.join(kas, 'state.db'), `
     create table sessions(id text primary key, source text, session_key text, started_at real, ended_at real, model text);
     create table messages(id integer primary key autoincrement, session_id text, role text, content text, timestamp real, platform_message_id text, _compressed_summary int default 0);
-    insert into sessions values('tg_leo','telegram','agent:SL:telegram:dm:777',${t - 600},null,'model-sesi-telegram');
-    insert into messages(session_id,role,content,timestamp,platform_message_id) values ('tg_leo','user','halo leo',${t - 500},'1');
+    insert into sessions values('tg_kasuari','telegram','agent:KASUARI:telegram:dm:777',${t - 600},null,'model-sesi-telegram');
+    insert into messages(session_id,role,content,timestamp,platform_message_id) values ('tg_kasuari','user','halo kasuari',${t - 500},'1');
   `]);
   const dataDir = path.join(tmp, 'data');
   fs.mkdirSync(dataDir, { mode: 0o700 });
@@ -132,10 +132,10 @@ test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khus
   assert.notEqual(nw.json.conversation.id, rpg.id);
   assert.equal(nw.json.conversation.turns.length, 0);
 
-  const tg = (await api('POST', '/api/conversations', { profile: 'SL' })).json;
+  const tg = (await api('POST', '/api/conversations', { profile: 'KASUARI' })).json;
   assert.equal(tg.channel, 'telegram');
   const st = await say(tg.id, '/status');
-  assert.equal(st.json.command.session, 'tg_leo');
+  assert.equal(st.json.command.session, 'tg_kasuari');
   assert.equal(st.json.command.model, 'model-sesi-telegram');
   const c0 = calls.length;
   const fresh = await say(tg.id, '/new');
@@ -144,15 +144,15 @@ test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khus
   assert.equal(fresh.json.conversation.channel, 'rpg');
   assert.equal(fresh.json.conversation.detached, true);
   // Reopening the bot keeps the new RPG-only chat (it does not snap back to Telegram).
-  const again = (await api('POST', '/api/conversations', { profile: 'SL' })).json;
+  const again = (await api('POST', '/api/conversations', { profile: 'KASUARI' })).json;
   assert.equal(again.id, fresh.json.conversation.id);
   const st2 = await say(again.id, '/status');
   assert.equal(st2.json.command.channel, 'rpg-detached');
-  assert.equal(st2.json.command.model, 'model-SL-uji', 'belum ada sesi: model bawaan profil');
+  assert.equal(st2.json.command.model, 'model-KASUARI-uji', 'belum ada sesi: model bawaan profil');
   // A message there starts a fresh Hermes session, not the Telegram one.
   await say(again.id, 'ide poster baru');
   await waitFor(() => calls.length > c0);
-  assert.equal(calls.at(-1).profile, 'SL');
+  assert.equal(calls.at(-1).profile, 'KASUARI');
   assert.equal(calls.at(-1).hermesSession, null);
   // A late reply in the detached chat must not pull it back in front after /telegram.
   let rel; gate = new Promise((r) => { rel = r; });
@@ -163,7 +163,7 @@ test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khus
   await waitFor(async () => (await api('GET', `/api/conversations/${again.id}`)).json.tasks.every((t) => t.terminal));
   assert.equal(back.json.command.ok, true);
   assert.equal(back.json.conversation.channel, 'telegram');
-  assert.equal((await api('POST', '/api/conversations', { profile: 'SL' })).json.channel, 'telegram');
+  assert.equal((await api('POST', '/api/conversations', { profile: 'KASUARI' })).json.channel, 'telegram');
   // Bot without Telegram: /telegram says so.
   const ent = (await api('POST', '/api/conversations', { profile: 'CM' })).json;
   assert.equal((await say(ent.id, '/telegram')).json.command.ok, false);
