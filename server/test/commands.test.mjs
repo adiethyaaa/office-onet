@@ -32,7 +32,7 @@ before(async () => {
   fs.mkdirSync(path.join(home, '.hermes', 'logs'), { recursive: true });
   fs.writeFileSync(path.join(home, '.hermes', '.env'), 'TELEGRAM_ALLOWED_USERS=777\n');
   const kas = path.join(home, '.hermes', 'profiles', 'KASUARI');
-  fs.mkdirSync(leo, { recursive: true });
+  fs.mkdirSync(kas, { recursive: true });
   fs.writeFileSync(path.join(kas, 'config.yaml'), "model:\n  default: 'model-KASUARI-uji'\n  provider: 'uji'\n");
   const t = Date.now() / 1000;
   execFileSync('sqlite3', [path.join(kas, 'state.db'), `
