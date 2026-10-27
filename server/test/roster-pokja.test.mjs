@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { ROSTER, byProfile, PRIVATE_PROFILES, PEMETAAN_AKTOR_POKJA } from '../roster.mjs';
 
 const NAMA = {
-  FA: 'Adiethya', ONET: 'Onet', KASUARI: 'Kasuari', CM: 'Citra',
+  FA: 'Adiethya', ONET: 'Onet Aspri', KASUARI: 'Kak Suary', CM: 'Citra',
   RP: 'Rony', ER: 'Erni', NG: 'Angelina', SL: 'Sonya', MJ: 'Michael',
 };
 

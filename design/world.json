@@ -9319,8 +9319,8 @@
  ],
  "actors": [
   {
-   "id": "ACT-BUDI",
-   "displayName": "Budi",
+   "id": "ACT-MAS",
+   "displayName": "Adiethya",
    "role": "CEO",
    "kind": "player",
    "avatarAsset": "CH-CEO",
@@ -9333,9 +9333,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-MAX",
-   "displayName": "Max",
-   "role": "Supervisor",
+   "id": "ACT-ONET",
+   "displayName": "Onet Aspri",
+   "role": "Asisten pribadi",
    "kind": "npc",
    "avatarAsset": "CH-SUPERVISOR",
    "homeRoom": "L1-IMPL",
@@ -9355,9 +9355,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-HUGO",
-   "displayName": "Hugo",
-   "role": "Karakter, aset & arsitektur",
+   "id": "ACT-KASUARI",
+   "displayName": "Kak Suary",
+   "role": "Agen pemantau",
    "kind": "npc",
    "avatarAsset": "CH-ARCHITECT",
    "homeRoom": "L1-HUGO",
@@ -9377,9 +9377,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-NOVA",
-   "displayName": "Nova",
-   "role": "Spesifikasi ICT",
+   "id": "ACT-CM",
+   "displayName": "Citra",
+   "role": "Pokja Mutasi",
    "kind": "npc",
    "avatarAsset": "CH-ICTSPEC",
    "homeRoom": "L1-NOVA",
@@ -9399,9 +9399,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-BRUNO",
-   "displayName": "Bruno",
-   "role": "Instalasi jaringan & server",
+   "id": "ACT-RP",
+   "displayName": "Rony",
+   "role": "Pokja Mutasi",
    "kind": "npc",
    "avatarAsset": "CH-NETINSTALL",
    "homeRoom": "L1-BRUNO",
@@ -9420,9 +9420,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-KEVIN",
-   "displayName": "Kevin",
-   "role": "Pamflet & materi visual",
+   "id": "ACT-ER",
+   "displayName": "Erni",
+   "role": "Pokja Mutasi",
    "kind": "npc",
    "avatarAsset": "CH-VISUAL",
    "homeRoom": "L1-KEVIN",
@@ -9442,9 +9442,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-REX",
-   "displayName": "Rex",
-   "role": "Review & QA",
+   "id": "ACT-NG",
+   "displayName": "Angelina",
+   "role": "Pokja Mutasi",
    "kind": "npc",
    "avatarAsset": "CH-QA",
    "homeRoom": "L1-IMPL",
@@ -9463,9 +9463,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-ECHO",
-   "displayName": "Echo",
-   "role": "Asisten 9router",
+   "id": "ACT-SL",
+   "displayName": "Sonya",
+   "role": "Pokja Mutasi",
    "kind": "npc",
    "avatarAsset": "CH-ASSISTANT",
    "homeRoom": "L1-IMPL",
@@ -9485,9 +9485,9 @@
    "simulated": true
   },
   {
-   "id": "ACT-LEO",
-   "displayName": "Leo",
-   "role": "Desain",
+   "id": "ACT-MJ",
+   "displayName": "Michael",
+   "role": "Pokja Mutasi",
    "kind": "npc",
    "avatarAsset": "CH-DESIGNER",
    "homeRoom": "L1-KEVIN",

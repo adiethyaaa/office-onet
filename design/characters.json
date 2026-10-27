@@ -209,9 +209,9 @@
   },
   "characters": {
     "CH-CEO": {
-      "displayName": "Budi",
+      "displayName": "Adiethya",
       "role": "CEO",
-      "actor": "ACT-BUDI",
+      "actor": "ACT-MAS",
       "kind": "player",
       "body": { "heightM": 1.58, "headRatio": 3.55, "legRatio": 0.375, "shoulderWidth": 0.35, "torsoWidth": 1.0, "torsoDepth": 1.0, "limbScale": 1.0, "headWidth": 1.0 },
       "skin": "#E3B48C",
@@ -239,9 +239,9 @@
       "silhouette": "flared blazer hem, lanyard badge on chest, single curled crown tuft"
     },
     "CH-SUPERVISOR": {
-      "displayName": "Max",
-      "role": "Supervisor",
-      "actor": "ACT-MAX",
+      "displayName": "Onet Aspri",
+      "role": "Asisten pribadi",
+      "actor": "ACT-ONET",
       "kind": "npc",
       "body": { "heightM": 1.56, "headRatio": 3.6, "legRatio": 0.375, "shoulderWidth": 0.34, "torsoWidth": 1.0, "torsoDepth": 1.0, "limbScale": 1.0, "headWidth": 1.0 },
       "skin": "#C98F65",
@@ -269,9 +269,9 @@
       "silhouette": "headset band over swept hair, mic boom, open cardigan"
     },
     "CH-ARCHITECT": {
-      "displayName": "Hugo",
-      "role": "Karakter, aset & arsitektur",
-      "actor": "ACT-HUGO",
+      "displayName": "Kak Suary",
+      "role": "Agen pemantau",
+      "actor": "ACT-KASUARI",
       "kind": "npc",
       "body": { "heightM": 1.6, "headRatio": 3.7, "legRatio": 0.39, "shoulderWidth": 0.34, "torsoWidth": 0.95, "torsoDepth": 0.95, "limbScale": 0.95, "headWidth": 0.98 },
       "skin": "#F0CDAA",
@@ -300,9 +300,9 @@
       "silhouette": "blueprint tube slung diagonally on the back, bun, turtleneck, pencil behind ear"
     },
     "CH-ICTSPEC": {
-      "displayName": "Nova",
-      "role": "Spesifikasi ICT",
-      "actor": "ACT-NOVA",
+      "displayName": "Citra",
+      "role": "Pokja Mutasi",
+      "actor": "ACT-CM",
       "kind": "npc",
       "body": { "heightM": 1.49, "headRatio": 3.5, "legRatio": 0.37, "shoulderWidth": 0.32, "torsoWidth": 0.92, "torsoDepth": 0.92, "limbScale": 0.92, "headWidth": 1.0 },
       "skin": "#A86F4C",
@@ -331,9 +331,9 @@
       "silhouette": "rounded bob with curled hem, cropped teal jacket, tablet in the right hand"
     },
     "CH-NETINSTALL": {
-      "displayName": "Bruno",
-      "role": "Instalasi jaringan & server",
-      "actor": "ACT-BRUNO",
+      "displayName": "Rony",
+      "role": "Pokja Mutasi",
+      "actor": "ACT-RP",
       "kind": "npc",
       "body": { "heightM": 1.55, "headRatio": 3.55, "legRatio": 0.365, "shoulderWidth": 0.39, "torsoWidth": 1.12, "torsoDepth": 1.08, "limbScale": 1.12, "headWidth": 1.02 },
       "skin": "#8A5A3C",
@@ -362,9 +362,9 @@
       "silhouette": "broad build, work cap with brim, tool belt with pouches, cable coil at the left hip"
     },
     "CH-VISUAL": {
-      "displayName": "Kevin",
-      "role": "Pamflet & materi visual",
-      "actor": "ACT-KEVIN",
+      "displayName": "Erni",
+      "role": "Pokja Mutasi",
+      "actor": "ACT-ER",
       "kind": "npc",
       "body": { "heightM": 1.51, "headRatio": 3.5, "legRatio": 0.375, "shoulderWidth": 0.33, "torsoWidth": 0.96, "torsoDepth": 0.96, "limbScale": 0.96, "headWidth": 1.0 },
       "skin": "#EBC4A0",
@@ -393,9 +393,9 @@
       "silhouette": "soft spiky hair, canvas apron with paint smudges, sketchbook tucked under the left arm"
     },
     "CH-QA": {
-      "displayName": "Rex",
-      "role": "Review & QA",
-      "actor": "ACT-REX",
+      "displayName": "Angelina",
+      "role": "Pokja Mutasi",
+      "actor": "ACT-NG",
       "kind": "npc",
       "body": { "heightM": 1.54, "headRatio": 3.6, "legRatio": 0.375, "shoulderWidth": 0.34, "torsoWidth": 0.98, "torsoDepth": 0.98, "limbScale": 0.98, "headWidth": 1.0 },
       "skin": "#D9A77F",
@@ -424,9 +424,9 @@
       "silhouette": "round glasses, neat side part, collared shirt under a sweater vest, clipboard held at the chest"
     },
     "CH-ASSISTANT": {
-      "displayName": "Echo",
-      "role": "Asisten 9router",
-      "actor": "ACT-ECHO",
+      "displayName": "Sonya",
+      "role": "Pokja Mutasi",
+      "actor": "ACT-SL",
       "kind": "npc",
       "body": { "heightM": 1.52, "headRatio": 3.6, "legRatio": 0.375, "shoulderWidth": 0.33, "torsoWidth": 0.97, "torsoDepth": 0.97, "limbScale": 0.97, "headWidth": 1.0 },
       "skin": "#E0B48C",
@@ -455,9 +455,9 @@
       "silhouette": "slate side part under a headset, sage sweater, tablet in the left hand; reads as a cooler, lighter echo of Max's headset silhouette"
     },
     "CH-DESIGNER": {
-      "displayName": "Leo",
-      "role": "Desain",
-      "actor": "ACT-LEO",
+      "displayName": "Michael",
+      "role": "Pokja Mutasi",
+      "actor": "ACT-MJ",
       "kind": "npc",
       "body": { "heightM": 1.57, "headRatio": 3.6, "legRatio": 0.38, "shoulderWidth": 0.34, "torsoWidth": 0.96, "torsoDepth": 0.96, "limbScale": 0.98, "headWidth": 1.0 },
       "skin": "#B98463",

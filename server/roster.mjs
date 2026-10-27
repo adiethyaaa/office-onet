@@ -10,7 +10,10 @@
 // kata depan nama lengkapnya adalah Yulius.
 // FA adalah akun Mas sendiri (nama pada sesi: Adiethya
 // Arpujiono), jadi tidak ada entri MAS terpisah; entri FA
-// memegang peran CEO.
+// memegang peran CEO. Nama tampil dua entri sistem memakai
+// arahan Mas 28 Oktober 2026 02:09 WIT: ONET tampil
+// "Onet Aspri" dan KASUARI tampil "Kak Suary"; kode profil
+// keduanya tetap ONET dan KASUARI.
 //
 // `profile` tidak boleh berubah: panel menyambung daftar
 // agen dan kehadiran lewat `profile` yang sama dengan kode
@@ -39,8 +42,8 @@
 // bersifat privat pada langkah ini.
 export const ROSTER = [
   { profile: 'FA', name: 'Adiethya', lane: 'CEO, Kanreg XIV BKN Manokwari', actorId: 'ACT-MAS', badan: 'KANREG XIV', gender: 'male' },
-  { profile: 'ONET', name: 'Onet', lane: 'Asisten pribadi, kehadiran dan laporan Pokja', actorId: 'ACT-ONET', badan: 'SISTEM', gender: 'male' },
-  { profile: 'KASUARI', name: 'Kasuari', lane: 'Agen pemantau Pokja (Telegram)', actorId: 'ACT-KASUARI', badan: 'SISTEM', gender: 'male' },
+  { profile: 'ONET', name: 'Onet Aspri', lane: 'Asisten pribadi, kehadiran dan laporan Pokja', actorId: 'ACT-ONET', badan: 'SISTEM', gender: 'male' },
+  { profile: 'KASUARI', name: 'Kak Suary', lane: 'Agen pemantau Pokja (Telegram)', actorId: 'ACT-KASUARI', badan: 'SISTEM', gender: 'male' },
   { profile: 'CM', name: 'Citra', lane: 'Pengguna Pokja Mutasi', actorId: 'ACT-CM', badan: 'POKJA', gender: 'male' },
   { profile: 'RP', name: 'Rony', lane: 'Pengguna Pokja Mutasi', actorId: 'ACT-RP', badan: 'POKJA', gender: 'male' },
   { profile: 'ER', name: 'Erni', lane: 'Pengguna Pokja Mutasi', actorId: 'ACT-ER', badan: 'POKJA', gender: 'male' },

@@ -49,7 +49,10 @@ Berkas itu belum disalin ke fork dan belum di-push.
   dan MJ memakai kata depan dari nama yang sudah
   terverifikasi pada laporan Pokja. RP memakai nama
   panggilan `Rony`, sesuai keputusan Mas 28 Oktober 2026
-  01:55 WIT (kata depan nama lengkapnya `Yulius`). Upaya
+  01:55 WIT (kata depan nama lengkapnya `Yulius`). Dua
+  entri sistem memakai nama tampil dari arahan Mas 02:09
+  WIT: ONET tampil `Onet Aspri`, KASUARI tampil `Kak Suary`;
+  kode profil keduanya tetap. Upaya
   mengambil nama lima inisial lain lewat filter inisial
   pada endpoint yang sama tidak mengembalikan baris apa
   pun (aktivitas mereka lebih lama dari 500 baris terakhir
