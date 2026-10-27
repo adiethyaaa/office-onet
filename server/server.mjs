@@ -20,7 +20,9 @@ import { buatMesinKehadiran, buatPenarikSnapshot, buatPenyegarKehadiran } from '
 // menyimpan kategori aksi dan layanan, bukan isi detail log.
 import { buatMesinLogAktivitas, buatPenarikKehadiran, keBentukPresenceLog } from './pokja-log.mjs';
 import { agentReplyTimes, lastChatLine, ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
-import { ROSTER, byProfile } from './roster.mjs';
+// Roster Pokja: PEMETAAN_AKTOR_POKJA diturunkan dari ROSTER dan
+// dipakai sebagai bawaan pemetaan aktor di bawah.
+import { ROSTER, byProfile, PEMETAAN_AKTOR_POKJA } from './roster.mjs';
 import { checkMessage, LIMITS } from './policy.mjs';
 import { createDispatcher, hermesRunner, TERMINAL } from './dispatcher.mjs';
 import { setupPage } from './setup-page.mjs';
@@ -50,9 +52,9 @@ export function createServer(cfg) {
   // (cfg.pokjaUrl, cfg.pokjaToken, dikirim main.mjs dari variabel
   // lingkungan). Kalau keduanya tidak ada, atau pembuatan mesin
   // gagal, mesin tetap null dan rute presence memakai jalur lama
-  // persis seperti sebelumnya. Pemetaan aktor masih kosong sampai
-  // roster.mjs diganti; sampai saat itu actorId pada daftar Pokja
-  // dibiarkan null.
+  // persis seperti sebelumnya. Pemetaan aktor diambil dari ROSTER
+  // (PEMETAAN_AKTOR_POKJA) kecuali pemanggil mengirim pemetaan
+  // suntikan lewat cfg.pokjaPemetaanAktor (untuk tes).
   let pokjaMesin = cfg.pokja ?? null;
   if (!pokjaMesin && cfg.pokjaUrl && cfg.pokjaToken) {
     try {
@@ -69,7 +71,7 @@ export function createServer(cfg) {
   const penyegarPokja = buatPenyegarKehadiran({
     mesin: pokjaMesin,
     batasCacheMs: cfg.pokjaCacheMs ?? 120000,
-    pemetaanAktor: cfg.pokjaPemetaanAktor ?? {},
+    pemetaanAktor: cfg.pokjaPemetaanAktor ?? PEMETAAN_AKTOR_POKJA,
   });
   // [POKJA-LOG] Mesin sesi dan log dibuat di sini dan menjadi
   // sumber utama kalau aktif, dengan penyegar perkiraan di atas
@@ -100,7 +102,7 @@ export function createServer(cfg) {
   const penyegarLog = buatPenyegarKehadiran({
     mesin: mesinLog,
     batasCacheMs: cfg.pokjaLogCacheMs ?? 30000,
-    pemetaanAktor: cfg.pokjaPemetaanAktor ?? {},
+    pemetaanAktor: cfg.pokjaPemetaanAktor ?? PEMETAAN_AKTOR_POKJA,
     bentukPresence: keBentukPresenceLog,
   });
   const home = cfg.home ?? os.homedir();

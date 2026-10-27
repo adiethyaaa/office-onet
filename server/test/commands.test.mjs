@@ -31,14 +31,14 @@ before(async () => {
   const home = path.join(tmp, 'home');
   fs.mkdirSync(path.join(home, '.hermes', 'logs'), { recursive: true });
   fs.writeFileSync(path.join(home, '.hermes', '.env'), 'TELEGRAM_ALLOWED_USERS=777\n');
-  const leo = path.join(home, '.hermes', 'profiles', 'leo');
+  const leo = path.join(home, '.hermes', 'profiles', 'SL');
   fs.mkdirSync(leo, { recursive: true });
-  fs.writeFileSync(path.join(leo, 'config.yaml'), "model:\n  default: 'model-leo-uji'\n  provider: 'uji'\n");
+  fs.writeFileSync(path.join(leo, 'config.yaml'), "model:\n  default: 'model-SL-uji'\n  provider: 'uji'\n");
   const t = Date.now() / 1000;
   execFileSync('sqlite3', [path.join(leo, 'state.db'), `
     create table sessions(id text primary key, source text, session_key text, started_at real, ended_at real, model text);
     create table messages(id integer primary key autoincrement, session_id text, role text, content text, timestamp real, platform_message_id text, _compressed_summary int default 0);
-    insert into sessions values('tg_leo','telegram','agent:leo:telegram:dm:777',${t - 600},null,'model-sesi-telegram');
+    insert into sessions values('tg_leo','telegram','agent:SL:telegram:dm:777',${t - 600},null,'model-sesi-telegram');
     insert into messages(session_id,role,content,timestamp,platform_message_id) values ('tg_leo','user','halo leo',${t - 500},'1');
   `]);
   const dataDir = path.join(tmp, 'data');
@@ -64,7 +64,7 @@ test('parseCommand: /word dan /word@bot saja; path dan teks biasa bukan perintah
 });
 
 test('/help, perintah tak dikenal, dan /status tidak diteruskan ke agen', async () => {
-  const conv = (await api('POST', '/api/conversations', { profile: 'enterprise' })).json;
+  const conv = (await api('POST', '/api/conversations', { profile: 'CM' })).json;
   const c0 = calls.length;
   const help = await say(conv.id, '/help');
   assert.equal(help.status, 200);
@@ -84,11 +84,11 @@ test('/help, perintah tak dikenal, dan /status tidak diteruskan ke agen', async 
 });
 
 test('/stop menghentikan tugas yang sedang jalan dan yang antre', async () => {
-  const conv = (await api('POST', '/api/conversations', { profile: 'finance', fresh: true })).json;
+  const conv = (await api('POST', '/api/conversations', { profile: 'MJ', fresh: true })).json;
   let release; gate = new Promise((r) => { release = r; });
   await say(conv.id, 'hitung margin proyek A');
   await say(conv.id, 'lalu proyek B');
-  await waitFor(() => calls.some((c) => c.profile === 'finance'));
+  await waitFor(() => calls.some((c) => c.profile === 'MJ'));
   const st = await say(conv.id, '/status');
   assert.equal(st.json.command.running, true);
   assert.ok(st.json.command.tasks.some((t) => t.status === 'working'));
@@ -102,7 +102,7 @@ test('/stop menghentikan tugas yang sedang jalan dan yang antre', async () => {
 });
 
 test('perintah idempoten: kunci yang sama tidak membuka chat kedua', async () => {
-  const conv = (await api('POST', '/api/conversations', { profile: 'infra', fresh: true })).json;
+  const conv = (await api('POST', '/api/conversations', { profile: 'ER', fresh: true })).json;
   const body = { text: '/new', idem: 'idem-slash-retry-0001' };
   const a = await api('POST', `/api/conversations/${conv.id}/messages`, body);
   const b = await api('POST', `/api/conversations/${conv.id}/messages`, body);
@@ -112,27 +112,27 @@ test('perintah idempoten: kunci yang sama tidak membuka chat kedua', async () =>
 });
 
 test('/stop saat prepare() (transkripsi) berjalan: agen tidak dipanggil sesudahnya', async () => {
-  const conv = (await api('POST', '/api/conversations', { profile: 'legal', fresh: true })).json;
+  const conv = (await api('POST', '/api/conversations', { profile: 'ONET', fresh: true })).json;
   slowStt = true; // transcription starts at upload time and is awaited in prepare()
   const up = await fetch(`${base}/api/conversations/${conv.id}/uploads`, { method: 'POST', headers: { 'content-type': 'audio/webm', 'x-file-name': 'v.webm', 'x-kantor-proxy': PROXY, origin: ORIGIN, cookie: s.cookie, 'x-csrf': s.csrf }, body: Buffer.from('1a45dfa3', 'hex') }).then((r) => r.json());
   assert.ok(up.upload?.id, JSON.stringify(up));
-  const c0 = calls.filter((c) => c.profile === 'legal').length;
+  const c0 = calls.filter((c) => c.profile === 'ONET').length;
   await api('POST', `/api/conversations/${conv.id}/messages`, { text: '', attachments: [up.upload.id], idem: 'idem-slash-prep-0001' });
   await new Promise((r) => setTimeout(r, 100));
   assert.equal((await say(conv.id, '/stop')).json.command.stopped, 1);
   releaseStt();
   await new Promise((r) => setTimeout(r, 300));
-  assert.equal(calls.filter((c) => c.profile === 'legal').length, c0, 'runner tidak boleh jalan untuk tugas yang dihentikan');
+  assert.equal(calls.filter((c) => c.profile === 'ONET').length, c0, 'runner tidak boleh jalan untuk tugas yang dihentikan');
 });
 
 test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khusus RPG lalu /telegram kembali', async () => {
-  const rpg = (await api('POST', '/api/conversations', { profile: 'sales', fresh: true })).json;
+  const rpg = (await api('POST', '/api/conversations', { profile: 'NG', fresh: true })).json;
   const nw = await say(rpg.id, '/new');
   assert.equal(nw.json.command.kind, 'new');
   assert.notEqual(nw.json.conversation.id, rpg.id);
   assert.equal(nw.json.conversation.turns.length, 0);
 
-  const tg = (await api('POST', '/api/conversations', { profile: 'leo' })).json;
+  const tg = (await api('POST', '/api/conversations', { profile: 'SL' })).json;
   assert.equal(tg.channel, 'telegram');
   const st = await say(tg.id, '/status');
   assert.equal(st.json.command.session, 'tg_leo');
@@ -144,15 +144,15 @@ test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khus
   assert.equal(fresh.json.conversation.channel, 'rpg');
   assert.equal(fresh.json.conversation.detached, true);
   // Reopening the bot keeps the new RPG-only chat (it does not snap back to Telegram).
-  const again = (await api('POST', '/api/conversations', { profile: 'leo' })).json;
+  const again = (await api('POST', '/api/conversations', { profile: 'SL' })).json;
   assert.equal(again.id, fresh.json.conversation.id);
   const st2 = await say(again.id, '/status');
   assert.equal(st2.json.command.channel, 'rpg-detached');
-  assert.equal(st2.json.command.model, 'model-leo-uji', 'belum ada sesi: model bawaan profil');
+  assert.equal(st2.json.command.model, 'model-SL-uji', 'belum ada sesi: model bawaan profil');
   // A message there starts a fresh Hermes session, not the Telegram one.
   await say(again.id, 'ide poster baru');
   await waitFor(() => calls.length > c0);
-  assert.equal(calls.at(-1).profile, 'leo');
+  assert.equal(calls.at(-1).profile, 'SL');
   assert.equal(calls.at(-1).hermesSession, null);
   // A late reply in the detached chat must not pull it back in front after /telegram.
   let rel; gate = new Promise((r) => { rel = r; });
@@ -163,8 +163,8 @@ test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khus
   await waitFor(async () => (await api('GET', `/api/conversations/${again.id}`)).json.tasks.every((t) => t.terminal));
   assert.equal(back.json.command.ok, true);
   assert.equal(back.json.conversation.channel, 'telegram');
-  assert.equal((await api('POST', '/api/conversations', { profile: 'leo' })).json.channel, 'telegram');
+  assert.equal((await api('POST', '/api/conversations', { profile: 'SL' })).json.channel, 'telegram');
   // Bot without Telegram: /telegram says so.
-  const ent = (await api('POST', '/api/conversations', { profile: 'enterprise' })).json;
+  const ent = (await api('POST', '/api/conversations', { profile: 'CM' })).json;
   assert.equal((await say(ent.id, '/telegram')).json.command.ok, false);
 });

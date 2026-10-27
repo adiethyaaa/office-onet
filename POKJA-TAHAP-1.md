@@ -4,9 +4,11 @@ Branch ini (`pokja-tahap-1`) berisi perubahan tahap 1 untuk
 kehadiran Pokja, dengan penanda `[POKJA-TAHAP-1]` dan
 `[POKJA-LOG]` di setiap tempat yang diubah, supaya Mas bisa
 memeriksa selisihnya satu per satu. Belum ada perubahan di
-tampilan (`app/`) dan belum ada penggantian roster, jadi uji
-coba pada tahap ini memeriksa API kehadiran dan cadangannya,
-bukan karakter 3D-nya.
+tampilan (`app/`) dan pemetaan id karakter ke dunia 3D
+(`design/world.json`) belum diubah, jadi uji coba pada tahap
+ini memeriksa API kehadiran, daftar agen, dan cadangannya,
+bukan gerakan karakter 3D-nya. Roster sudah diganti menjadi
+roster Pokja (lihat `docs/ROSTER-POKJA.md`).
 
 ## Berkas yang diubah atau ditambah
 
