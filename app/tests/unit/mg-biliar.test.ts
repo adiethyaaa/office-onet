@@ -351,7 +351,7 @@ describe('mini game: biliar full match', () => {
       expect(s.shots).toBeLessThanOrEqual(40);
       expect(res!.score).toBe(s.mine * 100 + (res!.won ? 1000 : 0));
       expect(r.sfx).toContain('pocket');
-      expect(s.foe).not.toBe('Adiethya');
+      expect(s.foe).not.toBe('Masdit CEO');
       cpuPots += s.theirs;
     }
     expect(cpuPots).toBeGreaterThan(3);

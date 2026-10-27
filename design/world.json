@@ -642,7 +642,7 @@
    "category": "quiet",
    "access": "staff",
    "noise": "quiet",
-   "function": "Ruang Adiethya (CEO)",
+   "function": "Ruang Masdit CEO",
    "polygon": [
     [
      0,
@@ -9320,7 +9320,7 @@
  "actors": [
   {
    "id": "ACT-MAS",
-   "displayName": "Adiethya",
+   "displayName": "Masdit CEO",
    "role": "CEO",
    "kind": "player",
    "avatarAsset": "CH-CEO",
@@ -9504,6 +9504,28 @@
     "activityState"
    ],
    "homeSeat": "FX-L1-099",
+   "simulated": true
+  },
+  {
+   "id": "ACT-FA",
+   "displayName": "Adiethya",
+   "role": "Pokja Mutasi",
+   "kind": "npc",
+   "avatarAsset": "CH-NETINSTALL",
+   "homeRoom": "L1-IMPL",
+   "rolePreference": {
+    "desk": 3,
+    "read": 2,
+    "chat": 2,
+    "coffee": 1,
+    "billiards": 1
+   },
+   "allowedPublicFields": [
+    "displayName",
+    "role",
+    "activityState"
+   ],
+   "homeSeat": "FX-L1-060",
    "simulated": true
   }
  ],

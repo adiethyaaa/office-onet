@@ -1,6 +1,8 @@
 // Roster Pokja tahap 1: identitas dari sesi/log Pokja, nama tampil
 // satu kata nama depan, kelamin bawaan laki-laki, dan pemetaan
-// aktor yang diturunkan dari roster yang sama.
+// aktor yang diturunkan dari roster yang sama. Sejak 28 Oktober
+// 2026, FA adalah karyawan biasa (ACT-FA); CEO Masdit adalah
+// pemain dan bukan anggota roster.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -22,7 +24,9 @@ test('roster berisi sembilan entri Pokja dengan nama depan dan kelamin bawaan', 
     assert.equal(typeof r.badan, 'string');
   }
   assert.equal(byProfile('CM')?.name, 'Citra');
-  assert.equal(byProfile('FA')?.actorId, 'ACT-MAS');
+  assert.equal(byProfile('FA')?.actorId, 'ACT-FA');
+  assert.equal(byProfile('FA')?.lane, 'Pengguna Pokja Mutasi');
+  assert.equal(byProfile('FA')?.badan, 'POKJA');
   assert.equal(byProfile('RP')?.actorId, 'ACT-RP');
 });
 
@@ -34,7 +38,7 @@ test('tidak ada profil Hermes yang tersisa di roster', () => {
 
 test('pemetaan aktor diturunkan dari roster, satu untuk setiap entri berkarakter', () => {
   assert.deepEqual(PEMETAAN_AKTOR_POKJA, {
-    FA: 'ACT-MAS', ONET: 'ACT-ONET', KASUARI: 'ACT-KASUARI', CM: 'ACT-CM',
+    FA: 'ACT-FA', ONET: 'ACT-ONET', KASUARI: 'ACT-KASUARI', CM: 'ACT-CM',
     RP: 'ACT-RP', ER: 'ACT-ER', NG: 'ACT-NG', SL: 'ACT-SL', MJ: 'ACT-MJ',
   });
   for (const r of ROSTER) assert.equal(PEMETAAN_AKTOR_POKJA[r.profile], r.actorId);

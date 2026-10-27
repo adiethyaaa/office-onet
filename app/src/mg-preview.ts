@@ -18,7 +18,7 @@ void initLang().then(async () => {
   if (!GAMES[id]) { document.body.textContent = `unknown game ${id}`; return; }
   const { openMiniGame, currentMiniGame } = await import('./minigames/host');
   const open = () => openMiniGame(id, {
-    reducedMotion: settings.reducedMotion, padProfile: () => settings.padProfile, playerName: 'Adiethya', seed,
+    reducedMotion: settings.reducedMotion, padProfile: () => settings.padProfile, playerName: 'Masdit CEO', seed,
     onClose: () => { document.body.dataset.closed = '1'; },
   });
   open();

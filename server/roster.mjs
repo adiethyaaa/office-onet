@@ -9,8 +9,11 @@
 // RP memakai nama panggilan Rony, sesuai keputusan Mas;
 // kata depan nama lengkapnya adalah Yulius.
 // FA adalah akun Mas sendiri (nama pada sesi: Adiethya
-// Arpujiono), jadi tidak ada entri MAS terpisah; entri FA
-// memegang peran CEO. Nama tampil dua entri sistem memakai
+// Arpujiono), tetapi sejak keputusan Mas 28 Oktober 2026
+// 08:13 WIT, FA adalah karyawan biasa seperti pengguna
+// Pokja lain; karakter CEO adalah Masdit (pemain) dan
+// bukan anggota roster, jadi tidak ada entri CEO di
+// roster ini. Nama tampil dua entri sistem memakai
 // arahan Mas 28 Oktober 2026 02:09 WIT: ONET tampil
 // "Onet Aspri" dan KASUARI tampil "Kak Suary"; kode profil
 // keduanya tetap ONET dan KASUARI.
@@ -26,12 +29,11 @@
 // karakter; Mas akan memberi tahu siapa yang laki-laki dan
 // siapa yang perempuan, lalu field ini diperbarui.
 //
-// actorId adalah id karakter BARU (ACT-MAS, ACT-ONET, dan
-// seterusnya). Id-id ini belum ada di design/world.json,
-// jadi karakter 3D belum bergerak sampai langkah design
-// berikutnya memetakan id-id ini ke karakter di dunia.
-// Sampai saat itu, /api/presence sudah membawa actorId yang
-// benar dan panel sudah menampilkan nama serta statusnya.
+// actorId adalah id karakter di design/world.json
+// (ACT-FA, ACT-ONET, dan seterusnya). Id pemain ACT-MAS
+// (Masdit CEO) tidak ada di roster, karena pemain bukan
+// agen yang dipantau kehadirannya; FA memakai id
+// karakternya sendiri ACT-FA.
 //
 // PRIVATE_PROFILES mempertahankan dua profil lama Hermes
 // (yupus, wealth) BUKAN sebagai anggota roster, melainkan
@@ -41,7 +43,7 @@
 // pada langkah berikutnya. Tidak ada anggota roster baru yang
 // bersifat privat pada langkah ini.
 export const ROSTER = [
-  { profile: 'FA', name: 'Adiethya', lane: 'CEO, Kanreg XIV BKN Manokwari', actorId: 'ACT-MAS', badan: 'KANREG XIV', gender: 'male' },
+  { profile: 'FA', name: 'Adiethya', lane: 'Pengguna Pokja Mutasi', actorId: 'ACT-FA', badan: 'POKJA', gender: 'male' },
   { profile: 'ONET', name: 'Onet Aspri', lane: 'Asisten pribadi, kehadiran dan laporan Pokja', actorId: 'ACT-ONET', badan: 'SISTEM', gender: 'male' },
   { profile: 'KASUARI', name: 'Kak Suary', lane: 'Agen pemantau Pokja (Telegram)', actorId: 'ACT-KASUARI', badan: 'SISTEM', gender: 'male' },
   { profile: 'CM', name: 'Citra', lane: 'Pengguna Pokja Mutasi', actorId: 'ACT-CM', badan: 'POKJA', gender: 'male' },

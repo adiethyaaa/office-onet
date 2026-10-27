@@ -1,7 +1,13 @@
-# Draf pengganti roster.mjs (peninjauan, belum disalin ke fork)
+# Pengganti roster.mjs (sudah di-push; pembaruan di bawah)
 
-Drafnya ada di `server/roster.mjs` pada folder peninjauan ini.
-Berkas itu belum disalin ke fork dan belum di-push.
+Draf awalnya disusun di folder peninjauan ini, lalu disalin
+ke fork dan di-push (commit `e11d945`, perbaikan label
+`d880e79`). Pembaruan 28 Oktober 2026 08:13 WIT: FA bukan
+lagi CEO; CEO adalah Masdit (pemain, bukan anggota
+roster) dan FA menjadi karyawan biasa ke-10 dengan
+`actorId` ACT-FA. Bagian "Isi draf" di bawah adalah
+riwayat draf awal; yang berlaku adalah isi
+`server/roster.mjs` saat ini.
 
 ## Yang dibaca sebelum menyusun draf
 
@@ -35,12 +41,15 @@ Berkas itu belum disalin ke fork dan belum di-push.
 
 ## Isi draf
 
-- FA (`FA`, nama tampil `Adiethya`, ACT-MAS): akun Mas
-  sendiri, peran CEO. Tidak ada entri `MAS` terpisah.
+- FA (`FA`, nama tampil `Adiethya`, ACT-FA): akun Mas
+  sendiri, kini karyawan biasa dengan jalur "Pengguna
+  Pokja Mutasi" dan badan POKJA, seperti pengguna lain.
   Onet (`ONET`, ACT-ONET), Kasuari (`KASUARI`, ACT-KASUARI).
 - Pengguna Pokja yang inisialnya terverifikasi dari sesi,
-  log, dan snapshot: CM, RP, ER, NG, SL, MJ, masing-masing
-  dengan `actorId` baru ACT-CM dan seterusnya.
+  log, dan snapshot: CM, RP, ER, NG, SL, MJ, ditambah FA,
+  masing-masing dengan `actorId` baru ACT-CM dan
+  seterusnya. Total 9 entri roster; dunia punya 10 aktor
+  karena pemain ACT-MAS (Masdit CEO) bukan anggota roster.
 - Nama tampil memakai satu kata nama depan, sesuai arahan
   Mas 28 Oktober 2026 01:45 WIT. FA (`Adiethya`) dan SL
   (`Sonya`) terverifikasi langsung dari field nama pada

@@ -33,7 +33,7 @@ const BOARD_LABEL: Record<BoardTab, string> = { handoffs: 'Papan Handoff', tasks
 /** Persona -> profil Pokja yang menerima perintah (roster server adalah otoritasnya). */
 export const ACTOR_PROFILE: Record<string, string> = {
   'ACT-ONET': 'ONET', 'ACT-KASUARI': 'KASUARI', 'ACT-CM': 'CM', 'ACT-RP': 'RP',
-  'ACT-ER': 'ER', 'ACT-NG': 'NG', 'ACT-SL': 'SL', 'ACT-MJ': 'MJ',
+  'ACT-ER': 'ER', 'ACT-NG': 'NG', 'ACT-SL': 'SL', 'ACT-MJ': 'MJ', 'ACT-FA': 'FA',
 };
 
 export interface Interactable {
@@ -479,7 +479,7 @@ export class Game {
   }
 
   /** Display name used on the local leaderboards. */
-  playerName = 'Adiethya';
+  playerName = 'Masdit CEO';
 
   private areaTrack(): string {
     return trackForRoom(this.roomId, this.player.floor);

@@ -25,16 +25,17 @@ export const IMPACT_WORD: Record<ScoldProp, string> = { gulungan: 'PLAK!', palu:
 
 /** One line per persona, in character. Indonesian source; t() translates. */
 export const SCOLD_LINES: Record<string, string[]> = {
-  'ACT-ONET': ['Siap, Pak! Saya rapikan antreannya sekarang.', 'Aduh. Oke, kembali koordinasi.'],
-  'ACT-KASUARI': ['Aduh, penggaris saya! Balik ke denah.', 'Iya, iya, gambarnya saya lanjutkan.'],
-  'ACT-CM': ['Sinyal diterima, Pak. Balik ke desain jaringan.', 'Oke, spesifikasinya saya selesaikan.'],
-  'ACT-RP': ['Waduh! Kabelnya saya tarik lagi sekarang.', 'Siap, cek server dulu.'],
-  'ACT-ER': ['Aw! Posternya hampir jadi kok.', 'Oke, kembali ke kanvas.'],
-  'ACT-NG': ['Teguran diterima. Status: kembali kerja.', 'Bug ditemukan: saya. Diperbaiki.'],
-  'ACT-SL': ['Eh, iya! Catatannya saya lanjutkan.', 'Maaf, Pak. Langsung kerja.'],
-  'ACT-MJ': ['Aduh, ide saya buyar! Balik ke meja.', 'Oke, desainnya saya kejar.'],
+  'ACT-ONET': ['Siap, Pak. Segera saya tindak lanjuti dan saya laporkan perkembangannya.', 'Mohon maaf, Pak. Saya kembali ke meja dan menyelesaikan yang tertunda.'],
+  'ACT-KASUARI': ['Siap, Pak. Pemantauan saya lanjutkan, hasilnya saya rekap sesuai ketentuan.', 'Mohon maaf, Pak. Saya kembali memantau dan memastikan tidak ada laporan yang terlewat.'],
+  'ACT-CM': ['Siap, Pak. Berkasnya segera saya proses sesuai antrean.', 'Mohon maaf, Pak. Saya kembali ke meja dan menindaklanjuti usulan yang masuk.'],
+  'ACT-RP': ['Siap, Pak. Segera saya selesaikan, mohon izin kembali bekerja.', 'Mohon maaf, Pak. Saya lanjutkan verifikasi berkasnya sekarang.'],
+  'ACT-ER': ['Siap, Pak. Saya kembali ke meja dan menyelesaikan tugas sesuai prosedur.', 'Mohon maaf, Pak. Berkasnya sedang saya tindak lanjuti.'],
+  'ACT-NG': ['Siap, Pak. Segera saya proses, mohon arahannya bila ada yang kurang.', 'Mohon maaf, Pak. Saya kembali bekerja dan memastikan berkasnya lengkap.'],
+  'ACT-SL': ['Siap, Pak. Saya lanjutkan pekerjaannya sesuai ketentuan yang berlaku.', 'Mohon maaf, Pak. Saya kembali ke meja dan menyelesaikan yang menjadi tugas saya.'],
+  'ACT-MJ': ['Siap, Pak. Segera saya tindak lanjuti, mohon izin kembali ke meja.', 'Mohon maaf, Pak. Saya lanjutkan proses berkasnya sekarang juga.'],
+  'ACT-FA': ['Siap, Pak. Segera saya kerjakan dan saya laporkan setelah selesai.', 'Mohon maaf, Pak. Saya kembali ke meja dan menindaklanjuti tugasnya.'],
 };
-export const SCOLD_FALLBACK = 'Aduh! Iya, kembali kerja.';
+export const SCOLD_FALLBACK = 'Siap, Pak. Segera saya tindak lanjuti.';
 
 const PAPER = 0xf4ecdc;
 const RED = 0xc0533a;

@@ -45,6 +45,25 @@ disalin ke fork setelah disetujui.
   mengikuti perubahan di atas (kunci lama yang tidak
   dipakai lagi dihapus; setiap literal baru punya
   terjemahan, sesuai syarat uji i18n).
+
+## Pembaruan Masdit CEO (28 Oktober 2026, disetujui Mas)
+
+- Nama tampil pemain menjadi persis `Masdit CEO`
+  (`game.ts`, `mg-preview.ts`, `characters.json` entri
+  CH-CEO, `world.json` entri ACT-MAS, terjemahan
+  Inggris, dan tes biliar). Fungsi ruangan CEO menjadi
+  "Ruang Masdit CEO".
+- FA menjadi karyawan biasa: entri aktor baru `ACT-FA`
+  di `world.json` (Ruang implementasi & review, kursi
+  FX-L1-060, model bersama Rony `CH-NETINSTALL`),
+  `ACT-FA` ditambahkan ke `ACTOR_PROFILE`, dan roster
+  FA berubah jalur/badan/`actorId` (lihat
+  `docs/ROSTER-POKJA.md`).
+- `scold.ts`: seluruh kalimat teguran ditulis ulang
+  dengan gaya pegawai birokrasi (dua kalimat untuk
+  tiap dari 9 NPC, termasuk ACT-FA, ditambah kalimat
+  cadangan), sesuai draf yang Mas setujui; terjemahan
+  Inggrisnya ada di `en/mg/office.ts`.
 - `design/world.json`: satu baris, fungsi ruangan CEO
   menjadi "Ruang Adiethya (CEO)" (id ruangan tidak
   berubah; berkas turunan dan generator tidak disentuh

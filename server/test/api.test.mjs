@@ -45,7 +45,7 @@ function fakeHome(root) {
     `${stamp(48 * 3600_000)} INFO [s1] agent.tool_executor: tool web_search completed (0.1s)`,
   ].join('\n') + '\n';
   fs.writeFileSync(path.join(h, '.hermes', 'logs', 'agent.log'), logLines);
-  // [POKJA-TAHAP-1] Log yang sama untuk profil FA (CEO): roster
+  // [POKJA-TAHAP-1] Log yang sama untuk profil FA (pengguna Pokja): roster
   // baru tidak lagi punya profil 'default' yang dibaca boards.mjs
   // dari log utama, jadi tanpa berkas ini baris alat papan kosong.
   fs.mkdirSync(path.join(h, '.hermes', 'profiles', 'FA', 'logs'), { recursive: true });
