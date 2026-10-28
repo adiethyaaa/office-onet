@@ -10,7 +10,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { openStore, RETENTION } from './store.mjs';
 import { loadOwner, verifyPassword, verifyTotp, hashPassword, base32Encode, token } from './auth.mjs';
-import { boardCache, buildPresence, makeSources } from './boards.mjs';
+import { boardCache, buildPresence, buatPapanPokja, makeSources } from './boards.mjs'; // [POKJA-PAPAN]
 // [POKJA-TAHAP-1] Satu-satunya impor baru pada langkah penyambungan ini.
 // Berkas pokja.mjs hanya membaca snapshot Pokja; tidak ada impor Hermes
 // baru dan tidak ada perubahan pada impor lain di berkas ini.
@@ -44,7 +44,15 @@ export function createServer(cfg) {
   const media = createMedia({ dataDir, home: cfg.home ?? os.homedir(), secret: cfg.proxySecret || 'dev', q: store.q, now, transcriber: cfg.transcriber });
   const push = cfg.push ?? createPush({ dataDir, q: store.q, now, fetchImpl: cfg.pushFetch });
   const sources = makeSources(cfg.home ?? os.homedir());
-  const boards = cfg.boards ?? boardCache(sources, cfg.boardTtlMs ?? 5000);
+  // [POKJA-PAPAN] Papan dibaca dari API Pokja (ringkasan + log aktivitas),
+  // memakai URL/token/fetch yang sama dengan kehadiran. Tanpa konfigurasi
+  // Pokja, /api/boards menjawab gagal, bukan kosong sukses.
+  let penarikRingkasan = null; let penarikKehadiran = null;
+  if (cfg.pokjaUrl && cfg.pokjaToken) {
+    try { penarikRingkasan = buatPenarikSnapshot({ url: cfg.pokjaUrl, token: cfg.pokjaToken, ambil: cfg.pokjaFetch }); } catch { penarikRingkasan = null; }
+    try { penarikKehadiran = buatPenarikKehadiran({ url: cfg.pokjaUrl, token: cfg.pokjaToken, ambil: cfg.pokjaFetch }); } catch { penarikKehadiran = null; }
+  }
+  const boards = cfg.boards ?? boardCache(buatPapanPokja({ penarikRingkasan, penarikKehadiran }), cfg.boardTtlMs ?? 30000);
   let presenceMemo = { at: 0, value: null };
   // [POKJA-TAHAP-1] Mesin kehadiran perkiraan Pokja dibuat di sini,
   // tetapi hanya aktif kalau pemanggil mengirim mesin suntikan
@@ -309,7 +317,7 @@ export function createServer(cfg) {
     send(res, 200, { ok: true }, { 'Set-Cookie': cookie('', 0) });
   });
 
-  route('GET', /^\/api\/boards$/, {}, (req, res) => send(res, 200, boards(now())));
+  route('GET', /^\/api\/boards$/, {}, async (req, res) => send(res, 200, await boards(now()))); // [POKJA-PAPAN]
 
   route('GET', /^\/api\/agents$/, {}, (req, res) => {
     const active = q("select profile, status, count(*) n from tasks where status in ('queued','working','blocked','waiting_owner') group by profile, status").all();

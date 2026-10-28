@@ -9,7 +9,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createServer, createSetup } from '../server.mjs';
 import { totp, hashPassword, base32Encode } from '../auth.mjs';
-import { buildBoards, boardCache, scrub } from '../boards.mjs';
+import { scrub } from '../boards.mjs';
 import { parseOptions, checkMessage } from '../policy.mjs';
 
 const SECRET = base32Encode(Buffer.from('12345678901234567890'));
@@ -91,7 +91,29 @@ before(async () => {
     if (r.wait) await r.wait;
     return r;
   };
-  const { server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, now: () => clock(), cookieSecure: false, boardTtlMs: 0, pushFetch: async () => ({ ok: true, status: 201 }), transcriber: async () => 'uji suara', telegram: { post: (profile, text) => { posts.push({ profile, text }); return { ok: true }; } } });
+  // [POKJA-PAPAN] Rute /api/boards disuntik papan tiruan berbentuk
+  // keluaran papanDariData; pemetaan Pokja sendiri diuji di
+  // boards-pokja.test.mjs, dan rumah Hermes tiruan tetap dipakai tes
+  // lain (cadangan kehadiran, sinkronisasi Telegram).
+  const papanTiruan = {
+    observedAt: '2026-10-28T02:00:00.000Z', mode: 'private',
+    handoffs: { ok: true, source: 'Pokja tidak memiliki handoff', items: [] },
+    tasks: {
+      ok: true, source: 'Ringkasan harian Pokja',
+      items: [
+        { id: 'pokja-PGA-CM', title: '11 data (3 MS, 8 BTS, 0 TMS)', owner: 'Citra', ownerProfile: 'CM', requester: 'PGA', status: 'blocked', createdAt: 0, ageHours: 0, handoff: false, badan: 'POKJA' },
+        { id: 'pokja-SDP-SL', title: '2 data (1 MS, 1 BTS, 0 TMS)', owner: 'Sonya', ownerProfile: 'SL', requester: 'SDP', status: 'blocked', createdAt: 0, ageHours: 0, handoff: false, badan: 'POKJA' },
+      ],
+    },
+    log: {
+      ok: true, source: 'audit_logs Pokja',
+      items: [
+        { at: 1000, kind: 'tool', bot: 'Citra', verb: 'Membuka layanan', object: 'KP', taskId: null },
+        { at: 500, kind: 'tool', bot: 'Adiethya', verb: 'Masuk ke Pokja', object: '', taskId: null },
+      ],
+    },
+  };
+  const { server } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, now: () => clock(), cookieSecure: false, boardTtlMs: 0, boards: async () => papanTiruan, pushFetch: async () => ({ ok: true, status: 201 }), transcriber: async () => 'uji suara', telegram: { post: (profile, text) => { posts.push({ profile, text }); return { ok: true }; } } });
   srv = server;
   tgHome = home;
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
@@ -239,47 +261,21 @@ test('logout mematikan sesi', async () => {
   assert.equal((await api('GET', '/api/boards', { cookie: s.cookie })).status, 401);
 });
 
-test('papan: handoff/pekerjaan/log sesuai sumber, tanpa rahasia/path, profil pribadi tersamar (REQ-BOARD-01..03)', async () => {
+test('papan: rute menyajikan papan Pokja yang disuntik, handoff kosong, tanpa rahasia (REQ-BOARD-01..03, 05)', async () => {
   clock.advance(31_000);
   const s = await login();
   const b = (await api('GET', '/api/boards', { cookie: s.cookie })).json;
+  assert.equal(b.mode, 'private');
   assert.equal(b.handoffs.ok, true);
-  assert.deepEqual(b.handoffs.items.map((h) => h.id).sort(), ['t_h1', 't_h2']);
-  const h1 = b.handoffs.items.find((h) => h.id === 't_h1');
-  assert.equal(h1.from, 'Rony'); assert.equal(h1.to, 'Citra'); assert.equal(h1.badan, 'ENT'); assert.equal(h1.status, 'Dikirim');
-  assert.equal(h1.attention, true, '>24 jam belum diterima');
-  assert.deepEqual(h1.chain, ['Rony', 'Citra']);
-  assert.match(h1.diminta, /Hitung outlet per ruang dari \[berkas\]/);
-  assert.equal(b.handoffs.items.find((h) => h.id === 't_h2').status, 'Dikerjakan');
-  const omp = b.tasks.items.filter((t) => t.ownerProfile === 'omp');
-  assert.deepEqual(omp.map((t) => [t.owner, t.title]), [['SUN', 'Drop omp SUN di center']], 'drop omp aktif saja');
-  assert.deepEqual(b.tasks.items.filter((t) => t.ownerProfile !== 'omp').map((t) => t.id), ['t_a', 't_h2', 't_p', 't_h1'], 'urut: diblokir, jalan, antre; done >7 hari dibuang');
-  assert.equal(b.tasks.items.find((t) => t.id === 't_h1').badan, 'ENT');
-  assert.equal(b.tasks.items.find((t) => t.id === 't_p').badan, 'PRIBADI');
-  assert.equal(b.tasks.items.find((t) => t.id === 't_p').title, 'Tugas pribadi');
+  assert.deepEqual(b.handoffs.items, []);
+  assert.deepEqual(b.tasks.items.map((t) => t.id), ['pokja-PGA-CM', 'pokja-SDP-SL']);
+  assert.equal(b.tasks.items[0].owner, 'Citra');
+  assert.equal(b.tasks.items[0].requester, 'PGA');
+  assert.equal(b.tasks.items[0].badan, 'POKJA');
   const flat = JSON.stringify(b);
   for (const bad of ['sk-abcdefghijklmnop', '/Users/', 'Belanja ulang tahun', 'rahasia/denah']) assert.ok(!flat.includes(bad), bad);
-  const tools = b.log.items.filter((r) => r.kind === 'tool');
-  assert.deepEqual(tools.map((t) => t.verb), ['Menulis berkas', 'Menjalankan perintah'], 'log 24 jam terurut, kata kerja Indonesia');
-  assert.equal(tools[0].object, 'gagal');
+  assert.deepEqual(b.log.items.map((r) => r.verb), ['Membuka layanan', 'Masuk ke Pokja']);
   assert.ok(b.log.items.every((r, i, a) => i === 0 || a[i - 1].at >= r.at));
-});
-
-test('sumber Kanban rusak tampil gagal, bukan kosong sukses (REQ-BOARD-05)', () => {
-  const b = buildBoards({ kanbanDb: '/tidak/ada.db', bersama: '/tidak', logFile: () => '/tidak/ada.log' });
-  assert.equal(b.handoffs.ok, false);
-  assert.equal(b.tasks.ok, false);
-  assert.equal(b.log.ok, false);
-});
-
-test('cache papan: viewer berulang dalam TTL tidak membaca sumber lagi', () => {
-  let reads = 0;
-  const src = { kanbanDb: '/tidak/ada.db', bersama: '/x', logFile: () => { reads++; return '/tidak'; } };
-  const get = boardCache(src, 5000);
-  get(1000); const r1 = reads; get(2000); get(5999);
-  assert.equal(reads, r1);
-  get(6001);
-  assert.ok(reads > r1);
 });
 
 test('kebijakan: parseOptions tepat tiga, berbeda; scrub; deteksi risiko', () => {

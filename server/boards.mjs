@@ -1,30 +1,35 @@
-// M4: tiga papan kerja (PRD 18) dari sumber yang sama dengan kantor 3D:
-// Kanban (SELECT lewat sqlite3 CLI; -readonly gagal pada DB WAL), berkas
-// handoff di ~/Hermes/_Bersama, dan ekor agent.log per profil. Hanya
-// ringkasan yang keluar: tanpa argumen perintah, path rumah, token atau isi
-// obrolan. Profil pribadi hanya tampil sebagai "Tugas pribadi".
+// [POKJA-PAPAN] Tiga papan kerja dari data Pokja yang dibaca lewat API
+// (baca-saja, tanpa akses database langsung): ringkasan harian menjadi
+// baris tugas per pengguna per layanan, audit log menjadi baris log
+// aktivitas, dan handoff kosong karena Pokja tidak memiliki konsep
+// handoff. Bentuk jawaban sama seperti sebelumnya, jadi panel tidak
+// berubah. Hanya ringkasan yang keluar: tanpa nomor usulan, nama
+// instansi, IP, id sesi, atau isi detail log.
+// Jalur kehadiran lama (buildPresence, dari Kanban dan agent.log Hermes)
+// dipertahankan apa adanya sebagai cadangan /api/presence di server.mjs.
+// Pembaca Kanban, berkas handoff, ekor log, dan sesi omp sudah dihapus
+// dari berkas ini; tidak ada lagi pemanggilan sqlite3 di sini.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROSTER, PRIVATE_PROFILES, byProfile } from './roster.mjs';
+import { ROSTER, byProfile } from './roster.mjs';
+import { URUTAN_LAYANAN, tanggalWit } from './pokja.mjs';
+import { normalisasiLog } from './pokja-log.mjs';
 
 const TAIL_BYTES = 512 * 1024;
-const DONE_WINDOW_S = 7 * 86400;
 const LOG_WINDOW_MS = 24 * 3600_000;
 export const QUOTA = { taskEvents: 50, toolEvents: 110 };
+// Dipertahankan untuk kompatibilitas; handoff selalu kosong pada mode
+// Pokja, jadi ambang basi ini tidak lagi dipakai di berkas ini.
 export const STALE_HANDOFF_HOURS = 24;
 
-const VERB = {
-  terminal: 'Menjalankan perintah', process_manage: 'Mengelola proses', execute_code: 'Menjalankan skrip',
-  read_file: 'Membaca berkas', search_files: 'Mencari di berkas', write_file: 'Menulis berkas', patch: 'Mengubah berkas',
-  web_search: 'Riset web', web_extract: 'Membaca halaman web', browser_exec: 'Memakai browser', delegate_task: 'Mendelegasikan tugas',
-  vision_analyze: 'Melihat gambar', skill_view: 'Memuat skill', skill_manage: 'Memperbarui skill', clarify: 'Bertanya ke Budi',
-  context_notes: 'Mencatat memori', text_to_speech: 'Membuat suara', tool_call: 'Memakai alat tambahan', tool_search: 'Mencari alat',
-  kanban_complete: 'Menutup tugas Kanban', kanban_create: 'Membuat tugas Kanban',
+// Kata kerja log dari kategori audit Pokja (lihat PETA_AKSI_NYATA di
+// pokja-log.mjs). String dipakai apa adanya pada render log, dan
+// diterjemahkan lewat kamus Inggris seperti kata kerja server lainnya.
+const VERB_POKJA = {
+  login: 'Masuk ke Pokja', logout: 'Keluar dari Pokja',
+  navigasi: 'Membuka layanan', aktivitas: 'Beraktivitas',
 };
-const TASK_VERB = { created: 'Membuat tugas', claimed: 'Mengambil tugas', completed: 'Menyelesaikan tugas', blocked: 'Tugas diblokir', gave_up: 'Menyerah pada tugas', crashed: 'Tugas gagal' };
-const HANDOFF_STATUS = { todo: 'Dikirim', ready: 'Dikirim', triage: 'Dikirim', scheduled: 'Dikirim', running: 'Dikerjakan', claimed: 'Diterima', blocked: 'Diblokir', done: 'Selesai', archived: 'Dibatalkan' };
-const TASK_ORDER = { blocked: 0, running: 1, claimed: 1, todo: 2, ready: 2, triage: 2, scheduled: 2, done: 3, archived: 4 };
 
 export const clip = (s, n) => {
   const a = Array.from(String(s ?? '').replace(/\s+/g, ' ').trim());
@@ -55,25 +60,6 @@ export function makeSources(home) {
 function sql(db, query) {
   const out = execFileSync('sqlite3', ['-json', db, query], { timeout: 4000, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   return out.trim() ? JSON.parse(out) : [];
-}
-
-/** Handoff file fields from the template: Badan, Dari, Untuk, Yang diminta. */
-export function readHandoffFile(file) {
-  const txt = fs.readFileSync(file, 'utf8').slice(0, 20000);
-  const section = (name) => {
-    const m = new RegExp(`^##\\s*${name}[^\\n]*\\n([\\s\\S]*?)(?=^##\\s|$(?![\\s\\S]))`, 'mi').exec(txt);
-    return m ? m[1].trim() : '';
-  };
-  const title = (/^#\s*(?:HANDOFF[:\s—-]*)?(.+)$/m.exec(txt)?.[1] ?? '').trim();
-  const badan = (/\b(ISP|ENT|LABS|PRIBADI)\b/.exec(section('Badan'))?.[1]) ?? 'Belum tercatat';
-  return { title, badan, diminta: section('Yang diminta') };
-}
-
-function handoffPath(body, bersama) {
-  const m = /Baca berkas handoff LENGKAP dulu:\s*(\S+\.md)/.exec(body ?? '');
-  if (!m) return null;
-  const p = path.resolve(m[1].replace(/^~/, path.dirname(path.dirname(bersama))));
-  return p.startsWith(bersama + path.sep) ? p : null;
 }
 
 function tailTools(file, sinceMs) {
@@ -124,133 +110,136 @@ export function buildPresence(src, rpg = [], now = Date.now()) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// Papan Pokja (pengganti pembaca Kanban di atas untuk /api/boards).
+// ---------------------------------------------------------------------------
+
+const namaPengguna = (kode) => byProfile(kode)?.name ?? kode;
+
 /**
- * Builds the three boards. Each board carries its own source/observedAt and
- * an `ok` flag; a source that fails yields ok=false, never an empty success.
+ * Pemeta murni: ringkasan yang sudah dinormalisasi (keluaran
+ * buatPenarikSnapshot) dan data kehadiran mentah (keluaran
+ * buatPenarikKehadiran) menjadi tiga papan dengan bentuk yang sama
+ * seperti sebelumnya. Fungsi ini tidak mengambil jaringan dan tidak
+ * membaca berkas, sehingga mudah diuji dengan data tiruan.
+ *
+ * Tugas: satu baris per pengguna per layanan yang totalnya lebih dari
+ * nol, urutan layanan PGA, PI, KP, CASN, SDP, lalu total terbesar dulu.
+ * Status adalah turunan tampilan, bukan data asli: 'blocked' bila ada
+ * BTS atau TMS yang perlu ditindaklanjuti, 'done' bila semuanya MS.
+ * Handoff selalu kosong: Pokja tidak memiliki konsep handoff. Log:
+ * baris audit yang kategorinya dikenal, terbaru dulu, dibatasi kuota
+ * dan jendela 24 jam; baris tanpa inisial, berwaktu tidak sah, atau
+ * duplikat dilewati. Hanya inisial/nama/waktu/kategori/layanan yang
+ * dipakai; IP, id sesi, dan isi detail tidak pernah disimpan.
  */
-export function buildBoards(src, now = Date.now()) {
-  const nowS = Math.floor(now / 1000);
-  const boards = { observedAt: new Date(now).toISOString(), mode: 'private', handoffs: null, tasks: null, log: null };
-
-  let tasks = null; let events = null; let kanbanErr = null;
-  try {
-    tasks = sql(src.kanbanDb, `select id,title,body,assignee,created_by,status,created_at,started_at,completed_at from tasks where status not in ('done','archived') or coalesce(completed_at,created_at) > ${nowS - DONE_WINDOW_S} order by created_at desc limit 400`);
-    events = sql(src.kanbanDb, `select e.id,e.kind,e.created_at,t.id as task,t.title,t.assignee,t.created_by from task_events e join tasks t on t.id=e.task_id where e.created_at > ${Math.floor((now - LOG_WINDOW_MS) / 1000)} and e.kind in ('created','claimed','completed','blocked','gave_up','crashed') order by e.id desc limit ${QUOTA.taskEvents}`);
-  } catch (e) { kanbanErr = clip(scrub(e.message), 120); }
-
-  const priv = (p) => PRIVATE_PROFILES.has(p);
-  const handoffBadan = new Map();
-  const badanOf = (t) => handoffBadan.get(t.id) ?? (priv(t.assignee) ? 'PRIBADI' : (byProfile(t.assignee)?.badan ?? 'Belum tercatat'));
-  if (tasks) {
-    const hand = tasks.filter((t) => /^HANDOFF\b/.test(t.title));
-    boards.handoffs = { ok: true, source: 'Kanban HANDOFF + berkas _Bersama', items: hand.map((t) => {
-      let file = null;
-      const hp = handoffPath(t.body, src.bersama);
-      if (hp) { try { file = readHandoffFile(hp); } catch { file = null; } }
-      const project = /^HANDOFF\s+([^:]+):/.exec(t.title)?.[1] ?? '-';
-      const status = HANDOFF_STATUS[t.status] ?? 'Belum tercatat';
-      const ageH = (nowS - t.created_at) / 3600;
-      const attention = status === 'Diblokir' || (status === 'Dikirim' && ageH > STALE_HANDOFF_HOURS);
-      if (file?.badan) handoffBadan.set(t.id, file.badan);
-      return {
-        id: t.id, project: clip(scrub(project), 60), badan: file?.badan ?? 'Belum tercatat',
-        from: lane(t.created_by), to: lane(t.assignee),
-        summary: priv(t.assignee) || priv(t.created_by) ? 'Tugas pribadi' : clip(scrub(t.title.replace(/^HANDOFF\s+[^:]+:\s*/, '')), 90),
-        diminta: file && !priv(t.assignee) ? clip(scrub(file.diminta), 160) : '',
-        hasFile: !!file, status, createdAt: t.created_at * 1000, ageHours: Math.round(ageH * 10) / 10, attention,
-      };
-    }) };
-    // Work chain per project (e.g. Hugo -> Nova -> Clara), oldest first.
-    const byProject = new Map();
-    for (const h of [...boards.handoffs.items].sort((a, b) => a.createdAt - b.createdAt)) {
-      if (!byProject.has(h.project)) byProject.set(h.project, []);
-      byProject.get(h.project).push(h);
-    }
-    for (const h of boards.handoffs.items) {
-      const steps = byProject.get(h.project);
-      const chain = [steps[0].from, ...steps.map((x) => x.to)];
-      h.chain = chain.filter((n, i) => n !== chain[i - 1]);
-      h.chainActive = steps.findIndex((x) => x.id === h.id) + 1;
-    }
-    boards.tasks = { ok: true, source: 'Kanban tasks', items: tasks
-      .filter((t) => t.status !== 'archived')
-      .map((t) => ({
-        id: t.id, title: priv(t.assignee) ? 'Tugas pribadi' : clip(scrub(t.title), 56), owner: lane(t.assignee), ownerProfile: t.assignee,
-        requester: lane(t.created_by), status: t.status, createdAt: t.created_at * 1000, ageHours: Math.round(((nowS - t.created_at) / 3600) * 10) / 10,
-        handoff: /^HANDOFF\b/.test(t.title), badan: badanOf(t),
-      }))
-      .concat(src.ompDir ? ompDrops(src.ompDir, now).items : [])
-      .sort((a, b) => (TASK_ORDER[a.status] ?? 5) - (TASK_ORDER[b.status] ?? 5) || b.createdAt - a.createdAt) };
-  } else {
-    const fail = { ok: false, source: 'Kanban', error: kanbanErr ?? 'tidak terbaca', items: [] };
-    boards.handoffs = fail; boards.tasks = fail;
+export function papanDariData(ringkasan, dataKehadiran, sekarangMs = Date.now()) {
+  const observedAt = new Date(sekarangMs).toISOString();
+  if (!ringkasan || typeof ringkasan !== 'object' || !ringkasan.services || typeof ringkasan.services !== 'object') {
+    throw new Error('Ringkasan Pokja tidak memuat services');
   }
-
-  const rows = [];
-  for (const e of events ?? []) {
-    rows.push({ at: e.created_at * 1000, kind: 'task', bot: lane(e.assignee), verb: TASK_VERB[e.kind] ?? e.kind, object: priv(e.assignee) ? 'Tugas pribadi' : clip(scrub(e.title), 56), taskId: e.task });
-  }
-  let toolCount = 0;
-  const toolRows = [];
-  for (const r of ROSTER) {
-    for (const t of tailTools(src.logFile(r.profile), now - LOG_WINDOW_MS)) {
-      toolRows.push({ at: t.at, kind: 'tool', bot: r.name, verb: priv(r.profile) ? 'Sedang bekerja' : (VERB[t.tool] ?? 'Memakai alat'), object: t.ok ? '' : 'gagal', taskId: null });
+  const tugas = [];
+  for (const layanan of URUTAN_LAYANAN) {
+    const daftar = ringkasan.services[layanan] ?? [];
+    if (!Array.isArray(daftar)) throw new Error(`services ${layanan} bukan daftar`);
+    const baris = [];
+    for (const u of daftar) {
+      if (!u || typeof u.user !== 'string') continue;
+      const total = Number(u.total ?? 0);
+      const ms = Number(u.ms ?? 0);
+      const bts = Number(u.bts ?? 0);
+      const tms = Number(u.tms ?? 0);
+      if (!Number.isFinite(total) || total <= 0) continue;
+      baris.push({
+        id: `pokja-${layanan}-${u.user}`,
+        title: clip(scrub(`${total} data (${ms} MS, ${bts} BTS, ${tms} TMS)`), 56),
+        owner: namaPengguna(u.user), ownerProfile: u.user, requester: layanan,
+        status: (bts + tms) > 0 ? 'blocked' : 'done',
+        createdAt: sekarangMs, ageHours: 0, handoff: false, badan: 'POKJA',
+        _total: total,
+      });
     }
+    baris.sort((a, b) => b._total - a._total || a.ownerProfile.localeCompare(b.ownerProfile));
+    for (const b of baris) { delete b._total; tugas.push(b); }
   }
-  toolRows.sort((a, b) => b.at - a.at);
-  for (const t of toolRows) { if (toolCount++ >= QUOTA.toolEvents) break; rows.push(t); }
-  rows.sort((a, b) => b.at - a.at);
-  boards.log = { ok: events !== null, source: 'Kanban task_events + agent.log', error: events === null ? kanbanErr : undefined, items: rows };
-  return boards;
+  const mentah = Array.isArray(dataKehadiran?.log) ? dataKehadiran.log : null;
+  if (mentah === null) throw new Error('Data kehadiran tidak memuat daftar logs');
+  const sejak = sekarangMs - LOG_WINDOW_MS;
+  const lihat = new Set();
+  const log = [];
+  for (const m of mentah) {
+    let n;
+    try { n = normalisasiLog(m); } catch { continue; }
+    if (!n) continue;
+    const kunci = n.id ?? `${n.inisial}|${n.waktuIso}|${n.kategori}|${n.layanan ?? ''}`;
+    if (lihat.has(kunci)) continue;
+    lihat.add(kunci);
+    const at = Date.parse(n.waktuIso);
+    if (!Number.isFinite(at) || at < sejak || at > sekarangMs) continue;
+    log.push({
+      at, kind: 'tool', bot: namaPengguna(n.inisial),
+      verb: VERB_POKJA[n.kategori] ?? 'Beraktivitas',
+      object: n.layanan ?? '', taskId: null,
+    });
+  }
+  log.sort((a, b) => b.at - a.at);
+  return {
+    observedAt, mode: 'private',
+    handoffs: { ok: true, source: 'Pokja tidak memiliki handoff', items: [] },
+    tasks: { ok: true, source: 'Ringkasan harian Pokja', items: tugas },
+    log: { ok: true, source: 'audit_logs Pokja', items: log.slice(0, QUOTA.toolEvents) },
+  };
 }
 
-const OMP_ROLES = ['SUN', 'MOON', 'MARS', 'JUPITER', 'NEPTUNE', 'SATURN', 'VENUS', 'MERCURY'];
-const OMP_RE = new RegExp(`(?:PERAN\\s*:\\s*|Kamu\\s+(?:adalah\\s+)?|^#\\s*)(${OMP_ROLES.join('|')})\\b`, 'm');
-const OMP_ACTIVE_MS = 30 * 60_000;
-const ompMemo = new Map();
+const papanGagal = (sekarangMs, pesan) => {
+  const gagal = { ok: false, source: 'API Pokja', error: clip(scrub(pesan), 120), items: [] };
+  return {
+    observedAt: new Date(sekarangMs).toISOString(), mode: 'private',
+    handoffs: { ...gagal }, tasks: { ...gagal }, log: { ...gagal },
+  };
+};
 
 /**
- * omp drops that are still running: sessions touched in the last 30 minutes
- * without a session_exit. Only the role and the repo folder name are kept.
+ * Pembangun papan async dari dua penarik yang disuntikkan (keduanya
+ * menerima tanggal WIT `YYYY-MM-DD`): penarik ringkasan dan penarik
+ * kehadiran, dibuat server.mjs dari URL/token/fetch yang sama dengan
+ * kehadiran. Tanpa penarik, atau bila salah satu penarikan gagal,
+ * ketiga papan menjawab gagal dengan pesan galatnya, bukan kosong
+ * sukses (REQ-BOARD-05 dipertahankan).
  */
-export function ompDrops(dir, now = Date.now()) {
-  const out = [];
-  let dirs = [];
-  try { dirs = fs.readdirSync(dir); } catch { return { ok: false, items: out }; }
-  for (const d of dirs) {
-    let files = [];
-    try { files = fs.readdirSync(path.join(dir, d)).filter((f) => f.endsWith('.jsonl')); } catch { continue; }
-    for (const f of files) {
-      const file = path.join(dir, d, f);
-      let st; try { st = fs.statSync(file); } catch { continue; }
-      if (now - st.mtimeMs > OMP_ACTIVE_MS) continue;
-      const m = ompMemo.get(file);
-      let info = m && m.size === st.size ? m.info : undefined;
-      if (info === undefined) {
-        info = null;
-        try {
-          const txt = fs.readFileSync(file, 'utf8');
-          const role = OMP_RE.exec(txt.slice(0, 40000))?.[1];
-          if (role && !txt.includes('"session_exit"')) {
-            const first = txt.slice(0, txt.indexOf('\n'));
-            let cwd = ''; let started = st.birthtimeMs;
-            try { const r = JSON.parse(first); cwd = String(r.cwd ?? ''); started = Date.parse(r.timestamp) || started; } catch { /* header optional */ }
-            info = { role, repo: path.basename(cwd) || '-', started };
-          }
-        } catch { info = null; }
-        ompMemo.set(file, { size: st.size, info });
+export function buatPapanPokja({ penarikRingkasan = null, penarikKehadiran = null } = {}) {
+  return async (sekarangMs = Date.now()) => {
+    if (typeof penarikRingkasan !== 'function' || typeof penarikKehadiran !== 'function') {
+      return papanGagal(sekarangMs, 'Pokja tidak terkonfigurasi');
+    }
+    try {
+      const tanggal = tanggalWit(new Date(sekarangMs));
+      const [ringkasan, kehadiran] = await Promise.all([
+        penarikRingkasan(tanggal), penarikKehadiran(tanggal),
+      ]);
+      return papanDariData(ringkasan, kehadiran, sekarangMs);
+    } catch (e) {
+      return papanGagal(sekarangMs, e?.message ?? 'gagal membaca API Pokja');
+    }
+  };
+}
+
+/** Snapshot papan yang dipakai bersama; penarikan ulang paling cepat tiap TTL, dan penarikan yang sedang berjalan dipakai bersama oleh semua viewer. */
+export function boardCache(ambilPapan, ttlMs = 30000) {
+  let memo = { at: 0, data: null, janji: null };
+  return async (sekarang = Date.now()) => {
+    if (memo.data && sekarang - memo.at < ttlMs) return memo.data;
+    if (memo.janji) return memo.janji;
+    memo.janji = (async () => {
+      try {
+        const data = await ambilPapan(sekarang);
+        memo = { at: sekarang, data, janji: null };
+        return data;
+      } catch (e) {
+        memo.janji = null;
+        throw e;
       }
-      if (info) out.push({ id: `omp-${f.slice(0, 12)}`, title: `Drop omp ${info.role} di ${clip(scrub(info.repo), 30)}`, owner: info.role, ownerProfile: 'omp', requester: 'Max', status: 'running', badan: 'ISP', createdAt: info.started, ageHours: Math.round(((now - info.started) / 3600_000) * 10) / 10, handoff: false });
-    }
-  }
-  return { ok: true, items: out };
-}
-
-/** Snapshot shared by every viewer; sources are read at most once per TTL. */
-export function boardCache(src, ttlMs = 5000) {
-  let memo = { at: 0, data: null };
-  return (now = Date.now()) => {
-    if (!memo.data || now - memo.at >= ttlMs) memo = { at: now, data: buildBoards(src, now) };
-    return memo.data;
+    })();
+    return memo.janji;
   };
 }
