@@ -1,5 +1,5 @@
 // Panel privat (PRD 17 M5 + 18 M4): login owner, tiga papan kerja, dan
-// percakapan dengan agen Hermes nyata (3 pilihan + Ketik manual).
+// percakapan Pokja (perintah baca-saja + 3 pilihan + Ketik manual).
 // Tanpa login atau tanpa backend, papan memakai data demo berlabel `Demo`
 // dan tombol kirim tidak ada: halaman publik tidak bisa memerintah agen.
 import { $, el, openDialog, toast } from '../ui/dom';
@@ -33,9 +33,14 @@ const fmtAge = (h: number) => (h < 1 ? t('{n} mnt', { n: Math.max(1, Math.round(
 const SLASH: { name: string; help: string }[] = [
   { name: 'new', help: 'Mulai percakapan baru' },
   { name: 'stop', help: 'Hentikan tugas yang sedang berjalan' },
-  { name: 'status', help: 'Sesi, model, dan tugas berjalan' },
-  { name: 'telegram', help: 'Kembali ke chat Telegram bot ini' },
+  { name: 'status', help: 'Tugas berjalan di percakapan ini' },
   { name: 'help', help: 'Daftar perintah' },
+  { name: 'laporan', help: 'Ringkasan Pokja hari ini' },
+  { name: 'rekap', help: 'Rekap beberapa hari: /rekap [dari] [sampai]' },
+  { name: 'sesi', help: 'Sesi login Pokja hari ini' },
+  { name: 'online', help: 'Siapa yang sedang online di Pokja' },
+  { name: 'audit', help: 'Aktivitas terakhir: /audit [INISIAL]' },
+  { name: 'ping', help: 'Periksa chat Pokja aktif' },
 ];
 type MicState = 'idle' | 'asking' | 'recording' | 'uploading';
 const fmtDur = (ms: number) => { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
@@ -440,15 +445,13 @@ export class PrivatePanel {
   private schedulePoll() {
     window.clearTimeout(this.pollTimer);
     const busy = this.conv?.tasks.some((t) => !t.terminal || t.status === 'blocked');
-    // A Telegram-bound chat keeps refreshing while open: Budi may type in Telegram.
-    const live = this.conv?.channel === 'telegram';
-    if (!busy && !live) return;
+    if (!busy) return;
     this.pollTimer = window.setTimeout(async () => {
       if (!($('dlg-agent') as HTMLDialogElement).open || !this.conv) return;
       try {
         const asked = this.conv.id;
         const next = await api.conversationById(asked);
-        // /new or /telegram switched chats while this request was in flight: drop the stale answer.
+        // /new switched chats while this request was in flight: drop the stale answer.
         if (this.conv?.id !== asked) return;
         const sig = (c: Conversation) => JSON.stringify([c.turns.map((t) => [t.id, t.pending, !!t.options]), c.tasks.map((t) => t.status), c.cursor]);
         const changed = sig(next) !== sig(this.conv) || next.typing !== this.conv.typing;
@@ -476,13 +479,10 @@ export class PrivatePanel {
     body.replaceChildren();
     body.append(el('p', { class: `chat-status${c.typing ? ' typing' : ''}`, id: 'agent-status', role: 'status', 'aria-live': 'polite' }, statusLine(c.typing, c.lastSeen)));
     const info = el('dl', { class: 'info-grid' });
-    const mode = t(c.channel === 'telegram' ? 'Sama dengan chat Telegram' : c.channel === 'telegram-unavailable' ? 'Telegram tidak terbaca' : 'Khusus RPG');
+    const mode = t('Khusus RPG');
     for (const [k, v] of [['Profil', c.profile], ['Lane', c.lane ?? '-'], ['Percakapan', mode]]) info.append(el('dt', {}, t(k)), el('dd', {}, v));
     body.append(info);
-    if (c.channel === 'telegram') body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, t('Ini percakapan Telegram-mu dengan {agent}. Pesan dari sini masuk ke sesi yang sama, dan balasannya juga dikirim bot ke Telegram. Jangan ketik sandi, OTP, atau token.', { agent: c.agent ?? '' })));
-    else if (c.detached) body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, t('Percakapan khusus RPG yang kamu mulai dengan /new. Sesi Telegram {agent} tidak berubah; ketik /telegram untuk kembali ke sana.', { agent: c.agent ?? '' })));
-    else if (c.channel === 'telegram-unavailable') body.append(el('p', { class: 'warn', role: 'status' }, t('Riwayat Telegram bot ini tidak bisa dibaca sekarang. Pesan yang kamu kirim tetap masuk ke sesi Telegram-nya bila sesinya ada.')));
-    else body.append(el('p', { class: 'muted small' }, t('Bot ini belum punya chat Telegram denganmu, jadi percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.')));
+    body.append(el('p', { class: 'muted small', id: 'agent-sync-note' }, t('Percakapan ini khusus RPG. Jangan ketik sandi, OTP, atau token di sini.')));
     body.append(this.searchBox());
     const log = el('ol', { class: 'chat', 'aria-live': 'polite', 'aria-label': t('Percakapan dengan {agent}', { agent: c.agent ?? '' }) });
     // Unread = agent/system messages newer than what Budi last saw (per profile, this browser).
@@ -582,7 +582,7 @@ export class PrivatePanel {
         drawSlash();
         return;
       }
-      // Tab only completes the name (Telegram does the same); Enter runs it.
+      // Tab only completes the name; Enter runs it.
       if (list.length && e.key === 'Tab' && !e.shiftKey && ta.value.trim() !== `/${list[this.slashIndex].name}`) {
         e.preventDefault();
         ta.value = `/${list[this.slashIndex].name}`;
@@ -656,8 +656,7 @@ export class PrivatePanel {
   private turnView(t: Turn): HTMLElement {
     const li = el('li', { class: `turn ${t.role}${t.pending ? ' pending' : ''}`, 'data-turn': t.id });
     const who = t.role === 'owner' ? tr('Kamu') : t.role === 'system' ? tr('Sistem') : this.conv!.agent ?? tr('Agen');
-    const where = t.pending ? ` · ${tr('dari RPG, menunggu')}` : t.via === 'rpg' ? ` · ${tr('dari RPG')}` : t.via === 'telegram' ? ' · Telegram' : '';
-    li.append(el('span', { class: 'who' }, `${who}${where}`));
+    li.append(el('span', { class: 'who' }, who));
     const p = el('div', { class: 'text' });
     p.textContent = t.text; // agent output is untrusted: rendered as text, never HTML
     if (t.text) li.append(p);
@@ -1000,21 +999,16 @@ export class PrivatePanel {
       case 'help': return `${t('Perintah yang bisa dipakai di chat ini:')}\n${list}`;
       case 'unknown': return `${t('Perintah /{name} tidak dikenal, jadi tidak dikirim ke agen.', { name: r.name ?? '' })}\n${list}`;
       case 'stop': return r.stopped ? t('{n} tugas dihentikan. Efek yang sudah terjadi tidak dibatalkan.', { n: r.stopped }) : t('Tidak ada tugas yang sedang berjalan di percakapan ini.');
-      case 'telegram': return r.ok ? t('Kembali ke chat Telegram {agent}.', { agent }) : t('{agent} belum punya chat Telegram denganmu.', { agent });
+      case 'pokja': return r.text ?? '';
       case 'new': {
-        const lines = [r.fromTelegram
-          ? t('Percakapan baru khusus RPG dimulai. Sesi Telegram {agent} tidak ikut diganti: Hermes belum punya cara resmi untuk mengganti sesi bot Telegram dari luar. Ketik /new di Telegram untuk mengganti sesi di sana, atau /telegram untuk kembali ke chat Telegram.', { agent })
-          : t('Percakapan baru dimulai. Pesan berikutnya membuka sesi Hermes baru.')];
+        const lines = [t('Percakapan baru dimulai.')];
         if (r.stillRunning) lines.push(t('{n} tugas di percakapan lama tetap berjalan sampai selesai.', { n: r.stillRunning }));
         return lines.join('\n');
       }
       case 'status': {
-        const where = r.channel === 'telegram' ? t('chat Telegram') : r.channel === 'rpg-detached' ? t('khusus RPG (dari /new)') : t('khusus RPG');
         const tasks = (r.tasks ?? []).map((x) => `${x.n} ${(STATUS_LABEL[x.status] ? t(STATUS_LABEL[x.status]) : x.status).toLowerCase()}`).join(', ') || t('tidak ada');
         return [
-          `${t('Percakapan')}: ${where}`,
-          `${t('Sesi Hermes')}: ${r.session ?? t('belum ada (dibuat saat pesan pertama)')}`,
-          `${t('Model')}: ${r.model ?? t('tidak diketahui')}`,
+          `${t('Percakapan')}: ${t('khusus RPG')}`,
           `${t('Tugas')}: ${tasks}`,
           `${agent}: ${r.running ? t('sedang mengerjakan tugas') : t('siap')}`,
         ].join('\n');
@@ -1044,7 +1038,7 @@ export class PrivatePanel {
         if (r.conversation.id !== this.conv.id) { this.staged = []; this.searchTerm = ''; this.readMarkAtOpen = null; }
         this.conv = r.conversation;
         this.commandNote = { text: this.commandText(r.command), at: Date.now() };
-        this.renderConversation(false, r.command.kind === 'new' || r.command.kind === 'telegram');
+        this.renderConversation(false, r.command.kind === 'new');
         this.schedulePoll();
         if (r.command.kind === 'stop') void this.startPresence();
         btn.disabled = false;

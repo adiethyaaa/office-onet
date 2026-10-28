@@ -18,17 +18,17 @@ export interface Option { id: string; label: string; message: string; requiresAp
 export type Receipt = 'sent' | 'delivered' | 'read';
 export interface Attachment { id: string; kind: 'image' | 'file' | 'voice' | 'video'; name: string; size: number; url: string | null; transcript: string | null; transcribing?: boolean }
 export interface SearchHit { id: string; role: 'owner' | 'agent' | 'system'; text: string; at: number }
-export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 'telegram' | 'rpg' | 'agent' | 'system'; pending?: boolean; receipt?: Receipt; attachments?: Attachment[]; text: string; taskId: string | null; at: number; options: Option[] | null; optionsExpired: boolean; expiresAt: number | null }
+export interface Turn { id: string; role: 'owner' | 'agent' | 'system'; via?: 'rpg' | 'agent' | 'system'; pending?: boolean; receipt?: Receipt; attachments?: Attachment[]; text: string; taskId: string | null; at: number; options: Option[] | null; optionsExpired: boolean; expiresAt: number | null }
 export interface TaskView { id: string; status: string; source: string; observed_at: number; created_at: number; error: string | null; terminal: boolean }
 export interface EventView { seq: number; task_id: string; status: string; note: string | null; at: number }
 export interface ApprovalView { id: string; task_id: string; action: string; impact: string; rollback: string; status: string; expires_at: number }
 export interface CommandInfo { name: string; help: string }
 export interface CommandResult {
-  kind: 'help' | 'unknown' | 'stop' | 'status' | 'new' | 'telegram'; conversation: string; name?: string; commands?: CommandInfo[];
-  stopped?: number; telegram?: boolean; ok?: boolean; fromTelegram?: boolean; telegramAvailable?: boolean; stillRunning?: number;
-  channel?: 'telegram' | 'rpg' | 'rpg-detached'; session?: string | null; model?: string | null; tasks?: { status: string; n: number }[]; running?: boolean;
+  kind: 'help' | 'unknown' | 'stop' | 'status' | 'new' | 'pokja'; conversation: string; name?: string; commands?: CommandInfo[];
+  stopped?: number; stillRunning?: number; text?: string;
+  channel?: 'rpg'; tasks?: { status: string; n: number }[]; running?: boolean;
 }
-export interface Conversation { id: string; profile: string; agent?: string; lane?: string; channel?: 'telegram' | 'telegram-unavailable' | 'rpg'; detached?: boolean; turns: Turn[]; typing?: boolean; lastSeen?: number | null; tasks: TaskView[]; events: EventView[]; approvals: ApprovalView[]; cursor: number }
+export interface Conversation { id: string; profile: string; agent?: string; lane?: string; channel?: 'rpg'; detached?: boolean; turns: Turn[]; typing?: boolean; lastSeen?: number | null; tasks: TaskView[]; events: EventView[]; approvals: ApprovalView[]; cursor: number }
 
 let csrf: string | null = null;
 
