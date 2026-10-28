@@ -19,17 +19,16 @@ import { buatMesinKehadiran, buatPenarikSnapshot, buatPenyegarKehadiran } from '
 // Berkas pokja-log.mjs hanya membaca log aktivitas Pokja dan hanya
 // menyimpan kategori aksi dan layanan, bukan isi detail log.
 import { buatMesinLogAktivitas, buatPenarikKehadiran, keBentukPresenceLog } from './pokja-log.mjs';
-import { agentReplyTimes, lastChatLine, ownerChatId, postToTelegram, telegramSession, telegramTranscript } from './telegram.mjs';
+import { buatRunnerPokja } from './pokja-chat.mjs'; // [POKJA-CHAT]
 // Roster Pokja: PEMETAAN_AKTOR_POKJA diturunkan dari ROSTER dan
 // dipakai sebagai bawaan pemetaan aktor di bawah.
 import { ROSTER, byProfile, PEMETAAN_AKTOR_POKJA } from './roster.mjs';
 import { checkMessage, LIMITS } from './policy.mjs';
 import { createDispatcher, hermesRunner, TERMINAL } from './dispatcher.mjs';
 import { setupPage } from './setup-page.mjs';
-import { chatState, TYPING_WINDOW_MS } from './chat-state.mjs';
+import { chatState } from './chat-state.mjs';
 import { createMedia, MEDIA_LIMITS } from './media.mjs';
 import { createPush, validSubscription } from './push.mjs';
-import { searchTelegram } from './telegram.mjs';
 import { parseCommand, runCommand } from './commands.mjs';
 
 const MAX_BODY = 16 * 1024;
@@ -114,38 +113,24 @@ export function createServer(cfg) {
     bentukPresence: keBentukPresenceLog,
   });
   const home = cfg.home ?? os.homedir();
-  // Telegram sync (ADR-017). Tests inject `telegram` to avoid real state.db/Bot API.
-  const tg = {
-    chatId: () => ownerChatId(home),
-    session: (profile) => telegramSession(home, profile, ownerChatId(home)),
-    transcript: (profile, sessionId) => telegramTranscript(home, profile, sessionId),
-    replyTimes: (profile, sessionId) => agentReplyTimes(home, profile, sessionId),
-    lastLine: (profile, sessionId) => lastChatLine(home, profile, sessionId),
-    post: (profile, text) => postToTelegram(home, profile, ownerChatId(home), text),
-    search: (profile, sessionId, term) => searchTelegram(home, profile, sessionId, term),
-    ...cfg.telegram,
-  };
-  const tgSession = (profile) => { try { return tg.session(profile); } catch { return null; } };
+  // [POKJA-CHAT] Tidak ada lagi sinkronisasi Telegram: telegram.mjs
+  // dihapus, dan perintah Pokja memakai penarik yang sama dengan papan.
+  const penarikPerintah = (penarikRingkasan && penarikKehadiran)
+    ? { ringkasan: penarikRingkasan, kehadiran: penarikKehadiran } : null;
+  const runnerPokja = (cfg.pokjaUrl && cfg.pokjaToken) ? buatRunnerPokja() : null;
   const dispatcher = createDispatcher(store, {
-    runner: cfg.runner ?? hermesRunner({ home }), now, sessionFor: tgSession,
+    runner: cfg.runner ?? runnerPokja ?? hermesRunner({ home }), now,
     // A task changing state must show at once (typing on/off), not after the 4 s presence cache.
     onChange: () => { presenceMemo.at = 0; },
-    // Attachments reach the agent as local paths (voice waits for its transcript), like Telegram's gateway.
+    // Attachments reach the agent as local paths (voice waits for its transcript).
     prepare: async (task) => {
       const rows = q('select * from uploads where task_id=? order by created_at, rowid').all(task.id);
       return rows.length ? `${task.message}\n\n${await media.agentText(rows)}` : task.message;
     },
-    // The RPG exchange also shows up in the bot's Telegram chat (sent by the bot, labelled).
-    onReply: ({ profile, ownerText, agentText, channel, taskId }) => {
+    onReply: ({ profile, agentText, taskId }) => {
       const name = byProfile(profile)?.name ?? profile;
-      const n = taskId ? media.forTask(taskId).length : 0;
-      const said = [ownerText, n ? `📎 ${n} lampiran (lihat di kantor RPG)` : ''].filter(Boolean).join('\n');
       const reply = media.fromTranscript(agentText).text;
       void Promise.resolve(push.notify(profile, { title: name, body: reply.replace(/\s+/g, ' ').slice(0, 120) || 'Balasan baru', tag: `chat-${profile}`, url: `./?chat=${encodeURIComponent(profile)}` })).catch(() => {});
-      if (channel !== 'telegram') return;
-      void Promise.resolve(tg.post(profile, `🎮 Dari kantor RPG\nBudi: ${said}\n\n${name}: ${reply}`))
-        .then((r) => { if (!r?.ok) store.audit('system', 'telegram.post_failed', profile, null, r?.error ?? 'gagal'); })
-        .catch(() => store.audit('system', 'telegram.post_failed', profile, null, 'error'));
     },
   });
   const q = store.q;
@@ -207,49 +192,7 @@ export function createServer(cfg) {
     } catch { throw Object.assign(new Error('JSON tidak sah.'), { code: 400 }); }
   }
 
-  /** Telegram transcript of the profile, or null (no session / unreadable). */
-  function tgTranscript(profile) {
-    const sid = tgSession(profile);
-    if (!sid) return null;
-    try { return { sessionId: sid, turns: tg.transcript(profile, sid) }; } catch { return null; }
-  }
-
-  /**
-   * Telegram-bound view: the turns ARE the Telegram DM transcript. RPG owner
-   * messages not yet picked up by Hermes are shown as pending; the 3 options
-   * of the latest RPG reply stay valid only while that reply is still the
-   * newest agent message in the chat (a later Telegram reply expires them).
-   */
-  function telegramTurns(conv, rpgTurns, tasks) {
-    const tr = tgTranscript(conv.profile);
-    if (!tr) return null;
-    const turns = tr.turns.map((t) => {
-      const m = media.fromTranscript(t.text);
-      return { id: t.id, role: t.role, via: t.via, text: m.text, attachments: m.attachments, taskId: null, at: t.at, options: null, optionsExpired: false, expiresAt: null };
-    });
-    const lastRpgAgent = [...rpgTurns].reverse().find((t) => t.role === 'agent');
-    const lastTgAgent = [...turns].reverse().find((t) => t.role === 'agent');
-    if (lastRpgAgent?.options && lastTgAgent && lastRpgAgent.expires_at > now() && Math.abs(lastTgAgent.at - lastRpgAgent.created_at) < 120_000) {
-      Object.assign(lastTgAgent, { id: lastRpgAgent.id, taskId: lastRpgAgent.task_id, options: JSON.parse(lastRpgAgent.options), expiresAt: lastRpgAgent.expires_at });
-    }
-    const status = new Map(tasks.map((t) => [t.id, t.status]));
-    for (const t of rpgTurns) {
-      if (t.role !== 'owner' || !['queued', 'working'].includes(status.get(t.task_id))) continue;
-      const seen = turns.some((x) => x.via === 'rpg' && x.at >= t.created_at - 5000 && x.text.trim() === t.text.trim());
-      if (!seen) turns.push({ id: t.id, role: 'owner', via: 'rpg', pending: true, text: t.text, attachments: media.forTask(t.task_id), taskId: t.task_id, at: t.created_at, options: null, optionsExpired: false, expiresAt: null });
-    }
-    return { sessionId: tr.sessionId, turns };
-  }
-
-  /** Options of an RPG turn are still the live ones (Telegram-bound check included). */
-  function optionsLive(conv, turn) {
-    if (conv.channel !== 'telegram') return true;
-    const tr = tgTranscript(conv.profile);
-    const lastTgAgent = tr && [...tr.turns].reverse().find((t) => t.role === 'agent');
-    return !!lastTgAgent && Math.abs(lastTgAgent.at - turn.created_at) < 120_000;
-  }
-
-  function conversationView(convId, after = 0) {
+  function conversationView(convId, after = 0) { // [POKJA-CHAT] Tampilan chat hanya dari giliran lokal; tidak ada lagi tampilan terikat Telegram.
     const conv = q('select * from conversations where id=?').get(convId);
     if (!conv) return null;
     const turns = q('select id,role,text,options,expires_at,task_id,created_at from turns where conversation_id=? order by created_at, rowid').all(convId);
@@ -259,8 +202,7 @@ export function createServer(cfg) {
     const events = ids.length ? q(`select seq,task_id,status,note,at from events where task_id in (${ids.map(() => '?').join(',')}) and seq > ? order by seq`).all(...ids, after) : [];
     const approvals = ids.length ? q(`select id,task_id,action,impact,rollback,status,expires_at from approvals where task_id in (${ids.map(() => '?').join(',')})`).all(...ids) : [];
     const r = byProfile(conv.profile);
-    const tgView = conv.channel === 'telegram' ? telegramTurns(conv, turns, tasks) : null;
-    const baseTurns = tgView ? tgView.turns : turns.map((t) => ({
+    const baseTurns = turns.map((t) => ({
       id: t.id, role: t.role, text: t.text, taskId: t.task_id, at: t.created_at,
       attachments: t.role === 'owner' && t.task_id ? media.forTask(t.task_id) : [],
       options: t.options && t.id === lastAgent?.id && t.expires_at > now() ? JSON.parse(t.options) : null,
@@ -270,7 +212,7 @@ export function createServer(cfg) {
     const chat = chatState(baseTurns, tasks, now());
     return {
       id: conv.id, profile: conv.profile, agent: r?.name, lane: r?.lane,
-      channel: conv.channel === 'telegram' ? (tgView ? 'telegram' : 'telegram-unavailable') : 'rpg',
+      channel: 'rpg',
       detached: !!conv.detached,
       turns: chat.turns, typing: chat.typing, lastSeen: chat.lastSeen,
       tasks: tasks.map((t) => ({ ...t, terminal: TERMINAL.has(t.status) })),
@@ -342,15 +284,9 @@ export function createServer(cfg) {
       if (!presenceMemo.value || t - presenceMemo.at > 4000) {
         const rpg = q("select profile, status, message from tasks where status in ('queued','working','waiting_owner') order by created_at desc").all();
         const agents = buildPresence(sources, rpg, t).map((a) => {
-          // Agent reply times (Telegram DM, or RPG chat for bots without one) for unread badges.
-          let replies = [];
-          const sid = tgSession(a.profile);
-          let line = null;
-          if (sid) { try { replies = tg.replyTimes(a.profile, sid); line = tg.lastLine?.(a.profile, sid) ?? null; } catch { replies = []; } }
-          else replies = q("select t.created_at at from turns t join conversations c on c.id=t.conversation_id where c.profile=? and t.role='agent' order by t.created_at desc limit 50").all(a.profile).map((r) => r.at).reverse();
-          // Typing like Telegram: the bot is on an RPG task, or Budi's last Telegram line is still unanswered.
-          const rpgWorking = rpg.some((x) => x.profile === a.profile && x.status === 'working');
-          const typing = rpgWorking || (line?.role === 'owner' && t - line.at < TYPING_WINDOW_MS);
+          // [POKJA-CHAT] Waktu balasan hanya dari giliran chat RPG lokal.
+          const replies = q("select t.created_at at from turns t join conversations c on c.id=t.conversation_id where c.profile=? and t.role='agent' order by t.created_at desc limit 50").all(a.profile).map((r) => r.at).reverse();
+          const typing = rpg.some((x) => x.profile === a.profile && x.status === 'working');
           return { ...a, replies, typing, lastSeen: replies.length ? replies[replies.length - 1] : null };
         });
         presenceMemo = { at: t, value: { observedAt: new Date(t).toISOString(), agents } };
@@ -362,7 +298,7 @@ export function createServer(cfg) {
     send(res, 200, { observedAt: hasil.observedAt, agents: hasil.agents });
   });
 
-  // Which chat opens for a bot is Budi's choice (/new, /telegram, "start new"), kept
+  // Which chat opens for a bot is Budi's choice (/new, "start new"), kept
   // apart from updated_at: a late reply in an older chat must not pull it back to front.
   const setFront = (profile, id) => q('insert into chat_front(profile,conversation_id,at) values(?,?,?) on conflict(profile) do update set conversation_id=excluded.conversation_id, at=excluded.at').run(profile, id, now());
   function createConversation(profile, channel, detached = 0) {
@@ -377,11 +313,9 @@ export function createServer(cfg) {
     const b = await readJson(req);
     const r = byProfile(b.profile);
     if (!r) return fail(res, 404, 'Profil tidak ada di roster RPG.');
-    // A bot with a Telegram DM session gets the Telegram-bound conversation (ADR-017),
-    // unless Budi started an RPG-only one with /new more recently (until /telegram).
-    const channel = tgSession(r.profile) ? 'telegram' : 'rpg';
-    // A detached chat only stays in front while the bot still has its Telegram session.
-    const allowed = channel === 'telegram' ? "(c.channel='telegram' or c.detached=1)" : "c.channel='rpg' and c.detached=0";
+    // [POKJA-CHAT] Semua percakapan jalur RPG; tidak ada lagi percakapan terikat Telegram.
+    const channel = 'rpg';
+    const allowed = "c.channel='rpg' and c.detached=0";
     let conv = b.fresh ? null
       : q(`select c.* from chat_front f join conversations c on c.id=f.conversation_id where f.profile=? and ${allowed}`).get(r.profile)
       // No stored choice yet (first run after upgrade): the most recent allowed chat.
@@ -419,16 +353,16 @@ export function createServer(cfg) {
       const turn = q("select * from turns where id=? and conversation_id=? and role='agent'").get(String(b.decision.turnId ?? ''), conv.id);
       const latest = q("select id from turns where conversation_id=? and role='agent' order by created_at desc, rowid desc limit 1").get(conv.id);
       if (!turn || !turn.options) return fail(res, 400, 'Pilihan tidak berasal dari giliran agen ini.');
-      if (turn.id !== latest?.id || turn.expires_at <= now() || !optionsLive(conv, turn)) return fail(res, 410, 'Pilihan ini sudah kedaluwarsa. Pilih dari giliran terbaru atau ketik manual.');
+      if (turn.id !== latest?.id || turn.expires_at <= now()) return fail(res, 410, 'Pilihan ini sudah kedaluwarsa. Pilih dari giliran terbaru atau ketik manual.');
       const opt = JSON.parse(turn.options).find((o) => o.id === b.decision.optionId);
       if (!opt) return fail(res, 400, 'Pilihan tidak dikenal.');
       text = opt.message; decisionId = `${turn.id}:${opt.id}`;
     } else text = typeof b.text === 'string' ? b.text : '';
-    // Telegram-style commands run here and never reach the agent (an unknown one gets help, not forwarded).
+    // Slash commands run here and never reach the agent (an unknown one gets help, not forwarded).
     // Staged attachments stay unclaimed: they are for the next real message.
     const cmd = decisionId ? null : parseCommand(text);
     if (cmd) {
-      const out = runCommand(cmd, conv, { q, dispatcher, tgSession, createConversation, setFront, home, now, terminal: TERMINAL });
+      const out = await runCommand(cmd, conv, { q, dispatcher, createConversation, setFront, now, terminal: TERMINAL, penarik: penarikPerintah }); // [POKJA-CHAT]
       q('insert into command_runs(idem,conversation_id,result,at) values(?,?,?,?)').run(b.idem, conv.id, JSON.stringify(out), now());
       store.audit('owner', 'command', conv.profile, conv.id, `/${cmd.name}${out.kind === 'unknown' ? ' (tidak dikenal)' : ''}`);
       return send(res, 200, { command: out, conversation: conversationView(out.conversation) });
@@ -507,13 +441,9 @@ export function createServer(cfg) {
     if (!conv) return fail(res, 404, 'Percakapan tidak ditemukan.');
     const term = String(url.searchParams.get('q') ?? '').trim().slice(0, 60);
     if (term.length < 2) return send(res, 200, { results: [] });
-    let results = [];
-    const sid = conv.channel === 'telegram' ? tgSession(conv.profile) : null;
-    if (sid) { try { results = tg.search(conv.profile, sid, term).map((r) => ({ ...r, text: media.fromTranscript(r.text).text })); } catch { return fail(res, 503, 'Riwayat Telegram tidak terbaca sekarang.'); } }
-    else {
-      const like = `%${term.replace(/[%_\\]/g, (c) => `\\${c}`)}%`;
-      results = q("select id, role, text, created_at at from turns where conversation_id=? and text like ? escape '\\' order by created_at desc limit 30").all(conv.id, like);
-    }
+    // [POKJA-CHAT] Pencarian hanya di giliran lokal; riwayat Telegram sudah tidak ada.
+    const like = `%${term.replace(/[%_\\]/g, (c) => `\\${c}`)}%`;
+    const results = q("select id, role, text, created_at at from turns where conversation_id=? and text like ? escape '\\' order by created_at desc limit 30").all(conv.id, like);
     send(res, 200, { results });
   });
 

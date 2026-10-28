@@ -1,10 +1,11 @@
 // Perintah slash dari chat game: dijalankan server, tidak pernah sampai ke agen.
+// Perintah Pokja dijawab dari API Pokja lewat fetch tiruan; tidak ada lagi
+// fixture Hermes/state.db dan tidak ada percakapan terikat Telegram.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
 import { createServer } from '../server.mjs';
 import { totp, hashPassword, base32Encode } from '../auth.mjs';
 import { parseCommand } from '../commands.mjs';
@@ -14,7 +15,7 @@ const PROXY = 'proxy-secret-for-slash-0123456789';
 const ORIGIN = 'https://employee-rpg.air-buddy.site';
 const PW = ['sandi', 'slash', 'panjang', '7'].join('-');
 let slowStt = false; let releaseStt = () => {};
-let tmp; let srv; let base; let calls; let gate; let s;
+let tmp; let srv; let base; let calls; let gate; let s; let fetchCalls;
 
 async function api(method, p, body) {
   const headers = { 'content-type': 'application/json', 'x-kantor-proxy': PROXY, origin: ORIGIN };
@@ -26,27 +27,53 @@ const waitFor = async (fn, ms = 3000) => { const t0 = Date.now(); for (;;) { con
 let n = 0;
 const say = (conv, text) => api('POST', `/api/conversations/${conv}/messages`, { text, idem: `idem-slash-${String(++n).padStart(4, '0')}` });
 
+// Tanggal hari ini (Jayapura) dan jam dini hari, supaya sesi/log tiruan
+// selalu tanggal hari ini dan selalu di masa lalu kapan pun tes jalan.
+const HARI_INI = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jayapura' });
+
+const ringkasanApi = (tanggal) => ({
+  judul_laporan: 'x', periode_teks: 'x', waktu_update: 'x', is_range: false,
+  start_date: tanggal, end_date: tanggal,
+  rekap_per_layanan: {
+    PGA: { perubahan_user: [{ user: 'CM', ms: 3, bts: 8, tms: 0, total: 11 }] },
+    PI: { perubahan_user: [] }, KP: { perubahan_user: [] },
+    CASN: { perubahan_user: [] }, SDP: { perubahan_user: [] },
+  },
+});
+
 before(async () => {
   tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kantor-slash-'));
   const home = path.join(tmp, 'home');
-  fs.mkdirSync(path.join(home, '.hermes', 'logs'), { recursive: true });
-  fs.writeFileSync(path.join(home, '.hermes', '.env'), 'TELEGRAM_ALLOWED_USERS=777\n');
-  const kas = path.join(home, '.hermes', 'profiles', 'KASUARI');
-  fs.mkdirSync(kas, { recursive: true });
-  fs.writeFileSync(path.join(kas, 'config.yaml'), "model:\n  default: 'model-KASUARI-uji'\n  provider: 'uji'\n");
-  const t = Date.now() / 1000;
-  execFileSync('sqlite3', [path.join(kas, 'state.db'), `
-    create table sessions(id text primary key, source text, session_key text, started_at real, ended_at real, model text);
-    create table messages(id integer primary key autoincrement, session_id text, role text, content text, timestamp real, platform_message_id text, _compressed_summary int default 0);
-    insert into sessions values('tg_kasuari','telegram','agent:KASUARI:telegram:dm:777',${t - 600},null,'model-sesi-telegram');
-    insert into messages(session_id,role,content,timestamp,platform_message_id) values ('tg_kasuari','user','halo kasuari',${t - 500},'1');
-  `]);
+  fs.mkdirSync(home, { recursive: true });
   const dataDir = path.join(tmp, 'data');
   fs.mkdirSync(dataDir, { mode: 0o700 });
   fs.writeFileSync(path.join(dataDir, 'owner.json'), JSON.stringify({ username: 'budi', passwordHash: hashPassword(PW), totpSecret: SECRET }), { mode: 0o600 });
-  calls = [];
+  calls = []; fetchCalls = [];
   const runner = async (job) => { calls.push(job); if (gate) await gate; return { ok: true, text: 'Oke.\n```json\n{"pilihan":[]}\n```', session: job.hermesSession ?? 'hs_rpg_1' }; };
-  ({ server: srv } = createServer({ dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, cookieSecure: false, boardTtlMs: 0, transcriber: async () => { if (slowStt) await new Promise((r) => { releaseStt = () => { slowStt = false; r(); }; }); return 'halo'; }, pushFetch: async () => ({ ok: true, status: 201 }), telegram: { post: () => ({ ok: true }) } }));
+  const pokjaFetch = async (url) => {
+    fetchCalls.push(url);
+    let badan;
+    if (url.includes('start_date=')) {
+      badan = ringkasanApi(new URL(url).searchParams.get('start_date'));
+    } else if (url.includes('action=sessions')) {
+      badan = {
+        total: 1, waktu_cek: 'x',
+        sessions: [{ id: 's1', session_id: 's1', inisial: 'FA', nama: 'ADIETHYA ARPUJIONO', status: 'active', login_time: `${HARI_INI} 00:05:00`, last_active: `${HARI_INI} 00:55:00`, logout_time: null }],
+      };
+    } else {
+      badan = {
+        total: 1, waktu_cek: 'x',
+        logs: [{ id: 1, session_id: 's1', inisial: 'CM', nama: 'CITRA SARI', module: 'KP', action: 'NAV_MENU', created_at: `${HARI_INI} 00:20:00` }],
+      };
+    }
+    return { ok: true, json: async () => badan };
+  };
+  ({ server: srv } = createServer({
+    dataDir, home, proxySecret: PROXY, allowedOrigin: ORIGIN, runner, cookieSecure: false, boardTtlMs: 0,
+    pokjaUrl: 'https://pokja.example/agent_summary.php', pokjaToken: 't-uji', pokjaFetch,
+    transcriber: async () => { if (slowStt) await new Promise((r) => { releaseStt = () => { slowStt = false; r(); }; }); return 'halo'; },
+    pushFetch: async () => ({ ok: true, status: 201 }),
+  }));
   await new Promise((r) => srv.listen(0, '127.0.0.1', r));
   base = `http://127.0.0.1:${srv.address().port}`;
   const r = await fetch(`${base}/api/login`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-kantor-proxy': PROXY, origin: ORIGIN }, body: JSON.stringify({ username: 'budi', password: PW, code: totp(SECRET) }) });
@@ -63,19 +90,23 @@ test('parseCommand: /word dan /word@bot saja; path dan teks biasa bukan perintah
   assert.equal(parseCommand('/'), null);
 });
 
-test('/help, perintah tak dikenal, dan /status tidak diteruskan ke agen', async () => {
+test('/help, perintah tak dikenal, /telegram, dan /status tidak diteruskan ke agen', async () => {
   const conv = (await api('POST', '/api/conversations', { profile: 'CM' })).json;
   const c0 = calls.length;
   const help = await say(conv.id, '/help');
   assert.equal(help.status, 200);
   assert.equal(help.json.command.kind, 'help');
-  assert.deepEqual(help.json.command.commands.map((c) => c.name), ['new', 'stop', 'status', 'telegram', 'help']);
+  assert.deepEqual(help.json.command.commands.map((c) => c.name), ['new', 'stop', 'status', 'help', 'laporan', 'rekap', 'sesi', 'online', 'audit', 'ping']);
   const unk = await say(conv.id, '/compress');
   assert.equal(unk.json.command.kind, 'unknown');
   assert.equal(unk.json.command.name, 'compress');
+  const tg = await say(conv.id, '/telegram');
+  assert.equal(tg.json.command.kind, 'unknown', '/telegram sudah tidak ada');
   const st = await say(conv.id, '/status');
   assert.equal(st.json.command.kind, 'status');
   assert.equal(st.json.command.channel, 'rpg');
+  assert.equal(st.json.command.session, null);
+  assert.equal(st.json.command.model, null);
   assert.equal(st.json.command.running, false);
   await new Promise((r) => setTimeout(r, 50));
   assert.equal(calls.length, c0, 'tidak ada perintah yang sampai ke agen');
@@ -125,46 +156,60 @@ test('/stop saat prepare() (transkripsi) berjalan: agen tidak dipanggil sesudahn
   assert.equal(calls.filter((c) => c.profile === 'ONET').length, c0, 'runner tidak boleh jalan untuk tugas yang dihentikan');
 });
 
-test('/new: chat RPG mendapat percakapan baru; chat Telegram pindah ke chat khusus RPG lalu /telegram kembali', async () => {
+test('/new: percakapan RPG baru, tanpa jejak Telegram', async () => {
   const rpg = (await api('POST', '/api/conversations', { profile: 'NG', fresh: true })).json;
+  assert.equal(rpg.channel, 'rpg');
   const nw = await say(rpg.id, '/new');
   assert.equal(nw.json.command.kind, 'new');
+  assert.equal(nw.json.command.fromTelegram, false);
+  assert.equal(nw.json.command.telegramAvailable, false);
   assert.notEqual(nw.json.conversation.id, rpg.id);
   assert.equal(nw.json.conversation.turns.length, 0);
+  assert.equal(nw.json.conversation.channel, 'rpg');
+  assert.equal(nw.json.conversation.detached, false);
+});
 
-  const tg = (await api('POST', '/api/conversations', { profile: 'KASUARI' })).json;
-  assert.equal(tg.channel, 'telegram');
-  const st = await say(tg.id, '/status');
-  assert.equal(st.json.command.session, 'tg_kasuari');
-  assert.equal(st.json.command.model, 'model-sesi-telegram');
-  const c0 = calls.length;
-  const fresh = await say(tg.id, '/new');
-  assert.equal(fresh.json.command.kind, 'new');
-  assert.equal(fresh.json.command.fromTelegram, true);
-  assert.equal(fresh.json.conversation.channel, 'rpg');
-  assert.equal(fresh.json.conversation.detached, true);
-  // Reopening the bot keeps the new RPG-only chat (it does not snap back to Telegram).
-  const again = (await api('POST', '/api/conversations', { profile: 'KASUARI' })).json;
-  assert.equal(again.id, fresh.json.conversation.id);
-  const st2 = await say(again.id, '/status');
-  assert.equal(st2.json.command.channel, 'rpg-detached');
-  assert.equal(st2.json.command.model, 'model-KASUARI-uji', 'belum ada sesi: model bawaan profil');
-  // A message there starts a fresh Hermes session, not the Telegram one.
-  await say(again.id, 'ide poster baru');
-  await waitFor(() => calls.length > c0);
-  assert.equal(calls.at(-1).profile, 'KASUARI');
-  assert.equal(calls.at(-1).hermesSession, null);
-  // A late reply in the detached chat must not pull it back in front after /telegram.
-  let rel; gate = new Promise((r) => { rel = r; });
-  await say(again.id, 'satu lagi');
-  await waitFor(() => calls.at(-1)?.message.startsWith('satu lagi'));
-  const back = await say(again.id, '/telegram');
-  rel(); gate = null;
-  await waitFor(async () => (await api('GET', `/api/conversations/${again.id}`)).json.tasks.every((t) => t.terminal));
-  assert.equal(back.json.command.ok, true);
-  assert.equal(back.json.conversation.channel, 'telegram');
-  assert.equal((await api('POST', '/api/conversations', { profile: 'KASUARI' })).json.channel, 'telegram');
-  // Bot without Telegram: /telegram says so.
-  const ent = (await api('POST', '/api/conversations', { profile: 'CM' })).json;
-  assert.equal((await say(ent.id, '/telegram')).json.command.ok, false);
+test('perintah Pokja: /laporan, /rekap, /sesi, /online, /audit, /ping dijawab dari API, tanpa memanggil runner', async () => {
+  const conv = (await api('POST', '/api/conversations', { profile: 'KASUARI', fresh: true })).json;
+  const c0 = calls.length; const f0 = fetchCalls.length;
+  const lap = await say(conv.id, '/laporan');
+  assert.equal(lap.json.command.kind, 'pokja');
+  assert.match(lap.json.command.text, /PGA: 11 data \(3 MS, 8 BTS, 0 TMS\)/);
+  const rek = await say(conv.id, `/rekap ${HARI_INI}`);
+  assert.match(rek.json.command.text, new RegExp(`${HARI_INI}: 11 data`));
+  const sesi = await say(conv.id, '/sesi');
+  assert.match(sesi.json.command.text, /Adiethya — aktif/);
+  const online = await say(conv.id, '/online');
+  assert.match(online.json.command.text, /Adiethya/);
+  const audit = await say(conv.id, '/audit CM');
+  assert.match(audit.json.command.text, /Citra — Membuka KP/);
+  const ping = await say(conv.id, '/ping');
+  assert.match(ping.json.command.text, /Aktif\./);
+  assert.equal(calls.length, c0, 'perintah Pokja tidak sampai ke runner');
+  assert.ok(fetchCalls.length > f0, 'perintah Pokja menarik API');
+  const f1 = fetchCalls.length;
+  await api('POST', `/api/conversations/${conv.id}/messages`, { text: '/laporan', idem: 'idem-slash-lap-0001' });
+  const ulang2 = await api('POST', `/api/conversations/${conv.id}/messages`, { text: '/laporan', idem: 'idem-slash-lap-0001' });
+  assert.equal(ulang2.json.duplicate, true);
+  assert.equal(fetchCalls.length, f1 + 1, 'percobaan ulang memakai jawaban pertama');
+});
+
+test('perintah Pokja tanpa konfigurasi: /laporan menjawab belum terkonfigurasi', async () => {
+  // Server kedua tanpa pokjaUrl: penarik perintah null, perintah menjawab terus terang.
+  const dataDir = path.join(tmp, 'data-tanpa-pokja');
+  fs.mkdirSync(dataDir, { mode: 0o700 });
+  fs.writeFileSync(path.join(dataDir, 'owner.json'), JSON.stringify({ username: 'budi', passwordHash: hashPassword(PW), totpSecret: SECRET }), { mode: 0o600 });
+  const { server: srv2 } = createServer({
+    dataDir, home: path.join(tmp, 'home'), proxySecret: PROXY, allowedOrigin: ORIGIN,
+    runner: async () => ({ ok: true, text: 'Oke.', session: null }), cookieSecure: false,
+    pushFetch: async () => ({ ok: true, status: 201 }),
+  });
+  await new Promise((r) => srv2.listen(0, '127.0.0.1', r));
+  const base2 = `http://127.0.0.1:${srv2.address().port}`;
+  const login = await fetch(`${base2}/api/login`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-kantor-proxy': PROXY, origin: ORIGIN }, body: JSON.stringify({ username: 'budi', password: PW, code: totp(SECRET) }) });
+  const s2 = { cookie: login.headers.get('set-cookie').split(';')[0], csrf: (await login.json()).csrf };
+  const conv = await fetch(`${base2}/api/conversations`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-kantor-proxy': PROXY, origin: ORIGIN, cookie: s2.cookie, 'x-csrf': s2.csrf }, body: JSON.stringify({ profile: 'KASUARI', fresh: true }) }).then((r) => r.json());
+  const r = await fetch(`${base2}/api/conversations/${conv.id}/messages`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-kantor-proxy': PROXY, origin: ORIGIN, cookie: s2.cookie, 'x-csrf': s2.csrf }, body: JSON.stringify({ text: '/laporan', idem: 'idem-tanpa-pokja-1' }) }).then((x) => x.json());
+  assert.match(r.command.text, /belum terkonfigurasi/);
+  srv2.close();
 });
