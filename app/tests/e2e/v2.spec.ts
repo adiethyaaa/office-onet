@@ -105,19 +105,19 @@ test.describe('v2.0 office integration', () => {
 
   test('reprimand: idle persona reacts and hurries to its desk; a working agent is refused', async ({ page }, info) => {
     const errors = await boot(page);
-    const res = await page.evaluate(() => (window.__kantor!.scold as (id: string, k: string) => Promise<string>)('ACT-KEVIN', 'bola'));
+    const res = await page.evaluate(() => (window.__kantor!.scold as (id: string, k: string) => Promise<string>)('ACT-ER', 'bola'));
     expect(res).toBe('ok');
-    await expect(page.locator('#toast')).toContainText('Kevin:');
+    await expect(page.locator('#toast')).toContainText('Erni:');
     expect(await page.evaluate(() => (window.__kantor!.scolds as () => number)())).toBe(1);
-    expect(await page.evaluate(() => (window.__kantor!.scold as (id: string, k: string) => Promise<string>)('ACT-KEVIN', 'palu'))).toBe('cooldown');
+    expect(await page.evaluate(() => (window.__kantor!.scold as (id: string, k: string) => Promise<string>)('ACT-ER', 'palu'))).toBe('cooldown');
     // The persona card offers the three props (data-scold buttons) for an idle persona.
-    await page.evaluate(() => (window.__kantor!.talkTo as (x: string) => void)('ACT-LEO'));
+    await page.evaluate(() => (window.__kantor!.talkTo as (x: string) => void)('ACT-MJ'));
     await expect(page.locator('#dlg-info [data-scold]')).toHaveCount(3);
     await page.locator('#dlg-info [data-scold="palu"]').click();
     await expect(page.locator('#dlg-info')).not.toBeVisible();
-    await expect(page.locator('#toast')).toContainText('Leo:');
-    await page.evaluate(() => (window.__kantor!.setWorkStatus as (id: string, s: string) => void)('ACT-NOVA', 'working'));
-    expect(await page.evaluate(() => (window.__kantor!.scold as (id: string, k: string) => Promise<string>)('ACT-NOVA', 'gulungan'))).toBe('working');
+    await expect(page.locator('#toast')).toContainText('Michael:');
+    await page.evaluate(() => (window.__kantor!.setWorkStatus as (id: string, s: string) => void)('ACT-CM', 'working'));
+    expect(await page.evaluate(() => (window.__kantor!.scold as (id: string, k: string) => Promise<string>)('ACT-CM', 'gulungan'))).toBe('working');
     await expect(page.locator('#toast')).toContainText('tidak bisa ditegur');
     await shot(page, info, 'v2-tegur');
     expect(errors).toEqual([]);

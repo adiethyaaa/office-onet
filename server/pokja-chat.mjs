@@ -139,12 +139,12 @@ export function formatAudit(dataKehadiran, { filterInisial = null, limit = 10, s
 }
 
 const TANGGAL_RE = /^\d{4}-\d{2}-\d{2}$/;
-const tanggalSah = (s) => TANGGAL_RE.test(s) && !Number.isNaN(Date.parse(`${s}T00:00:00+07:00`));
+const tanggalSah = (s) => TANGGAL_RE.test(s) && !Number.isNaN(Date.parse(`${s}T00:00:00+09:00`));
 
 const daftarTanggal = (dari, sampai) => {
   const out = [];
-  let d = new Date(`${dari}T00:00:00+07:00`);
-  const akhir = new Date(`${sampai}T00:00:00+07:00`);
+  let d = new Date(`${dari}T00:00:00+09:00`);
+  const akhir = new Date(`${sampai}T00:00:00+09:00`);
   while (d <= akhir && out.length <= 31) {
     out.push(tanggalWit(d));
     d = new Date(d.getTime() + 86400_000);

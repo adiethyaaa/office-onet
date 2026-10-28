@@ -354,7 +354,7 @@ export function buatPenarikSnapshot({ url, token, ambil = fetch, batasMs = 20000
 // (misalnya tiap 2 menit) menjadi tanggung jawab pemanggil,
 // dan akan diputuskan bersama Mas pada langkah penyambungan.
 //   const mesin = buatMesinKehadiran({ batasMenit: 15, penarik });
-//   const hasil = await mesin.perbarui("2026-10-27T08:02:00+07:00");
+//   const hasil = await mesin.perbarui("2026-10-27T08:02:00+09:00");
 export function buatMesinKehadiran({ batasMenit = 15, penarik } = {}) {
   if (typeof penarik !== "function") {
     throw new Error("buatMesinKehadiran butuh penarik snapshot");

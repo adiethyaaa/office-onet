@@ -113,7 +113,7 @@ test.describe('world vertical slice', () => {
     await page.getByRole('button', { name: 'Pergi Ruang biliar' }).click();
     await expect.poll(async () => (await state(page)).room, { timeout: 5000 }).toBe('L2-BILLIARD');
     await page.locator('#btn-directory').click();
-    await page.getByRole('button', { name: 'Profil Nova' }).click();
+    await page.getByRole('button', { name: 'Profil Citra' }).click();
     await expect(page.locator('#dlg-info')).toContainText('Spesifikasi ICT');
     await expect(page.locator('#dlg-info')).toContainText('Representasi virtual original');
     await shot(page, info, 'persona-card');

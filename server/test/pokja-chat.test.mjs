@@ -13,7 +13,7 @@ import { buatPenarikSnapshot } from '../pokja.mjs';
 import { buatPenarikKehadiran } from '../pokja-log.mjs';
 import { COMMANDS } from '../commands.mjs';
 
-const SEKARANG = Date.parse('2026-10-28T09:00:00+07:00');
+const SEKARANG = Date.parse('2026-10-28T09:00:00+09:00');
 
 const ringkasan = {
   date: '2026-10-28',
@@ -89,15 +89,15 @@ test('formatRekap: per tanggal, hari gagal ditandai, total di akhir', () => {
 test('sesiHariIni dan formatSesi/formatOnline: dedupe, filter tanggal, tanpa IP', () => {
   const daftar = sesiHariIni(dataKehadiran, '2026-10-28');
   assert.deepEqual(daftar.map((s) => s.idSesi), ['s1', 's2']);
-  assert.equal(daftar[0].terakhirIso, new Date('2026-10-28T08:58:00+07:00').toISOString());
-  // Stempel dibaca +07:00 dan ditampilkan di Jayapura (konvensi yang sama
-  // dengan jamWit di pokja-log.mjs), jadi 08:05 tampil 10.05.
+  assert.equal(daftar[0].terakhirIso, new Date('2026-10-28T08:58:00+09:00').toISOString());
+  // Stempel dibaca +09:00 (WIT) dan ditampilkan di Jayapura (konvensi
+  // yang sama dengan jamWit di pokja-log.mjs), jadi 08:05 tampil 08.05.
   const sesi = formatSesi(daftar, '2026-10-28');
-  assert.match(sesi, /10\.05 Adiethya — aktif, terakhir 10\.58/);
-  assert.match(sesi, /09\.30 Rony — keluar 10\.10/);
+  assert.match(sesi, /08\.05 Adiethya — aktif, terakhir 08\.58/);
+  assert.match(sesi, /07\.30 Rony — keluar 08\.10/);
   assert.ok(!sesi.includes('192.0.2.1'));
   const online = formatOnline(daftar, SEKARANG);
-  assert.match(online, /Adiethya — masuk 10\.05, terakhir aktif 2 menit lalu/);
+  assert.match(online, /Adiethya — masuk 08\.05, terakhir aktif 2 menit lalu/);
   assert.ok(!online.includes('Rony'));
   assert.equal(formatSesi([], '2026-10-28'), 'Tidak ada sesi Pokja pada 2026-10-28.');
   assert.equal(formatOnline([], SEKARANG), 'Tidak ada yang sedang online di Pokja.');
@@ -106,11 +106,11 @@ test('sesiHariIni dan formatSesi/formatOnline: dedupe, filter tanggal, tanpa IP'
 test('formatAudit: dedupe, filter inisial, aksi tak dikenal dan masa depan dilewati', () => {
   const teks = formatAudit(dataKehadiran, { sekarangMs: SEKARANG });
   assert.deepEqual(teks.split('\n').slice(1), [
-    '10.50 Adiethya — Keluar',
-    '10.40 Sonya — Beraktivitas di SDP',
-    '10.35 Rony — Beraktivitas di PGA',
-    '10.20 Citra — Membuka KP',
-    '10.05 Adiethya — Masuk',
+    '08.50 Adiethya — Keluar',
+    '08.40 Sonya — Beraktivitas di SDP',
+    '08.35 Rony — Beraktivitas di PGA',
+    '08.20 Citra — Membuka KP',
+    '08.05 Adiethya — Masuk',
   ]);
   assert.match(formatAudit(dataKehadiran, { filterInisial: 'CM', sekarangMs: SEKARANG }), /Citra — Membuka KP/);
   assert.ok(!formatAudit(dataKehadiran, { filterInisial: 'CM', sekarangMs: SEKARANG }).includes('Rony'));
@@ -152,13 +152,13 @@ test('jawabPerintahPokja dengan penarik nyata dan fetch tiruan', async () => {
   assert.match(bawaan.text, /2026-10-22: belum ada data/);
   assert.equal(diminta.filter((u) => u.includes('start_date=')).length, 10, 'laporan 1 + rekap 2 hari + bawaan 7 hari');
   const sesi = await jawabPerintahPokja({ nama: 'sesi', penarik, sekarangMs: SEKARANG });
-  assert.match(sesi.text, /Rony — keluar 10\.10/);
+  assert.match(sesi.text, /Rony — keluar 08\.10/);
   const online = await jawabPerintahPokja({ nama: 'online', penarik, sekarangMs: SEKARANG });
   assert.match(online.text, /Adiethya/);
   const audit = await jawabPerintahPokja({ nama: 'audit', args: 'cm', penarik, sekarangMs: SEKARANG });
   assert.match(audit.text, /Citra — Membuka KP/);
   const ping = await jawabPerintahPokja({ nama: 'ping', sekarangMs: SEKARANG });
-  assert.match(ping.text, /Aktif\. 2026-10-28 pukul 11\.00 WIT/);
+  assert.match(ping.text, /Aktif\. 2026-10-28 pukul 09\.00 WIT/);
   const bantuan = await jawabPerintahPokja({ nama: 'help', sekarangMs: SEKARANG });
   assert.equal(bantuan.text, formatBantuan());
   const salahRekap = await jawabPerintahPokja({ nama: 'rekap', args: 'kemarin', penarik, sekarangMs: SEKARANG });

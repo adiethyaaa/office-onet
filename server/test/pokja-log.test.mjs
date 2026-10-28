@@ -21,7 +21,7 @@ import {
 import { buatPenyegarKehadiran } from "../pokja.mjs";
 
 const T = (jamMenit) => `2026-10-28 ${jamMenit}:00`;
-const TISO = (jamMenit) => `2026-10-28T${jamMenit}:00+07:00`;
+const TISO = (jamMenit) => `2026-10-28T${jamMenit}:00+09:00`;
 let idSesi = 0;
 let idLog = 0;
 
@@ -165,7 +165,7 @@ test("baris log ganda dengan id sama dihitung sekali", () => {
 });
 
 test("parseWaktu menganggap stempel tanpa zona sebagai WIT, dan normalisasi menolak baris rusak", () => {
-  assert.equal(parseWaktu("2026-10-28 08:00:00"), "2026-10-28T01:00:00.000Z");
+  assert.equal(parseWaktu("2026-10-28 08:00:00"), "2026-10-27T23:00:00.000Z");
   assert.equal(parseWaktu("2026-10-28T08:00:00+07:00"), "2026-10-28T01:00:00.000Z");
   assert.throws(() => normalisasiSesi({ inisial: "", login_time: T("08:00"), status: "active" }));
   assert.throws(() => normalisasiSesi({ inisial: "CM", login_time: "bukan-tanggal", status: "active" }));

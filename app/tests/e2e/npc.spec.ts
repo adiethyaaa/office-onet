@@ -22,16 +22,16 @@ test.describe('persona NPCs (M2)', () => {
   test('directory "Temui" opens the persona dialog, pauses the NPC and restores focus on Escape', async ({ page }, info) => {
     await boot(page);
     await page.locator('#btn-directory').click();
-    await page.getByRole('button', { name: 'Temui Nova' }).click();
+    await page.getByRole('button', { name: 'Temui Citra' }).click();
     const dlg = page.locator('#dlg-info');
     await expect(dlg).toBeVisible({ timeout: 10_000 });
-    await expect(dlg).toContainText('Nova');
+    await expect(dlg).toContainText('Citra');
     await expect(dlg).toContainText('SIMULASI');
     await expect(dlg).toContainText('tidak diketahui');
-    expect((await npcs(page)).find((n) => n.id === 'ACT-NOVA')!.phase).toBe('paused');
+    expect((await npcs(page)).find((n) => n.id === 'ACT-CM')!.phase).toBe('paused');
     // Talking drives the face morph targets from the Blender GLB (smile + mouth).
     type Face = { expressions: Record<string, number>; lod: number } | null;
-    const face = () => page.evaluate(() => (window.__kantor!.npcFace as (id: string) => Face)('ACT-NOVA'));
+    const face = () => page.evaluate(() => (window.__kantor!.npcFace as (id: string) => Face)('ACT-CM'));
     await expect.poll(async () => Object.keys((await face())?.expressions ?? {}).sort().join(','), { timeout: 15_000 }).toBe('blink,frown,smile,surprised,talk');
     await expect.poll(async () => (await face())!.expressions.smile).toBeGreaterThan(0.4);
     const first = await dlg.locator('.quote').innerText();
@@ -47,7 +47,7 @@ test.describe('persona NPCs (M2)', () => {
     await expect(dlg).toBeHidden();
     await expect(page.locator('#btn-directory')).toBeFocused();
     // The dialog 'close' event is dispatched in a later task; poll for the resume.
-    await expect.poll(async () => (await npcs(page)).find((n) => n.id === 'ACT-NOVA')!.phase).not.toBe('paused');
+    await expect.poll(async () => (await npcs(page)).find((n) => n.id === 'ACT-CM')!.phase).not.toBe('paused');
   });
 
   test('walking up to a seated NPC and pressing E (or tapping Aksi) greets it', async ({ page }, info) => {

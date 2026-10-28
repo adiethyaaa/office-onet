@@ -107,9 +107,14 @@ export const KATEGORI_LABEL = {
 const LAYANAN_DIKENAL = ["PGA", "PI", "KP", "CASN", "SDP"];
 
 // Stempel waktu menjadi ISO yang bisa diparse. Bentuk nyata
-// adalah "2026-10-28 00:34:11" tanpa zona, dianggap WIT.
-// Stempel yang sudah membawa zona dipakai apa adanya.
-export function parseWaktu(nilai, zonaDefault = "+07:00") {
+// adalah "2026-10-28 00:34:11" tanpa zona, dianggap WIT (+09:00,
+// Asia/Jayapura). Bukti: `waktu_cek` dari endpoint sessions memuat
+// akhiran "WIT" dan cocok dengan jam dinding WIT saat diperiksa
+// (2026-10-28 10:59 WIT). Nilai lama +07:00 menggeser semua waktu
+// 2 jam ke depan: log 2 jam terakhir terbuang dari papan, dan
+// pengguna idle 30 menit terhitung 150 menit sehingga hilang
+// dari kehadiran. Stempel yang sudah membawa zona dipakai apa adanya.
+export function parseWaktu(nilai, zonaDefault = "+09:00") {
   const teks = String(nilai ?? "").trim();
   if (teks === "") return null;
   const tanpaZona = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2})?$/.test(teks);
@@ -452,7 +457,7 @@ export function buatPenarikKehadiran({
 // ulang sesi dan log hari itu dan melipatnya dari awal, jadi
 // tidak ada keadaan bertambah yang bisa menggandakan peristiwa.
 //   const mesin = buatMesinLogAktivitas({ penarik });
-//   const hasil = await mesin.perbarui("2026-10-28T08:05:00+07:00");
+//   const hasil = await mesin.perbarui("2026-10-28T08:05:00+09:00");
 export function buatMesinLogAktivitas({
   penarik,
   batasBekerjaMenit = 5,

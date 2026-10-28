@@ -12,8 +12,8 @@ import { buatPenarikSnapshot } from '../pokja.mjs';
 import { buatPenarikKehadiran } from '../pokja-log.mjs';
 
 // "Sekarang" tetap: 2026-10-28 09:00 WIT. Baris log memakai stempel
-// nyata "YYYY-MM-DD HH:MM:SS" tanpa zona, dianggap WIT.
-const SEKARANG = Date.parse('2026-10-28T09:00:00+07:00');
+// nyata "YYYY-MM-DD HH:MM:SS" tanpa zona, dianggap WIT (+09:00).
+const SEKARANG = Date.parse('2026-10-28T09:00:00+09:00');
 
 const ringkasan = {
   date: '2026-10-28',
