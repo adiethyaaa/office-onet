@@ -21,7 +21,7 @@ export const EN_PRIVATE: Record<string, string> = {
 
   // push.ts
   'Browser ini tidak mendukung notifikasi push.': 'This browser does not support push notifications.',
-  'Di iPhone/iPad: ketuk Bagikan → Tambah ke Layar Utama, buka Kantor RPG dari ikon itu, lalu aktifkan notifikasi di sini (iOS 16.4+).': 'On iPhone/iPad: tap Share → Add to Home Screen, open Kantor RPG from that icon, then turn on notifications here (iOS 16.4+).',
+  'Di iPhone/iPad: ketuk Bagikan → Tambah ke Layar Utama, buka Kantor Regional XIV BKN dari ikon itu, lalu aktifkan notifikasi di sini (iOS 16.4+).': 'On iPhone/iPad: tap Share → Add to Home Screen, open Kantor Regional XIV BKN from that icon, then turn on notifications here (iOS 16.4+).',
   'Notifikasi diblokir browser. Izinkan lewat pengaturan situs (ikon gembok di bilah alamat), lalu muat ulang.': 'The browser blocks notifications. Allow them in the site settings (lock icon in the address bar), then reload.',
   'Notifikasi mati di perangkat ini.': 'Notifications are off on this device.',
   'Notifikasi aktif di perangkat ini. Balasan agen muncul walau tab ditutup.': 'Notifications are on for this device. Agent replies show up even when the tab is closed.',

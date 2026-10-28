@@ -1,7 +1,7 @@
 {
-  "name": "Kantor RPG",
-  "short_name": "Kantor RPG",
-  "description": "Kantor virtual 3D dan chat agen Hermes.",
+  "name": "Kantor Regional XIV BKN",
+  "short_name": "Kantor Regional XIV BKN",
+  "description": "Kantor virtual 3D Kantor Regional XIV BKN.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -50,10 +50,10 @@ export function buildBank(t: T, rand: () => number): Question[] {
     raw.push({ id, q, right: o.right, wrong: o.wrong, why: why(lvl) });
   };
   where('office-billiard', /BILLIARD/, t('Ruang biliar ada di lantai berapa?'), (n) => t('Ruang biliar ada di lantai {n}, area rekreasi.', { n }));
-  where('office-server', /SERVER/, t('Ruang server ada di lantai berapa?'), (n) => t('Ruang server ada di lantai {n}, dekat area Bruno.', { n }));
-  where('office-read', /-READ$/, t('Perpustakaan ada di lantai berapa?'), (n) => t('Perpustakaan ada di lantai {n}, kamu sedang di sana.', { n }));
+  where('office-server', /SERVER/, t('Ruang server ada di lantai berapa?'), (n) => t('Ruang server ada di lantai {n}, dekat Ruang Tata Usaha.', { n }));
+  where('office-read', /-READ$/, t('Ruang PPNPN ada di lantai berapa?'), (n) => t('Ruang PPNPN ada di lantai {n}, kamu sedang di sana.', { n }));
   where('office-gym', /-GYM$/, t('Ruang olahraga ada di lantai berapa?'), (n) => t('Ruang olahraga ada di lantai {n}.', { n }));
-  where('office-meet', /-MEET$/, t('Ruang rapat besar ada di lantai berapa?'), (n) => t('Ruang rapat besar ada di lantai {n}, dekat lobby.', { n }));
+  where('office-meet', /-MEET$/, t('Ruang Rapat ada di lantai berapa?'), (n) => t('Ruang Rapat ada di lantai {n}, dekat lobby.', { n }));
   const nL1 = WORLD.rooms.filter((r) => r.floor === WORLD.floors[0].id).length;
   const lv1 = WORLD.floors[0].level;
   raw.push({ id: 'office-rooms-l1', q: t('Berapa ruang tercatat di denah lantai {f}?', { f: lv1 }), right: t('{n} ruang', { n: nL1 }), wrong: nearNumbers(nL1, 2, rand).map((v) => t('{n} ruang', { n: v })), why: t('Denah lantai {f} memuat {n} ruang, termasuk koridor dan shaft.', { f: lv1, n: nL1 }) });

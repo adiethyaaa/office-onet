@@ -1,4 +1,4 @@
-// Susun Denah (drafting_table, Studio Hugo). Floor plan puzzle: rooms from
+// Susun Denah (drafting_table, Ruang Wasdal). Floor plan puzzle: rooms from
 // world.json are snapped to a coarse 1.5 m grid, a handful of them is cut out
 // of the plan and the player puts each piece back into its place. Three plans
 // per session, 60 s each.

@@ -33,7 +33,7 @@ describe('floor map helpers', () => {
   });
 
   it('names the room, and says so when a persona is on the way to another floor', () => {
-    expect(placeText(W, person('A', 'L2', [26, 13]))).toBe('Ruang game');
+    expect(placeText(W, person('A', 'L2', [26, 13]))).toBe('Ruang Game');
     expect(placeText(W, person('A', 'L1', [17, 14], 'L2'))).toMatch(/, menuju Lantai 2$/);
   });
 });

@@ -28,7 +28,7 @@
  },
  "building": {
   "id": "KRPG-01",
-  "name": "kantor-rpg",
+  "name": "Kantor Regional XIV BKN",
   "footprint": [
    32,
    24
@@ -103,7 +103,7 @@
   {
    "id": "L1-MEET",
    "floor": "L1",
-   "name": "Ruang rapat besar",
+   "name": "Ruang Rapat",
    "category": "work",
    "access": "public",
    "noise": "moderate",
@@ -146,7 +146,7 @@
   {
    "id": "L1-LOBBY",
    "floor": "L1",
-   "name": "Lobby & resepsi",
+   "name": "Lobby & Resepsionis",
    "category": "public",
    "access": "public",
    "noise": "moderate",
@@ -190,11 +190,11 @@
   {
    "id": "L1-GALLERY",
    "floor": "L1",
-   "name": "Galeri portofolio",
+   "name": "Galeri Kanreg",
    "category": "public",
    "access": "public",
    "noise": "quiet",
-   "function": "Pameran karya tim (artwork original)",
+   "function": "Pameran karya dan informasi Kanreg",
    "polygon": [
     [
      20,
@@ -392,11 +392,11 @@
   {
    "id": "L1-DISC",
    "floor": "L1",
-   "name": "Ruang diskusi",
+   "name": "Ruang Konsultasi",
    "category": "quiet",
    "access": "staff",
    "noise": "quiet",
-   "function": "Diskusi kecil 4 orang",
+   "function": "Konsultasi kecil 4 orang",
    "polygon": [
     [
      0,
@@ -431,11 +431,11 @@
   {
    "id": "L1-IMPL",
    "floor": "L1",
-   "name": "Ruang implementasi & review",
+   "name": "Ruang Mutasi",
    "category": "work",
    "access": "staff",
    "noise": "moderate",
-   "function": "Workstation implementasi/review (Rex, Max)",
+   "function": "Workstation layanan Mutasi",
    "polygon": [
     [
      6,
@@ -513,11 +513,11 @@
   {
    "id": "L1-NOVA",
    "floor": "L1",
-   "name": "Area Nova (spesifikasi ICT)",
+   "name": "Ruang Sidigi",
    "category": "work",
    "access": "staff",
    "noise": "quiet",
-   "function": "Spesifikasi ICT, meja denah",
+   "function": "Sistem digital dan pemantauan",
    "polygon": [
     [
      20,
@@ -554,11 +554,11 @@
   {
    "id": "L1-LAB",
    "floor": "L1",
-   "name": "Lab ICT",
+   "name": "Lab CAT BKN",
    "category": "work",
    "access": "staff",
    "noise": "moderate",
-   "function": "Bench uji perangkat virtual, terpisah dari server",
+   "function": "Ruang ujian CAT BKN",
    "polygon": [
     [
      26,
@@ -638,7 +638,7 @@
   {
    "id": "L1-CEO",
    "floor": "L1",
-   "name": "Ruang CEO",
+   "name": "Ruang Pimpinan",
    "category": "quiet",
    "access": "staff",
    "noise": "quiet",
@@ -679,11 +679,11 @@
   {
    "id": "L1-HUGO",
    "floor": "L1",
-   "name": "Studio Hugo",
+   "name": "Ruang Wasdal",
    "category": "work",
    "access": "staff",
    "noise": "quiet",
-   "function": "Karakter, aset, arsitektur/interior",
+   "function": "Pengawasan dan pengendalian",
    "polygon": [
     [
      7,
@@ -720,11 +720,11 @@
   {
    "id": "L1-KEVIN",
    "floor": "L1",
-   "name": "Studio Kevin",
+   "name": "Ruang Pensiun",
    "category": "work",
    "access": "staff",
    "noise": "quiet",
-   "function": "Pamflet, signage, artwork",
+   "function": "Workstation layanan pensiun",
    "polygon": [
     [
      14,
@@ -761,11 +761,11 @@
   {
    "id": "L1-BRUNO",
    "floor": "L1",
-   "name": "Area Bruno",
+   "name": "Ruang Tata Usaha",
    "category": "work",
    "access": "staff",
    "noise": "moderate",
-   "function": "Instalasi jaringan/server/workstation",
+   "function": "Tata usaha dan administrasi",
    "polygon": [
     [
      20,
@@ -845,7 +845,7 @@
   {
    "id": "L1-STORE",
    "floor": "L1",
-   "name": "Gudang & utilitas",
+   "name": "Gudang",
    "category": "service",
    "access": "staff",
    "noise": "quiet",
@@ -884,11 +884,11 @@
   {
    "id": "L2-READ",
    "floor": "L2",
-   "name": "Perpustakaan / reading nook",
+   "name": "Ruang PPNPN",
    "category": "quiet",
    "access": "staff",
    "noise": "quiet",
-   "function": "Baca tenang",
+   "function": "Ruang kerja PPNPN",
    "polygon": [
     [
      0,
@@ -1169,11 +1169,11 @@
   {
    "id": "L2-CHAT",
    "floor": "L2",
-   "name": "Diskusi santai",
+   "name": "Ruang Pembinaan",
    "category": "quiet",
    "access": "staff",
    "noise": "quiet",
-   "function": "Ngobrol santai, jauh dari game",
+   "function": "Pembinaan dan diskusi santai",
    "polygon": [
     [
      0,
@@ -1208,7 +1208,7 @@
   {
    "id": "L2-GARDEN",
    "floor": "L2",
-   "name": "Taman dalam",
+   "name": "Taman Kasuari",
    "category": "recreation",
    "access": "staff",
    "noise": "quiet",
@@ -1286,7 +1286,7 @@
   {
    "id": "L2-GAME",
    "floor": "L2",
-   "name": "Ruang game",
+   "name": "Ruang Game",
    "category": "recreation",
    "access": "staff",
    "noise": "loud",

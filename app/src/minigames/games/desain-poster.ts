@@ -1,4 +1,4 @@
-// Desain Poster (easel, Studio Kevin). The player builds a poster for a short
+// Desain Poster (easel, Ruang Pensiun). The player builds a poster for a short
 // brief by cycling five properties. The poster is graded on text contrast
 // (WCAG relative luminance), fit with the brief and type hierarchy, and Kevin
 // comments on each criterion. Three briefs per session.
