@@ -1,0 +1,18 @@
+# Contoh konfigurasi Cloudflare Tunnel untuk office-onet.
+# Salin menjadi ~/.cloudflared/config.yml di VPS, isi placeholder
+# <...> dengan nilai dari tunnel yang sudah dibuat, dan jangan pernah
+# menaruh berkas ini (atau config.yml yang sudah diisi) di repo.
+# Tunnel dibuat sekali, lewat dashboard Cloudflare Zero Trust atau
+# `cloudflared tunnel create <nama>` di VPS; lihat docs/DEPLOY-VPS.md.
+tunnel: <ID-atau-nama-tunnel>
+credentials-file: /home/<user>/.cloudflared/<ID-tunnel>.json
+ingress:
+  # API privat dulu: pola /api/* harus di atas /*.
+  - hostname: <hostname-office>
+    path: /api/*
+    service: http://127.0.0.1:3242
+  - hostname: <hostname-office>
+    path: /*
+    service: http://127.0.0.1:4180
+  # Selain hostname di atas: tolak.
+  - service: http_status:404

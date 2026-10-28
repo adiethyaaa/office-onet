@@ -1,0 +1,21 @@
+# Cloudflare Tunnel untuk office-onet sebagai layanan systemd level user.
+# Tunnel harus sudah dibuat dan berkas config + kredensialnya sudah ada
+# di ~/.cloudflared/ (lihat docs/DEPLOY-VPS.md). Unit ini tidak membuat
+# tunnel dan tidak menyimpan rahasia apa pun.
+[Unit]
+Description=Cloudflare Tunnel untuk office-onet
+After=network-online.target office-onet.service office-onet-static.service
+Wants=network-online.target
+Requires=office-onet.service office-onet-static.service
+
+[Service]
+Type=simple
+ExecStart=cloudflared tunnel --config %h/.cloudflared/config.yml run
+Restart=on-failure
+RestartSec=10
+MemoryMax=256M
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

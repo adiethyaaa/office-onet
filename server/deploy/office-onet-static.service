@@ -1,0 +1,21 @@
+# Server statis untuk app/dist (build frontend office-onet) sebagai
+# layanan systemd level user. Memakai scripts/serve-csp.mjs yang sama
+# dengan yang dipakai suite e2e, termasuk header CSP yang diuji.
+# Dipasang dengan server/deploy/pasang-vps.sh.
+[Unit]
+Description=Server statis office-onet (app/dist)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/office-onet/current
+ExecStart=node %h/office-onet/current/app/scripts/serve-csp.mjs 4180
+Restart=on-failure
+RestartSec=5
+MemoryMax=256M
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

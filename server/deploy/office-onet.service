@@ -1,0 +1,35 @@
+# Backend privat office-onet (Pokja) sebagai layanan systemd level user.
+# Dipasang dengan server/deploy/pasang-vps.sh; jangan jalankan berkas ini
+# langsung tanpa membaca docs/DEPLOY-VPS.md.
+# Satu-satunya pintu masuk adalah Cloudflare Tunnel (lihat
+# office-onet-tunnel.service); backend hanya mendengarkan di localhost.
+[Unit]
+Description=Backend privat office-onet (data Pokja, baca-saja)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/office-onet/current
+# Rahasia (POKJA_API_TOKEN, KANTOR_RPG_ORIGIN) dibaca dari berkas env
+# di luar repo; berkas itu tidak boleh di-commit. Lihat
+# server/deploy/office-onet.env.example.
+EnvironmentFile=%h/office-onet/data/office-onet.env
+Environment=KANTOR_RPG_DATA=%h/office-onet/data
+Environment=KANTOR_RPG_BIND=127.0.0.1
+Environment=KANTOR_RPG_PORT=3242
+# PERINGATAN: jangan buat berkas proxy-secret di folder data untuk
+# penyebaran Tunnel. Bila berkas itu ada, main.mjs mewajibkan header
+# X-Kantor-Proxy yang tidak pernah dikirim cloudflared, sehingga semua
+# /api/ dijawab 403. Mekanisme proxy-secret hanya untuk penyebaran
+# nginx (lihat server/deploy/sambung-nginx.sh).
+ExecStart=node %h/office-onet/current/server/main.mjs
+Restart=on-failure
+RestartSec=5
+# Batas sumber daya untuk VPS kecil: backend hanya melayani satu owner.
+MemoryMax=512M
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target
