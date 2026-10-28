@@ -1,7 +1,7 @@
 # Scope dan delivery
-Baca PRD/PRD-v0.1.md, DESIGN.md, docs/DELIVERABLES.md dan handoff/PROMPT-CLAUDE.md sebelum mengerjakan. Kerjakan hanya repo ini, bukan operasi ISP.
+Baca PRD/PRD-v0.1.md, DESIGN.md, docs/DELIVERABLES.md dan handoff/PROMPT-CLAUDE.md sebelum mengerjakan. Untuk pekerjaan Pokja, baca juga POKJA-TAHAP-1.md dan dokumen langkah di docs/ (ROSTER-POKJA, PAPAN-POKJA, CHAT-POKJA, PANEL-POKJA, DEPLOY-VPS, DIALOG-POKJA). Kerjakan hanya repo ini, bukan operasi ISP.
 Opus 5.5 High adalah pilihan pemilik; laporkan jika runtime berbeda. Paid usage, top-up, auto-reload, model substitution, merge dan deploy tidak diizinkan.
-M0-M3 boleh dikerjakan, M4 private integration disabled sampai persetujuan sumber/hosting/security. Gunakan branch/PR; jangan merge ke main.
+M0-M3 boleh dikerjakan. M4 integrasi privat Pokja dikerjakan di branch pokja-tahap-1 sesuai persetujuan sumber/hosting/security yang tercatat di POKJA-TAHAP-1.md. Gunakan branch/PR; jangan merge ke main.
 Jangan menyalin aset, source bundle atau persona Holixora/Pokemon. Tulis evidence dari hasil execution nyata. Repo public hanya sanitized original outputs. Jangan memasukkan local skills pihak ketiga sebelum lisensi diperiksa.
 PDF PRD bukan gambar CAD. Native DWG hanya sah setelah generated/reopened dengan tool native legal; DXF renamed tidak sah.
 

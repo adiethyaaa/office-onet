@@ -2,7 +2,18 @@
 
 # Changelog
 
-All notable changes to kantor-rpg, newest first. Each release goes to the [public demo](https://employee-rpg.air-buddy.site) after the tests and CI pass. The release code is the commit on `main`.
+All notable changes to kantor-rpg, newest first. Upstream releases go to the [public demo](https://employee-rpg.air-buddy.site) after the tests and CI pass; the upstream release code is the commit on `main`. This fork has no public demo yet; the stage 1 work lives on the `pokja-tahap-1` branch.
+
+## Pokja stage 1, October 2026 (`pokja-tahap-1` branch, unreleased)
+
+Adapting the virtual office for the Kanreg XIV BKN Pokja Mutasi service (read-only, no Telegram):
+
+- Presence from Pokja sessions and audit logs (`/api/presence`), plus an estimate from data changes as a fallback.
+- Pokja roster, character identities, dialogue, and Kanreg room names; the title becomes Kantor Regional XIV BKN.
+- Work boards, read-only chat commands, and the panel from Pokja data; labeled sample demo data.
+- VPS deploy files (user-level systemd + Cloudflare Tunnel).
+
+Each step is documented in [POKJA-TAHAP-1.md](POKJA-TAHAP-1.md) and the docs in `docs/`.
 
 ## v2.2, 14 October 2026
 

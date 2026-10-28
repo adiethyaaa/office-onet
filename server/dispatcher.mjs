@@ -135,7 +135,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
       const id = `task_${token(9)}`;
       const at = now();
       q('insert into tasks(id,conversation_id,profile,idem,message,decision_id,status,source,observed_at,created_at) values(?,?,?,?,?,?,?,?,?,?)').run(
-        id, conversationId, profile, idem, message, decisionId ?? null, 'queued', `hermes:${profile}`, at, at);
+        id, conversationId, profile, idem, message, decisionId ?? null, 'queued', `pokja:${profile}`, at, at);
       q('insert into turns(id,conversation_id,role,text,options,expires_at,task_id,created_at) values(?,?,?,?,?,?,?,?)').run(`turn_${token(9)}`, conversationId, 'owner', message, null, null, id, at);
       for (const u of uploads) q('update uploads set task_id=? where id=? and task_id is null').run(id, u);
       q('update conversations set updated_at=? where id=?').run(at, conversationId);

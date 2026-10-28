@@ -1,11 +1,11 @@
 **Bahasa Indonesia** · [English](INSTALL.en.md)
 
-# Panduan instalasi Kantor RPG
+# Panduan instalasi Kantor Regional XIV BKN
 
 Kantor RPG punya dua bagian:
 
 1. **App 3D** (`app/`): Vite + three.js, hasil build berupa file statis (`app/dist`). Bagian ini cukup untuk jalan-jalan di kantor, NPC simulasi, direktori, dan dokumen.
-2. **Backend privat** (`server/`): Node tanpa framework. Dipakai untuk chat agen yang tersambung ke Telegram lewat Hermes Agent, push notifikasi, dan lampiran. Opsional; tanpa backend, app tetap jalan dalam mode simulasi.
+2. **Backend privat** (`server/`): Node tanpa framework. Dipakai untuk kehadiran, papan kerja, dan perintah chat dari data layanan Pokja (hanya dibaca), push notifikasi, dan lampiran. Opsional; tanpa backend, app tetap jalan dalam mode simulasi.
 
 Ada tiga jalur: (A) coba di laptop, (B) pasang situs statis, (C) sambungkan backend privat.
 
@@ -27,8 +27,10 @@ GLB, gambar, dan PDF hasil build sudah di-commit, jadi Python/Blender **tidak** 
 ## A. Coba di laptop (5 menit)
 
 ```bash
-git clone https://github.com/air-buddy410/kantor-rpg.git
-cd kantor-rpg/app
+git clone https://github.com/adiethyaaa/office-onet.git
+cd office-onet
+git checkout pokja-tahap-1
+cd app
 npm ci
 npm run dev            # http://localhost:5173
 ```
@@ -60,7 +62,7 @@ Port 4173 harus bebas, atau sudah berisi `vite preview` dari folder yang sama (`
 
 ## B. Pasang situs statis (nginx)
 
-`app/dist` bisa disajikan oleh web server statis apa pun. Contoh nginx dengan rilis per commit, supaya rollback cukup dengan mengganti satu baris:
+`app/dist` bisa disajikan oleh web server statis apa pun. Penyebaran fork ini memakai Cloudflare Tunnel; lihat [docs/DEPLOY-VPS.md](docs/DEPLOY-VPS.md). Contoh nginx di bawah tetap berlaku sebagai alternatif:
 
 ```bash
 # di mesin build
@@ -98,33 +100,47 @@ Catatan:
 
 ---
 
-## C. Backend privat (chat agen, push, lampiran)
+## C. Backend privat (data Pokja, push, lampiran)
 
-Backend membaca sesi Telegram Hermes di mesin tempat Hermes berjalan, jadi dipasang di mesin itu (misalnya Mac mini), lalu diproksikan oleh nginx situs.
+Backend membaca data Pokja lewat API ringkasan, sesi, dan log audit di alamat yang sama (hanya dibaca, tanpa akses database langsung). Di VPS, backend dipasang sebagai layanan systemd level user di belakang Cloudflare Tunnel; detail lengkapnya ada di [docs/DEPLOY-VPS.md](docs/DEPLOY-VPS.md).
 
 ### Jalankan manual
 
 ```bash
 cd server
 npm ci --omit=dev
-KANTOR_RPG_DATA=~/.hermes/kantor-rpg \
+KANTOR_RPG_DATA=~/.office-onet/data \
 KANTOR_RPG_BIND=127.0.0.1 \
 KANTOR_RPG_PORT=3242 \
-KANTOR_RPG_ORIGIN=https://kantor.contoh.id \
+KANTOR_RPG_ORIGIN=https://<hostname-office> \
+POKJA_API_URL=https://<alamat-api-pokja> \
+POKJA_API_TOKEN=<token> \
 node main.mjs
 ```
 
 | Variabel | Default | Arti |
 |---|---|---|
-| `KANTOR_RPG_DATA` | `~/.hermes/kantor-rpg` | Folder data (mode 0700): sesi, `proxy-secret`, `vapid.json`, lampiran |
+| `KANTOR_RPG_DATA` | `~/.office-onet/data` | Folder data (mode 0700): berkas env, `vapid.json`, lampiran |
 | `KANTOR_RPG_PORT` | `3242` | Port HTTP |
-| `KANTOR_RPG_BIND` | `127.0.0.1` | Alamat bind; pakai IP Tailscale/LAN bila nginx di mesin lain |
-| `KANTOR_RPG_ORIGIN` | situs demo | Origin yang boleh POST (CSRF) |
-| `KANTOR_RPG_PROXY_SECRET` | isi berkas `proxy-secret` | Header wajib dari nginx; request tanpa header ini ditolak |
+| `KANTOR_RPG_BIND` | `127.0.0.1` | Alamat bind; backend hanya mendengarkan di localhost |
+| `KANTOR_RPG_ORIGIN` | situs demo | Origin yang boleh POST (CSRF); harus sama dengan hostname Tunnel |
+| `KANTOR_RPG_PROXY_SECRET` | isi berkas `proxy-secret` | Header wajib dari nginx. Jangan buat berkas `proxy-secret` untuk penyebaran Tunnel: semua `/api/` akan dijawab 403 |
+| `POKJA_API_URL` | _(kosong)_ | Alamat API Pokja (ringkasan, sesi, dan log audit) |
+| `POKJA_API_TOKEN` | _(kosong)_ | Token API Pokja. Rahasia: hanya lewat berkas env di luar repo |
 
-Kunci VAPID untuk push dibuat otomatis sekali di folder data. Jangan commit folder data.
+Kunci VAPID untuk push dibuat otomatis sekali di folder data. Jangan commit folder data atau berkas env yang sudah diisi.
 
-### macOS + launchd (cara yang dipakai produksi)
+### VPS + systemd + Tunnel (cara yang dipakai fork ini)
+
+```bash
+server/deploy/pasang-vps.sh <sha>   # salin rilis, buat berkas env kosong bila belum ada, aktifkan tiga unit
+```
+
+Unit yang diaktifkan: `office-onet` (backend), `office-onet-static` (server statis), dan `office-onet-tunnel` (Cloudflare Tunnel). Log dibaca dengan `journalctl --user -u office-onet`. Rollback: jalankan lagi skrip itu dengan SHA lama.
+
+### macOS + launchd (penyebaran asli upstream)
+
+Skrip upstream tetap ada dan tidak diubah:
 
 ```bash
 server/deploy/pasang-mac.sh <sha>   # salin ke ~/.hermes/kantor-rpg/releases/<sha>, buat proxy-secret, pasang LaunchAgent
@@ -135,7 +151,7 @@ Log tersimpan di `~/.hermes/log/kantor-rpg-api.log`. Rollback: arahkan symlink `
 
 `pasang-mac.sh` bind ke `KANTOR_RPG_BIND` bila di-set, kalau tidak ke IP Tailscale mesin itu (`tailscale ip -4`), dan terakhir ke contoh `192.168.1.10`. `sambung-nginx.sh` memakai urutan yang sama untuk upstream (`KANTOR_RPG_UPSTREAM`).
 
-### Sambungkan nginx ke backend
+### Sambungkan nginx ke backend (alternatif upstream)
 
 ```bash
 KANTOR_RPG_UPSTREAM=http://<ip-backend>:3242 server/deploy/sambung-nginx.sh
@@ -143,7 +159,7 @@ KANTOR_RPG_UPSTREAM=http://<ip-backend>:3242 server/deploy/sambung-nginx.sh
 
 Skrip ini menulis `/etc/nginx/snippets/kantor-rpg-api.conf` (0600, berisi header rahasia), menyisipkan `include` ke vhost, mencadangkan vhost, lalu menjalankan `nginx -t`. Bila gagal, vhost dikembalikan otomatis. Nama host dan path vhost di bagian atas skrip mengikuti server demo; ganti untuk server Anda.
 
-Cek: `curl https://kantor.contoh.id/api/me` harus membalas 200.
+Cek: `curl https://<hostname-office>/api/me` harus membalas 200.
 
 ---
 
@@ -153,7 +169,7 @@ Cek: `curl https://kantor.contoh.id/api/me` harus membalas 200.
 - **Permukaan berkedip (z-fighting)**: sudah ditangani di sumbernya (lihat [docs/evidence/AUDIT-3D/LAPORAN.md](docs/evidence/AUDIT-3D/LAPORAN.md)). Bila menambah furnitur/GLB baru, jalankan `npx vitest run tests/unit/coplanar.test.ts`; tes gagal bila ada dua permukaan berbeda warna yang menempel.
 - **Masih memuat versi lama setelah deploy**: service worker PWA. Tutup semua tab situs lalu buka ulang, atau hapus data situs.
 - **E2E gagal `ERR_CONNECTION_REFUSED`**: server preview di 4173 mati di tengah run. Jalankan `npm run preview` terpisah, lalu ulangi dengan `npx playwright test --last-failed`.
-- **Chat agen tidak muncul**: periksa `/api/me`. Bila 404/502, nginx belum memuat snippet API atau backend tidak berjalan (`launchctl print gui/$UID/id.perumnet.kantor-rpg-api`).
+- **Chat/papan Pokja tidak muncul**: periksa `/api/me`. Bila 404/502, backend tidak berjalan (`systemctl --user status office-onet` untuk penyebaran Tunnel) atau nginx belum memuat snippet API (untuk penyebaran nginx).
 
 ## Bobot dan anggaran
 

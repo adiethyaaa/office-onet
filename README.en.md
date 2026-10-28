@@ -2,14 +2,13 @@
 
 <p align="center"><img src="docs/brand/icon.svg" alt="" width="112"></p>
 
-<h1 align="center">kantor-rpg</h1>
+<h1 align="center">Kantor Regional XIV BKN</h1>
 
 <p align="center">
-A two-floor virtual office that runs in the browser. You can explore the building, talk to its AI team agents, and print its working drawings.
+A two-floor virtual office that runs in the browser. You can explore the building, monitor Pokja team presence, and print its working drawings.
 </p>
 
 <p align="center">
-<a href="https://employee-rpg.air-buddy.site"><b>Try the demo</b></a> ·
 <a href="CHANGELOG.en.md">Changelog</a> ·
 <a href="docs/FEATURES.md">All features</a> ·
 <a href="INSTALL.en.md">Self-host</a> ·
@@ -20,11 +19,11 @@ A two-floor virtual office that runs in the browser. You can explore the buildin
 
 You play as the CEO in a two-floor building built from a single data file, `design/world.json`. From that same file, the scripts in this repo generate a Blender 3D model, 15 CAD drawing sheets, a network design, and the world you explore in the browser. Move one room in the dataset, then rebuild: the floor plans, the model, and the game all change with it.
 
-Eight NPC characters live their own day: working at their desks, making coffee, playing billiards, reading in the library. If you install the private backend, each character connects to a real AI agent. The character sits down and types while its agent works, and you can give it tasks through a chat that syncs with Telegram.
+Nine NPC characters live their own day: working at their desks, making coffee, playing billiards, reading in the PPNPN room. If you install the private backend, the characters connect to read-only Pokja service data: a character sits down and types while its owner is recorded as working, and you can check reports through read-only chat commands. No message is forwarded to a real person, and no data is changed.
 
 The app runs in English or Indonesian. It follows your browser language, and you can switch in **Settings** or with `?lang=en`. Some docs and screenshots still show the Indonesian labels; the English meaning is given the first time each one appears.
 
-The public demo runs without login. It shows a simulation with a fixed seed, so every visitor sees the same day.
+Without login, the app runs in simulation mode with a fixed seed, so every visitor sees the same day. Pokja data only appears after the owner logs in.
 
 ## New in v2.2
 
@@ -44,12 +43,12 @@ Latest version: **v2.2** (14 October 2026). Details are in the [changelog](CHANG
 |---|---|
 | Building | 2 floors, 36 rooms, 44 doors, 39 windows |
 | Contents | 201 furniture items and devices, 54 furniture GLB models, 118 NPC activity slots |
-| Characters | 9 original characters (1 player avatar, 8 NPCs), modeled in Blender |
+| Characters | 10 original characters (1 player avatar, 9 NPCs), modeled in Blender |
 | Working drawings | 15 architecture, interior, and ICT sheets in DWG, DXF, and PDF |
 | Mini games | 15 games: 10 at office facilities, 5 in the Game Station, downloaded when opened |
 | Music | 12 original songs, generated in the browser |
 | Initial JavaScript download | three.js 168 kB + app 48 kB (gzip) |
-| Tests | 368 unit tests, 318 E2E scenarios (desktop, tablet, phone), 432 Python tests, 32 server tests |
+| Tests | 364 unit tests, 318 E2E scenarios (desktop, tablet, phone), 432 Python tests, 85 server tests |
 | Recorded decisions | 18 ADRs in [docs/decisions.md](docs/decisions.md) |
 
 ## Main features
@@ -57,12 +56,12 @@ Latest version: **v2.2** (14 October 2026). Details are in the [changelog](CHANG
 | Feature | In short |
 |---|---|
 | [Two-floor 3D world](docs/FEATURES.md#2-3d-world) | 36 rooms, doors that open by themselves, stairs and a lift between floors |
-| [NPC characters](docs/FEATURES.md#5-npc-characters) | 8 characters with daily schedules, ready to talk, working out on the treadmill and exercise bike |
+| [NPC characters](docs/FEATURES.md#5-npc-characters) | 9 characters with daily schedules, ready to talk, working out on the treadmill and exercise bike |
 | [Mini games](docs/FEATURES.md#4a-mini-games) | 10 games at office facilities, chess at the board game table included, and a 5-game Game Station: racing, fighting, platformer, cable puzzle, bomb arena |
 | [Animation](docs/FEATURES.md#4d-character-animation) | Walking and running blend with speed, start, stop, turn, glance; a clip for every activity |
 | [Reprimand](docs/FEATURES.md#4c-reprimand) | Three cartoon reprimands in 3D; animation only, nothing sent to the agent |
 | [Sound](docs/FEATURES.md#4b-sound) | 12 original songs, footsteps, doors, lift; generated in the browser, no audio files |
-| [Agent chat and work board](docs/FEATURES.md#10-agent-chat) | Give tasks to AI agents, synced with Telegram (needs the private backend) |
+| [Pokja commands and work board](docs/FEATURES.md#10-agent-chat) | Check Pokja reports, sessions, and logs through read-only chat commands (needs the private backend) |
 | [Map and minimap](docs/FEATURES.md#6a-map-and-minimap) | Where everyone is on each floor, **Temui** (Meet) to jump next to them |
 | [Office Studio](docs/FEATURES.md#8-office-studio-rearranging-furniture) | Rearrange furniture, save drafts, publish, roll back |
 | [Avatar Studio](docs/FEATURES.md#7-avatar-studio) | Pick the avatar's hair, colors, and outfit |
@@ -73,25 +72,25 @@ Latest version: **v2.2** (14 October 2026). Details are in the [changelog](CHANG
 
 ## Explore the building
 
-<img src="docs/img/hero-l1.jpg" alt="Floor 1 from above: meeting room, lobby, gallery, implementation room, building core">
+<img src="docs/img/hero-l1.jpg" alt="Floor 1 from above: Meeting Room, lobby, Kanreg Gallery, Mutation Room, building core">
 
-**Floor 1 is for work and guests.** A lobby with a reception desk, a large meeting room, a work gallery, a pantry, an implementation room with a plan table, work areas per role, a lab, and a server room.
+**Floor 1 is for work and guests.** A lobby with a reception desk, the Meeting Room, the Kanreg Gallery, a pantry, the Mutation Room with a plan table, work areas per service, the BKN CAT Lab, and the Server Room.
 
-| Meeting room | Gallery | Implementation room |
+| Meeting Room | Kanreg Gallery | Mutation Room |
 |---|---|---|
-| ![Meeting room](docs/img/meeting.jpg) | ![Gallery](docs/img/gallery.jpg) | ![Implementation room](docs/img/implementation.jpg) |
+| ![Meeting Room](docs/img/meeting.jpg) | ![Kanreg Gallery](docs/img/gallery.jpg) | ![Mutation Room](docs/img/implementation.jpg) |
 
-<img src="docs/img/hero-l2.jpg" alt="Floor 2 from above: lounge, game room, billiards, gym, indoor garden">
+<img src="docs/img/hero-l2.jpg" alt="Floor 2 from above: lounge, Game Room, billiards, gym, Kasuari Garden">
 
-**Floor 2 is for breaks.** A library, a lounge with a coffee bar, a game room, a billiard table, a gym, an indoor garden, and a balcony. Go up by the U-shaped stairs or the elevator in the building core.
+**Floor 2 is for breaks.** The PPNPN Room, a lounge with a coffee bar, the Game Room, a billiard table, a gym, the Kasuari Garden, and a balcony. Go up by the U-shaped stairs or the elevator in the building core.
 
 | Game room | Billiards | Gym |
 |---|---|---|
 | ![Game room](docs/img/game.jpg) | ![Billiards](docs/img/billiard.jpg) | ![Gym](docs/img/gym.jpg) |
 
-| Lounge | Library | Indoor garden |
+| Lounge | PPNPN Room | Kasuari Garden |
 |---|---|---|
-| ![Lounge](docs/img/lounge.jpg) | ![Library](docs/img/library.jpg) | ![Indoor garden](docs/img/garden.jpg) |
+| ![Lounge](docs/img/lounge.jpg) | ![PPNPN Room](docs/img/library.jpg) | ![Kasuari Garden](docs/img/garden.jpg) |
 
 Interior walls are kept low (1.25 m), so the camera sees into every room without any see-through effect. Doors open on their own when the avatar or an NPC comes close.
 
@@ -101,7 +100,7 @@ Interior walls are kept low (1.25 m), so the camera sees into every room without
 
 - **Seeded simulation.** The same seed (`?seed=20261001`) produces the same sequence of activities. The demo can be replayed exactly, and the E2E tests check this.
 - **No collisions.** NPCs reserve a chair before sitting and make way for each other in corridors. An NPC that gets stuck picks another destination. NPCs can't trap the avatar either: keep pushing for 2 seconds, or run, and you pass through. Once you're past, the NPC is solid again.
-- **Real work status.** With the backend, a character whose agent is working leaves its leisure activity, sits at its desk, and its label changes to `bekerja` (working) or `menunggu keputusanmu` (waiting for your decision).
+- **Work status from Pokja.** With the backend, a character whose owner is recorded as working leaves its leisure activity, sits at its desk, and its label follows the Pokja presence status (`bekerja`, `idle`).
 - **You can greet them.** Greeting an NPC opens its profile, main room, current activity, and a snippet of dialogue. The owner gets a button to assign a task directly.
 
 - **Know who is where.** The minimap in the corner shows everyone on your floor and how many people are on the other floor (`↑ L2: 3`). Press **P** for the full two-floor map, then **Temui** (Meet) to jump right next to that person, even on another floor.
@@ -116,23 +115,23 @@ You can relax too. Every facility opens a mini game: run on the treadmill, lift 
 |---|---|---|
 | ![Game Station](docs/img/game-station.jpg) | ![Chess](docs/img/catur.jpg) | ![Treadmill and exercise bike](docs/img/gym-anim.jpg) |
 
-## Chat with agents
+## Pokja chat and board
 
-| Agent chat | Team work board |
+| Pokja chat | Team work board |
 |---|---|
-| ![Agent chat](docs/img/chat-agen.jpg) | ![Work board](docs/img/papan-kerja.jpg) |
+| ![Pokja chat](docs/img/chat-agen.jpg) | ![Work board](docs/img/papan-kerja.jpg) |
 
-The chat in the app is the same Telegram conversation, not a copy. Messages from the app continue that agent's Telegram session, and replies show up in both places.
+The chat in the app holds read-only Pokja commands (`/laporan`, `/rekap`, `/sesi`, `/online`, `/audit`, `/ping`, `/help`). The answers are data summaries, not messages to a real person, and no data is changed.
 
 - Typing indicator, sent and read ticks, incoming message sound, unread count in the tab title.
 - Photos, files, and voice messages recorded right in the app, up to 10 MB per attachment. Voice is transcribed on your own server.
 - Agents can end a reply with three options. One tap sends that option.
 - Messages that touch risky actions (deploy, deleting data, costs, sending to clients, access) are held until the owner approves them. Approval expires after 15 minutes and applies only to that task.
 - Messages that look like they contain a password, OTP, token, or card number are rejected before sending.
-- The work board shows handoffs between agents, the task list, and the activity log. Handoffs stuck for more than 24 hours are flagged as needing attention.
+- The work board shows a summary per user per service, and the activity log from Pokja sessions and audit logs.
 - Push notifications when the tab is closed, and the app can be installed on a phone home screen as a PWA.
 
-Chat and the work board are only active for the owner, who logs in with a password and a 2FA code. Demo visitors see labeled simulated data.
+Chat and the work board are only active for the owner, who logs in with a password and a 2FA code. Visitors without login see labeled sample data.
 
 ## Rearrange the office
 
@@ -182,8 +181,10 @@ The 3D models are audited so no surfaces flicker (z-fighting). The test `app/tes
 ## Start in one minute
 
 ```bash
-git clone https://github.com/air-buddy410/kantor-rpg.git
-cd kantor-rpg/app
+git clone https://github.com/adiethyaaa/office-onet.git
+cd office-onet
+git checkout pokja-tahap-1
+cd app
 npm ci
 npm run dev        # open http://localhost:5173
 ```
@@ -193,7 +194,7 @@ That is enough for the 3D world, NPCs, Studio, and all visitor features. Product
 ## Technology
 
 - **App:** TypeScript, Vite, three.js. No UI framework.
-- **Backend:** Node.js without a framework, one process, data in Node's built-in SQLite. Password and TOTP login, cookie sessions with CSRF, Web Push with VAPID.
+- **Backend:** Node.js without a framework, one process, data in Node's built-in SQLite. Password and TOTP login, cookie sessions with CSRF, Web Push with VAPID. Pokja data is read through the summary, sessions, and audit log API; there is no direct database access.
 - **3D:** Blender 5 driven by Python scripts. GLB optimized with meshopt and mesh quantization.
 - **CAD:** DXF generator in Python, vector PDF, DWG through AutoCAD.
 - **Tests:** vitest, Playwright, pytest, `node:test`.
@@ -203,7 +204,7 @@ That is enough for the 3D world, NPCs, Studio, and all visitor features. Product
 | Folder | Contents |
 |---|---|
 | `app/` | 3D app, unit tests (vitest) and E2E tests (Playwright) |
-| `server/` | Private backend: auth, agent chat, push, attachments |
+| `server/` | Private backend: Pokja presence, boards, and chat (read-only), push, attachments |
 | `design/` | World, character, dialogue, and requirements datasets; the source of all artifacts |
 | `blender/` | Scripts and `.blend` files for the building, characters, furniture |
 | `cad/`, `drawings/` | DXF/DWG generator and working drawing PDFs |

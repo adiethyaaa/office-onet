@@ -2,7 +2,18 @@
 
 # Catatan perubahan
 
-Semua perubahan penting kantor-rpg, dari yang terbaru. Setiap rilis dipasang di [demo publik](https://employee-rpg.air-buddy.site) setelah tes dan CI lulus. Kode rilis adalah commit di `main`.
+Semua perubahan penting kantor-rpg, dari yang terbaru. Rilis upstream dipasang di [demo publik](https://employee-rpg.air-buddy.site) setelah tes dan CI lulus; kode rilis upstream adalah commit di `main`. Fork ini belum punya demo publik; pekerjaan tahap 1 hidup di branch `pokja-tahap-1`.
+
+## Tahap 1 Pokja, Oktober 2026 (branch `pokja-tahap-1`, belum rilis)
+
+Adaptasi kantor virtual untuk layanan Pokja Mutasi Kanreg XIV BKN (baca-saja, tanpa Telegram):
+
+- Kehadiran dari sesi dan log audit Pokja (`/api/presence`), ditambah perkiraan dari perubahan data sebagai cadangan.
+- Roster, identitas karakter, dialog, dan nama ruangan Kanreg; judul menjadi Kantor Regional XIV BKN.
+- Papan kerja, perintah chat baca-saja, dan panel dari data Pokja; data contoh demo berlabel.
+- Berkas deploy VPS (systemd level user + Cloudflare Tunnel).
+
+Rincian tiap langkah ada di [POKJA-TAHAP-1.md](POKJA-TAHAP-1.md) dan dokumen di `docs/`.
 
 ## v2.2, 14 Oktober 2026
 

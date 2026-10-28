@@ -2,14 +2,13 @@
 
 <p align="center"><img src="docs/brand/icon.svg" alt="" width="112"></p>
 
-<h1 align="center">kantor-rpg</h1>
+<h1 align="center">Kantor Regional XIV BKN</h1>
 
 <p align="center">
-Kantor virtual dua lantai yang berjalan di browser. Gedungnya bisa dijelajahi, agen tim AI-nya bisa diajak bicara, dan gambar kerjanya bisa dicetak.
+Kantor virtual dua lantai yang berjalan di browser. Gedungnya bisa dijelajahi, kehadiran tim Pokja bisa dipantau, dan gambar kerjanya bisa dicetak.
 </p>
 
 <p align="center">
-<a href="https://employee-rpg.air-buddy.site"><b>Coba demo</b></a> ·
 <a href="docs/FITUR.md">Semua fitur</a> ·
 <a href="CHANGELOG.md">Catatan perubahan</a> ·
 <a href="INSTALL.md">Pasang sendiri</a> ·
@@ -20,9 +19,9 @@ Kantor virtual dua lantai yang berjalan di browser. Gedungnya bisa dijelajahi, a
 
 Kamu bermain sebagai CEO di gedung dua lantai yang dibangun dari satu berkas data, `design/world.json`. Dari berkas yang sama, skrip di repo ini menghasilkan model 3D Blender, 15 sheet gambar CAD, rancangan jaringan, dan dunia yang kamu jelajahi di browser. Geser satu ruang di dataset, lalu bangun ulang: denah, model, dan game ikut berubah.
 
-Delapan karakter NPC menjalani hari mereka sendiri: kerja di meja, bikin kopi, main biliar, membaca di perpustakaan. Kalau backend privat dipasang, setiap karakter tersambung ke agen AI sungguhan. Karakter itu duduk dan mengetik saat agennya bekerja, dan kamu bisa memberinya tugas lewat chat yang sinkron dengan Telegram.
+Sembilan karakter NPC menjalani hari mereka sendiri: kerja di meja, bikin kopi, main biliar, membaca di Ruang PPNPN. Kalau backend privat dipasang, karakter tersambung ke data layanan Pokja yang hanya dibaca: karakter duduk dan mengetik saat pemiliknya tercatat bekerja, dan kamu bisa memeriksa laporan lewat perintah chat baca-saja. Tidak ada pesan yang diteruskan ke orang sungguhan dan tidak ada data yang diubah.
 
-Demo publik berjalan tanpa login. Isinya simulasi dengan seed tetap, jadi setiap pengunjung melihat hari yang sama.
+Tanpa login, app berjalan dalam mode simulasi dengan seed tetap, jadi setiap pengunjung melihat hari yang sama. Data Pokja hanya tampil setelah pemilik login.
 
 ## Baru di v2.2
 
@@ -42,12 +41,12 @@ Versi terbaru: **v2.2** (14 Oktober 2026). Rinciannya ada di [catatan perubahan]
 |---|---|
 | Gedung | 2 lantai, 36 ruang, 44 pintu, 39 jendela |
 | Isi | 201 perabot dan perangkat, 54 model GLB perabot, 118 slot aktivitas NPC |
-| Karakter | 9 karakter original (1 avatar pemain, 8 NPC), dimodelkan di Blender |
+| Karakter | 10 karakter original (1 avatar pemain, 9 NPC), dimodelkan di Blender |
 | Gambar kerja | 15 sheet arsitektur, interior, dan ICT dalam DWG, DXF, dan PDF |
 | Mini game | 15 game: 10 di fasilitas kantor, 5 di Game Station, diunduh saat dibuka |
 | Musik | 12 lagu original, dibuat di browser |
 | Unduhan JavaScript awal | three.js 168 kB + app 48 kB (gzip) |
-| Tes | 368 tes unit, 318 skenario E2E (desktop, tablet, HP), 432 tes Python, 32 tes server |
+| Tes | 364 tes unit, 318 skenario E2E (desktop, tablet, HP), 432 tes Python, 85 tes server |
 | Keputusan tercatat | 18 ADR di [docs/decisions.md](docs/decisions.md) |
 
 ## Fitur utama
@@ -55,12 +54,12 @@ Versi terbaru: **v2.2** (14 Oktober 2026). Rinciannya ada di [catatan perubahan]
 | Fitur | Ringkasnya |
 |---|---|
 | [Dunia 3D dua lantai](docs/FITUR.md#2-dunia-3d) | 36 ruang, pintu yang membuka sendiri, tangga dan lift antarlantai |
-| [Karakter NPC](docs/FITUR.md#5-karakter-npc) | 8 karakter dengan jadwal harian, bisa diajak bicara, ikut berolahraga di treadmill dan sepeda statis |
+| [Karakter NPC](docs/FITUR.md#5-karakter-npc) | 9 karakter dengan jadwal harian, bisa diajak bicara, ikut berolahraga di treadmill dan sepeda statis |
 | [Mini game](docs/FITUR.md#4a-mini-game) | 10 game di fasilitas kantor, termasuk catur di meja board game, dan Game Station 5 game: balap, tarung, platformer, puzzle kabel, arena bom |
 | [Animasi](docs/FITUR.md#4d-animasi-karakter) | Jalan dan lari menyatu sesuai kecepatan, mulai, berhenti, berbalik, menoleh; animasi khusus tiap aktivitas |
 | [Tegur](docs/FITUR.md#4c-tegur) | Tiga gaya tegur kartun di 3D; hanya animasi, tidak dikirim ke agen |
 | [Suara](docs/FITUR.md#4b-suara) | 12 lagu original, langkah, pintu, lift; dibuat di browser tanpa berkas audio |
-| [Chat agen dan papan kerja](docs/FITUR.md#10-chat-agen) | Beri tugas ke agen AI, sinkron dengan Telegram (butuh backend privat) |
+| [Perintah Pokja dan papan kerja](docs/FITUR.md#10-chat-agen) | Periksa laporan, sesi, dan log Pokja lewat perintah chat baca-saja (butuh backend privat) |
 | [Peta dan minimap](docs/FITUR.md#6a-peta-dan-minimap) | Lokasi semua orang per lantai, **Temui** untuk pindah ke sebelahnya |
 | [Office Studio](docs/FITUR.md#8-office-studio-menata-ulang-perabot) | Tata ulang perabot, simpan draft, publish, rollback |
 | [Avatar Studio](docs/FITUR.md#7-avatar-studio) | Pilih rambut, warna, dan pakaian avatar |
@@ -71,25 +70,25 @@ Versi terbaru: **v2.2** (14 Oktober 2026). Rinciannya ada di [catatan perubahan]
 
 ## Jelajahi gedungnya
 
-<img src="docs/img/hero-l1.jpg" alt="Lantai 1 dari atas: ruang rapat, lobby, galeri, ruang implementasi, inti bangunan">
+<img src="docs/img/hero-l1.jpg" alt="Lantai 1 dari atas: Ruang Rapat, lobby, Galeri Kanreg, Ruang Mutasi, inti bangunan">
 
-**Lantai 1 untuk kerja dan tamu.** Lobby dengan meja resepsi, ruang rapat besar, galeri karya, pantry, ruang implementasi dengan meja denah, area kerja per peran, lab, dan ruang server.
+**Lantai 1 untuk kerja dan tamu.** Lobby dengan meja resepsi, Ruang Rapat, Galeri Kanreg, pantry, Ruang Mutasi dengan meja denah, ruang kerja per layanan, Lab CAT BKN, dan Ruang Server.
 
-| Ruang rapat | Galeri | Ruang implementasi |
+| Ruang Rapat | Galeri Kanreg | Ruang Mutasi |
 |---|---|---|
-| ![Ruang rapat](docs/img/meeting.jpg) | ![Galeri](docs/img/gallery.jpg) | ![Ruang implementasi](docs/img/implementation.jpg) |
+| ![Ruang Rapat](docs/img/meeting.jpg) | ![Galeri Kanreg](docs/img/gallery.jpg) | ![Ruang Mutasi](docs/img/implementation.jpg) |
 
-<img src="docs/img/hero-l2.jpg" alt="Lantai 2 dari atas: lounge, ruang game, biliar, ruang olahraga, taman dalam">
+<img src="docs/img/hero-l2.jpg" alt="Lantai 2 dari atas: lounge, Ruang Game, biliar, ruang olahraga, Taman Kasuari">
 
-**Lantai 2 untuk istirahat.** Perpustakaan, lounge dengan coffee bar, ruang game, meja biliar, ruang olahraga, taman dalam, dan balkon. Naik lewat tangga U atau lift di inti bangunan.
+**Lantai 2 untuk istirahat.** Ruang PPNPN, lounge dengan coffee bar, Ruang Game, meja biliar, ruang olahraga, Taman Kasuari, dan balkon. Naik lewat tangga U atau lift di inti bangunan.
 
 | Ruang game | Biliar | Olahraga |
 |---|---|---|
 | ![Ruang game](docs/img/game.jpg) | ![Biliar](docs/img/billiard.jpg) | ![Ruang olahraga](docs/img/gym.jpg) |
 
-| Lounge | Perpustakaan | Taman dalam |
+| Lounge | Ruang PPNPN | Taman Kasuari |
 |---|---|---|
-| ![Lounge](docs/img/lounge.jpg) | ![Perpustakaan](docs/img/library.jpg) | ![Taman dalam](docs/img/garden.jpg) |
+| ![Lounge](docs/img/lounge.jpg) | ![Ruang PPNPN](docs/img/library.jpg) | ![Taman Kasuari](docs/img/garden.jpg) |
 
 Dinding dalam dibuat rendah (1,25 m), jadi kamera tetap melihat ke dalam ruang tanpa efek tembus pandang. Pintu terbuka sendiri saat avatar atau NPC mendekat.
 
@@ -99,7 +98,7 @@ Dinding dalam dibuat rendah (1,25 m), jadi kamera tetap melihat ke dalam ruang t
 
 - **Simulasi berseed.** Seed yang sama (`?seed=20261001`) menghasilkan urutan kegiatan yang sama. Demo bisa diulang persis, dan tes E2E memeriksanya.
 - **Tidak saling tabrak.** NPC memesan kursi sebelum duduk dan saling memberi jalan di koridor. NPC yang tersangkut memilih tujuan lain. NPC juga tidak bisa mengurung avatar: dorong terus 2 detik, atau lari, dan avatar menembusnya. Setelah lewat, NPC padat lagi.
-- **Status kerja nyata.** Dengan backend, karakter yang agennya sedang bekerja meninggalkan kegiatan santai, duduk di mejanya, dan labelnya berubah menjadi `bekerja` atau `menunggu keputusanmu`.
+- **Status kerja dari Pokja.** Dengan backend, karakter yang pemiliknya tercatat bekerja meninggalkan kegiatan santai, duduk di mejanya, dan labelnya berubah mengikuti status kehadiran Pokja (`bekerja`, `idle`).
 - **Bisa disapa.** Menyapa NPC membuka profil, ruang utama, kegiatan saat ini, dan potongan dialog. Pemilik mendapat tombol untuk langsung memberi tugas.
 
 - **Tahu siapa di mana.** Minimap di pojok layar menunjukkan semua orang di lantaimu dan berapa yang ada di lantai lain (`↑ L2: 3`). Tekan **P** untuk peta penuh dua lantai, lalu **Temui** untuk langsung pindah ke sebelah orang itu, walau beda lantai.
@@ -114,23 +113,23 @@ Kamu juga bisa ikut bersantai. Setiap fasilitas membuka mini game: lari di tread
 |---|---|---|
 | ![Game Station](docs/img/game-station.jpg) | ![Catur](docs/img/catur.jpg) | ![Treadmill dan sepeda statis](docs/img/gym-anim.jpg) |
 
-## Chat dengan agen
+## Chat dan papan Pokja
 
-| Chat agen | Papan kerja tim |
+| Chat Pokja | Papan kerja tim |
 |---|---|
-| ![Chat agen](docs/img/chat-agen.jpg) | ![Papan kerja](docs/img/papan-kerja.jpg) |
+| ![Chat Pokja](docs/img/chat-agen.jpg) | ![Papan kerja](docs/img/papan-kerja.jpg) |
 
-Chat di dalam app adalah percakapan Telegram yang sama, bukan salinan. Pesan dari app melanjutkan sesi Telegram agen itu, dan balasannya muncul di kedua tempat.
+Chat di dalam app berisi perintah Pokja yang hanya dibaca (`/laporan`, `/rekap`, `/sesi`, `/online`, `/audit`, `/ping`, `/help`). Jawabannya adalah ringkasan data, bukan pesan ke orang sungguhan, dan tidak ada data yang diubah.
 
 - Indikator mengetik, centang terkirim dan dibaca, nada pesan masuk, jumlah pesan belum dibaca di judul tab.
 - Foto, berkas, dan pesan suara yang direkam langsung dari app, sampai 10 MB per lampiran. Suara diubah menjadi teks di server sendiri.
 - Agen bisa menutup balasan dengan tiga pilihan. Satu ketukan mengirim pilihan itu.
 - Pesan yang menyentuh aksi berisiko (deploy, hapus data, biaya, kirim ke klien, akses) ditahan sampai pemilik menyetujuinya. Persetujuan kedaluwarsa dalam 15 menit dan hanya berlaku untuk tugas itu.
 - Pesan yang tampak berisi sandi, OTP, token, atau nomor kartu ditolak sebelum dikirim.
-- Papan kerja menampilkan handoff antar-agen, daftar pekerjaan, dan log aktivitas. Handoff yang tertahan lebih dari 24 jam ditandai perlu perhatian.
+- Papan kerja menampilkan ringkasan per pengguna per layanan, dan log aktivitas dari sesi dan log audit Pokja.
 - Notifikasi push saat tab tertutup, dan app bisa dipasang di layar utama HP sebagai PWA.
 
-Chat dan papan kerja hanya aktif untuk pemilik yang login dengan sandi dan kode 2FA. Pengunjung demo melihat data simulasi berlabel.
+Chat dan papan kerja hanya aktif untuk pemilik yang login dengan sandi dan kode 2FA. Pengunjung tanpa login melihat data contoh berlabel.
 
 ## Tata ulang kantornya
 
@@ -180,8 +179,10 @@ Model 3D diaudit supaya tidak ada permukaan yang berkedip (z-fighting). Tes `app
 ## Mulai dalam satu menit
 
 ```bash
-git clone https://github.com/air-buddy410/kantor-rpg.git
-cd kantor-rpg/app
+git clone https://github.com/adiethyaaa/office-onet.git
+cd office-onet
+git checkout pokja-tahap-1
+cd app
 npm ci
 npm run dev        # buka http://localhost:5173
 ```
@@ -191,7 +192,7 @@ Itu sudah cukup untuk dunia 3D, NPC, Studio, dan semua fitur pengunjung. Build p
 ## Teknologi
 
 - **App:** TypeScript, Vite, three.js. Tanpa framework UI.
-- **Backend:** Node.js tanpa framework, satu proses, data di SQLite bawaan Node. Login sandi dan TOTP, sesi bercookie dengan CSRF, Web Push dengan VAPID.
+- **Backend:** Node.js tanpa framework, satu proses, data di SQLite bawaan Node. Login sandi dan TOTP, sesi bercookie dengan CSRF, Web Push dengan VAPID. Data Pokja dibaca lewat API ringkasan, sesi, dan log audit; tidak ada akses database langsung.
 - **3D:** Blender 5 lewat skrip Python. GLB dioptimasi dengan meshopt dan kuantisasi mesh.
 - **CAD:** generator DXF di Python, PDF vektor, DWG lewat AutoCAD.
 - **Tes:** vitest, Playwright, pytest, `node:test`.
@@ -201,7 +202,7 @@ Itu sudah cukup untuk dunia 3D, NPC, Studio, dan semua fitur pengunjung. Build p
 | Folder | Isi |
 |---|---|
 | `app/` | App 3D, tes unit (vitest) dan E2E (Playwright) |
-| `server/` | Backend privat: auth, chat agen, push, lampiran |
+| `server/` | Backend privat: kehadiran, papan, dan chat Pokja (baca-saja), push, lampiran |
 | `design/` | Dataset dunia, karakter, dialog, dan kebutuhan; sumber semua artefak |
 | `blender/` | Skrip dan berkas `.blend` untuk gedung, karakter, perabot |
 | `cad/`, `drawings/` | Generator DXF/DWG dan PDF gambar kerja |
@@ -232,6 +233,7 @@ python3 -m pytest tests/py -q
 - [Semua fitur, dijelaskan satu per satu](docs/FITUR.md)
 - [Catatan perubahan per versi](CHANGELOG.md)
 - [Panduan pemasangan](INSTALL.md)
+- [Adaptasi Pokja tahap 1](POKJA-TAHAP-1.md) dan [deploy VPS](docs/DEPLOY-VPS.md)
 - [Cara berkontribusi](CONTRIBUTING.md)
 - [Keputusan arsitektur](docs/decisions.md), ADR-001 sampai ADR-018
 - [Laporan QA](docs/QA-REPORT.md) dan [daftar tes yang dilewati](docs/SKIP-LEDGER.md)
