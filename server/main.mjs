@@ -12,6 +12,10 @@
 //     ?action=sessions serta ?action=audit_logs (jalur sesi
 //     dan log), persis seperti agent.py di VPS Tencent. Tidak
 //     ada env log terpisah, karena alamatnya sama.
+// Uji lokal lewat http saja: KANTOR_RPG_COOKIE_SECURE=0 membuat cookie
+// sesi tanpa flag Secure, supaya login jalan di http://localhost.
+// Bawaan (env tidak disetel) tetap Secure; jangan pakai nilai 0 di
+// penyebaran publik.
 // `node server/main.mjs setup` mencetak tautan setup owner sekali pakai.
 import fs from 'node:fs';
 import os from 'node:os';
@@ -38,6 +42,7 @@ const bind = process.env.KANTOR_RPG_BIND ?? '127.0.0.1';
 // hanya isi env yang sudah ada di lingkungan proses ini.
 const pokjaUrl = process.env.POKJA_API_URL ?? '';
 const pokjaToken = process.env.POKJA_API_TOKEN ?? '';
-const { server } = createServer({ dataDir, proxySecret, allowedOrigin: origin, pokjaUrl, pokjaToken });
+const cookieSecure = process.env.KANTOR_RPG_COOKIE_SECURE === '0' ? false : undefined;
+const { server } = createServer({ dataDir, proxySecret, allowedOrigin: origin, pokjaUrl, pokjaToken, cookieSecure });
 server.listen(port, bind, () => console.log(`kantor-rpg backend ${bind}:${port} data=${dataDir}`));
 for (const sig of ['SIGTERM', 'SIGINT']) process.on(sig, () => server.close(() => process.exit(0)));

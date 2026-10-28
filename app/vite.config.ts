@@ -6,7 +6,23 @@ const design = fileURLToPath(new URL('../design', import.meta.url));
 export default defineConfig({
   base: './',
   resolve: { alias: { '@design': design } },
-  server: { fs: { allow: ['..'] } },
+  // Hanya untuk `npm run dev` (uji lokal): teruskan /api/ same-origin ke
+  // backend lokal (bawaan port 3242). Produksi memakai Cloudflare Tunnel
+  // atau nginx, yang menambahkan header proxy. Nilai header dibaca dari
+  // env (nama saja, tanpa nilai di berkas ini); tanpa nilai itu backend
+  // menjawab 403, sesuai perilaku fail-closed-nya. `vite preview` dan
+  // suite E2E sengaja tidak memakai proxy ini.
+  server: {
+    fs: { allow: ['..'] },
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:3242',
+        headers: process.env.KANTOR_RPG_PROXY_SECRET
+          ? { 'x-kantor-proxy': process.env.KANTOR_RPG_PROXY_SECRET }
+          : {},
+      },
+    },
+  },
   build: {
     target: 'es2022',
     sourcemap: false,

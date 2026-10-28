@@ -44,6 +44,8 @@ npm run preview        # http://127.0.0.1:4173
 
 Kontrol: WASD/panah untuk jalan, Shift untuk lari, Q/Z untuk memutar kamera, R untuk meluruskan kamera, +/- untuk zoom, E/Enter untuk interaksi, H untuk bantuan. Di HP: joystick sentuh. Simulasi NPC berseed (`?seed=20261001`).
 
+Uji coba dengan backend Pokja lokal (login owner dan data nyata) dijelaskan di [POKJA-TAHAP-1.md](../POKJA-TAHAP-1.md); server dev meneruskan `/api/` ke backend lokal.
+
 Pengaturan kualitas (ikon roda gigi): `auto`, `low`, atau `high`. Mode `auto` memilih `low` (tanpa bayangan) bila GPU terdeteksi sebagai renderer software.
 
 ### Cek sebelum dipakai

@@ -21,8 +21,12 @@ test("main.mjs salinan mengirim env Pokja ke createServer, tanpa env log terpisa
   assert.doesNotMatch(mainMjs, /POKJA_LOG_API_URL|POKJA_LOG_API_TOKEN/);
   assert.match(
     mainMjs,
-    /createServer\(\{ dataDir, proxySecret, allowedOrigin: origin, pokjaUrl, pokjaToken \}\)/,
+    /createServer\(\{ dataDir, proxySecret, allowedOrigin: origin, pokjaUrl, pokjaToken, cookieSecure \}\)/,
   );
+});
+
+test("main.mjs salinan hanya mematikan Secure cookie lewat env eksplisit", () => {
+  assert.match(mainMjs, /process\.env\.KANTOR_RPG_COOKIE_SECURE === '0' \? false : undefined/);
 });
 
 test("main.mjs salinan tetap fail-closed untuk proxy-secret dan tidak memuat nilai rahasia", () => {

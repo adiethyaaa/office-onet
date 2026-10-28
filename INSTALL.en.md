@@ -44,6 +44,8 @@ npm run preview        # http://127.0.0.1:4173
 
 Controls: WASD/arrow keys to walk, Shift to run, Q/Z to rotate the camera, R to straighten the camera, +/- to zoom, E/Enter to interact, H for help. On phones: touch joystick. The NPC simulation is seeded (`?seed=20261001`).
 
+Trying it with a local Pokja backend (owner login and real data) is described in [POKJA-TAHAP-1.md](../POKJA-TAHAP-1.md); the dev server forwards `/api/` to the local backend.
+
 Quality setting (gear icon): `auto`, `low`, or `high`. `auto` mode picks `low` (no shadows) when the GPU is detected as a software renderer.
 
 ### Check before use
