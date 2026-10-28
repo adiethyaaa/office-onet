@@ -16,7 +16,7 @@ img{display:block;margin:12px auto;width:220px;height:220px}
 </style></head><body><main>${body}</main></body></html>`;
 
 export function setupPage({ secret, username, token, error, done } = {}) {
-  if (done) return shell('<h1>Owner siap</h1><p>Akun owner dibuat. Tutup halaman ini, lalu login dari tombol <b>Panel privat</b> di employee-rpg.air-buddy.site.</p>');
+  if (done) return shell('<h1>Owner siap</h1><p>Akun owner dibuat. Tutup halaman ini, lalu login dari tombol <b>Panel privat</b>.</p>');
   if (!secret) return shell(`<h1>Setup owner</h1><p class="err">${esc(error)}</p>`);
   const uri = `otpauth://totp/kantor-rpg:${encodeURIComponent(username)}?secret=${secret}&issuer=kantor-rpg&algorithm=SHA1&digits=6&period=30`;
   return QRCode.toDataURL(uri, { margin: 1, width: 440 }).then((qr) => shell(`
@@ -33,7 +33,7 @@ ${error ? `<p class="err">${esc(error)}</p>` : ''}
 <label for="c">Langkah 3. Kode 6 digit dari aplikasi</label><input id="c" name="code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" required>
 <button type="submit">Simpan owner</button>
 </form>
-<p class="muted">Tautan ini hanya sekali pakai. Sandi disimpan sebagai hash scrypt di Mac mini; Max dan bot lain tidak melihatnya.</p>`));
+<p class="muted">Tautan ini hanya sekali pakai. Sandi disimpan sebagai hash scrypt di server ini; tidak ada pihak lain yang melihatnya.</p>`));
 }
 
 /** The token must survive into the POST: GET fills it from the query string. */

@@ -208,7 +208,7 @@ test('aksi berisiko menunggu approval terpisah; ditolak/kedaluwarsa/replay tidak
   // keadaan menunggu tidak mengubah status ER pada uji presence.
   const conv = (await api('POST', '/api/conversations', { cookie: s.cookie, csrf: s.csrf, body: { profile: 'ONET', fresh: true } })).json;
   const n0 = calls.length;
-  const r = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: 'Restart VM 105 di proxmox2', idem: 'idem-risk-0001' } });
+  const r = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: 'Deploy ke produksi sekarang', idem: 'idem-risk-0001' } });
   assert.equal(r.status, 202);
   assert.ok(r.json.approval?.id);
   await new Promise((x) => setTimeout(x, 80));
@@ -216,7 +216,7 @@ test('aksi berisiko menunggu approval terpisah; ditolak/kedaluwarsa/replay tidak
   const rej = await api('POST', `/api/approvals/${r.json.approval.id}`, { cookie: s.cookie, csrf: s.csrf, body: { decision: 'reject', taskId: r.json.taskId } });
   assert.equal(rej.json.status, 'cancelled');
   assert.equal((await api('POST', `/api/approvals/${r.json.approval.id}`, { cookie: s.cookie, csrf: s.csrf, body: { decision: 'approve' } })).status, 409, 'replay ditolak');
-  const r2 = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: 'Upgrade firmware OLT', idem: 'idem-risk-0002' } });
+  const r2 = await api('POST', `/api/conversations/${conv.id}/messages`, { cookie: s.cookie, csrf: s.csrf, body: { text: 'Kirim penawaran ke klien', idem: 'idem-risk-0002' } });
   assert.equal((await api('POST', `/api/approvals/${r2.json.approval.id}`, { cookie: s.cookie, csrf: s.csrf, body: { decision: 'approve', taskId: r.json.taskId } })).status, 404, 'approval tidak bisa dipindah ke task lain');
   clock.advance(16 * 60_000);
   const s2 = await login();
@@ -287,7 +287,7 @@ test('kebijakan: parseOptions tepat tiga, berbeda; scrub; deteksi risiko', () =>
   assert.equal(ok.body, 'Isi');
   assert.equal(scrub('lihat /Users/a/b/c.md dan https://x.y/z 192.0.2.7'), 'lihat [berkas] dan [tautan] [ip]');
   assert.equal(checkMessage('Buat poster promo').risks.length, 0);
-  assert.ok(checkMessage('reset ONU pelanggan Kecicang').risks.some((r) => r.id === 'isp'));
+  assert.ok(checkMessage('deploy ke produksi sekarang').risks.some((r) => r.id === 'deploy'));
   assert.equal(checkMessage('kartu 4111 1111 1111 1111').ok, false);
 });
 

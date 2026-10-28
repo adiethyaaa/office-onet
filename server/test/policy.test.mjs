@@ -68,8 +68,11 @@ test('gerbang hapus/reset: pertanyaan dan obrolan tidak memicu persetujuan', () 
 });
 
 test('gerbang lain tidak ikut melemah', () => {
-  assert.ok(checkMessage('reset ONU pelanggan Kecicang').risks.some((r) => r.id === 'isp'));
-  assert.ok(checkMessage('restart VM 105').risks.some((r) => r.id === 'homelab'));
   assert.ok(checkMessage('deploy ke produksi sekarang').risks.some((r) => r.id === 'deploy'));
+  assert.ok(checkMessage('kirim penawaran ke klien').risks.some((r) => r.id === 'client'));
+  assert.ok(checkMessage('ganti sandi akun admin').risks.some((r) => r.id === 'cred'));
   assert.equal(checkMessage('kartu 4111 1111 1111 1111').ok, false);
+  // Kata infrastruktur pemilik lama tidak lagi menahan pesan.
+  assert.equal(checkMessage('restart VM 105').risks.length, 0);
+  assert.equal(checkMessage('reset ONU pelanggan Kecicang').risks.some((r) => r.id === 'destroy'), true, 'tetap ditahan gerbang hapus karena menyebut pelanggan');
 });

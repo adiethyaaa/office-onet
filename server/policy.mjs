@@ -1,7 +1,10 @@
 // Kebijakan pesan (PRD 17.4). Dua gerbang sebelum pesan dikirim ke profil:
 //  1. rahasia: sandi/OTP/token/kartu tidak boleh diketik di chat RPG -> tolak.
-//  2. aksi berisiko: produksi ISP, homelab, biaya, kredensial, kirim klien,
-//     hapus/deploy -> butuh approval terpisah yang terikat task + kedaluwarsa.
+//  2. aksi berisiko: hapus/deploy, biaya, kredensial, kirim klien,
+//     -> butuh approval terpisah yang terikat task + kedaluwarsa.
+// Entri risiko khusus infrastruktur pemilik lama (ISP PerumNet, homelab)
+// dihapus pada tahap Pokja: balasan di fork ini baca-saja, dan kata-kata
+// itu hanya menambah kartu persetujuan untuk balasan yang tidak berbuat apa-apa.
 // Memilih salah satu dari tiga opsi bukan izin umum: opsi melewati gerbang yang sama.
 export const LIMITS = { messageChars: 4000, optionLabelChars: 80, optionMessageChars: 600, approvalMinutes: 15, turnMinutes: 60, queuePerProfile: 5 };
 
@@ -13,8 +16,6 @@ const SECRET = [
 ];
 
 const RISK = [
-  { id: 'isp', re: /\b(mikrotik|routeros|olt|onu|ont|switch antar|core router|router core|pop\b|sistem lama|alus|radius|pppoe|bras|produksi isp)\b/i, label: 'Perangkat/sistem produksi ISP PerumNet' },
-  { id: 'homelab', re: /\b(proxmox|pve|vm\s?\d+|lxc|docker-01|restart|reboot|matikan|shutdown|upgrade firmware)\b/i, label: 'Homelab/server: restart, VM, atau upgrade' },
   { id: 'destroy', test: destroyIntent, label: 'Menghapus atau mereset data' },
   { id: 'deploy', re: /\b(deploy|publish|rilis ke produksi|merge|push ke main|go live)\b/i, label: 'Deploy/merge ke produksi' },
   { id: 'money', re: /\b(bayar|transfer|top.?up|beli|langganan berbayar|checkout|invoice ke klien)\b/i, label: 'Biaya atau pembayaran' },
@@ -122,10 +123,10 @@ export function sanitizeReply(text) {
 
 export const OPTION_INSTRUCTION = `
 
-[Catatan sistem dari kantor RPG, bukan bagian pesan Budi]
-Pesan ini dikirim Budi lewat panel privat kantor RPG (employee-rpg), sudah login sandi + 2FA. Aturan lanemu, jobdesk, dan batas produksi ISP tetap berlaku persis seperti di Telegram.
-Balas dalam bahasa Indonesia, ringkas. Kalau balasanmu meminta keputusan Budi, akhiri dengan SATU blok kode json berisi tepat tiga pilihan yang berbeda, aman, dan relevan:
+[Catatan sistem dari kantor RPG, bukan bagian pesan owner]
+Pesan ini dikirim owner lewat panel privat kantor RPG, sudah login sandi + 2FA.
+Balas dalam bahasa Indonesia, ringkas. Kalau balasanmu meminta keputusan owner, akhiri dengan SATU blok kode json berisi tepat tiga pilihan yang berbeda, aman, dan relevan:
 \`\`\`json
-{"pilihan":[{"label":"maks 60 karakter","pesan":"teks lengkap yang akan dikirim balik kalau Budi memilih ini"},{"label":"...","pesan":"..."},{"label":"...","pesan":"..."}]}
+{"pilihan":[{"label":"maks 60 karakter","pesan":"teks lengkap yang akan dikirim balik kalau owner memilih ini"},{"label":"...","pesan":"..."},{"label":"...","pesan":"..."}]}
 \`\`\`
 Kalau tidak perlu keputusan (jawaban akhir, laporan, error), tulis {"pilihan":[]} di blok itu. Jangan menulis sandi/token.`;
