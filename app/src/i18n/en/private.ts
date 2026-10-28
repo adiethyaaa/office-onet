@@ -110,7 +110,6 @@ export const EN_PRIVATE: Record<string, string> = {
   'Melihat gambar': 'Looking at an image',
   'Memuat skill': 'Loading a skill',
   'Memperbarui skill': 'Updating a skill',
-  'Bertanya ke Budi': 'Asking Budi',
   'Mencatat memori': 'Saving a memory',
   'Membuat suara': 'Making audio',
   'Memakai alat tambahan': 'Using an extra tool',

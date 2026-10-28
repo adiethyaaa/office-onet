@@ -226,7 +226,7 @@ test('aksi berisiko menunggu approval terpisah; ditolak/kedaluwarsa/replay tidak
   const ok = await api('POST', `/api/approvals/${r3.json.approval.id}`, { cookie: s2.cookie, csrf: s2.csrf, body: { decision: 'approve' } });
   assert.equal(ok.json.status, 'queued');
   await waitFor(() => calls.length === n0 + 1);
-  assert.match(calls.at(-1).message, /Persetujuan Budi dari panel RPG, hanya untuk tugas ini/);
+  assert.match(calls.at(-1).message, /Persetujuan owner dari panel RPG, hanya untuk tugas ini/);
 });
 
 test('rahasia di chat ditolak; gagal/offline jujur; cancel (REQ-CMD-02, REQ-CMD-05)', async () => {

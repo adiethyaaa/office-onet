@@ -115,7 +115,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
       q('update tasks set result_turn=? where id=?').run(turnId, t.id);
       onReply?.({ profile, ownerText: t.message, agentText: sanitizeReply(parsed.body), channel: conv?.channel, taskId: t.id });
       if (parsed.invalid) event(t.id, 'completed', `Balasan diterima. ${parsed.invalid} Hanya input manual yang tersedia.`);
-      else event(t.id, parsed.options ? 'waiting_owner' : 'completed', `${parsed.options ? 'Agen menunggu keputusan Budi.' : 'Balasan agen diterima.'}${out.note ? ` ${out.note}` : ''}`);
+      else event(t.id, parsed.options ? 'waiting_owner' : 'completed', `${parsed.options ? 'Agen menunggu keputusan owner.' : 'Balasan agen diterima.'}${out.note ? ` ${out.note}` : ''}`);
     } else {
       q('update tasks set error=? where id=?').run(out.error ?? 'gagal', t.id);
       event(t.id, out.unknown ? 'unknown' : 'failed', out.error);
@@ -145,7 +145,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
         // task-bound, expiring approval (PRD 17.4, AC-CMD-03).
         approval = {
           id: `appr_${token(9)}`, action: risks.map((r) => r.label).join('; '),
-          impact: `Pesan akan diteruskan ke ${profile} dan agen boleh mengerjakan aksi itu sesuai aturan lanenya.`,
+          impact: `Pesan hanya diproses sebagai balasan baca-saja dari data Pokja untuk ${profile}; tidak ada pesan yang diteruskan ke orang sungguhan dan tidak ada data yang diubah.`,
           rollback: 'Sebelum disetujui: tolak, tidak ada yang dikirim. Sesudah: hentikan tugas; efek yang sudah terjadi perlu dibatalkan manual.',
         };
         q('insert into approvals(id,task_id,action,impact,rollback,status,created_at,expires_at) values(?,?,?,?,?,?,?,?)').run(
@@ -171,12 +171,12 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
       }
       if (decision !== 'approve') {
         q("update approvals set status='rejected', decided_at=? where id=?").run(now(), a.id);
-        event(t.id, 'cancelled', 'Ditolak Budi; pesan tidak dikirim.');
+        event(t.id, 'cancelled', 'Ditolak owner; pesan tidak dikirim.');
         return { ok: true, status: 'cancelled' };
       }
       q("update approvals set status='approved', decided_at=? where id=?").run(now(), a.id);
-      q('update tasks set message=? where id=?').run(`${t.message}\n\n[Persetujuan Budi dari panel RPG, hanya untuk tugas ini: ${a.action}. Tunjukkan rencana + perintah + jalan mundur sebelum eksekusi bila aturan lanemu mewajibkan.]`, t.id);
-      event(t.id, 'queued', 'Disetujui Budi, menunggu giliran profil.');
+      q('update tasks set message=? where id=?').run(`${t.message}\n\n[Persetujuan owner dari panel RPG, hanya untuk tugas ini: ${a.action}.]`, t.id);
+      event(t.id, 'queued', 'Disetujui owner, menunggu giliran profil.');
       void runNext(t.profile);
       return { ok: true, status: 'queued' };
     },
@@ -186,7 +186,7 @@ export function createDispatcher(store, { runner, now = () => Date.now(), onChan
       const r = running.get(t.profile);
       if (t.status === 'working' && r?.taskId === taskId) {
         r.child?.kill('SIGTERM');
-        event(taskId, 'cancelled', 'Dihentikan Budi. Efek eksternal yang sudah terjadi tidak dibatalkan.');
+        event(taskId, 'cancelled', 'Dihentikan owner. Efek eksternal yang sudah terjadi tidak dibatalkan.');
       } else {
         q("update approvals set status='cancelled', decided_at=? where task_id=? and status='pending'").run(now(), taskId);
         event(taskId, 'cancelled', 'Dibatalkan sebelum dikirim ke agen.');

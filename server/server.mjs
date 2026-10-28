@@ -231,7 +231,7 @@ export function createServer(cfg) {
   route('POST', /^\/api\/login$/, { auth: false, csrf: false }, async (req, res) => {
     const b = await readJson(req);
     const o = owner();
-    if (!o) return fail(res, 503, 'Akun owner belum dibuat. Buka tautan setup yang dikirim ke Telegram Budi.');
+    if (!o) return fail(res, 503, 'Akun owner belum dibuat. Jalankan `node server/main.mjs setup` di server untuk mencetak tautan setup sekali pakai.');
     const key = `${clientIp(req)}|${String(b.username ?? '').slice(0, 40)}`;
     const recent = q('select count(*) n from login_attempts where key=? and at > ?').get(key, now() - RETENTION.loginWindowMin * 60_000).n;
     if (recent >= LOGIN_MAX) { store.audit('anon', 'login.locked', null, null, key.split('|')[0]); return fail(res, 429, `Terlalu banyak percobaan. Coba lagi ${RETENTION.loginWindowMin} menit lagi.`); }
